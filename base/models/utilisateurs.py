@@ -11,7 +11,9 @@ class User(AbstractUser):
 	sexe = models.PositiveSmallIntegerField(choices=(
 		(SEXE_HOMME, 'homme'),
 		(SEXE_FEMME, 'femme'),
-		))
+		), default=SEXE_HOMME)
+
+	REQUIRED_FIELDS = ['sexe',]
 
 class Etudiant(User):
 	origine = models.ForeignKey(Etablissement,
@@ -47,3 +49,7 @@ class Professeur(User):
 			default=2)
 	etablissement = models.ForeignKey(Etablissement, null=True,
 			blank=True, on_delete=models.SET_NULL)
+
+	class Meta:
+		verbose_name = "professeur"
+		verbose_name_plural = "professeurs"

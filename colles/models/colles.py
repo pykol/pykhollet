@@ -31,6 +31,8 @@ class Creneau(models.Model):
 
 	class Meta:
 		ordering = ['jour', 'debut', 'matiere']
+		verbose_name = 'créneau'
+		verbose_name_plural = 'créneaux'
 	
 	def __str__(self):
 		return "{} {}-{}".format(self.jour, self.debut, self.fin)

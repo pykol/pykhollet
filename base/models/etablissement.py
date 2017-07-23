@@ -12,6 +12,10 @@ class Academie(models.Model):
 	departements = models.CharField(max_length=100, verbose_name="Départements",
 			validators=[validate_comma_separated_integer_list])
 
+	class Meta:
+		verbose_name = "académie"
+		verbose_name_plural = "académies"
+
 	def __str__(self):
 		return self.nom
 
@@ -34,7 +38,7 @@ class Etablissement(models.Model):
 	academie = models.ForeignKey(Academie, verbose_name="Académie",
 			null=True, blank=True,
 			on_delete=models.PROTECT)
-	email = models.EmailField()
+	email = models.EmailField(blank=True)
 
 	NATURE_UAI=(
 			(101,"École maternelle"),

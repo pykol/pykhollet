@@ -5,13 +5,13 @@ from .utilisateurs import Professeur, Etudiant
 
 class Annee(models.Model):
 	nom = models.CharField(max_length=100)
-	debut = models.DateField()
+	debut = models.DateField(verbose_name="début")
 	fin = models.DateField()
 
 	class Meta:
 		ordering = ['debut']
-		verbose_name = ['année scolaire']
-		verbose_name_plural = ['années scolaires']
+		verbose_name = 'année scolaire'
+		verbose_name_plural = 'années scolaires'
 
 	def __str__(self):
 		return self.nom

@@ -1,12 +1,54 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="fr">
   <head>
     <meta charset="utf-8">
     <title>{% block title %}pyKol{% endblock %}</title>
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="{% static 'style.css' %}">
   </head>
   
   <body>
-    {% block content %}{% endblock %}
+    <header>
+      <h1>{% block h1 %}pyKol{% endblock %}</h1>
+    </header>
+
+    <div class="main">
+
+      <div class="wrapper">
+        <div id="ariane">
+        </div>
+        <div id="content">
+          {% block content %}Contenu{% endblock %}
+        </div>
+      </div>
+
+      <nav>
+        <ul>
+          <li class="active"><a href="{% url 'home' %}">
+              <i class="fa fa-bar-chart"></i>
+              Tableau de bord
+            </a></li>
+          <li><a href="">
+              <i class="fa fa-wrench"></i>
+              Configuration
+            </a>
+            <ul>
+              <li>Utilisateurs</li>
+              <li>Classes</li>
+            </ul>
+          </li>
+          <li><a href="">
+              <i class="fa"></i>
+              Bar
+            </a></li>
+        </ul>
+      </nav>
+
+    </div>
+
+    <footer>
+      {% block footer %}{% endblock%}
+      pyKol
+    </footer>
   </body>
 </html>

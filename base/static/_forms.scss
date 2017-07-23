@@ -1,0 +1,39 @@
+@mixin button {
+  display: inline-block;
+  padding: 6px 12px;
+  margin-bottom: 0;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 20px;
+  white-space: nowrap;
+  vertical-align: middle;
+  cursor: pointer;
+  border: 1px solid #a7a9aa;
+  color: white;
+  background-color: #a7a9aa;
+
+  &:hover, &:focus, &:active {
+    color: white;
+    text-decoration: none;
+    background-color: #9a9c9d;
+    border-color: #8d9091;
+  }
+}
+
+@mixin button-primary {
+  @include button;
+  background-color: #2d89ef;
+  border-color: #2d89ef;
+
+  &:hover, &:focus, &:active {
+    background-color: #357ebd;
+    border-color: #3071a9;
+  }
+}
+
+form {
+  input[type="submit"] {
+    @include button-primary;
+  }
+}
+

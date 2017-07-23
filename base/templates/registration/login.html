@@ -1,14 +1,20 @@
-{% extends "base.html" %}
+{% extends "base-bare.html" %}
 
 {% block title %}Identification{% endblock %}
 
 {% block content %}
-<form method="post" action="{% url 'login' %}">
+<form id="login" method="post" action="{% url 'login' %}">
   {% csrf_token %}
+  <h2>Connexion à votre compte</h2>
+  <ul>
   {{ form.as_ul }}
+  </ul>
   <input type="submit" value="Identification">
   <input type="hidden" name="next" value="{{ next }}">
 
-  <p><a href="{% url 'password_reset' %}">Mot de passe oublié ?</a></p>
+  <h3>Mot de passe oublié ?</h3>
+  <p>Ce n'est pas un problème, suivez
+  <a href="{% url 'password_reset' %}">ce lien</a> pour en obtenir
+  un nouveau.</p>
 </form>
 {% endblock content %}

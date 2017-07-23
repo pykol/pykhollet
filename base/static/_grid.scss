@@ -1,0 +1,7 @@
+@mixin make-row {
+  display: flex;
+}
+
+@mixin make-cell($span) {
+  width: $span / 12 * 100%;
+}

@@ -21,7 +21,8 @@ class Etudiant(User):
 			verbose_name="Établissement d'origine",
 			on_delete=models.SET_NULL)
 	classe = models.ForeignKey('Classe', on_delete=models.PROTECT)
-	entree = models.DateField(null=True, blank=True)
+	entree = models.DateField(null=True, blank=True,
+			verbose_name="entrée")
 	sortie = models.DateField(null=True, blank=True)
 	#XXX sensibilité à la casse de la lettre code INE
 	ine = models.CharField(max_length=11,
@@ -48,7 +49,8 @@ class Professeur(User):
 	corps = models.PositiveSmallIntegerField(choices=LISTE_CORPSS,
 			default=2)
 	etablissement = models.ForeignKey(Etablissement, null=True,
-			blank=True, on_delete=models.SET_NULL)
+			blank=True, on_delete=models.SET_NULL,
+			verbose_name="établissement")
 
 	class Meta:
 		verbose_name = "professeur"

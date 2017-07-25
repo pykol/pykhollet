@@ -8,10 +8,10 @@ LISTE_JOURS = enumerate(["lundi", "mardi", "mercredi", "jeudi",
 	"vendredi", "samedi", "dimanche"], 1)
 
 class Semaine(models.Model):
-	debut = models.DateField()
+	debut = models.DateField(verbose_name="début")
 	fin = models.DateField()
 	classe = models.ForeignKey(Classe)
-	numero = models.TextField(verbose_name="Numéro")
+	numero = models.TextField(verbose_name="numéro")
 
 	class Meta:
 		ordering = ['debut']
@@ -48,7 +48,7 @@ class Colle(models.Model):
 	ETATS_COLLE = enumerate([
 		"Prévue", "Notation en attente", "Notée", "Relevée", "Annulée"
 		])
-	etat = models.PositiveSmallIntegerField(verbose_name="État",
+	etat = models.PositiveSmallIntegerField(verbose_name="état",
 			choices=ETATS_COLLE)
 
 class ColleNote(models.Model):

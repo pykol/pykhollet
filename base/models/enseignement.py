@@ -31,7 +31,8 @@ class Matiere(models.Model):
 class Groupe(models.Model):
 	nom = models.CharField(max_length=100)
 	annee = models.ForeignKey(Annee, on_delete=models.CASCADE)
-	etudiants = models.ManyToManyField(Etudiant)
+	etudiants = models.ManyToManyField(Etudiant,
+			verbose_name="étudiants")
 
 	MODE_MANUEL = 0
 	MODE_AUTOMATIQUE = 1
@@ -57,10 +58,10 @@ class Service(models.Model):
 
 class Enseignement(models.Model):
 	matiere = models.ForeignKey(Matiere, on_delete=models.SET_NULL,
-			blank=True, null=True)
+			blank=True, null=True, verbose_name="matière")
 	classe = models.ForeignKey('Classe', on_delete=models.CASCADE)
 	option = models.BooleanField()
-	specialite = models.BooleanField()
+	specialite = models.BooleanField(verbose_name="spécialité")
 	professeurs = models.ManyToManyField(Professeur, through=Service)
 
 	class Meta:
@@ -70,7 +71,8 @@ class Enseignement(models.Model):
 		return "{} - {}".format(self.classe, self.matiere)
 
 class Classe(Groupe):
-	matieres = models.ManyToManyField(Matiere, through=Enseignement)
+	matieres = models.ManyToManyField(Matiere, through=Enseignement,
+			verbose_name="matières")
 	coordonnateur = models.ForeignKey(Professeur,
 			on_delete=models.SET_NULL, blank=True, null=True)
 

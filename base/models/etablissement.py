@@ -9,7 +9,7 @@ import string
 class Academie(models.Model):
 	nom = models.CharField(max_length=100)
 	slug = models.SlugField()
-	departements = models.CharField(max_length=100, verbose_name="Départements",
+	departements = models.CharField(max_length=100, verbose_name="départements",
 			validators=[validate_comma_separated_integer_list])
 
 	class Meta:
@@ -33,9 +33,9 @@ class Etablissement(models.Model):
 	appellation = models.CharField(max_length=100)
 	denomination = models.CharField(max_length=100)
 	adresse = models.TextField(
-			verbose_name="Adresse de l'établissement",
+			verbose_name="adresse de l'établissement",
 			blank=True)
-	academie = models.ForeignKey(Academie, verbose_name="Académie",
+	academie = models.ForeignKey(Academie, verbose_name="académie",
 			null=True, blank=True,
 			on_delete=models.PROTECT)
 	email = models.EmailField(blank=True)

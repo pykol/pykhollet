@@ -13,7 +13,7 @@ class User(AbstractUser):
 		(SEXE_FEMME, 'femme'),
 		), default=SEXE_HOMME)
 
-	REQUIRED_FIELDS = ['sexe',]
+	REQUIRED_FIELDS = ['email', 'sexe',]
 
 class Etudiant(User):
 	origine = models.ForeignKey(Etablissement,

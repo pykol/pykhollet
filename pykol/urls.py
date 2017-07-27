@@ -20,4 +20,5 @@ from base.admin import admin_site
 urlpatterns = [
     url(r'^admin/', admin_site.urls),
 	url(r'^', include('base.urls')),
+	url(r'^colles/', include('colles.urls')),
 ]

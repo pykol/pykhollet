@@ -1,0 +1,10 @@
+{% load static %}
+<nav>
+  <ul>
+  {% for item in navigation %}
+    <li><a href="{% url item.url %}">
+        <i class="fa fa-{{ item.icon }}"></i>{{ item.label }}
+      </a></li>
+  {% endfor %}
+  </ul>
+</nav>

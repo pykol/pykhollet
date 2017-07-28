@@ -79,7 +79,7 @@ class Groupe(models.Model):
 	"""
 	nom = models.CharField(max_length=100)
 	annee = models.ForeignKey(Annee, on_delete=models.CASCADE)
-	etudiants = models.ManyToManyField(Etudiant,
+	etudiants = models.ManyToManyField(Etudiant, blank=True,
 			verbose_name="étudiants")
 	slug = models.SlugField()
 
@@ -89,8 +89,6 @@ class Groupe(models.Model):
 		(MODE_MANUEL, "manuel"),
 		(MODE_AUTOMATIQUE, "automatique"),
 		), default=MODE_MANUEL)
-
-	enseignements = models.ManyToManyField('Enseignement')
 
 	def __str__(self):
 		return self.nom
@@ -157,9 +155,10 @@ class Classe(Groupe):
 	enseignements correspondants), le colloscope, les conseils de classe.
 	"""
 	matieres = models.ManyToManyField(Matiere, through=Enseignement,
-			verbose_name="matières")
+			verbose_name="matières", blank=True)
 	coordonnateur = models.ForeignKey(Professeur,
 			on_delete=models.SET_NULL, blank=True, null=True)
+	# enseignements = models.ManyToManyField('Enseignement', blank=True)
 
 	NIVEAU_PREMIERE_ANNEE = 1
 	NIVEAU_DEUXIEME_ANNEE = 2

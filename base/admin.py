@@ -5,6 +5,7 @@ from django.utils.translation import gettext, gettext_lazy as _
 from django.contrib.admin import AdminSite
 from .models import User, Professeur, Etudiant
 from .models import Academie, Annee, Etablissement
+from .models import Matiere, Classe
 
 class PykolAdminSite(AdminSite):
 	site_header = 'Administration de pyKol'
@@ -92,3 +93,6 @@ class AcademieResource(resources.ModelResource):
 class AcademieAdmin(ImportExportModelAdmin):
 	resource_class = AcademieResource
 admin_site.register(Academie, AcademieAdmin)
+
+admin_site.register(Matiere)
+admin_site.register(Classe)

@@ -29,7 +29,7 @@ class Etablissement(models.Model):
 	#XXX sensibilité à la casse de la lettre code UAI
 	numero_uai = models.CharField(max_length=8, unique=True,
 			verbose_name="UAI", primary_key=True,
-			validators=[RegexValidator(regex='\d{7,7}[a-z][A-Z]', message="Un numéro UAI doit être constitué de sept chiffres suivis d'une lettre code"), validateur_lettre23])
+			validators=[RegexValidator(regex='\d{7,7}[a-zA-Z]', message="Un numéro UAI doit être constitué de sept chiffres suivis d'une lettre code"), validateur_lettre23])
 	appellation = models.CharField(max_length=100)
 	denomination = models.CharField(max_length=100)
 	adresse = models.TextField(

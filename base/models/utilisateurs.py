@@ -27,8 +27,8 @@ class Etudiant(User):
 	#XXX sensibilité à la casse de la lettre code INE
 	ine = models.CharField(max_length=11,
 			verbose_name="INE (numéro d'étudiant)",
-			validators=[RegexValidator(regex='\d{10,10}[a-z][A-Z]', message="Un numéro INE doit être constitué de dix chiffres suivis d'une lettre code"), validateur_lettre23])
-	options = models.ManyToManyField('Matiere')
+			validators=[RegexValidator(regex='\d{10,10}[a-zA-Z]', message="Un numéro INE doit être constitué de dix chiffres suivis d'une lettre code"), validateur_lettre23])
+	options = models.ManyToManyField('Matiere', blank=True)
 
 	class Meta:
 		verbose_name = "étudiant"

@@ -40,13 +40,13 @@ class Professeur(User):
 	CORPS_CERTIFIE = 1
 	CORPS_AGREGE = 2
 	CORPS_CHAIRESUP = 3
-	LISTE_CORPSS = (
+	LISTE_CORPS = (
 			(CORPS_AUTRE, "autre"),
 			(CORPS_CERTIFIE, "certifié"),
 			(CORPS_AGREGE, "agrégé"),
 			(CORPS_CHAIRESUP, "chaire supérieure"),
 		)
-	corps = models.PositiveSmallIntegerField(choices=LISTE_CORPSS,
+	corps = models.PositiveSmallIntegerField(choices=LISTE_CORPS,
 			default=2)
 	etablissement = models.ForeignKey(Etablissement, null=True,
 			blank=True, on_delete=models.SET_NULL,

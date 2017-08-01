@@ -1,6 +1,7 @@
 # -*- coding:utf8 -*-
 from django.db import models
 from django.db.models import Q, F
+from django.core.exceptions import ValidationError
 
 from base.models import Classe, Professeur, Matiere, Groupe
 
@@ -43,6 +44,11 @@ class Creneau(models.Model):
 class Roulement(models.Model):
 	classe = models.ForeignKey(Classe, on_delete=models.CASCADE)
 	semaines = models.ManyToManyField(Semaine, blank=True)
+
+	def clean(self):
+		for semaine_classe in self.semaines.classe:
+			if semaine_classe != self.classe:
+				raise ValidationError() #XXX
 
 class RoulementLigne(models.Model):
 	ordre = models.PositiveSmallIntegerField()

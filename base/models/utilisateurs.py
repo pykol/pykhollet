@@ -6,6 +6,15 @@ from django.core.validators import RegexValidator
 from .etablissement import Etablissement, validateur_lettre23
 
 class User(AbstractUser):
+	"""
+	Compte utilisateur de pyKol
+
+	Ce modèle reprend le modèle de base de Django pour les utilisateurs,
+	en ajoutant un champ supplémentaire pour stocker le sexe de
+	l'utilisateur. Cette information est toujours nécessaire pour les
+	traitements administratifs des différentes catégories
+	d'utilisateurs.
+	"""
 	SEXE_HOMME=1
 	SEXE_FEMME=2
 	sexe = models.PositiveSmallIntegerField(choices=(
@@ -16,6 +25,9 @@ class User(AbstractUser):
 	REQUIRED_FIELDS = ['email', 'sexe',]
 
 class Etudiant(User):
+	"""
+	Étudiant inscrit dans l'établissement
+	"""
 	origine = models.ForeignKey(Etablissement,
 			blank=True, null=True,
 			verbose_name="Établissement d'origine",
@@ -36,6 +48,13 @@ class Etudiant(User):
 		unique_together = ['ine']
 
 class Professeur(User):
+	"""
+	Professeur intervenant dans l'établissement
+
+	Ce modèle peut servir à représenter aussi bien les professeurs
+	affectés à l'établissement que les intervenants extérieurs. Le
+	statut est précisé grâce au champ corps.
+	"""
 	CORPS_AUTRE = 0
 	CORPS_CERTIFIE = 1
 	CORPS_AGREGE = 2

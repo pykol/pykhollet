@@ -7,6 +7,9 @@ from django.utils.translation import ugettext_lazy as _
 import string
 
 class Academie(models.Model):
+	"""
+	Académie
+	"""
 	nom = models.CharField(max_length=100)
 	slug = models.SlugField()
 	departements = models.CharField(max_length=100, verbose_name="départements",
@@ -26,6 +29,9 @@ def validateur_lettre23(uai):
 		raise ValidationError(_("Le numéro %(uai)s comporte une erreur"), params={'uai':uai})
 
 class Etablissement(models.Model):
+	"""
+	Établissement d'enseignement
+	"""
 	#XXX sensibilité à la casse de la lettre code UAI
 	numero_uai = models.CharField(max_length=8, unique=True,
 			verbose_name="UAI", primary_key=True,

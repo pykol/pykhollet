@@ -1,4 +1,5 @@
 # -*- coding: utf-8
 
-from .conception import Semaine, Creneau, Roulement, RoulementLigne
-from .colles import Colle, ColleNote, ColleReleve
+from .conception import Semaine, Creneau, Trinome, Roulement, \
+		RoulementLigne, RoulementGraine
+from .colles import Colle, ColleDetails, ColleNote, ColleReleve

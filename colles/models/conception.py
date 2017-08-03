@@ -41,6 +41,11 @@ class Creneau(models.Model):
 	def __str__(self):
 		return "{} {:%H:%M}-{:%H:%M}".format(self.get_jour_display(), self.debut, self.fin)
 
+class Trinome(Groupe):
+	dans_classe = models.ForeignKey(Classe, verbose_name="classe",
+			on_delete=models.CASCADE, related_name='trinomes')
+	commentaire = models.TextField(blank=True)
+
 class Roulement(models.Model):
 	classe = models.ForeignKey(Classe, on_delete=models.CASCADE)
 	semaines = models.ManyToManyField(Semaine, blank=True)
@@ -57,4 +62,4 @@ class RoulementLigne(models.Model):
 			related_name="lignes")
 
 class RoulementGraine(models.Model):
-	groupes = models.ManyToManyField(Groupe)
+	trinomes = models.ManyToManyField(Trinome)

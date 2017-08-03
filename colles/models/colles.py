@@ -2,6 +2,7 @@
 from django.db import models
 
 from base.models.enseignement import Classe, Professeur, Matiere, Etudiant
+from base.notes import NoteField
 from .conception import Creneau
 
 # Liste des jours de la semaine, numérotation ISO
@@ -25,7 +26,7 @@ class Colle(models.Model):
 class ColleNote(models.Model):
 	colle = models.ForeignKey(Colle)
 	eleve = models.ForeignKey(Etudiant)
-	note = models.SmallIntegerField() #XXX
+	note = NoteField()
 	horaire = models.DateField()
 
 class ColleReleve(models.Model):

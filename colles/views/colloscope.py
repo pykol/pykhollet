@@ -17,6 +17,7 @@ def colloscope(request, slug):
 @login_required
 def trinomes(request, slug):
 	classe = get_object_or_404(Classe, slug=slug)
+	trinomes = classe.trinomes
 	return render(request, 'base.html')
 
 @login_required
@@ -27,4 +28,4 @@ def create_trinome(request, slug):
 
 
 from base.navigation import nav
-nav.register("Colloscope", "colloscope", icon="calendar")
+nav.register("Colloscope", "colloscope_home", icon="calendar")

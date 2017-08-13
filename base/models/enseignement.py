@@ -61,7 +61,11 @@ class Matiere(models.Model):
 		verbose_name_plural = "matières"
 
 	def __str__(self):
-		return self.nom
+		if self.parent:
+			return '{parent} - {current}'.format(parent=self.parent.nom,
+					current=self.nom)
+		else:
+			return self.nom
 
 class Groupe(models.Model):
 	"""

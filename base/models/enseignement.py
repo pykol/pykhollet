@@ -54,6 +54,7 @@ class Matiere(models.Model):
 	nom = models.CharField(max_length=100)
 	parent = models.ForeignKey('self', null=True, blank=True,
 			on_delete=models.SET_NULL)
+	virtuelle = models.BooleanField()
 
 	class Meta:
 		verbose_name = "matière"

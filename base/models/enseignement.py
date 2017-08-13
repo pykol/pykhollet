@@ -83,7 +83,8 @@ class Groupe(models.Model):
 	pour cela passer par le modèle qui a créé le groupe.
 	"""
 	nom = models.CharField(max_length=100)
-	annee = models.ForeignKey(Annee, on_delete=models.CASCADE)
+	annee = models.ForeignKey(Annee, on_delete=models.CASCADE,
+			verbose_name="année")
 	etudiants = models.ManyToManyField(Etudiant, blank=True,
 			verbose_name="étudiants")
 	slug = models.SlugField()

@@ -139,7 +139,8 @@ class Enseignement(models.Model):
 	:model:`base.Service`.
 	"""
 	matiere = models.ForeignKey(Matiere, on_delete=models.SET_NULL,
-			blank=True, null=True, verbose_name="matière")
+			blank=True, null=True, verbose_name="matière",
+			limit_choices_to={'virtuelle': False,})
 	groupe = models.ForeignKey('Groupe', on_delete=models.CASCADE)
 	option = models.BooleanField()
 	specialite = models.BooleanField(verbose_name="spécialité")

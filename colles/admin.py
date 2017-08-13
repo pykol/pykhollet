@@ -4,7 +4,7 @@ from __future__ import unicode_literals
 from django.contrib import admin
 
 from base.admin import admin_site
-from .models import Semaine, Creneau, Colle, Roulement, RoulementLigne
+from .models import Semaine, Creneau, Trinome, Roulement, RoulementLigne, Colle
 
 class SemaineAdmin(admin.ModelAdmin):
 	fields = ('classe', 'numero', 'debut', 'fin')
@@ -13,7 +13,15 @@ class SemaineAdmin(admin.ModelAdmin):
 admin_site.register(Semaine, SemaineAdmin)
 
 admin_site.register(Creneau)
-admin_site.register(Colle)
+
+class TrinomeInline(admin.TabularInline):
+	model = Trinome
+	extra = 3
+	fk_name = 'dans_classe'
+	fields = ('nom',)
+	show_change_link = True
+from base.admin import ClasseAdmin
+ClasseAdmin.inlines.append(TrinomeInline)
 
 class RoulementLigneInline(admin.TabularInline):
 	model = RoulementLigne
@@ -22,3 +30,5 @@ class RoulementLigneInline(admin.TabularInline):
 class RoulementAdmin(admin.ModelAdmin):
 	inlines = [RoulementLigneInline,]
 admin_site.register(Roulement, RoulementAdmin)
+
+admin_site.register(Colle)

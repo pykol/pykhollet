@@ -46,6 +46,10 @@ class Trinome(Groupe):
 			on_delete=models.CASCADE, related_name='trinomes')
 	commentaire = models.TextField(blank=True)
 
+	def save(self, *args, **kwargs):
+		self.annee = self.dans_classe.annee
+		super().save(*args, **kwargs)
+
 class Roulement(models.Model):
 	classe = models.ForeignKey(Classe, on_delete=models.CASCADE)
 	semaines = models.ManyToManyField(Semaine, blank=True)

@@ -24,6 +24,27 @@ class User(AbstractUser):
 
 	REQUIRED_FIELDS = ['email', 'sexe',]
 
+	def civilite(self, abrege=True):
+		if self.sexe == SEXE_HOMME:
+			if abrege:
+				return 'M.'
+			else:
+				return 'Monsieur'
+
+		if self.sexe == SEXE_FEMME:
+			if abrege:
+				return 'Mme'
+			else:
+				return 'Madame'
+
+	def __str__(self):
+		nom = '{last} {first}'.format(last=self.last_name.upper(),
+				first=self.first_name)
+		if nom.strip():
+			return nom
+		else:
+			return '({})'.format(self.username)
+
 class Etudiant(User):
 	"""
 	Étudiant inscrit dans l'établissement

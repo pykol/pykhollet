@@ -23,15 +23,15 @@ class Semaine(models.Model):
 				self.debut.month, self.fin.day, self.fin.month)
 
 class Creneau(models.Model):
+	classe = models.ForeignKey(Classe, on_delete=models.CASCADE)
 	jour = models.PositiveSmallIntegerField(choices=LISTE_JOURS)
-	debut = models.TimeField()
+	debut = models.TimeField(verbose_name="début")
 	fin = models.TimeField()
-	salle = models.CharField(max_length=30)
+	salle = models.CharField(max_length=30, blank=True)
 	colleur = models.ForeignKey(Professeur, blank=True, null=True,
 			on_delete=models.SET_NULL)
 	matiere = models.ForeignKey(Matiere, blank=True, null=True,
-			on_delete=models.SET_NULL)
-	classe = models.ForeignKey(Classe, on_delete=models.CASCADE)
+			on_delete=models.SET_NULL, verbose_name="matière")
 
 	class Meta:
 		ordering = ['jour', 'debut', 'matiere']

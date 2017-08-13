@@ -3,10 +3,12 @@ from __future__ import unicode_literals
 
 from django.utils.translation import gettext, gettext_lazy as _
 from django.contrib import admin
+from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.admin import UserAdmin
 
 from .models import User, Professeur, Etudiant
 from .models import Academie, Annee, Etablissement
-from .models import Matiere, Classe
+from .models import Matiere, Classe, Enseignement, Service
 
 class PykolAdminSite(admin.AdminSite):
 	site_header = 'Administration de pyKol'
@@ -17,8 +19,6 @@ def register(*models, **kwargs):
 	kwargs['site'] = admin_site
 	return admin.register(*models, **kwargs)
 
-from django.contrib.auth.admin import UserAdmin
-from django.contrib.auth.forms import UserCreationForm, UserChangeForm
 class PykolUserCreateForm(UserCreationForm):
 	class Meta:
 		model = User
@@ -101,4 +101,36 @@ class AcademieAdmin(ImportExportModelAdmin):
 	resource_class = AcademieResource
 
 admin_site.register(Matiere)
-admin_site.register(Classe)
+
+class ServiceInline(admin.TabularInline):
+	model = Service
+	extra = 0
+@register(Enseignement)
+class EnseignementAdmin(admin.ModelAdmin):
+	inlines = [ServiceInline,]
+
+class EnseignementInline(admin.TabularInline):
+	model = Enseignement
+	extra = 3
+	show_change_link = True
+
+class EtudiantInline(admin.TabularInline):
+	model = Etudiant
+	extra = 0
+	show_change_link = True
+	readonly_fields = ('__str__',)
+	fields = ('__str__', 'entree', 'sortie',)
+	fk_name = 'classe'
+	can_delete = False
+
+	def has_add_permission(self, request):
+		return False
+
+@register(Classe)
+class ClasseAdmin(admin.ModelAdmin):
+	fieldsets = (
+			(None, {
+				'fields': (('nom', 'niveau', 'annee'), 'slug', 'coordonnateur',),
+				}),
+			)
+	inlines = [EnseignementInline, EtudiantInline]

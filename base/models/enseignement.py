@@ -154,11 +154,9 @@ class Classe(Groupe):
 	l'emploi du temps avec la liste des matières dispensées (et les
 	enseignements correspondants), le colloscope, les conseils de classe.
 	"""
-	matieres = models.ManyToManyField(Matiere, through=Enseignement,
-			verbose_name="matières", blank=True)
+	enseignements = models.ManyToManyField(Enseignement, blank=True)
 	coordonnateur = models.ForeignKey(Professeur,
 			on_delete=models.SET_NULL, blank=True, null=True)
-	# enseignements = models.ManyToManyField('Enseignement', blank=True)
 
 	NIVEAU_PREMIERE_ANNEE = 1
 	NIVEAU_DEUXIEME_ANNEE = 2

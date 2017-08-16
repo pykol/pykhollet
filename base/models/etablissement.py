@@ -1,10 +1,8 @@
 # -*- coding:utf8 -*-
 from django.db import models
-from django.core.validators import RegexValidator, \
-		validate_comma_separated_integer_list
-from django.core.exceptions import ValidationError
-from django.utils.translation import ugettext_lazy as _
-import string
+from django.core.validators import validate_comma_separated_integer_list
+
+from base.uppercasecharfield import Lettre23Field
 
 class Academie(models.Model):
 	"""
@@ -22,20 +20,13 @@ class Academie(models.Model):
 	def __str__(self):
 		return self.nom
 
-def validateur_lettre23(uai):
-	code_lettre = int(uai[:-1]) % 23
-	alphabet = [l for l in string.ascii_lowercase if l not in ('i','o','q')]
-	if uai[-1].lower() != alphabet[code_lettre]:
-		raise ValidationError(_("Le numéro %(uai)s comporte une erreur"), params={'uai':uai})
-
 class Etablissement(models.Model):
 	"""
 	Établissement d'enseignement
 	"""
 	#XXX sensibilité à la casse de la lettre code UAI
-	numero_uai = models.CharField(max_length=8, unique=True,
-			verbose_name="UAI", primary_key=True,
-			validators=[RegexValidator(regex='\d{7,7}[a-zA-Z]', message="Un numéro UAI doit être constitué de sept chiffres suivis d'une lettre code"), validateur_lettre23])
+	numero_uai = Lettre23Field(length=8, unique=True,
+			verbose_name="UAI", primary_key=True)
 	appellation = models.CharField(max_length=100)
 	denomination = models.CharField(max_length=100)
 	adresse = models.TextField(

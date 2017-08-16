@@ -3,7 +3,8 @@ from django.db import models
 from django.contrib.auth.models import AbstractUser
 from django.core.validators import RegexValidator
 
-from .etablissement import Etablissement, validateur_lettre23
+from base.uppercasecharfield import Lettre23Field
+from .etablissement import Etablissement
 
 class User(AbstractUser):
 	"""
@@ -57,10 +58,7 @@ class Etudiant(User):
 	entree = models.DateField(null=True, blank=True,
 			verbose_name="entrée")
 	sortie = models.DateField(null=True, blank=True)
-	#XXX sensibilité à la casse de la lettre code INE
-	ine = models.CharField(max_length=11,
-			verbose_name="INE (numéro d'étudiant)",
-			validators=[RegexValidator(regex='\d{10,10}[a-zA-Z]', message="Un numéro INE doit être constitué de dix chiffres suivis d'une lettre code"), validateur_lettre23])
+	ine = Lettre23Field(length=11, verbose_name="INE (numéro d'étudiant)")
 	options = models.ManyToManyField('Matiere', blank=True)
 
 	class Meta:

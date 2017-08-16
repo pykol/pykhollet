@@ -2,7 +2,7 @@
 
 from django.test import TestCase
 from django.core.exceptions import ValidationError
-from .models.etablissement import validateur_lettre23
+from base.uppercasecharfield import validateur_lettre23
 
 class ValidationUaiTests(TestCase):
 	def test_lettre_code_correcte_1(self):

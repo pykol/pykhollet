@@ -3,16 +3,20 @@ from __future__ import unicode_literals
 
 from django.contrib import admin
 
-from base.admin import admin_site
-from .models import Semaine, Creneau, Trinome, Roulement, RoulementLigne, Colle
+from base.admin import register, admin_site
+from .models import Semaine, Creneau, Trinome, Roulement, \
+		RoulementLigne, Colle, ColleDetails
 
+@register(Semaine)
 class SemaineAdmin(admin.ModelAdmin):
 	fields = ('classe', 'numero', 'debut', 'fin')
 	list_display = ['__str__', 'classe']
 	list_filter = ('classe',)
-admin_site.register(Semaine, SemaineAdmin)
 
-admin_site.register(Creneau)
+@register(Creneau)
+class CreneauAdmin(admin.ModelAdmin):
+	list_display = ['__str__', 'classe', 'matiere', 'colleur']
+	list_filter = ('classe', 'colleur')
 
 class TrinomeInline(admin.TabularInline):
 	model = Trinome
@@ -27,8 +31,14 @@ class RoulementLigneInline(admin.TabularInline):
 	model = RoulementLigne
 	extra = 3
 
+@register(Roulement)
 class RoulementAdmin(admin.ModelAdmin):
 	inlines = [RoulementLigneInline,]
-admin_site.register(Roulement, RoulementAdmin)
 
-admin_site.register(Colle)
+class ColleDetailsInline(admin.TabularInline):
+	model = ColleDetails
+	extra = 0
+
+@register(Colle)
+class ColleAdmin(admin.ModelAdmin):
+	inlines = [ColleDetailsInline,]

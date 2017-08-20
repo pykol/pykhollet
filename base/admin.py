@@ -1,9 +1,11 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
+from django import forms
 from django.utils.translation import gettext, gettext_lazy as _
+from django.utils.text import capfirst
 from django.contrib import admin
-from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth import get_user_model
 from django.contrib.auth.admin import UserAdmin
 
 from .models import User, Professeur, Etudiant
@@ -19,14 +21,14 @@ def register(*models, **kwargs):
 	kwargs['site'] = admin_site
 	return admin.register(*models, **kwargs)
 
-class PykolUserCreateForm(UserCreationForm):
+class PykolUserCreationForm(forms.ModelForm):
 	class Meta:
 		model = User
 		fields = ('username', 'sexe', 'email',)
 
 @register(User)
 class PykolUserAdmin(UserAdmin):
-	add_form = PykolUserCreateForm
+	add_form = PykolUserCreationForm
 	add_fieldsets = ((None, {
 			'classes': ('wide',),
 			'fields': ('username', 'password1', 'password2', 'sexe', 'email'),
@@ -39,17 +41,41 @@ class PykolUserAdmin(UserAdmin):
 		(_('Important dates'), {'fields': ('last_login', 'date_joined')}),
 		)
 
-class ProfesseurCreateForm(PykolUserCreateForm):
+class ProfesseurCreationForm(PykolUserCreationForm):
+	username = forms.CharField(required=False)
+
+	def __init__(self, *args, **kwargs):
+		super(ProfesseurCreationForm, self).__init__(*args, **kwargs)
+		UserModel = get_user_model()
+		self.username_field = UserModel._meta.get_field(UserModel.USERNAME_FIELD)
+		if self.fields['username'].label is None:
+			self.fields['username'].label = capfirst(self.username_field.verbose_name)
+
 	class Meta:
 		model = Professeur
 		fields = ('username', 'sexe', 'email', 'corps', 'etablissement')
 
+	def clean(self):
+		cleaned_data = super(ProfesseurCreationForm, self).clean()
+		if not cleaned_data.get('username'):
+			cleaned_data['username'] = \
+			(cleaned_data.get('first_name')[0] +
+			cleaned_data.get('last_name')).lower()
+
+	def save(self, commit=True):
+		user = super(ProfesseurCreationForm, self).save(commit=False)
+		user.set_unusable_password()
+		if commit:
+			user.save()
+		return user
+
+
 @register(Professeur)
 class ProfesseurAdmin(PykolUserAdmin):
-	add_form = ProfesseurCreateForm
+	add_form = ProfesseurCreationForm
 	add_fieldsets = ((None, {
 			'classes': ('wide',),
-			'fields': ('username', 'password1', 'password2', 'sexe',
+			'fields': ('username', 'last_name', 'first_name', 'sexe',
 				'email', 'corps', 'etablissement'),
 			}),)
 	fieldsets = (
@@ -61,14 +87,14 @@ class ProfesseurAdmin(PykolUserAdmin):
 		(_('Important dates'), {'fields': ('last_login', 'date_joined')}),
 		)
 
-class EtudiantCreateForm(PykolUserCreateForm):
+class EtudiantCreationForm(PykolUserCreationForm):
 	class Meta:
 		model = Etudiant
 		fields = ('username', 'sexe', 'email', 'ine', 'classe')
 
 @register(Etudiant)
 class EtudiantAdmin(PykolUserAdmin):
-	add_form = EtudiantCreateForm
+	add_form = EtudiantCreationForm
 	add_fieldsets = ((None, {
 			'classes': ('wide',),
 			'fields': ('username', 'password1', 'password2', 'sexe',

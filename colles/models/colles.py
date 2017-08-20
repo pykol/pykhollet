@@ -11,14 +11,18 @@ LISTE_JOURS = enumerate(["lundi", "mardi", "mercredi", "jeudi",
 
 class Colle(models.Model):
 	creneau = models.ForeignKey(Creneau, blank=True, null=True,
-			on_delete=models.SET_NULL)
+			on_delete=models.SET_NULL, verbose_name="créneau")
 	classe = models.ForeignKey(Classe, on_delete=models.CASCADE)
 
 	ETATS = enumerate([
 		"Prévue", "Notation en attente", "Notée", "Relevée", "Annulée"
 		])
 	etat = models.PositiveSmallIntegerField(verbose_name="état",
-			choices=ETATS)
+			choices=ETATS, default=0)
+	matiere = models.ForeignKey(Matiere, blank=True, null=True,
+			on_delete=models.SET_NULL, verbose_name="matière")
+	groupe = models.ForeignKey(Groupe, blank=True, null=True,
+			on_delete=models.SET_NULL, related_name='+')
 
 class ColleDetails(models.Model):
 	colle = models.ForeignKey(Colle, on_delete=models.CASCADE)
@@ -26,11 +30,8 @@ class ColleDetails(models.Model):
 	salle = models.CharField(max_length=30)
 	colleur = models.ForeignKey(Professeur, blank=True, null=True,
 			on_delete=models.SET_NULL)
-	matiere = models.ForeignKey(Matiere, blank=True, null=True,
-			on_delete=models.SET_NULL)
-	groupe = models.ForeignKey(Groupe, blank=True, null=True,
-			on_delete=models.SET_NULL)
-	eleves = models.ManyToManyField(Etudiant, blank=True)
+	eleves = models.ManyToManyField(Etudiant, blank=True,
+			verbose_name="élèves")
 	actif = models.BooleanField()
 
 class ColleNote(models.Model):

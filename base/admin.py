@@ -92,6 +92,14 @@ class EtudiantCreationForm(PykolUserCreationForm):
 		model = Etudiant
 		fields = ('username', 'sexe', 'email', 'ine', 'classe')
 
+	def save(self, commit=True):
+		user = super(EtudiantCreationForm, self).save(commit=False)
+		user.set_unusable_password()
+		if commit:
+			user.save()
+		return user
+
+
 @register(Etudiant)
 class EtudiantAdmin(PykolUserAdmin):
 	add_form = EtudiantCreationForm

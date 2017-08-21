@@ -25,26 +25,21 @@ class Lettre23Field(UppercaseCharField):
 	description = "Numéro suivi d'une lettre de contrôle"
 
 	def __init__(self, *args, **kwargs):
-		regex = "\d{{{0},{0}}}[a-zA-Z]".format(kwargs['length'] - 1)
 		self.length = kwargs['length']
-		kwargs['max_length'] = kwargs['length']
-		kwargs.setdefault('validators', [])
-		kwargs['validators'].append(RegexValidator(regex=regex,
-			message="Le code doit être constitué de {} chiffres suivis d'une lettre code".format(kwargs['length'] - 1)))
-		kwargs['validators'].append(validateur_lettre23)
 		del kwargs['length']
+		kwargs['max_length'] = self.length
+
 		super(Lettre23Field, self).__init__(*args, **kwargs)
+
+		regex = "\d{{{0},{0}}}[a-zA-Z]".format(self.length - 1)
+		self.validators.append(RegexValidator(regex=regex,
+			message="Le code doit être constitué de {} chiffres suivis d'une lettre code".format(self.length - 1)))
+		self.validators.append(validateur_lettre23)
 
 	def deconstruct(self):
 		name, path, args, kwargs = super(Lettre23Field, self).deconstruct()
 
 		kwargs['length'] = self.length
 		del kwargs['max_length']
-
-		try:
-			kwargs['validators'].remove(validateur_lettre23)
-			#XXX retirer RegexValidator
-		except ValueError:
-			pass
 
 		return name, path, args, kwargs

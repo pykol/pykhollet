@@ -32,7 +32,11 @@ class ColleDetails(models.Model):
 			on_delete=models.SET_NULL)
 	eleves = models.ManyToManyField(Etudiant, blank=True,
 			verbose_name="élèves")
-	actif = models.BooleanField()
+	actif = models.BooleanField(default=True)
+
+	class Meta:
+		verbose_name = "détails de la colle"
+		verbose_name_plural = "détails de la colle"
 
 class ColleNote(models.Model):
 	colle = models.ForeignKey(Colle, on_delete=models.CASCADE)
@@ -40,5 +44,13 @@ class ColleNote(models.Model):
 	note = NoteField()
 	horaire = models.DateTimeField()
 
+	class Meta:
+		verbose_name = "note de colle"
+		verbose_name_plural = "notes de colle"
+
 class ColleReleve(models.Model):
 	colles = models.ManyToManyField(Colle, blank=True)
+
+	class Meta:
+		verbose_name = "relevé des colles"
+		verbose_name_plural = "relevés des colles"

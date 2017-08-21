@@ -13,6 +13,19 @@ header {
   color: $header-color;
   background: $header-background;
   text-shadow: 1px 1px 1px $header-shadow;
+  display: flex;
+
+  h1 {
+    flex: 1 0;
+  }
+}
+
+#header-nav {
+  margin: 10px 0;
+
+  li i.fa:last-child {
+    text-align: center;
+  }
 }
 
 .main {
@@ -58,9 +71,6 @@ header {
         text-decoration: none;
       }
 
-      i {
-        width: 1.25em;
-      }
     }
   }
 }

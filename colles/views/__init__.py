@@ -2,3 +2,4 @@
 
 from .colloscope import colloscope_home, colloscope
 from .colloscope import trinomes, create_trinome
+from .colloscope import semaines

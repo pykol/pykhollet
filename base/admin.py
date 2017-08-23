@@ -9,7 +9,7 @@ from django.contrib.auth import get_user_model
 from django.contrib.auth.admin import UserAdmin
 
 from .models import User, Professeur, Etudiant
-from .models import Academie, Annee, Etablissement
+from .models import Academie, Annee, Vacances, Etablissement
 from .models import Matiere, Classe, Enseignement, Service
 
 class PykolAdminSite(admin.AdminSite):
@@ -120,8 +120,12 @@ class EtudiantAdmin(PykolUserAdmin):
 		)
 
 admin_site.register(Etablissement)
-admin_site.register(Annee)
 
+class VacancesInline(admin.TabularInline):
+	model = Vacances
+@register(Annee)
+class AnneeAdmin(admin.ModelAdmin):
+	inlines = [VacancesInline,]
 
 from import_export import resources
 from import_export.admin import ImportExportModelAdmin

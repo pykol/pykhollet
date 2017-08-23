@@ -1,30 +1,8 @@
 # -*- coding:utf8 -*-
 from django.db import models
 
+from .annee import Annee
 from .utilisateurs import Professeur, Etudiant
-
-class Annee(models.Model):
-	"""
-	Année scolaire
-
-	La plupart des données (groupes, classes, etc.) sont rattachées à
-	une année scolaire. Ceci permet notamment de n'afficher que les
-	données pertinentes à l'année en cours tout en conservant des
-	archives des années précédentes. Ces archives peuvent être
-	supprimées simplement en cascade suite à la suppression de l'année
-	scolaire de la base de données.
-	"""
-	nom = models.CharField(max_length=100)
-	debut = models.DateField(verbose_name="début")
-	fin = models.DateField()
-
-	class Meta:
-		ordering = ['debut']
-		verbose_name = 'année scolaire'
-		verbose_name_plural = 'années scolaires'
-
-	def __str__(self):
-		return self.nom
 
 class Matiere(models.Model):
 	"""

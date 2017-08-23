@@ -2,5 +2,6 @@
 
 from .etablissement import Academie, Etablissement
 from .utilisateurs import User, Etudiant, Professeur
-from .enseignement import Annee, Matiere, Groupe, Service, \
+from .annee import Periode, Annee, Vacances
+from .enseignement import Matiere, Groupe, Service, \
 		Enseignement, Classe

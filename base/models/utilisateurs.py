@@ -1,4 +1,7 @@
 # -*- coding:utf8 -*-
+
+import re
+
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 from django.core.validators import RegexValidator
@@ -45,6 +48,11 @@ class User(AbstractUser):
 			return nom
 		else:
 			return '({})'.format(self.username)
+
+	def short_display_name(self):
+		return '{initials} {last_name}'.format(
+				initials=re.sub(r'(\w)\w*', r'\1.', self.first_name),
+				last_name=self.last_name.upper())
 
 class Etudiant(User):
 	"""

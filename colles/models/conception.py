@@ -56,9 +56,17 @@ class Roulement(models.Model):
 	semaines = models.ManyToManyField(Semaine, blank=True)
 
 	def clean(self):
-		for semaine_classe in self.semaines.classe:
-			if semaine_classe != self.classe:
-				raise ValidationError() #XXX
+		errors = []
+		for semaine in self.semaines:
+			if semaine.classe != self.classe:
+				errors.append(ValidationError("Vous ne pouvez pas "
+				"sélectionner la semaine %(semaine)s car elle "
+				"n'appartient pas à la classe %(classe)s.",
+				code='invalid',
+				params={'semaine': semaine,
+					'classe': self.classe,}))
+		if len(errors) > 0:
+			raise ValidationError({'semaines': errors})
 
 class RoulementLigne(models.Model):
 	ordre = models.PositiveSmallIntegerField()

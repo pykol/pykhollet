@@ -3,7 +3,8 @@ from django.db import models
 from django.db.models import Q, F
 from django.core.exceptions import ValidationError
 
-from base.models import Classe, Professeur, Matiere, Groupe
+from base.models import Classe, Professeur, Matiere, Groupe, \
+		Enseignement
 
 # Liste des jours de la semaine, numérotation ISO
 LISTE_JOURS = enumerate(["lundi", "mardi", "mercredi", "jeudi",
@@ -67,3 +68,40 @@ class RoulementLigne(models.Model):
 
 class RoulementGraine(models.Model):
 	trinomes = models.ManyToManyField(Trinome)
+
+class CollesParMatiere(models.Model):
+	enseignement = models.ForeignKey(Enseignement, on_delete=models.CASCADE)
+	reglages = models.ForeignKey('CollesReglages',
+			on_delete=models.CASCADE)
+	duree = models.PositiveSmallIntegerField(verbose_name="durée hebdomadaire")
+
+class CollesReglages(models.Model):
+	classe = models.OneToOneField(Classe, on_delete=models.CASCADE)
+	numeros_auto = models.BooleanField(default=False)
+	numeros_format = models.CharField(max_length=100, blank=True)
+	durees = models.ManyToManyField(Enseignement, through=CollesParMatiere)
+
+	def clean(self):
+		errors = {}
+
+		if self.numeros_auto and not self.numeros_format:
+			errors['numero_format'] = ValidationError("Le format de "
+					"numérotation est obligatoire.", code='required')
+
+		durees_errors = []
+		for enseignement in self.durees.enseignement:
+			if enseignement not in self.classe.enseignements:
+				durees_errors.append(ValidationError("Vous ne pouvez "
+					"pas sélectionner l'enseignement %(enseignement)s "
+					"car il n'appartient pas à la classe %(classe)s.",
+					code='invalid',
+					params={'enseignement': enseignement,
+						'classe': self.classe}))
+		if len(duree_errors) > 0:
+			errors['durees'] = ValidationError(durees_errors)
+
+		if len(errors) > 0:
+			raise ValidationError(errors)
+
+	class Meta:
+		unique_together = ('classe',)

@@ -4,7 +4,7 @@
 <form action="" method="post">
   {% csrf_token %}
   {{ formset.management_form }}
-  {{ formset.errors }}
+  {{ formset.non_form_errors }}
   <table>
     <tr>
       <th>Début</th>
@@ -13,13 +13,24 @@
       <th>Numéro</th>
     </tr>
     {% for form in formset %}
+    {% if form.errors %}
+    <tr>
+      <td colspan="4">
+      {{ form.errors.values | unordered_list }}
+      </td>
+    </tr>
+    {% endif %}
     <tr>
       <td>{{ form.debut }}</td>
       <td>{{ form.fin }}</td>
       <td>{{ form.est_colle }}</td>
-      <td>{{ form.numero }}</td>
+      <td>{{ form.numero }}{{ form.semaine }}</td>
     </tr>
     {% endfor %}
+  </table>
+
+  <table>
+  {{ genform.as_table }}
   </table>
   <input type="submit">
 </form>

@@ -3,37 +3,60 @@
   padding: 6px 12px;
   margin-bottom: 0;
   font-size: 14px;
-  font-weight: 500;
-  line-height: 20px;
+  font-weight: 400;
   white-space: nowrap;
   vertical-align: middle;
   cursor: pointer;
   border: 1px solid #a7a9aa;
+  border-radius: 3px;
   color: white;
   background-color: #a7a9aa;
+  text-align: center;
 
   &:hover, &:focus, &:active {
-    color: white;
+    color: #333;
     text-decoration: none;
-    background-color: #9a9c9d;
-    border-color: #8d9091;
+    background-color: #e6e6e6;
+    border-color: #adadad;
   }
 }
 
 @mixin button-primary {
   @include button;
-  background-color: #2d89ef;
-  border-color: #2d89ef;
+  color: white;
+  background-color: #26B99A;
+  border-color: #169F85;
 
   &:hover, &:focus, &:active {
-    background-color: #357ebd;
-    border-color: #3071a9;
+    color: white;
+    background-color: #169F85;
+    border-color: #398439;
   }
+}
+
+label {
+  font-weight: 700;
+}
+
+input {
+  display: block;
+  height: 34px;
+  width: 100%;
+  padding: 6px 12px;
+  font-size: 14px;
+  line-height: 1.42857143;
+  color: $input-text-color;
+  background-color: $input-text-background;
+  border: 1px solid #ccc;
+  border-radius: 0;
+  box-shadow: inset 0 1px 1px rgba(0,0,0,.075)
+}
+
+input[type="submit"] {
+  @include button-primary;
+  width: auto;
 }
 
 form {
-  input[type="submit"] {
-    @include button-primary;
-  }
+  @include x-panel;
 }
-

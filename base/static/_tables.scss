@@ -1,0 +1,41 @@
+table {
+  width: 100%;
+  table-layout: fixed;
+  border-collapse: collapse;
+  margin-bottom: 20px;
+  border-spacing: 0;
+}
+
+th, td {
+  text-align: left;
+}
+
+th {
+  font-weight: bold;
+}
+
+tbody > tr > td,
+tbody > tr > th,
+tfoot > tr > td,
+tfoot > tr > th,
+thead > tr > td,
+thead > tr > th {
+  padding: 8px;
+  line-height: 1.42857143;
+  vertical-align: top;
+  border-top: 1px solid #ddd;
+}
+
+caption + thead > tr:first-child > td,
+caption + thead > tr:first-child > th,
+colgroup + thead > tr:first-child > td,
+colgroup + thead > tr:first-child > th,
+thead:first-child > tr:first-child > td,
+thead:first-child > tr:first-child > th {
+  border-top: 0;
+}
+
+thead > tr > th {
+  vertical-align: top;
+  border-bottom: 2px solid #ddd;
+}

@@ -1,17 +1,38 @@
-@import "fonts/open-sans.css";
-
 body {
-  font-family: 'Open Sans', sans-serif;
-  font-weight: 400;
+  font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
   font-size: 14px;
+  line-height: 1.42857143;
   color: black;
 }
 
 h1, h2, h3, h4, h5, h6 {
   margin: 10px 0;
-  font-weight: bold;
+  font-weight: 500;
+  line-height: 1.1;
   text-rendering: optimizelegibility;
+
+  small {
+    font-size: 65%;
+    color: $title-small-color;
+  }
 }
+
+h1 {
+ font-size: 22px;
+ color: white;
+
+  a:link, a:hover, a:visited {
+    text-decoration: none;
+    color: inherit;
+  }
+}
+
+//h1 { font-size: ;}
+h2 { font-size: 24px;}
+h3 { font-size: 18px;}
+//h4 { font-size: ;}
+//h5 { font-size: ;}
+//h6 { font-size: ;}
 
 i.#{$fa-css-prefix} {
   width: 1.25em;

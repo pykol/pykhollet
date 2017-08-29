@@ -2,28 +2,26 @@
 {% load navigation %}
 {% block body %}
 <header>
-  <h1>{% block h1 %}pyKol{% endblock %}</h1>
-
-  <ul id="header-nav">
-    <li><i class="fa fa-user"></i>{{ user }}<i class="fa fa-caret-down"></i></li>
-  </ul>
-</header>
-
-<div class="main">
-
-  <div class="wrapper">
-    <div id="ariane">
-    </div>
-    <div id="content">
-      {% block content %}{% endblock %}
-    </div>
-  </div>
+  <h1>
+    <a href="{% url 'home' %}">
+      <i class="fa fa-graduation-cap"></i>
+      {% block h1 %}pyKol{% endblock %}
+    </a>
+  </h1>
 
   {% show_navigation %}
-</div>
+</header>
 
-<footer>
-  {% block footer %}{% endblock%}
-  pyKol
-</footer>
+<div id="main">
+
+  <div id="content">
+    {% block content %}{% endblock %}
+  </div>
+
+  <footer>
+    {% block footer %}{% endblock%}
+    pyKol
+  </footer>
+
+</div>
 {% endblock body %}

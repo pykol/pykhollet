@@ -1,6 +1,9 @@
 {% extends "base.html" %}
 {% block content %}
-<h2>Semaines de colles en {{ classe }}</h2>
+<h2>
+  Semaines de colles
+  <small>{{ classe }} − {{ classe.annee }}</small>
+</h2>
 <form action="" method="post">
   {% csrf_token %}
   {{ formset.management_form }}

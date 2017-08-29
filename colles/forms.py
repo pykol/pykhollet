@@ -3,7 +3,7 @@
 from django import forms
 from django.forms import formset_factory
 
-from colles.models import Semaine
+from colles.models import Semaine, CollesReglages
 
 class SemaineForm(forms.Form):
 	debut = forms.DateField(label="début")
@@ -28,8 +28,7 @@ class SemaineForm(forms.Form):
 
 SemaineFormSet = formset_factory(SemaineForm, extra=0)
 
-class SemaineNumeroGenerateurForm(forms.Form):
-	actif = forms.BooleanField(label="générer automatiquement les "
-			"numéros de semaines", required=False)
-	format = forms.CharField(label="format", required=False,
-			initial="{numero}")
+class SemaineNumeroGenerateurForm(forms.ModelForm):
+	class Meta:
+		model = CollesReglages
+		fields = ('numeros_auto', 'numeros_format',)

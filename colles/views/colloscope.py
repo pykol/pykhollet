@@ -7,7 +7,7 @@ from django.contrib.auth.decorators import login_required
 from django.db import transaction
 
 from base.models import Classe
-from colles.models import Semaine
+from colles.models import Semaine, CollesReglages
 from colles.forms import SemaineFormSet, SemaineNumeroGenerateurForm
 
 @login_required
@@ -41,14 +41,25 @@ def create_trinome(request, slug):
 def semaines(request, slug):
 	classe = get_object_or_404(Classe, slug=slug)
 
+	try:
+		colles_reglages = CollesReglages.objects.get(classe=classe)
+	except CollesReglages.DoesNotExist:
+		colles_reglages = CollesReglages(classe=classe)
+		colles_reglages.save()
+
 	formset_prefix = "semaines"
 
 	if request.method == 'POST':
-		formset = SemaineFormSet(request.POST, prefix=formset_prefix)
-		genform = SemaineNumeroGenerateurForm(request.POST, prefix="gen")
+		formset = SemaineFormSet(request.POST, prefix=formset_prefix,
+					form_kwargs={'classe': classe})
+		genform = SemaineNumeroGenerateurForm(request.POST,
+				instance=colles_reglages, prefix="gen")
+
 		formset_data = formset.data.copy()
 
-		if genform.is_valid() and genform.cleaned_data['actif']:
+		genform.save()
+
+		if genform.is_valid() and genform.cleaned_data['numeros_auto']:
 			formset.full_clean()
 
 			id_colle = 0
@@ -60,7 +71,7 @@ def semaines(request, slug):
 
 				if form.cleaned_data['est_colle']:
 					formset_data['semaines-{}-numero'.format(id_semaine)] = \
-							genform.cleaned_data['format'].format(
+							genform.cleaned_data['numeros_format'].format(
 							numero=id_colle + 1,
 							quinzaine=id_colle // 2 + 1,
 							parite=(id_colle + 1) % 2,
@@ -73,7 +84,9 @@ def semaines(request, slug):
 				field_name = '{}-{}'.format(formset_prefix, field)
 				formset_data[field_name] = formset.data[field_name]
 
-			formset = SemaineFormSet(formset_data, prefix=formset_prefix)
+			formset = SemaineFormSet(formset_data,
+					prefix=formset_prefix,
+					form_kwargs={'classe': classe})
 
 		if formset.is_valid():
 			with transaction.atomic():
@@ -131,8 +144,11 @@ def semaines(request, slug):
 					})
 			lundi += timedelta(days=7)
 		formset = SemaineFormSet(initial=toutes_semaines,
-				prefix=formset_prefix)
-		genform = SemaineNumeroGenerateurForm(prefix="gen")
+				prefix=formset_prefix,
+				form_kwargs={'classe': classe})
+		genform = SemaineNumeroGenerateurForm(
+				instance=colles_reglages,
+				prefix="gen")
 
 	return render(request, 'semaines.html',
 			context={

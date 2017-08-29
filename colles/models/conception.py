@@ -85,8 +85,10 @@ class CollesParMatiere(models.Model):
 
 class CollesReglages(models.Model):
 	classe = models.OneToOneField(Classe, on_delete=models.CASCADE)
-	numeros_auto = models.BooleanField(default=False)
-	numeros_format = models.CharField(max_length=100, blank=True)
+	numeros_auto = models.BooleanField(default=False,
+			verbose_name="numérotation automatique")
+	numeros_format = models.CharField(max_length=100, blank=True,
+			default="{numero}", verbose_name="format des numéros")
 	durees = models.ManyToManyField(Enseignement, through=CollesParMatiere)
 
 	def clean(self):

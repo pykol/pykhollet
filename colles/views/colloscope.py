@@ -17,7 +17,14 @@ def colloscope_home(request):
 @login_required
 def colloscope(request, slug):
 	classe = get_object_or_404(Classe, slug=slug)
-	return render(request, 'base.html')
+	semaines = classe.semaine_set.order_by('debut')
+	creneaux = classe.creneau_set.order_by('matiere', 'jour', 'debut')
+	return render(request, 'colloscope.html',
+			context={
+				'classe': classe,
+				'semaines': semaines,
+				'creneaux' : creneaux,
+				})
 
 @login_required
 def trinomes(request, slug):

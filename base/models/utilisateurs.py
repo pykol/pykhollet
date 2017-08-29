@@ -74,10 +74,10 @@ class Etudiant(User):
 		verbose_name_plural = "étudiants"
 		unique_together = ['ine']
 
-	def save(self, *args, **kwargs):
+	def clean(self):
+		super().clean()
 		if not self.entree:
 			self.entree = self.classe.annee.debut
-		super().save(*args, **kwargs)
 
 class Professeur(User):
 	"""

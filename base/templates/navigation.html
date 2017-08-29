@@ -2,9 +2,22 @@
 <nav>
   <ul>
   {% for item in navigation %}
-    <li><a href="{% url item.url %}">
+    <li>
+      <a href="{% url item.url %}">
         <i class="fa fa-{{ item.icon }}"></i>{{ item.label }}
-      </a></li>
+      </a>
+      {% if item.has_children %}
+      <ul>
+        {% for child_item in item %}
+        <li>
+          <a href="{% url child_item.url %}">
+            <i class="fa fa-{{ child_item.icon }}"></i>{{ child_item.label }}
+          </a>
+        </li>
+        {% endfor %}
+      </ul>
+      {% endif %}
+    </li>
   {% endfor %}
   </ul>
 </nav>

@@ -142,4 +142,5 @@ def semaines(request, slug):
 				})
 
 from base.navigation import nav
-nav.register("Colloscope", "colloscope_home", icon="calendar")
+nav.register("Colloscope", "colloscope_home", icon="calendar",
+		name="colloscope")

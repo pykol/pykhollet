@@ -55,18 +55,18 @@ class Roulement(models.Model):
 	classe = models.ForeignKey(Classe, on_delete=models.CASCADE)
 	semaines = models.ManyToManyField(Semaine, blank=True)
 
-	def clean(self):
-		errors = []
-		for semaine in self.semaines:
-			if semaine.classe != self.classe:
-				errors.append(ValidationError("Vous ne pouvez pas "
-				"sélectionner la semaine %(semaine)s car elle "
-				"n'appartient pas à la classe %(classe)s.",
-				code='invalid',
-				params={'semaine': semaine,
-					'classe': self.classe,}))
-		if len(errors) > 0:
-			raise ValidationError({'semaines': errors})
+	#def clean(self):
+	#	errors = []
+	#	for semaine in self.semaines:
+	#		if semaine.classe != self.classe:
+	#			errors.append(ValidationError("Vous ne pouvez pas "
+	#			"sélectionner la semaine %(semaine)s car elle "
+	#			"n'appartient pas à la classe %(classe)s.",
+	#			code='invalid',
+	#			params={'semaine': semaine,
+	#				'classe': self.classe,}))
+	#	if len(errors) > 0:
+	#		raise ValidationError({'semaines': errors})
 
 class RoulementLigne(models.Model):
 	ordre = models.PositiveSmallIntegerField()
@@ -96,17 +96,17 @@ class CollesReglages(models.Model):
 			errors['numero_format'] = ValidationError("Le format de "
 					"numérotation est obligatoire.", code='required')
 
-		durees_errors = []
-		for enseignement in self.durees.enseignement:
-			if enseignement not in self.classe.enseignements:
-				durees_errors.append(ValidationError("Vous ne pouvez "
-					"pas sélectionner l'enseignement %(enseignement)s "
-					"car il n'appartient pas à la classe %(classe)s.",
-					code='invalid',
-					params={'enseignement': enseignement,
-						'classe': self.classe}))
-		if len(duree_errors) > 0:
-			errors['durees'] = ValidationError(durees_errors)
+		#durees_errors = []
+		#for enseignement in self.durees.enseignement:
+		#	if enseignement not in self.classe.enseignements:
+		#		durees_errors.append(ValidationError("Vous ne pouvez "
+		#			"pas sélectionner l'enseignement %(enseignement)s "
+		#			"car il n'appartient pas à la classe %(classe)s.",
+		#			code='invalid',
+		#			params={'enseignement': enseignement,
+		#				'classe': self.classe}))
+		#if len(duree_errors) > 0:
+		#	errors['durees'] = ValidationError(durees_errors)
 
 		if len(errors) > 0:
 			raise ValidationError(errors)

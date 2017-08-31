@@ -148,7 +148,7 @@ class EnseignementAdmin(admin.ModelAdmin):
 	inlines = [ServiceInline,]
 
 class EnseignementInline(admin.TabularInline):
-	model = Enseignement
+	model = Classe.enseignements.through
 	extra = 3
 	show_change_link = True
 

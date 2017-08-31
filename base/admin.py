@@ -10,7 +10,7 @@ from django.contrib.auth.admin import UserAdmin
 
 from .models import User, Professeur, Etudiant
 from .models import Academie, Annee, Vacances, Etablissement
-from .models import Matiere, Classe, Enseignement, Service
+from .models import Matiere, Classe, Enseignement, Service, Groupe
 
 class PykolAdminSite(admin.AdminSite):
 	site_header = 'Administration de pyKol'
@@ -163,6 +163,8 @@ class EtudiantInline(admin.TabularInline):
 
 	def has_add_permission(self, request):
 		return False
+
+admin_site.register(Groupe)
 
 @register(Classe)
 class ClasseAdmin(admin.ModelAdmin):

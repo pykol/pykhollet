@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load colloscope %}
 {% block content %}
 <h2>
   Colloscope
@@ -14,7 +15,7 @@
       <th rowspan="2">Heure</th>
       <th rowspan="2">Salle</th>
       {% for semaine in semaines %}
-      <th>{{ semaine.numero }}</th>
+      <th class="numero_semaine">{{ semaine.numero }}</th>
       {% endfor %}
     </tr>
   
@@ -33,7 +34,7 @@
       <th>{% ifchanged creneau.matiere %}{{ creneau.matiere }}{% endifchanged %}</th>
       <th>{{ creneau.colleur.short_display_name }}</th>
       <th>{{ creneau.get_jour_display }}</th>
-      <th>{{ creneau.debut }} − {{ creneau.fin }}</th>
+      <th>{{ creneau.debut | heure_pour_colloscope }}−{{ creneau.fin | heure_pour_colloscope}}</th>
       <th>{{ creneau.salle }}</th>
     </tr>
     {% endfor %}

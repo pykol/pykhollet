@@ -1,4 +1,7 @@
 # -*- coding:utf8 -*-
+
+import datetime
+
 from django.db import models
 
 class Periode(models.Model):
@@ -17,6 +20,19 @@ class Periode(models.Model):
 	def contains(self, date):
 		return self.debut <= date <= self.fin
 
+class AnneeActuelleManager(models.Manager):
+	"""
+	Gestionnaire de l'année actuelle
+
+	Ce gestionnaire ne renvoie qu'une seule année, l'année actuelle
+	trouvée en fonction de la date du jour.
+	"""
+	def get_queryset(self):
+		today = datetime.date.today()
+
+		return super(AnneeActuelleManager,
+				self).get_queryset().filter(fin__gte=today).order_by('debut')[:1]
+
 class Annee(Periode):
 	"""
 	Année scolaire
@@ -31,6 +47,9 @@ class Annee(Periode):
 	nom = models.CharField(max_length=100)
 	debut = models.DateField(verbose_name="début")
 	fin = models.DateField()
+
+	objects = models.Manager()
+	actuelle = AnneeActuelleManager()
 
 	class Meta:
 		ordering = ['debut']

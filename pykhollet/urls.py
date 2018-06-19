@@ -13,11 +13,11 @@ Including another URLconf
     1. Import the include() function: from django.conf.urls import url, include
     2. Add a URL to urlpatterns:  url(r'^blog/', include('blog.urls'))
 """
-from django.conf.urls import url, include
+from django.urls import path, include
 
 from pykol.admin import admin_site
 
 urlpatterns = [
-    url(r'^admin/', admin_site.urls),
-	url(r'^', include('pykol.urls')),
+	path('admin/', admin_site.urls),
+	path('', include('pykol.urls')),
 ]

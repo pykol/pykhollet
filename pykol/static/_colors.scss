@@ -1,0 +1,29 @@
+$header-color: #73879C;
+$header-background: #2A3F54;
+$header-shadow: #0a0c0e;
+
+$content-color: #73879C;
+$content-background: #f7f7f7;
+
+$footer-color: $content-color;
+$footer-background: white;
+
+$nav-color: #F2F5F7;
+$nav-background: transparent;
+$nav-active-color: $nav-color;
+$nav-active-background: linear-gradient(#334556,#2C4257),#2A3F54;
+$nav-current-color: white;
+$nav-current-background: rgba(255,255,255,.05);
+$nav-hover-color: $nav-color;
+$nav-hover-background: $nav-current-background;
+$nav-active-border: #1ABB9C;
+
+$title-small-color: #777;
+
+$input-text-color: #555;
+$input-text-background: white;
+$input-text-border: #ccc;
+
+$x-panel-color: inherit;
+$x-panel-background: white;
+$x-panel-border: #e6e9ed;

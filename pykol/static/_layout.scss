@@ -1,0 +1,137 @@
+body {
+  min-height: 100vh;
+  display: flex;
+}
+
+header {
+  @include make-cell(2);
+  flex: none;
+  zoom: 1;
+  border-bottom: 1px solid #38383D;
+  color: $header-color;
+  background: $header-background;
+  display: flex;
+  flex-direction: column;
+
+  h1 {
+    width: 100%;
+
+    i.fa {
+      border: 1px solid #eaeaea;
+      padding: 5px 6px;
+      border-radius: 50%;
+      width: auto;
+    }
+
+    a:link, a:hover, a:visited {
+      width: 100%;
+      display: block;
+    }
+  }
+}
+
+#main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+nav {
+  background: $nav-background;
+  color: $nav-color;
+
+  & > ul > li {
+    min-height: 50px;
+    line-height: 20px;
+  }
+
+  .fa-chevron-down {
+    font-size: 10px;
+    text-align: right;
+  }
+
+  .active {
+    border-right: 5px solid $nav-active-border;
+
+    & > a {
+      box-shadow: rgba(0,0,0,.25) 0 1px 0,inset rgba(255,255,255,.16) 0 1px 0;
+    }
+
+    li {
+      padding-left: 18px;
+      font-size: 12px;
+      position: relative;
+      line-height: 18px;
+    }
+
+    li::before {
+      background: #425668;
+      bottom: auto;
+      content: "";
+      height: 8px;
+      left: 23px;
+      margin-top: 15px;
+      position: absolute;
+      right: auto;
+      width: 8px;
+      z-index: 1;
+      border-radius: 50%;
+    }
+
+    a {
+      padding: 9px;
+    }
+  }
+
+  a {
+    padding: 15px 10px 14px 10px;
+    display: block;
+
+    &:link, &:visited {
+      color: inherit;
+      text-decoration: none;
+    }
+  }
+
+  ul {
+    display: block;
+  }
+
+  li {
+    display: block;
+
+    &:hover {
+      background-color: $nav-hover-background;
+      color: $nav-hover-color;
+    }
+
+    &.current {
+      color: $nav-current-color;
+      background-color: $nav-current-background;
+    }
+  }
+}
+
+#content {
+  flex: 1 0;
+  max-width: 100%;
+  color: $content-color;
+  background: $content-background;
+  padding: 10px 20px 0;
+}
+
+footer {
+  padding: 10px 20px;
+  min-height: 24px;
+  background: $footer-background;
+  color: $footer-color;
+}
+
+@mixin x-panel {
+  width: 100%;
+  padding: 10px 17px;
+  background: $x-panel-background;
+  color: $x-panel-color;
+  border: 1px solid $x-panel-border;
+  margin-bottom: 10px;
+}

@@ -16,8 +16,6 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-from __future__ import unicode_literals
-
 from django import forms
 from django.utils.translation import gettext, gettext_lazy as _
 from django.utils.text import capfirst

@@ -19,8 +19,12 @@
 from django import template
 register = template.Library()
 
-#from base.navigation import nav
+from pykol.navigation import nav
+
+# Cet import ne sert à rien, si ce n'est forcer l'exécution du code
+# contenu dans ce fichier afin de peupler "nav".
+import pykol.navtree
 
 @register.inclusion_tag('pykol/navigation.html')
-def show_navigation(nav=None):
+def show_navigation(nav=nav):
 	return {'navigation': nav}

@@ -18,12 +18,12 @@
 
 from django.urls import reverse
 
-from pykol.navigation import item
+from pykol.navigation import item, nav
 
-navtree = (
+nav.register(
 		item(name="home",
 			label="Tableau de bord",
-			url=reverse("home"),
+			url="home",
 			icon="bar-chart",
-			),
+			)
 		)

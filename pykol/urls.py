@@ -30,6 +30,6 @@ colles_urlpatterns = [
 
 urlpatterns = [
 	path('', views.home, name='home'),
-    path(r'accounts/', include('django.contrib.auth.urls')),
+    path('accounts/', include('django.contrib.auth.urls')),
 	path('colles/', include(colles_urlpatterns)),
 ]

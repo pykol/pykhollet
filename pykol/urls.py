@@ -22,10 +22,10 @@ from django.urls import path, include
 from . import views
 
 colles_urlpatterns = [
-	path('', views.colloscope_home, name='colloscope_home'),
-	path('<slug:slug>/', views.colloscope, views.colloscope, name='colloscope'),
-	path('<slug:slug>/trinomes$', views.trinomes, name='trinomes'),
-	path('<slug:slug>/semaines$', views.semaines, name='semaines'),
+	path('', views.colles.colloscope_home, name='colloscope_home'),
+	path('<slug:slug>/', views.colles.colloscope, name='colloscope'),
+	path('<slug:slug>/trinomes', views.colles.trinomes, name='trinomes'),
+	path('<slug:slug>/semaines', views.colles.semaines, name='semaines'),
 ]
 
 urlpatterns = [

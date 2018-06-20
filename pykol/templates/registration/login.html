@@ -1,8 +1,8 @@
-{% extends "base-bare.html" %}
+{% extends "pykol/base-bare.html" %}
 
 {% block title %}Identification{% endblock %}
 
-{% block content %}
+{% block body %}
 <form id="login" method="post" action="{% url 'login' %}">
   {% csrf_token %}
   <h2>Connexion à votre compte</h2>
@@ -17,4 +17,4 @@
   <a href="{% url 'password_reset' %}">ce lien</a> pour en obtenir
   un nouveau.</p>
 </form>
-{% endblock content %}
+{% endblock body %}

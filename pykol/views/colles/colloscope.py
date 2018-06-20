@@ -28,14 +28,14 @@ from pykol.forms.colles import SemaineFormSet, SemaineNumeroGenerateurForm
 
 @login_required
 def colloscope_home(request):
-	return render(request, 'base.html')
+	return render(request, 'pykol/base.html')
 
 @login_required
 def colloscope(request, slug):
 	classe = get_object_or_404(Classe, slug=slug)
 	semaines = classe.semaine_set.order_by('debut')
 	creneaux = classe.creneau_set.order_by('matiere', 'jour', 'debut')
-	return render(request, 'colloscope.html',
+	return render(request, 'pykol/colles/colloscope.html',
 			context={
 				'classe': classe,
 				'semaines': semaines,
@@ -46,12 +46,12 @@ def colloscope(request, slug):
 def trinomes(request, slug):
 	classe = get_object_or_404(Classe, slug=slug)
 	trinomes = classe.trinomes
-	return render(request, 'base.html')
+	return render(request, 'pykol/base.html')
 
 @login_required
 def create_trinome(request, slug):
 	classe = get_object_or_404(Classe, slug=slug)
-	return render(request, 'base.html')
+	return render(request, 'pykol/base.html')
 
 @login_required
 def semaines(request, slug):
@@ -166,7 +166,7 @@ def semaines(request, slug):
 				instance=colles_reglages,
 				prefix="gen")
 
-	return render(request, 'semaines.html',
+	return render(request, 'pykol/colles/semaines.html',
 			context={
 				'classe': classe,
 				'formset': formset,

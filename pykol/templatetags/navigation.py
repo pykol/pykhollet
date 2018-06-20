@@ -21,6 +21,6 @@ register = template.Library()
 
 #from base.navigation import nav
 
-@register.inclusion_tag('navigation.html')
+@register.inclusion_tag('pykol/navigation.html')
 def show_navigation(nav=None):
 	return {'navigation': nav}

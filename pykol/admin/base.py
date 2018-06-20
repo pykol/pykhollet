@@ -23,9 +23,9 @@ from django.contrib import admin
 from django.contrib.auth import get_user_model
 from django.contrib.auth.admin import UserAdmin
 
-from .models import User, Professeur, Etudiant
-from .models import Academie, Annee, Vacances, Etablissement
-from .models import Matiere, Classe, Enseignement, Service, Groupe
+from pykol.models.base import User, Professeur, Etudiant
+from pykol.models.base import Academie, Annee, Vacances, Etablissement
+from pykol.models.base import Matiere, Classe, Enseignement, Service, Groupe
 
 class PykolAdminSite(admin.AdminSite):
 	site_header = 'Administration de pyKol'

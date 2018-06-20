@@ -20,7 +20,7 @@ from django.db import models
 from django.db.models import Q, F
 from django.core.exceptions import ValidationError
 
-from pykol.models.enseignement import Classe, Professeur, Matiere, Groupe, \
+from pykol.models.base import Classe, Professeur, Matiere, Groupe, \
 		Enseignement
 
 # Liste des jours de la semaine, numérotation ISO

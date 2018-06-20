@@ -19,7 +19,7 @@
 from django import forms
 from django.forms import formset_factory
 
-from colles.models import Semaine, CollesReglages
+from pykol.models.colles import Semaine, CollesReglages
 
 class SemaineForm(forms.Form):
 	debut = forms.DateField(label="début")

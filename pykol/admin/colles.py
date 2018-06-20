@@ -19,7 +19,7 @@
 from django.contrib import admin
 
 from pykol.admin.base import register, admin_site
-from .models import Semaine, Creneau, Trinome, Roulement, \
+from pykol.models.colles import Semaine, Creneau, Trinome, Roulement, \
 		RoulementLigne, Colle, ColleDetails
 
 @register(Semaine)

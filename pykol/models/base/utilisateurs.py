@@ -22,8 +22,8 @@ from django.db import models
 from django.contrib.auth.models import AbstractUser
 from django.core.validators import RegexValidator
 
-from pykol.uppercasecharfield import Lettre23Field
-from .etablissement import Etablissement
+from pykol.models.fields import Lettre23Field
+from pykol.models.base import Etablissement
 
 class User(AbstractUser):
 	"""

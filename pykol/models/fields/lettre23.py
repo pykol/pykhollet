@@ -16,21 +16,11 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-
-import string
-from django.db import models
 from django.core.validators import RegexValidator
 from django.core.exceptions import ValidationError
 from django.utils.translation import ugettext_lazy as _
 
-class UppercaseCharField(models.CharField):
-	description = "Uppercase char field"
-
-	def __init__(self, *args, **kwargs):
-		super(UppercaseCharField, self).__init__(*args, **kwargs)
-
-	def get_prep_value(self, value):
-		return super(UppercaseCharField, self).get_prep_value(value).upper()
+from .uppercasecharfield import UppercaseCharField
 
 def validateur_lettre23(uai):
 	code_lettre = int(uai[:-1]) % 23

@@ -16,15 +16,6 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-
-from django.test import TestCase
-from django.core.exceptions import ValidationError
-from pykol.models.fields import validateur_lettre23
-
-class ValidationUaiTests(TestCase):
-	def test_lettre_code_correcte_1(self):
-		self.assertIsNone(validateur_lettre23("0021593W"))
-
-	def test_lettre_code_incorrecte(self):
-		with self.assertRaises(ValidationError):
-			validateur_lettre23("0740003A")
+from .uppercasecharfield import UppercaseCharField
+from .lettre23 import Lettre23Field, validateur_lettre23
+from .note import NoteField, Note

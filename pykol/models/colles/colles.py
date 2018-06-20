@@ -19,7 +19,7 @@
 from django.db import models
 
 from pykol.models.base import Classe, Professeur, Matiere, Etudiant, Groupe
-from pykol.notes import NoteField
+from pykol.models.fields import NoteField
 from .conception import Creneau
 
 # Liste des jours de la semaine, numérotation ISO

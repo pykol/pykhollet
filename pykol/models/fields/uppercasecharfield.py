@@ -16,15 +16,13 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+from django.db import models
 
-from django.test import TestCase
-from django.core.exceptions import ValidationError
-from pykol.models.fields import validateur_lettre23
+class UppercaseCharField(models.CharField):
+	description = "Uppercase char field"
 
-class ValidationUaiTests(TestCase):
-	def test_lettre_code_correcte_1(self):
-		self.assertIsNone(validateur_lettre23("0021593W"))
+	def __init__(self, *args, **kwargs):
+		super(UppercaseCharField, self).__init__(*args, **kwargs)
 
-	def test_lettre_code_incorrecte(self):
-		with self.assertRaises(ValidationError):
-			validateur_lettre23("0740003A")
+	def get_prep_value(self, value):
+		return super(UppercaseCharField, self).get_prep_value(value).upper()

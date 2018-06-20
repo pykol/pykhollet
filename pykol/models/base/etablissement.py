@@ -19,7 +19,7 @@
 from django.db import models
 from django.core.validators import validate_comma_separated_integer_list
 
-from pykol.uppercasecharfield import Lettre23Field
+from pykol.models.fields import Lettre23Field
 
 class Academie(models.Model):
 	"""

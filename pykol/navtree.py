@@ -37,6 +37,11 @@ nav.register(item(name="colloscope_home",
 	url="colloscope_home",
 	icon="calendar"))
 
+nav.register(item(name="classes",
+	label="Classes",
+	icon="users",
+	))
+
 nav.register(item(name="logout",
 	label="Déconnexion",
 	url="logout",

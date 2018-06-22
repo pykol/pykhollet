@@ -30,7 +30,8 @@ import re
 
 from django.utils.text import slugify
 
-from pykol.models.base import Etudiant, Annee, Classe, Etablissement
+from pykol.models.base import Etudiant, Annee, Classe, Etablissement, \
+		Groupe
 
 class CodeMEF:
 	"""Gestion d'un code de Module Élémentaire de Formation
@@ -164,8 +165,10 @@ def import_etudiants(eleves_xml):
 
 		# TODO enregistrer les options suivies par chaque étudiant
 
-		# TODO mettre à jour la composition des groupes correspondant à
-		# chaque classe.
+	# Une fois que tous les étudiants ont été importés, on met à jour
+	# les compositions des classes
+	for division in divisions.values():
+		division.update_etudiants()
 
 def import_divisions(structures_xml):
 	"""Import des divisions (classes) à partir du fichier Structures.xml
@@ -207,6 +210,7 @@ def import_divisions(structures_xml):
 			'nom': division.find('LIBELLE_LONG').text,
 			'niveau': classe_niveau,
 			'annee': annee_actuelle,
+			'mode': Groupe.MODE_AUTOMATIQUE,
 			}
 		Classe.objects.update_or_create(code_structure=code_structure,
 			defaults=classe_data)

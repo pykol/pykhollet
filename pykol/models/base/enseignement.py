@@ -165,6 +165,8 @@ class Classe(Groupe):
 	enseignements = models.ManyToManyField(Enseignement, blank=True)
 	coordonnateur = models.ForeignKey(Professeur,
 			on_delete=models.SET_NULL, blank=True, null=True)
+	code_structure = models.CharField(max_length=20, unique=True)
+	code_mef = models.CharField(max_length=11)
 
 	NIVEAU_PREMIERE_ANNEE = 1
 	NIVEAU_DEUXIEME_ANNEE = 2

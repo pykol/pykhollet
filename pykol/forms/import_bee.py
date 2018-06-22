@@ -16,27 +16,9 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-from django.urls import reverse
+from django import forms
 
-from pykol.navigation import item, nav
-
-nav.register(item(name="home",
-	label="Tableau de bord",
-	url="home",
-	icon="bar-chart",
-	))
-
-nav.register(item(name="import_bee",
-	label="Import BEE",
-	url="import_bee",
-	icon="download"))
-
-nav.register(item(name="colloscope_home",
-	label="Colloscopes",
-	url="colloscope_home",
-	icon="calendar"))
-
-nav.register(item(name="logout",
-	label="Déconnexion",
-	url="logout",
-	icon="power-off"))
+class ImportBEEForm(forms.Form):
+	nomenclature = forms.FileField()
+	structure = forms.FileField()
+	eleves = forms.FileField()

@@ -32,4 +32,5 @@ urlpatterns = [
 	path('', views.home, name='home'),
     path('accounts/', include('django.contrib.auth.urls')),
 	path('colles/', include(colles_urlpatterns)),
+	path('import_bee/', views.import_bee, name='import_bee'),
 ]

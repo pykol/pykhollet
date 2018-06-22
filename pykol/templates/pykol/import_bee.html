@@ -1,0 +1,18 @@
+{% extends "pykol/base.html" %}
+{% block content %}
+<h2>Import des données depuis la base élèves (SIECLE)</h2>
+
+{% if messages %}
+<ul class="messages">
+    {% for message in messages %}
+    <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+    {% endfor %}
+</ul>
+{% endif %}
+
+<form enctype="multipart/form-data" action="{% url 'import_bee' %}" method="post">
+  {% csrf_token %}
+  {{ form.as_table }}
+  <p><input type="submit" value="Importer les données">
+</form>
+{% endblock %}

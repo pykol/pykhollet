@@ -189,3 +189,4 @@ class ClasseAdmin(admin.ModelAdmin):
 				}),
 			)
 	inlines = [EnseignementInline, EtudiantInline]
+	list_display = ('nom', 'annee')

@@ -1,13 +1,16 @@
-{% load static %}
 <nav>
   <ul>
   {% for item in navigation %}
   <li{% if item.has_children %} class="active"{% endif %}>
+      {% if item.url %}
       <a href="{% url item.url %}">
+      {% endif %}
         <i class="fa fa-{{ item.icon }}"></i>
         {{ item.label }}
         {% if item.has_children %}<i class="fa fa-chevron-down"></i>{% endif %}
+      {% if item.url %}
       </a>
+      {% endif %}
       {% if item.has_children %}
       <ul>
         {% for child_item in item %}

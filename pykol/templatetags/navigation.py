@@ -26,5 +26,5 @@ from pykol.navigation import nav
 import pykol.navtree
 
 @register.inclusion_tag('pykol/navigation.html')
-def show_navigation(nav=nav):
-	return {'navigation': nav}
+def show_navigation(user, nav=nav):
+	return {'navigation': nav.iter_allowed(user)}

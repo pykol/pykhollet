@@ -20,7 +20,7 @@ from importlib import import_module
 from django.utils import six
 
 class NavigationItem:
-	def __init__(self, label, url=None, priority=0, permissions=None,
+	def __init__(self, label, url=None, priority=0, permissions=[],
 			icon=None, name=None, parent=None, children=[]):
 		self.label = label
 		self.url = url
@@ -34,8 +34,8 @@ class NavigationItem:
 	def __iter__(self):
 		return iter(self.children)
 
-	def is_allowed(self, request):
-		return request.user.has_perms(self.permissions)
+	def is_allowed(self, user):
+		return user.has_perms(self.permissions)
 
 	def is_current(self, request):
 		return request.path_info == self.url
@@ -70,9 +70,9 @@ class Navigation:
 	def __iter__(self):
 		return iter(self.root_item)
 
-	def iter_allowed(self, request):
+	def iter_allowed(self, user):
 		for item in self.root_item:
-			if item.is_allowed(request):
+			if item.is_allowed(user):
 				yield(item)
 
 nav = Navigation()

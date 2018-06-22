@@ -36,8 +36,8 @@ def import_bee(request):
 				pykol.lib.bee.import_divisions(structure_xml)
 
 			with zipfile.ZipFile(request.FILES['nomenclature']) as nomenclatures_zip:
-				nomenclatures_xml = eleves_zip.open('Nomenclatures.xml')
-				pykol.lib.bee.import_nomenclature(nomenclatures_xml)
+				nomenclatures_xml = nomenclatures_zip.open('Nomenclature.xml')
+				pykol.lib.bee.import_nomenclatures(nomenclatures_xml)
 
 			with zipfile.ZipFile(request.FILES['eleves']) as eleves_zip:
 				eleves_xml = eleves_zip.open('ElevesSansAdresses.xml')

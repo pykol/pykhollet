@@ -71,6 +71,8 @@ class User(AbstractUser):
 				last_name=self.last_name.upper())
 
 	class Meta:
+		verbose_name = "utilisateur"
+		verbose_name_plural = "utilisateurs"
 		permissions = (
 			('direction', "Droits de paramétrage de l'équipe de direction"),
 			)

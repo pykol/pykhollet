@@ -93,6 +93,23 @@ class Groupe(models.Model):
 		(MODE_AUTOMATIQUE, "automatique"),
 		), default=MODE_MANUEL)
 
+	def update_etudiants(self):
+		"""Méthode de mise à jour de la composition du groupe.
+
+		Lorsque le mode d'un groupe vaut MODE_MANUEL, la composition du
+		groupe est renseignée manuellement par les utilisateurs.
+
+		Lorsque ce mode vaut MODE_AUTOMATIQUE, la composition du groupe
+		est générée automatiquement par pyKol grâce à un appel à la
+		méthode update_etudiants.
+
+		La méthode de base Groupe.update_etudiants ne fait rien du tout.
+		Cette méthode doit être surchargée par les modèles qui héritent
+		de Groupe, afin de mettre à jour les étudiants automatiquement
+		en fonction des contraintes spécifiques de ces modèles.
+		"""
+		pass
+
 	def __str__(self):
 		return self.nom
 
@@ -182,3 +199,16 @@ class Classe(Groupe):
 	
 	def __str__(self):
 		return self.nom
+
+	def update_etudiants(self):
+		"""Mise à jour de la composition du groupe.
+
+		Le modèle Etudiant contient une clé étrangère vers le modèle
+		Classe, qui indique pour chaque étudiant à quelle classe il
+		appartient.
+
+		Cette méthode met à jour le champ etudiants (hérité du modèle
+		Groupe) afin que la liste des étudiants corresponde
+		effectivement aux étudiants qui pointent vers cette classe.
+		"""
+		self.etudiants.set(Etudiant.objects.filter(classe=self))

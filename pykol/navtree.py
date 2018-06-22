@@ -29,7 +29,8 @@ nav.register(item(name="home",
 nav.register(item(name="import_bee",
 	label="Import BEE",
 	url="import_bee",
-	icon="download"))
+	icon="download",
+	permissions=("direction",)))
 
 nav.register(item(name="colloscope_home",
 	label="Colloscopes",

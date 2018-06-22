@@ -70,6 +70,11 @@ class User(AbstractUser):
 				initials=re.sub(r'(\w)\w*', r'\1.', self.first_name),
 				last_name=self.last_name.upper())
 
+	class Meta:
+		permissions = (
+			('direction', "Droits de paramétrage de l'équipe de direction"),
+			)
+
 class Etudiant(User):
 	"""
 	Étudiant inscrit dans l'établissement

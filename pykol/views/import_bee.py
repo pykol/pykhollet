@@ -19,13 +19,14 @@
 import zipfile
 
 from django.shortcuts import render
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required, permission_required
 from django.contrib import messages
 
 from pykol.forms.import_bee import ImportBEEForm
 import pykol.lib.bee
 
 @login_required
+@permission_required('direction')
 def import_bee(request):
 	if request.method == 'POST':
 		form = ImportBEEForm(request.POST, request.FILES)

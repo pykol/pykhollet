@@ -28,9 +28,13 @@ colles_urlpatterns = [
 	path('<slug:slug>/semaines', views.colles.semaines, name='semaines'),
 ]
 
+direction_urlpatterns = [
+	path('import_bee/', views.import_bee, name='import_bee'),
+]
+
 urlpatterns = [
 	path('', views.home, name='home'),
     path('accounts/', include('django.contrib.auth.urls')),
 	path('colles/', include(colles_urlpatterns)),
-	path('import_bee/', views.import_bee, name='import_bee'),
+	path('direction/', include(direction_urlpatterns)),
 ]

@@ -17,6 +17,7 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 from django.db import models
+from django.urls import reverse
 
 from .annee import Annee
 from .utilisateurs import Professeur, Etudiant
@@ -212,3 +213,6 @@ class Classe(Groupe):
 		effectivement aux étudiants qui pointent vers cette classe.
 		"""
 		self.etudiants.set(Etudiant.objects.filter(classe=self))
+
+	def get_absolute_url(self):
+		return reverse('classe_detail', args=(self.slug,))

@@ -44,4 +44,5 @@ urlpatterns = [
 	path('colles/', include(colles_urlpatterns)),
 	path('direction/', include(direction_urlpatterns)),
 	path('annees/', include(annees_urlpatterns)),
+	path('classes/<slug:slug>/', views.ClasseDetailView.as_view(), name='classe_detail'),
 ]

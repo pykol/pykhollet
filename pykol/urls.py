@@ -24,8 +24,8 @@ from . import views
 colles_urlpatterns = [
 	path('', views.colles.colloscope_home, name='colloscope_home'),
 	path('<slug:slug>/', views.colles.colloscope, name='colloscope'),
-	path('<slug:slug>/trinomes', views.colles.trinomes, name='trinomes'),
-	path('<slug:slug>/semaines', views.colles.semaines, name='semaines'),
+	path('<slug:slug>/trinomes', views.colles.trinomes, name='colloscope_trinomes'),
+	path('<slug:slug>/semaines', views.colles.semaines, name='colloscope_semaines'),
 ]
 
 direction_urlpatterns = [

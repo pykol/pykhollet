@@ -2,5 +2,12 @@
 {% block content %}
 <h2>Détail de la classe {{ classe.nom }}</h2>
 
+<h3>Gestion du colloscope</h3>
+<ul>
+  <li><a href="{% url 'colloscope_semaines' classe.slug %}">Gestion des
+      semaines de colles</a></li>
+  <li><a href="{% url 'colloscope_trinomes' classe.slug %}">Gestion des
+      groupes de colles</a></li>
+</ul>
 {% endblock %}
 

@@ -55,6 +55,17 @@ def create_trinome(request, slug):
 
 @login_required
 def semaines(request, slug):
+	"""
+	Vue qui permet de créer la liste des semaines de colle pour une
+	classe donnée.
+
+	Au lieu de saisir toutes les semaines une à une, cette vue propose
+	la liste de l'ensemble des semaines (démarrant les lundis) de
+	l'année scolaire en cours. Le professeur en charge du colloscope
+	peut alors sélectionner celles qui figureront effectivement dans le
+	colloscope de la classe. Il peut numéroter les semaines manuellement
+	ou bien fournir un format pour générer automatiquement les numéros.
+	"""
 	classe = get_object_or_404(Classe, slug=slug)
 
 	try:

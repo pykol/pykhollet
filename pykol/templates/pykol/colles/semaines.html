@@ -1,9 +1,23 @@
-{% extends "base.html" %}
+{% extends "pykol/base.html" %}
 {% block content %}
 <h2>
   Semaines de colles
   <small>{{ classe }} − {{ classe.annee }}</small>
 </h2>
+
+<p>Sur cette page, vous pouvez définir quelles semaines seront des
+semaines de colles cette année en {{ classe }}. Par défaut, le
+formulaire contient la liste de toutes les semaines de l'année scolaire.
+
+<p>Pour chaque ligne, cochez la case <em>Colles ?</em> pour indiquer que
+la semaine concernée est une semaine de colle. Il faudra alors également
+renseigner le champ <em>Numéro</em>. Ce champ est libre : choisissez ce
+qui vous convient le mieux pour désigner la semaine de colle (ce n'est
+pas nécessairement un nombre).
+
+<p>Les numéros peuvent être générés automatiquement grâce au bloc situé
+en bas de page.
+
 <form action="" method="post">
   {% csrf_token %}
   {{ formset.management_form }}

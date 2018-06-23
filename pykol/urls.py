@@ -32,9 +32,16 @@ direction_urlpatterns = [
 	path('import_bee/', views.direction.import_bee, name='import_bee'),
 ]
 
+annees_urlpatterns = [
+	path('', views.direction.AnneeListView.as_view(), name='annee_list'),
+	path('<int:pk>/', views.direction.AnneeDetailView.as_view(), name='annee_detail'),
+	path('<int:pk>/supprimer', views.direction.annee_supprimer, name='annee_supprimer'),
+]
+
 urlpatterns = [
 	path('', views.home, name='home'),
     path('accounts/', include('django.contrib.auth.urls')),
 	path('colles/', include(colles_urlpatterns)),
 	path('direction/', include(direction_urlpatterns)),
+	path('annees/', include(annees_urlpatterns)),
 ]

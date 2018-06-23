@@ -1,0 +1,23 @@
+{% extends "pykol/base.html" %}
+{% block content %}
+<h2>Années scolaires</h2>
+
+<table>
+  <tr>
+    <td>Nom</td>
+    <td>Date de début</td>
+    <td>Date de fin</td>
+    <td>Actions</td>
+  </tr>
+
+  {% for annee in annee_list %}
+  <tr>
+    <td><a href="{{ annee.get_absolute_url }}">{{ annee.nom }}</a></td>
+    <td>{{ annee.debut }}</td>
+    <td>{{ annee.fin }}</td>
+    <td></td>
+  </tr>
+  {% endfor %}
+</table>
+{% endblock %}
+

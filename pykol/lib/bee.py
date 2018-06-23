@@ -139,11 +139,11 @@ def import_etudiants(eleves_xml):
 
 		date_sortie = None
 		date_sortie_et = eleve.find('DATE_SORTIE')
-		if date_sortie_et:
+		if date_sortie_et is not None and date_sortie_et.text:
 			date_sortie = parse_date_francaise(date_sortie_et.text)
 
 		email_et = eleve.find('MEL')
-		if email_et:
+		if email_et is not None and email_et.text:
 			email = email_et.text
 		else:
 			email = 'nobody@nowhere.invalid'

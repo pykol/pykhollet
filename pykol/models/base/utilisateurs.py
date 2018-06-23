@@ -89,7 +89,7 @@ class Etudiant(User):
 	entree = models.DateField(null=True, blank=True,
 			verbose_name="entrée")
 	sortie = models.DateField(null=True, blank=True)
-	ine = Lettre23Field(length=11, verbose_name="INE (numéro d'étudiant)")
+	ine = models.CharField(max_length=11, verbose_name="INE (numéro d'étudiant)")
 	options = models.ManyToManyField('Matiere', blank=True)
 
 	class Meta:

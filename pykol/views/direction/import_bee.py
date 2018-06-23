@@ -36,19 +36,22 @@ def import_bee(request):
 
 			if form.cleaned_data['structure']:
 				with zipfile.ZipFile(request.FILES['structure']) as structure_zip:
-					structure_xml = structure_zip.open('Structures.xml')
+					xml_name = structure_zip.namelist()[0]
+					structure_xml = structure_zip.open(xml_name)
 					pykol.lib.bee.import_divisions(structure_xml)
 				import_success.append('Structures')
 
 			if form.cleaned_data['nomenclature']:
 				with zipfile.ZipFile(request.FILES['nomenclature']) as nomenclatures_zip:
-					nomenclatures_xml = nomenclatures_zip.open('Nomenclature.xml')
+					xml_name = nomenclatures_zip.namelist()[0]
+					nomenclatures_xml = nomenclatures_zip.open(xml_name)
 					pykol.lib.bee.import_nomenclatures(nomenclatures_xml)
 				import_success.append('Nomenclature')
 
 			if form.cleaned_data['eleves']:
 				with zipfile.ZipFile(request.FILES['eleves']) as eleves_zip:
-					eleves_xml = eleves_zip.open('ElevesSansAdresses.xml')
+					xml_name = eleves_zip.namelist()[0]
+					eleves_xml = eleves_zip.open(xml_name)
 					pykol.lib.bee.import_etudiants(eleves_xml)
 				import_success.append('Élèves')
 

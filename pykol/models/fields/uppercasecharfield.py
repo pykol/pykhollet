@@ -25,4 +25,7 @@ class UppercaseCharField(models.CharField):
 		super(UppercaseCharField, self).__init__(*args, **kwargs)
 
 	def get_prep_value(self, value):
-		return super(UppercaseCharField, self).get_prep_value(value).upper()
+		val = super().get_prep_value(value)
+		if val is not None:
+			return val.upper()
+		return val

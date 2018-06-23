@@ -144,7 +144,7 @@ def import_etudiants(eleves_xml):
 
 		email_et = eleve.find('MEL')
 		if email_et:
-			email = eleve.find('MEL').text
+			email = email_et.text
 		else:
 			email = 'nobody@nowhere.invalid'
 

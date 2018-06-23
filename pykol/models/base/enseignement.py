@@ -52,7 +52,7 @@ class Matiere(models.Model):
 			on_delete=models.SET_NULL)
 	virtuelle = models.BooleanField()
 	code_nomenclature = models.CharField(max_length=20, null=False,
-			blank=True)
+			blank=True, unique=True)
 
 	class Meta:
 		verbose_name = "matière"

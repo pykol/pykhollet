@@ -19,6 +19,6 @@
 from django import forms
 
 class ImportBEEForm(forms.Form):
-	nomenclature = forms.FileField()
-	structure = forms.FileField()
-	eleves = forms.FileField()
+	nomenclature = forms.FileField(required=False)
+	structure = forms.FileField(required=False)
+	eleves = forms.FileField(required=False)

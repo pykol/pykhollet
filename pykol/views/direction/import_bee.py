@@ -31,26 +31,38 @@ def import_bee(request):
 	if request.method == 'POST':
 		form = ImportBEEForm(request.POST, request.FILES)
 		if form.is_valid():
-			with zipfile.ZipFile(request.FILES['structure']) as structure_zip:
-				structure_xml = structure_zip.open('Structures.xml')
-				pykol.lib.bee.import_divisions(structure_xml)
+			import_success = []
+			print(form.cleaned_data)
 
-			with zipfile.ZipFile(request.FILES['nomenclature']) as nomenclatures_zip:
-				nomenclatures_xml = nomenclatures_zip.open('Nomenclature.xml')
-				pykol.lib.bee.import_nomenclatures(nomenclatures_xml)
+			if form.cleaned_data['structure']:
+				with zipfile.ZipFile(request.FILES['structure']) as structure_zip:
+					structure_xml = structure_zip.open('Structures.xml')
+					pykol.lib.bee.import_divisions(structure_xml)
+				import_success.append('Structures')
 
-			with zipfile.ZipFile(request.FILES['eleves']) as eleves_zip:
-				eleves_xml = eleves_zip.open('ElevesSansAdresses.xml')
-				pykol.lib.bee.import_etudiants(eleves_xml)
+			if form.cleaned_data['nomenclature']:
+				with zipfile.ZipFile(request.FILES['nomenclature']) as nomenclatures_zip:
+					nomenclatures_xml = nomenclatures_zip.open('Nomenclature.xml')
+					pykol.lib.bee.import_nomenclatures(nomenclatures_xml)
+				import_success.append('Nomenclature')
+
+			if form.cleaned_data['eleves']:
+				with zipfile.ZipFile(request.FILES['eleves']) as eleves_zip:
+					eleves_xml = eleves_zip.open('ElevesSansAdresses.xml')
+					pykol.lib.bee.import_etudiants(eleves_xml)
+				import_success.append('Élèves')
 
 			# TODO améliorer la gestion des erreurs
 
-			# TODO gérer le cas où les fichiers n'ont pas tous été
-			# envoyés (on peut vouloir mettre à jour seulement l'un
-			# d'entre eux, par exemple juste la liste des élèves).
+			if import_success:
+				messages.success(request,
+						"L'import des données a été effectué avec succès "
+						"pour les fichiers : "
+						"{}.".format(", ".join(import_success)))
+			else:
+				messages.warning(request,
+						"Vous n'avez fourni aucun fichier à importer.")
 
-			messages.success(request,
-					"L'import des données a été effectué avec succès.")
 			form = ImportBEEForm()
 			# TODO redirect pour éviter double soumission
 

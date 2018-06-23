@@ -1,7 +1,7 @@
 <nav>
   <ul>
   {% for item in navigation %}
-  <li{% if item.has_children %} class="active"{% endif %}>
+  <li>
       {% if item.url %}
       <a href="{% url item.url %}">
       {% endif %}

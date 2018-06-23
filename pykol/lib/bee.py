@@ -31,7 +31,7 @@ import re
 from django.utils.text import slugify
 
 from pykol.models.base import Etudiant, Annee, Classe, Etablissement, \
-		Groupe
+		Groupe, Matiere, Enseignement
 
 class CodeMEF:
 	"""Gestion d'un code de Module Élémentaire de Formation
@@ -179,7 +179,7 @@ def import_divisions(structures_xml):
 	fichier XML diffèrent.
 
 	Cette fonction écrit les modifications dans la base de données, en
-	mettant à jour les tables Classe, Matiere et Enseignement.
+	mettant à jour la table Classe.
 	"""
 	structures_et = ET.parse(structures_xml)
 
@@ -225,3 +225,49 @@ def import_nomenclatures(nomenclatures_xml):
 	"""
 	nomenclatures_et = ET.parse(nomenclatures_xml)
 
+	# On construit d'abord le dictionnaire des matières
+	# TODO regrouper les LV dans une matière parent
+	matieres = {}
+	for matiere in nomenclatures_et.getroot().findall('DONNEES/MATIERES/MATIERE'):
+		code_matiere = matiere.attrib['CODE_MATIERE']
+		matieres[code_matiere] = {
+				'code_nomenclature': code_matiere,
+				'nom': matiere.find('LIBELLE_EDITION').text,
+				'virtuelle': False,
+				}
+
+	# On construit le dictionnaire qui à chaque code MEF associe la
+	# liste des classes relevant de ce code.
+	annee_actuelle = Annee.actuelle.all().first()
+	classe_par_mef = {}
+	for classe in Classe.objects.filter(annee=annee_actuelle):
+		if not classe.code_mef in classe_par_mef:
+			classe_par_mef[classe.code_mef] = []
+
+		classe_par_mef[classe.code_mef].append(classe)
+
+	# On parcourt ensuite la liste des programmes et on attache chaque
+	# matière aux classe possédant le code MEF indiqué pour la matière.
+	for programme in nomenclatures_et.getroot().findall('DONNEES/PROGRAMMES/PROGRAMME'):
+		code_mef = programme.find('CODE_MEF').text
+		if not code_mef in classe_par_mef:
+			continue
+
+		# On crée ou on met à jour la matière en base de données
+		code_matiere = programme.find('CODE_MATIERE').text
+
+		matiere, _ = Matiere.objects.update_or_create(
+				code_nomenclature=code_matiere,
+				defaults=matieres[code_matiere])
+
+		est_option = (programme.find('CODE_MODALITE_ELECT').text in ('O', 'F'))
+		est_specialite = (programme.find('CODE_MODALITE_ELECT').text == 'O')
+
+		for classe in classe_par_mef[code_mef]:
+			enseignement, _ = Enseignement.objects.update_or_create(matiere=matiere,
+					groupe=classe, defaults={
+						'option': est_option,
+						'specialite': est_specialite,
+						})
+			# Django ne crée pas de doublon en cas d'un nouvel ajout
+			classe.enseignements.add(enseignement)

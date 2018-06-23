@@ -21,3 +21,4 @@ from .colles import Colle, ColleDetails, ColleNote, \
 from .conception import Semaine, Creneau, Trinome, \
 		Roulement, RoulementLigne, RoulementGraine, \
 		CollesParMatiere, CollesReglages
+from .perms import ColloscopePermission

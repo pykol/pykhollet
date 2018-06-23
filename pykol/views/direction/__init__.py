@@ -16,25 +16,5 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-from django.conf.urls import url
-from django.urls import path, include
-
-from . import views
-
-colles_urlpatterns = [
-	path('', views.colles.colloscope_home, name='colloscope_home'),
-	path('<slug:slug>/', views.colles.colloscope, name='colloscope'),
-	path('<slug:slug>/trinomes', views.colles.trinomes, name='trinomes'),
-	path('<slug:slug>/semaines', views.colles.semaines, name='semaines'),
-]
-
-direction_urlpatterns = [
-	path('import_bee/', views.direction.import_bee, name='import_bee'),
-]
-
-urlpatterns = [
-	path('', views.home, name='home'),
-    path('accounts/', include('django.contrib.auth.urls')),
-	path('colles/', include(colles_urlpatterns)),
-	path('direction/', include(direction_urlpatterns)),
-]
+from .import_bee import import_bee
+from .annee import *

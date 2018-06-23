@@ -26,9 +26,21 @@ nav.register(item(name="home",
 	icon="bar-chart",
 	))
 
-nav.register(item(name="import_bee",
+parametrage = item(
+		name="parametrage",
+		label="Paramétrage",
+		icon="wrench",
+		permissions=("direction",))
+nav.register(parametrage)
+
+parametrage.children.append(item(name="import_bee",
 	label="Import BEE",
 	url="import_bee",
+	icon="download",))
+
+parametrage.children.append(item(name="annee_list",
+	label="Années scolaires",
+	url="annee_list",
 	icon="download",
 	permissions=("direction",)))
 

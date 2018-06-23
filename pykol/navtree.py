@@ -44,6 +44,11 @@ parametrage.children.append(item(name="annee_list",
 	icon="download",
 	permissions=("direction",)))
 
+nav.register(item(name="colle_list",
+	label="Mes colles",
+	url="colle_list",
+	icon="calendar"))
+
 nav.register(item(name="colloscope_home",
 	label="Colloscopes",
 	url="colloscope_home",

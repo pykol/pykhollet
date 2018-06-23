@@ -22,7 +22,7 @@ from django.urls import path, include
 from . import views
 
 colles_urlpatterns = [
-	path('', views.colles.colloscope_home, name='colloscope_home'),
+	path('', views.colles.colle_list, name='colle_list'),
 	path('<slug:slug>/', views.colles.colloscope, name='colloscope'),
 	path('<slug:slug>/trinomes', views.colles.trinomes, name='colloscope_trinomes'),
 	path('<slug:slug>/semaines', views.colles.semaines, name='colloscope_semaines'),
@@ -42,6 +42,7 @@ urlpatterns = [
 	path('', views.home, name='home'),
     path('accounts/', include('django.contrib.auth.urls')),
 	path('colles/', include(colles_urlpatterns)),
+	path('colloscopes/', views.colles.colloscope_home, name='colloscope_home'),
 	path('direction/', include(direction_urlpatterns)),
 	path('annees/', include(annees_urlpatterns)),
 	path('classes/<slug:slug>/', views.ClasseDetailView.as_view(), name='classe_detail'),

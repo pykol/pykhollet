@@ -183,3 +183,12 @@ def semaines(request, slug):
 				'formset': formset,
 				'genform': genform,
 				})
+
+@login_required
+def colle_creer(request, slug):
+	"""Créer une colle dans une classe donnée"""
+	pass
+
+@login_required
+def colle_supprimer(request, pk):
+	"""Supprimer une colle"""

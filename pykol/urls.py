@@ -26,10 +26,12 @@ colles_urlpatterns = [
 	path('<slug:slug>/', views.colles.colloscope, name='colloscope'),
 	path('<slug:slug>/trinomes', views.colles.trinomes, name='colloscope_trinomes'),
 	path('<slug:slug>/semaines', views.colles.semaines, name='colloscope_semaines'),
+	path('<slug:slug>/creneaux', views.colles.creneaux, name='colloscope_creneaux'),
 ]
 
 direction_urlpatterns = [
 	path('import_bee/', views.direction.import_bee, name='import_bee'),
+	path('creneaux/', views.colles.creneau_list_direction, name='creneau_list_direction'),
 ]
 
 annees_urlpatterns = [

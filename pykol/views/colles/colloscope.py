@@ -19,12 +19,14 @@
 from datetime import timedelta
 
 from django.shortcuts import render, get_object_or_404
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required, permission_required
 from django.db import transaction
 
 from pykol.models.base import Classe
-from pykol.models.colles import Semaine, CollesReglages
-from pykol.forms.colles import SemaineFormSet, SemaineNumeroGenerateurForm
+from pykol.models.colles import Semaine, CollesReglages, Creneau
+from pykol.forms.colles import SemaineFormSet, \
+		SemaineNumeroGenerateurForm, \
+		CreneauFormSet, CreneauSansClasseFormSet
 
 @login_required
 def colloscope_home(request):
@@ -192,3 +194,50 @@ def colle_creer(request, slug):
 @login_required
 def colle_supprimer(request, pk):
 	"""Supprimer une colle"""
+	pass
+
+@login_required
+def creneaux(request, slug):
+	"""Liste des créneaux de colles pour une classe"""
+	classe = get_object_or_404(Classe, slug=slug)
+	creneaux_qs = Creneau.objects.filter(classe=classe)
+
+	if request.method == 'POST':
+		formset = CreneauSansClasseFormSet(request.POST, queryset=creneaux_qs,
+					form_kwargs={'classe': classe})
+
+		if formset.is_valid():
+			creneaux = formset.save(commit=False)
+			for creneau in creneaux:
+				creneau.classe = classe
+				creneau.save()
+
+	else:
+		formset = CreneauSansClasseFormSet(queryset=creneaux_qs, form_kwargs={'classe': classe})
+
+	return render(request, 'pykol/colles/creneaux.html', context={
+		'classe': classe,
+		'formset': formset})
+
+@login_required
+@permission_required('pykol.direction')
+def creneau_list_direction(request):
+	"""Gestion de tous les créneaux de colle par la direction"""
+	creneaux_qs = Creneau.objects.order_by('colleur', 'jour', 'debut', 'matiere')
+
+	if request.method == 'POST':
+		formset = CreneauFormSet(request.POST, queryset=creneaux_qs)
+
+		if formset.is_valid():
+			formset.save()
+	
+	else:
+		formset = CreneauFormSet(queryset=creneaux_qs)
+	
+	return render(request, 'pykol/direction/creneau_list.html',
+			context={'formset': formset})
+
+@login_required
+def creneau_supprimer(request, pk):
+	"""Suppression d'un créneau de colle"""
+	pass

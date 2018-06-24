@@ -1,0 +1,12 @@
+{% extends "pykol/base.html" %}
+{% block content %}
+<h2>
+  Créneaux de colles
+</h2>
+
+<form action="" method="post">
+  {% csrf_token %}
+  {{ formset }}
+  <input type="submit">
+</form>
+{% endblock %}

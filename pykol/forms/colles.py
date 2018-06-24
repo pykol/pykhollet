@@ -17,9 +17,10 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 from django import forms
-from django.forms import formset_factory
+from django.forms import formset_factory, modelformset_factory
 
-from pykol.models.colles import Semaine, CollesReglages
+from pykol.models.base import Matiere
+from pykol.models.colles import Semaine, CollesReglages, Creneau
 
 class SemaineForm(forms.Form):
 	debut = forms.DateField(label="début")
@@ -48,3 +49,22 @@ class SemaineNumeroGenerateurForm(forms.ModelForm):
 	class Meta:
 		model = CollesReglages
 		fields = ('numeros_auto', 'numeros_format',)
+
+class CreneauForm(forms.ModelForm):
+	def __init__(self, *args, classe=None, **kwargs):
+		super().__init__(*args, **kwargs)
+		if classe:
+			self.fields['matiere'].queryset = Matiere.objects.filter(enseignement__classe=classe)
+
+	class Meta:
+		model = Creneau
+		fields = ('classe', 'jour', 'debut', 'fin', 'salle', 'colleur',
+				'matiere',)
+
+CreneauFormSet = modelformset_factory(Creneau, form=CreneauForm,
+		can_delete=True, extra=0, fields=CreneauForm.Meta.fields)
+
+CreneauSansClasseFormSet = modelformset_factory(Creneau,
+		form=CreneauForm, can_delete=True, extra=3,
+		fields = ('jour', 'debut', 'fin', 'salle', 'colleur',
+			'matiere',))

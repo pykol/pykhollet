@@ -49,9 +49,15 @@ nav.register(item(name="colle_list",
 	url="colle_list",
 	icon="calendar"))
 
-nav.register(item(name="colloscope_home",
+colloscopes = item(name="colloscope_home",
 	label="Colloscopes",
 	url="colloscope_home",
+	icon="calendar")
+nav.register(colloscopes)
+
+colloscopes.children.append(item(name="crenau_list_direction",
+	label="Créneaux",
+	url="creneau_list_direction",
 	icon="calendar"))
 
 nav.register(item(name="classes",

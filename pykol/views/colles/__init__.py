@@ -19,6 +19,7 @@
 from .colloscope import colloscope_home, colloscope
 from .colloscope import trinomes, create_trinome
 from .colloscope import semaines
+from .colloscope import creneaux, creneau_list_direction
 
 from .colles import colle_declarer, colle_deplacer, \
 		colle_list, colle_annuler

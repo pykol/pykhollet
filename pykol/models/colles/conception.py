@@ -41,6 +41,11 @@ class Semaine(models.Model):
 				self.debut.month, self.fin.day, self.fin.month)
 
 class Creneau(models.Model):
+	"""Créneau de colle programmé au colloscope
+
+	Un créneau de colle sert de modèle pour créer les Colle et les
+	ColleDetail lors de la génération du colloscope.
+	"""
 	classe = models.ForeignKey(Classe, on_delete=models.CASCADE)
 	jour = models.PositiveSmallIntegerField(choices=LISTE_JOURS)
 	debut = models.TimeField(verbose_name="début")

@@ -32,12 +32,12 @@ class SemaineForm(forms.Form):
 			widget=forms.HiddenInput, required=False)
 
 	def __init__(self, *args, classe=None, **kwargs):
-		super(SemaineForm, self).__init__(*args, **kwargs)
+		super().__init__(*args, **kwargs)
 		if classe:
 			self.fields['semaine'].queryset = Semaine.objects.filter(classe=classe)
 
 	def clean(self):
-		cleaned_data = super(SemaineForm, self).clean()
+		cleaned_data = super().clean()
 		if cleaned_data.get('est_colle') and not cleaned_data.get('numero'):
 			raise forms.ValidationError(
 					"Il faut obligatoirement donner un numéro à chaque "

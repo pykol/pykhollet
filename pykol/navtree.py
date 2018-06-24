@@ -62,6 +62,7 @@ colloscopes.children.append(item(name="crenau_list_direction",
 
 nav.register(item(name="classes",
 	label="Classes",
+	url="classe_list",
 	icon="users",
 	))
 

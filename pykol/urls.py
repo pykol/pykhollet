@@ -40,6 +40,11 @@ annees_urlpatterns = [
 	path('<int:pk>/supprimer', views.direction.annee_supprimer, name='annee_supprimer'),
 ]
 
+classes_urlpatterns = [
+	path('', views.ClasseListView.as_view(), name="classe_list"),
+	path('<slug:slug>/', views.ClasseDetailView.as_view(), name='classe_detail'),
+]
+
 urlpatterns = [
 	path('', views.home, name='home'),
     path('accounts/', include('django.contrib.auth.urls')),
@@ -47,5 +52,5 @@ urlpatterns = [
 	path('colloscopes/', views.colles.colloscope_home, name='colloscope_home'),
 	path('direction/', include(direction_urlpatterns)),
 	path('annees/', include(annees_urlpatterns)),
-	path('classes/<slug:slug>/', views.ClasseDetailView.as_view(), name='classe_detail'),
+	path('classes/', include(classes_urlpatterns)),
 ]

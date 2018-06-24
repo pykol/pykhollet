@@ -23,3 +23,6 @@ from pykol.models.base import Classe
 
 class ClasseDetailView(LoginRequiredMixin, generic.DetailView):
 	model = Classe
+
+class ClasseListView(LoginRequiredMixin, generic.ListView):
+	model = Classe

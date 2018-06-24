@@ -28,6 +28,7 @@ LISTE_JOURS = enumerate(["lundi", "mardi", "mercredi", "jeudi",
 	"vendredi", "samedi", "dimanche"], 1)
 
 class Semaine(models.Model):
+	"""Semaine de colles prévue au colloscope"""
 	debut = models.DateField(verbose_name="début")
 	fin = models.DateField()
 	classe = models.ForeignKey(Classe, on_delete=models.CASCADE)
@@ -65,6 +66,7 @@ class Creneau(models.Model):
 		return "{} {:%H:%M}-{:%H:%M}".format(self.get_jour_display(), self.debut, self.fin)
 
 class Trinome(Groupe):
+	"""Groupe de colle dans une classe"""
 	dans_classe = models.ForeignKey(Classe, verbose_name="classe",
 			on_delete=models.CASCADE, related_name='trinomes')
 	commentaire = models.TextField(blank=True)
@@ -106,6 +108,8 @@ class CollesParMatiere(models.Model):
 	duree = models.PositiveSmallIntegerField(verbose_name="durée hebdomadaire")
 
 class CollesReglages(models.Model):
+	"""Sauvegarde des paramètres utilisés pour générer les semaines de
+	colles."""
 	classe = models.OneToOneField(Classe, on_delete=models.CASCADE)
 	numeros_auto = models.BooleanField(default=False,
 			verbose_name="numérotation automatique")

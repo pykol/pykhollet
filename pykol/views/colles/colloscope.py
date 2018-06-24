@@ -213,6 +213,8 @@ def creneaux(request, slug):
 			for creneau in creneaux:
 				creneau.classe = classe
 				creneau.save()
+			for creneau in formset.deleted_objects:
+				creneau.delete()
 
 			return redirect('colloscope_creneaux', slug=classe.slug)
 

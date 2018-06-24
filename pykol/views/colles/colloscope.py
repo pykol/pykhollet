@@ -55,6 +55,7 @@ def create_trinome(request, slug):
 	classe = get_object_or_404(Classe, slug=slug)
 	return render(request, 'pykol/base.html')
 
+#@object_permission_required(Classe, 'pykol.colloscope.complet', 'slug')
 @login_required
 def semaines(request, slug):
 	"""

@@ -19,6 +19,8 @@
 """Fonctions utilitaires pour gérer les permissions des utilisateurs"""
 
 from django.contrib.auth.backends import ModelBackend
+from django.contrib.auth.decorators import user_passes_test
+
 from pykol.models.base import Classe
 from pykol.models.colles import ColloscopePermission
 
@@ -40,3 +42,17 @@ class PykolBackend(ModelBackend):
 			# Permission de colloscope
 			pass
 		return set()
+
+def user_has_object_perm(user, model, perm, **kwargs):
+	# TODO cache
+	if model != Classe:
+		return False
+
+	classe = Classe.objects.get(**kwargs)
+	# TODO requête pour la permission à partir de son nom ?
+	return ColloscopePermission.objects.exists(user=user, classe=classe,
+			droit=perm)
+
+def object_permission_required(model, perm, **kwargs):
+	return user_passes_test(
+			lambda u: user_has_object_perm(u, model, perm, **kwargs))

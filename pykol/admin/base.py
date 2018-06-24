@@ -37,9 +37,15 @@ def register(*models, **kwargs):
 	return admin.register(*models, **kwargs)
 
 class PykolUserCreationForm(forms.ModelForm):
+	password1 = forms.CharField(label=_("Password"),
+			widget=forms.PasswordInput, required=False)
+	password2 = forms.CharField(label=_("Password confirmation"),
+		widget=forms.PasswordInput,
+		help_text=_("Enter the same password as above, for verification."),
+		required=False)
 	class Meta:
 		model = User
-		fields = ('username', 'sexe', 'email',)
+		fields = ('username', 'sexe', 'email')
 
 @register(User)
 class PykolUserAdmin(UserAdmin):

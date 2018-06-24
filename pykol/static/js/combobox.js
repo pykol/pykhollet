@@ -154,5 +154,12 @@ $( function() {
 
 $(document).ready(function() {
   $( ".formset select" ).combobox();
-  $(".formset").formset();
-})
+  $(".formset tbody tr").formset({
+    addText: '<i class="fa fa-plus"></i> Ajouter un nouvel élément',
+    deleteText: '<i class="fa fa-trash"></i> Supprimer',
+  });
+  // TODO: bug, les éléments ajoutés n'ont pas leur propre combobox mais
+  // activent celui du dernier élément présent initialement dans le
+  // formulaire.
+  // TODO la suppression avec formset ne marche pas
+});

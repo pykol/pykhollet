@@ -18,7 +18,7 @@
 
 from datetime import timedelta
 
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required, permission_required
 from django.db import transaction
 
@@ -201,7 +201,8 @@ def colle_supprimer(request, pk):
 def creneaux(request, slug):
 	"""Liste des créneaux de colles pour une classe"""
 	classe = get_object_or_404(Classe, slug=slug)
-	creneaux_qs = Creneau.objects.filter(classe=classe)
+	creneaux_qs = Creneau.objects.filter(classe=classe).order_by('jour',
+			'colleur', 'debut')
 
 	if request.method == 'POST':
 		formset = CreneauSansClasseFormSet(request.POST, queryset=creneaux_qs,
@@ -212,6 +213,8 @@ def creneaux(request, slug):
 			for creneau in creneaux:
 				creneau.classe = classe
 				creneau.save()
+
+			return redirect('colloscope_creneaux', slug=classe.slug)
 
 	else:
 		formset = CreneauSansClasseFormSet(queryset=creneaux_qs, form_kwargs={'classe': classe})

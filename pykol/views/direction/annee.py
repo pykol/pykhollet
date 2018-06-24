@@ -29,6 +29,6 @@ class AnneeDetailView(LoginRequiredMixin, generic.DetailView):
 	model = Annee
 
 @login_required
-@permission_required('direction')
+@permission_required('pykol.direction')
 def annee_supprimer(request, pk):
 	pass

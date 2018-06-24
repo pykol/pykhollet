@@ -26,7 +26,7 @@ from pykol.forms.import_bee import ImportBEEForm
 import pykol.lib.bee
 
 @login_required
-@permission_required('direction')
+@permission_required('pykol.direction')
 def import_bee(request):
 	if request.method == 'POST':
 		form = ImportBEEForm(request.POST, request.FILES)

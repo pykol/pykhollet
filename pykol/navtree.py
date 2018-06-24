@@ -30,7 +30,7 @@ parametrage = item(
 		name="parametrage",
 		label="Paramétrage",
 		icon="wrench",
-		permissions=("direction",))
+		permissions=("pykol.direction",))
 nav.register(parametrage)
 
 parametrage.children.append(item(name="import_bee",
@@ -42,7 +42,7 @@ parametrage.children.append(item(name="annee_list",
 	label="Années scolaires",
 	url="annee_list",
 	icon="download",
-	permissions=("direction",)))
+	permissions=("pykol.direction",)))
 
 nav.register(item(name="colle_list",
 	label="Mes colles",

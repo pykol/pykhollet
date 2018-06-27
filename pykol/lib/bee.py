@@ -183,7 +183,7 @@ def import_etudiants(eleves_xml):
 		if email_et is not None and email_et.text:
 			email = email_et.text
 		else:
-			email = 'nobody@nowhere.invalid'
+			email = None
 
 		etudiant_data = {
 			'classe': classe_etudiant[num_eleve],
@@ -192,9 +192,8 @@ def import_etudiants(eleves_xml):
 			'origine': origine,
 			'sexe': int(eleve.find('CODE_SEXE').text),
 			'email': email,
-			'first_name': eleve.find('PRENOM').text,
-			'last_name': eleve.find('NOM_DE_FAMILLE').text,
-			'username': eleve.attrib['ELEVE_ID'], # FIXME
+			'first_name': eleve.find('PRENOM').text.title(),
+			'last_name': eleve.find('NOM_DE_FAMILLE').text.title(),
 			}
 		etudiant_db, _ = Etudiant.objects.update_or_create(
 				ine=eleve.find('INE_RNIE').text,
@@ -554,8 +553,8 @@ def import_stsemp(stsemp_xml):
 	dict_profs = {}
 	for individu in stsemp_et.getroot().findall('DONNEES/INDIVIDUS/INDIVIDU'):
 		individu_id = individu.attrib['ID']
-		nom = individu.find('NOM_USAGE').text
-		prenom = individu.find('PRENOM').text
+		nom = individu.find('NOM_USAGE').text.title()
+		prenom = individu.find('PRENOM').text.title()
 
 		sexe_xml = individu.find('SEXE').text
 		if sexe_xml == '1':
@@ -592,7 +591,6 @@ def import_stsemp(stsemp_xml):
 						'first_name': prenom,
 						'corps': grade,
 						'sexe': sexe,
-						'username': 'pro-' + individu.attrib['ID'] # FIXME
 						})
 		elif fonction == "DIR":
 			User.objects.update_or_create(
@@ -602,7 +600,6 @@ def import_stsemp(stsemp_xml):
 						'last_name': nom,
 						'first_name': prenom,
 						'sexe': sexe,
-						'username': 'pro-' + individu.attrib['ID'] # FIXME
 						})
 
 	# Mise à jour des programmes, matières et MEF

@@ -45,28 +45,32 @@ class PykolUserCreationForm(forms.ModelForm):
 		required=False)
 	class Meta:
 		model = User
-		fields = ('username', 'sexe', 'email')
+		fields = ('sexe', 'email')
 
 @register(User)
 class PykolUserAdmin(UserAdmin):
 	add_form = PykolUserCreationForm
 	add_fieldsets = ((None, {
 			'classes': ('wide',),
-			'fields': ('username', 'password1', 'password2', 'sexe', 'email'),
+			'fields': ('password1', 'password2', 'sexe', 'email'),
 			}),)
 	fieldsets = (
-		(None, {'fields': ('username', 'password')}),
+		(None, {'fields': ('password',)}),
 		(_('Personal info'), {'fields': ('first_name', 'last_name', 'sexe', 'email')}),
 		(_('Permissions'), {'fields': ('is_active', 'is_staff', 'is_superuser',
 									   'groups', 'user_permissions')}),
 		(_('Important dates'), {'fields': ('last_login', 'date_joined')}),
 		)
 
+	ordering = ('email',)
+	list_display = ('email', 'first_name', 'last_name', 'is_staff')
+	search_fields = ('first_name', 'last_name', 'email')
+
 class ProfesseurCreationForm(PykolUserCreationForm):
-	username = forms.CharField(required=False)
+	email = forms.EmailField(required=True)
 
 	def __init__(self, *args, **kwargs):
-		super(ProfesseurCreationForm, self).__init__(*args, **kwargs)
+		super().__init__(*args, **kwargs)
 		UserModel = get_user_model()
 		self.username_field = UserModel._meta.get_field(UserModel.USERNAME_FIELD)
 		if self.fields['username'].label is None:
@@ -74,17 +78,10 @@ class ProfesseurCreationForm(PykolUserCreationForm):
 
 	class Meta:
 		model = Professeur
-		fields = ('username', 'sexe', 'email', 'corps', 'etablissement')
-
-	def clean(self):
-		cleaned_data = super(ProfesseurCreationForm, self).clean()
-		if not cleaned_data.get('username'):
-			cleaned_data['username'] = \
-			(cleaned_data.get('first_name')[0] +
-			cleaned_data.get('last_name')).lower()
+		fields = ('sexe', 'email', 'corps', 'etablissement')
 
 	def save(self, commit=True):
-		user = super(ProfesseurCreationForm, self).save(commit=False)
+		user = super().save(commit=False)
 		user.set_unusable_password()
 		if commit:
 			user.save()
@@ -96,11 +93,11 @@ class ProfesseurAdmin(PykolUserAdmin):
 	add_form = ProfesseurCreationForm
 	add_fieldsets = ((None, {
 			'classes': ('wide',),
-			'fields': ('username', 'last_name', 'first_name', 'sexe',
+			'fields': ('last_name', 'first_name', 'sexe',
 				'email', 'corps', 'etablissement'),
 			}),)
 	fieldsets = (
-		(None, {'fields': ('username', 'password')}),
+		(None, {'fields': ('password',)}),
 		(_('Personal info'), {'fields': ('first_name', 'last_name',
 			'sexe', 'email', 'corps')}),
 		(_('Permissions'), {'fields': ('is_active', 'is_staff', 'is_superuser',
@@ -111,7 +108,7 @@ class ProfesseurAdmin(PykolUserAdmin):
 class EtudiantCreationForm(PykolUserCreationForm):
 	class Meta:
 		model = Etudiant
-		fields = ('username', 'sexe', 'email', 'ine', 'classe')
+		fields = ('sexe', 'email', 'ine', 'classe')
 
 	def save(self, commit=True):
 		user = super(EtudiantCreationForm, self).save(commit=False)
@@ -126,11 +123,11 @@ class EtudiantAdmin(PykolUserAdmin):
 	add_form = EtudiantCreationForm
 	add_fieldsets = ((None, {
 			'classes': ('wide',),
-			'fields': ('username', 'password1', 'password2', 'sexe',
+			'fields': ('password1', 'password2', 'sexe',
 				'email', 'ine', 'classe'),
 			}),)
 	fieldsets = (
-		(None, {'fields': ('username', 'password')}),
+		(None, {'fields': ('password',)}),
 		(_('Personal info'), {'fields': ('first_name', 'last_name',
 			'sexe', 'email', 'ine',)}),
 		('Scolarité', {'fields': ('classe', 'origine', 'options')}),

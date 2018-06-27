@@ -19,11 +19,45 @@
 import re
 
 from django.db import models
-from django.contrib.auth.models import AbstractUser
+from django.contrib.auth.models import AbstractUser, BaseUserManager
 from django.core.validators import RegexValidator
+from django.urls import reverse
 
 from pykol.models.fields import Lettre23Field
 from pykol.models.base import Etablissement
+
+class UserManager(BaseUserManager):
+    """Define a model manager for User model with no username field."""
+
+    use_in_migrations = True
+
+    def _create_user(self, email, password, **extra_fields):
+        """Create and save a User with the given email and password."""
+        if not email:
+            raise ValueError('The given email must be set')
+        email = self.normalize_email(email)
+        user = self.model(email=email, **extra_fields)
+        user.set_password(password)
+        user.save(using=self._db)
+        return user
+
+    def create_user(self, email, password=None, **extra_fields):
+        """Create and save a regular User with the given email and password."""
+        extra_fields.setdefault('is_staff', False)
+        extra_fields.setdefault('is_superuser', False)
+        return self._create_user(email, password, **extra_fields)
+
+    def create_superuser(self, email, password, **extra_fields):
+        """Create and save a SuperUser with the given email and password."""
+        extra_fields.setdefault('is_staff', True)
+        extra_fields.setdefault('is_superuser', True)
+
+        if extra_fields.get('is_staff') is not True:
+            raise ValueError('Superuser must have is_staff=True.')
+        if extra_fields.get('is_superuser') is not True:
+            raise ValueError('Superuser must have is_superuser=True.')
+
+        return self._create_user(email, password, **extra_fields)
 
 class User(AbstractUser):
 	"""
@@ -35,14 +69,21 @@ class User(AbstractUser):
 	traitements administratifs des différentes catégories
 	d'utilisateurs.
 	"""
-	SEXE_HOMME=1
-	SEXE_FEMME=2
+	SEXE_HOMME = 1
+	SEXE_FEMME = 2
 	sexe = models.PositiveSmallIntegerField(choices=(
 		(SEXE_HOMME, 'homme'),
 		(SEXE_FEMME, 'femme'),
 		), default=SEXE_HOMME)
 
-	REQUIRED_FIELDS = ['email', 'sexe',]
+	email = models.EmailField(verbose_name="E-mail", unique=True,
+			null=True, blank=True)
+	username = None
+
+	USERNAME_FIELD = 'email'
+	REQUIRED_FIELDS = ['sexe',]
+
+	objects = UserManager()
 
 	def civilite(self, abrege=True):
 		if self.sexe == SEXE_HOMME:
@@ -63,7 +104,7 @@ class User(AbstractUser):
 		if nom.strip():
 			return nom
 		else:
-			return '({})'.format(self.username)
+			return '({})'.format(self.email)
 
 	def short_display_name(self):
 		return '{initials} {last_name}'.format(

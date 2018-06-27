@@ -564,7 +564,7 @@ def import_stsemp(stsemp_xml):
 
 		fonction = individu.find('FONCTION').text
 
-		if individu.find('GRADE'):
+		if individu.find('GRADE') is not None:
 			grade_xml = individu.find('GRADE').text
 		else:
 			grade_xml = None

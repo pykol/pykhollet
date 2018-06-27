@@ -51,7 +51,7 @@ class Matiere(models.Model):
 	parent = models.ForeignKey('self', null=True, blank=True,
 			on_delete=models.SET_NULL)
 	virtuelle = models.BooleanField()
-	code_nomenclature = models.CharField(max_length=20, null=False,
+	code_matiere = models.CharField(max_length=20, null=False,
 			blank=True, unique=True)
 
 	class Meta:
@@ -93,6 +93,9 @@ class Groupe(models.Model):
 		(MODE_MANUEL, "manuel"),
 		(MODE_AUTOMATIQUE, "automatique"),
 		), default=MODE_MANUEL)
+
+	class Meta:
+		unique_together = ('nom', 'annee')
 
 	def update_etudiants(self):
 		"""Méthode de mise à jour de la composition du groupe.
@@ -173,6 +176,24 @@ class ProfClasseManager(models.Manager):
 		pass
 		Classe.objects.filter(enseignements__service__professeur=prof)
 
+class ModuleElementaireFormation(models.Model):
+	"""
+	MEF
+	"""
+	code_mef = models.CharField(max_length=11)
+	matieres = models.ManyToManyField(Matiere, through='MEFMatiere')
+	libelle = models.CharField(max_length=100)
+
+class MEFMatiere(models.Model):
+	"""
+	Appartenance d'une matière à un MEF
+	"""
+	matiere = models.ForeignKey(Matiere, on_delete=models.CASCADE)
+	mef = models.ForeignKey(ModuleElementaireFormation,
+			on_delete=models.CASCADE)
+	mode_election = models.CharField(max_length=10)
+	rang = models.SmallIntegerField()
+
 class Classe(Groupe):
 	"""
 	Classe
@@ -186,7 +207,8 @@ class Classe(Groupe):
 	coordonnateur = models.ForeignKey(Professeur,
 			on_delete=models.SET_NULL, blank=True, null=True)
 	code_structure = models.CharField(max_length=20, unique=True)
-	code_mef = models.CharField(max_length=11)
+	mef = models.ForeignKey(ModuleElementaireFormation,
+			on_delete=models.CASCADE)
 
 	NIVEAU_PREMIERE_ANNEE = 1
 	NIVEAU_DEUXIEME_ANNEE = 2

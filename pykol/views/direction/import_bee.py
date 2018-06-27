@@ -32,13 +32,19 @@ def import_bee(request):
 		form = ImportBEEForm(request.POST, request.FILES)
 		if form.is_valid():
 			import_success = []
-			print(form.cleaned_data)
+
+			if form.cleaned_data['stsemp']:
+				with zipfile.ZipFile(request.FILES['stsemp']) as stsemp_zip:
+					xml_name = stsemp_zip.namelist()[0]
+					stsemp_xml = stsemp_zip.open(xml_name)
+					pykol.lib.bee.import_stsemp(stsemp_xml)
+				import_success.append('STS-EMP')
 
 			if form.cleaned_data['structure']:
 				with zipfile.ZipFile(request.FILES['structure']) as structure_zip:
 					xml_name = structure_zip.namelist()[0]
 					structure_xml = structure_zip.open(xml_name)
-					pykol.lib.bee.import_divisions(structure_xml)
+					pykol.lib.bee.import_structures(structure_xml)
 				import_success.append('Structures')
 
 			if form.cleaned_data['nomenclature']:

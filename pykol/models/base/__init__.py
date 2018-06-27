@@ -22,3 +22,4 @@ from .utilisateurs import User, Etudiant, Professeur
 from .annee import Periode, Annee, Vacances
 from .enseignement import Matiere, Groupe, Service, \
 		Enseignement, Classe
+from .enseignement import ModuleElementaireFormation, MEFMatiere

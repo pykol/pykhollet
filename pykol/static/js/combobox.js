@@ -126,40 +126,21 @@ $( function() {
       this.element.show();
     }
   });
-
-/*  $.widget("custom.pykol_formset", {
-    _create: function() {
-      formset_prefix = this.element.attr("data-formset-prefix");
-      this.management_form_total = $("#id_" + formset_prefix + "-TOTAL_FORMS").val();
-      this.management_form_min = $("#id_" + formset_prefix + "-MIN_NUM_FORMS").val();
-      this.management_form_max = $("#id_" + formset_prefix + "-MAX_NUM_FORMS").val();
-      this.management_form_initial = $("#id_" + formset_prefix + "-INITIAL_FORMS").val();
-
-      var extra_forms = this.management_form_total - this.management_form_initial;
-
-      for(var i = 0; i < extra_forms; i++) {
-        this.element.find("tr").last().remove();
-      }
-      $("#id_" + formset_prefix + "-TOTAL_FORMS").val(this.management_form_initial);
-
-      tr = $("<tr>").appendTo(this.element);
-      td = $("<td>").appendTo(tr);
-      link = $("<a>+ Ajouter une ligne</a>")
-        .appendTo(td);
-    },
-  }); */
 } );
 
-// Bouton d'ajout de ligne dans un formset
-
 $(document).ready(function() {
-  $( ".formset select" ).combobox();
   $(".formset tbody tr").formset({
-    addText: '<i class="fa fa-plus"></i> Ajouter un nouvel élément',
+    createAddButton: function() {
+      return $('<button class="' + this.addCssClass + '"><i class="fa fa-plus"></i> Ajouter un nouvel élément</button>');
+    },
+    createDeleteButton: function() {
+      return $('<button class="' + this.deleteCssClass + '"><i class="fa fa-trash"></i> Supprimer</button>');
+    },
     deleteText: '<i class="fa fa-trash"></i> Supprimer',
+    added: function (row) { $( ".formset select" ).combobox(); }
   });
-  // TODO: bug, les éléments ajoutés n'ont pas leur propre combobox mais
-  // activent celui du dernier élément présent initialement dans le
-  // formulaire.
-  // TODO la suppression avec formset ne marche pas
+
+  // Ne placer la combobx qu'après avoir appelé formset, qui crée son
+  // modèle avec le formulaire d'origine.
+  $( ".formset select" ).combobox();
 });

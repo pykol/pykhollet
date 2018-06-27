@@ -53,4 +53,5 @@ urlpatterns = [
 	path('direction/', include(direction_urlpatterns)),
 	path('annees/', include(annees_urlpatterns)),
 	path('classes/', include(classes_urlpatterns)),
+	path('etudiant/<int:pk>/', views.EtudiantDetailView.as_view(), name='etudiant'),
 ]

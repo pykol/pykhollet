@@ -143,6 +143,9 @@ class Etudiant(User):
 		if not self.entree:
 			self.entree = self.classe.annee.debut
 
+	def get_absolute_url(self):
+		return reverse('etudiant', args=(self.pk,))
+
 class Professeur(User):
 	"""
 	Professeur intervenant dans l'établissement

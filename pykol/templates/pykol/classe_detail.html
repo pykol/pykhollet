@@ -11,4 +11,11 @@
   <li><a href="{% url 'colloscope_creneaux' classe.slug %}">Gestion des
       créneaux de colles</a></li>
 </ul>
+
+<h3>Étudiants</h3>
+<ul>
+  {% for etudiant in classe.etudiant_set.all %}
+  <li><a href="{{ etudiant.get_absolute_url }}">{{ etudiant }}</a></li>
+  {% endfor %}
+</ul>
 {% endblock %}

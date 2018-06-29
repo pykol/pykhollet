@@ -3,6 +3,7 @@ body {
   display: flex;
 }
 
+/* Barre de menu à gauche */
 header {
   @include make-cell(2);
   flex: none;
@@ -23,6 +24,10 @@ header {
       width: auto;
     }
 
+    a {
+      padding-left: 10px;
+    }
+
     a:link, a:hover, a:visited {
       width: 100%;
       display: block;
@@ -40,14 +45,24 @@ nav {
   background: $nav-background;
   color: $nav-color;
 
+  // Menu de premier niveau
   & > ul > li {
     min-height: 50px;
     line-height: 20px;
+
+    & > a {
+      padding: 13px 15px 12px;
+      margin-bottom: 6px;
+    }
+    & > ul {
+      padding: 0px 15px 12px;
+    }
   }
 
   .fa-chevron-down {
     font-size: 10px;
-    text-align: right;
+    float: right;
+    margin-top: 5px;
   }
 
   .active {
@@ -83,12 +98,22 @@ nav {
     }
   }
 
+  // Menu de deuxième niveau
+  & > ul > li > ul > li {
+    padding: 9px;
+  }
+
   a {
     display: block;
 
     &:link, &:visited {
       color: inherit;
       text-decoration: none;
+    }
+
+    &:hover {
+      background-color: $nav-hover-background;
+      color: $nav-hover-color;
     }
   }
 
@@ -98,12 +123,6 @@ nav {
 
   li {
     display: block;
-    padding: 15px 10px 14px 10px;
-
-    &:hover {
-      background-color: $nav-hover-background;
-      color: $nav-hover-color;
-    }
 
     &.current {
       color: $nav-current-color;

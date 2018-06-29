@@ -1,5 +1,11 @@
 {% extends "pykol/base-bare.html" %}
+{% load static %}
 {% load navigation %}
+{% block head %}
+{{ block.super }}
+<link rel="stylesheet" href="{% static 'jquery-ui/jquery-ui.min.css' %}">
+<script src="{% static 'pykol-full.js' %}"></script>
+{% endblock %}
 {% block body %}
 <header>
   <h1>

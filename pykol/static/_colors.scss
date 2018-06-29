@@ -27,3 +27,43 @@ $input-text-border: #ccc;
 $x-panel-color: inherit;
 $x-panel-background: white;
 $x-panel-border: #e6e9ed;
+
+@mixin color-success {
+  color: white;
+  background-color: #26B99A;
+  border-color: #169F85;
+
+  &:hover, &:focus, &:active {
+    color: white;
+    background-color: #169F85;
+    border-color: #398439;
+  }
+  &:active {
+    background-color: #169F85;
+  }
+}
+
+@mixin color-danger {
+  color: white;
+  background-color: #c9302c;
+  border-color: #ac2925;
+  &:hover {
+    background-color: #c9302c;
+    border-color: #ac2925;
+  }
+}
+
+@mixin color-primary {
+  border-color: #2e6da4;
+  background-color: #337ab7;
+  color: white;
+}
+
+@mixin color-warning {
+}
+
+@mixin color-info {
+}
+
+@mixin color-dark {
+}

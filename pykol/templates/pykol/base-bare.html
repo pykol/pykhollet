@@ -5,11 +5,11 @@
     <meta charset="utf-8">
     <title>{% block title %}pyKol{% endblock %}</title>
     <link rel="stylesheet" href="{% static 'style.css' %}">
-    <link rel="stylesheet" href="{% static 'jquery-ui/jquery-ui.min.css' %}">
-    <script src="{% static 'pykol-full.js' %}"></script>
+    {% block head %}{% endblock %}
   </head>
-  
+  {% block body_replace %}
   <body>
     {% block body %}{% endblock %}
   </body>
+  {% endblock %}
 </html>

@@ -2,19 +2,21 @@
 
 {% block title %}Identification{% endblock %}
 
-{% block body %}
-<form id="login" method="post" action="{% url 'login' %}">
-  {% csrf_token %}
-  <h2>Connexion à votre compte</h2>
-  <ul>
-  {{ form.as_ul }}
-  </ul>
-  <input type="submit" value="Identification">
-  <input type="hidden" name="next" value="{{ next }}">
+{% block body_replace %}
+<body class="login">
+  <form id="login" method="post" action="{% url 'login' %}">
+    {% csrf_token %}
+    <h1>Connexion à votre compte</h1>
+    <ul>
+    {{ form.as_ul }}
+    </ul>
+    <input type="submit" value="Identification">
+    <input type="hidden" name="next" value="{{ next }}">
 
-  <h3>Mot de passe oublié ?</h3>
-  <p>Ce n'est pas un problème, suivez
-  <a href="{% url 'password_reset' %}">ce lien</a> pour en obtenir
-  un nouveau.</p>
-</form>
-{% endblock body %}
+    <h3>Mot de passe oublié ?</h3>
+    <p>Ce n'est pas un problème, suivez
+    <a href="{% url 'password_reset' %}">ce lien</a> pour en obtenir
+    un nouveau.</p>
+  </form>
+</body>
+{% endblock body_replace %}

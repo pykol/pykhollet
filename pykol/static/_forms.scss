@@ -1,4 +1,4 @@
-@mixin button {
+@mixin base-button {
   display: inline-block;
   padding: 6px 12px;
   margin-bottom: 0;
@@ -21,17 +21,34 @@
   }
 }
 
-@mixin button-primary {
-  @include button;
-  color: white;
-  background-color: #26B99A;
-  border-color: #169F85;
+@mixin button-success {
+  @include base-button;
+  @include color-success;
+}
 
-  &:hover, &:focus, &:active {
-    color: white;
-    background-color: #169F85;
-    border-color: #398439;
-  }
+@mixin button-danger {
+  @include base-button;
+  @include color-danger;
+}
+
+@mixin button-primary {
+  @include base-button;
+  @include color-primary;
+}
+
+@mixin button-warning {
+  @include base-button;
+  @include color-warning;
+}
+
+@mixin button-info {
+  @include base-button;
+  @include color-info;
+}
+
+@mixin button-dark {
+  @include base-button;
+  @include color-dark;
 }
 
 label {
@@ -53,7 +70,7 @@ input {
 }
 
 input[type="submit"] {
-  @include button-primary;
+  @include button-success;
   width: auto;
 }
 
@@ -82,5 +99,11 @@ form {
   .custom-combobox-input {
     margin: 0;
     padding: 5px 10px;
+  }
+  .add-row {
+    @include button-primary;
+  }
+  .delete-row {
+    @include button-danger;
   }
 }

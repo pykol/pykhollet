@@ -1,0 +1,14 @@
+{% extends "pykol/base-bare.html" %}
+
+{% block title %}Déconnexion{% endblock %}
+
+{% block body_replace %}
+<body class="login">
+  <div id="login">
+    <h1>Déconnexion</h1>
+    <p>Votre session a bien été fermée. Bonne journée.</p>
+    <p>Vous pouvez vous <a href="{% url 'login' %}">connecter à
+      nouveau</a>.</p>
+  </div>
+</body>
+{% endblock body_replace %}

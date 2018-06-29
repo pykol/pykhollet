@@ -165,11 +165,42 @@ class Enseignement(models.Model):
 	specialite = models.BooleanField(verbose_name="spécialité")
 	professeurs = models.ManyToManyField(Professeur, through=Service)
 
+	avec_colles = models.BooleanField()
+
+	PERIODICITE_HEBDOMADAIRE = 1
+	PERIODICITE_TRIMESTRIELLE = 2
+	PERIODICITE_CHOICES = (
+			(PERIODICITE_HEBDOMADAIRE, 'par semaine'),
+			(PERIODICITE_TRIMESTRIELLE, 'par trimestre'),
+		)
+	periodicite = models.SmallIntegerField(verbose_name="périodicité",
+			choices=PERIODICITE_CHOICES)
+	duree_par_periode = models.SmallIntegerField(
+			verbose_name="durée par période")
+
 	class Meta:
 		ordering = ['groupe', 'matiere']
 	
 	def __str__(self):
 		return "{} - {}".format(self.groupe, self.matiere)
+
+	def dotation_heures_colles(self, classe):
+		"""
+		Calcule la dotation en heures de colles théorique pour cet
+		enseignement dans la classe donnée
+		"""
+		if not self.avec_colles:
+			return 0
+
+		nb_etudiants = classe.etudiants.filter(
+				options__contains=self.matiere).count()
+
+		if self.periodicite == Enseignement.PERIODICITE_HEBDOMADAIRE:
+			mult = classe.get_nb_trimestres()
+		else:
+			mult = classe.get_nb_semaines()
+
+		return nb_etudiants * self.duree_par_periode * mult
 
 class ProfClasseManager(models.Manager):
 	def get_queryset(self):
@@ -238,3 +269,13 @@ class Classe(Groupe):
 
 	def get_absolute_url(self):
 		return reverse('classe_detail', args=(self.slug,))
+
+	def get_nb_semaines_colles(self):
+		if self.niveau == Classe.NIVEAU_PREMIERE_ANNEE:
+			return 30
+		return 25
+
+	def get_nb_trimestres_colles(self):
+		if self.niveau == Classe.NIVEAU_PREMIERE_ANNEE:
+			return 3
+		return 2

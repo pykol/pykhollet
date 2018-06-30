@@ -40,6 +40,8 @@ class Colle(models.Model):
 			on_delete=models.SET_NULL, verbose_name="matière")
 	groupe = models.ForeignKey(Groupe, blank=True, null=True,
 			on_delete=models.SET_NULL, related_name='+')
+	releve = models.ForeignKey('ColleReleve', blank=True, null=True,
+			on_delete=models.SET_NULL)
 
 class ColleDetails(models.Model):
 	colle = models.ForeignKey(Colle, on_delete=models.CASCADE)
@@ -64,10 +66,3 @@ class ColleNote(models.Model):
 	class Meta:
 		verbose_name = "note de colle"
 		verbose_name_plural = "notes de colle"
-
-class ColleReleve(models.Model):
-	colles = models.ManyToManyField(Colle, blank=True)
-
-	class Meta:
-		verbose_name = "relevé des colles"
-		verbose_name_plural = "relevés des colles"

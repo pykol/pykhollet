@@ -1,4 +1,4 @@
-# -*- coding: utf-8
+# -*- coding:utf8 -*-
 
 # pyKol - Gestion de colles en CPGE
 # Copyright (c) 2018 Florian Hatat
@@ -16,9 +16,24 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-from .colles import Colle, ColleDetails, ColleNote
-from .releve import ColleReleve
-from .conception import Semaine, Creneau, Trinome, \
-		Roulement, RoulementLigne, RoulementGraine, \
-		CollesParMatiere, CollesReglages
-from .perms import ColloscopePermission
+
+"""Modèles pour la gestion des relevés des heures de colles
+effectuées et leur mise en paiement."""
+
+from django.db import models
+
+class ColleReleve(models.Model):
+	date = models.DateTimeField()
+
+	ETAT_NOUVEAU = 0
+	ETAT_PAYE = 1
+	ETAT_CHOICES = (
+			(ETAT_NOUVEAU, 0),
+			(ETAT_PAYE, 1),
+		)
+	etat = models.PositiveSmallIntegerField(verbose_name="état",
+			choices=ETAT_CHOICES, default=0)
+
+	class Meta:
+		verbose_name = "relevé des colles"
+		verbose_name_plural = "relevés des colles"

@@ -28,7 +28,7 @@ class NavigationItem:
 		self.permissions = permissions
 		self.icon = icon
 		self.name = name
-		self.children = []
+		self.children = children
 		self.parent = None
 
 	def __iter__(self):
@@ -84,13 +84,14 @@ def tuple_flatten(tpl):
 			res += elt
 		else:
 			res.append(elt)
+
 	return tuple(res)
 
 def item(**kwargs):
 	try:
 		children = tuple_flatten(kwargs.pop('children'))
 	except KeyError:
-		children = None
+		children = []
 
 	item = NavigationItem(children=children, **kwargs)
 

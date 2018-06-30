@@ -18,7 +18,7 @@
 
 from django.urls import reverse
 
-from pykol.navigation import item, nav
+from pykol.lib.navigation import item, nav
 
 nav.register(item(name="home",
 	label="Tableau de bord",
@@ -26,44 +26,84 @@ nav.register(item(name="home",
 	icon="bar-chart",
 	))
 
-parametrage = item(
-		name="parametrage",
-		label="Paramétrage",
-		icon="wrench",
-		permissions=("pykol.direction",))
-nav.register(parametrage)
+nav.register(item(name="home",
+	label="Mon profil",
+	url="home",
+	icon="bar-chart",
+	))
 
-parametrage.children.append(item(name="import_bee",
-	label="Import BEE",
-	url="import_bee",
-	icon="download",))
-
-parametrage.children.append(item(name="annee_list",
-	label="Années scolaires",
-	url="annee_list",
-	icon="download",
-	permissions=("pykol.direction",)))
-
-nav.register(item(name="colle_list",
+mes_colles = item(
+	name="mes_colles",
 	label="Mes colles",
-	url="colle_list",
-	icon="calendar"))
+	icon="question",
+	children=(
+		item(
+			name="colles_a_noter",
+			label="À noter",
+			icon="edit",
+		),
+		item(
+			name="colles_planning",
+			label="Planning",
+		),
+		item(
+			name="colles_releve_heures",
+			label="Relevés d'heures",
+			icon="clone",
+		),
+	)
+)
+
+nav.register(mes_colles)
+
+parametrage = item(
+	name="parametrage",
+	label="Paramétrage",
+	icon="wrench",
+	permissions=("pykol.direction",),
+	children=(
+		item(name="annee_list",
+			label="Années scolaires",
+			url="annee_list",
+			icon="calendar-plus",
+			permissions=("pykol.direction",)
+		),
+
+		item(name="import_bee",
+			label="Import SIECLE/STS",
+			url="import_bee",
+			icon="download",
+		),
+
+		item(name="utilisateurs",
+			label="Utilisateurs",
+			icon="users",
+		),
+	)
+)
+nav.register(parametrage)
 
 colloscopes = item(name="colloscope_home",
 	label="Colloscopes",
 	url="colloscope_home",
-	icon="calendar")
+	icon="calendar",
+	children=(
+		item(name="creneau_list_direction",
+			label="Créneaux",
+			url="creneau_list_direction",
+			icon="fort-awesome"),
+		item(name="reservation_ponctuelle",
+			label="Réservations ponctuelles",
+			icon="calendar"),
+		# TODO entrées pour les classes
+	)
+)
 nav.register(colloscopes)
-
-colloscopes.children.append(item(name="crenau_list_direction",
-	label="Créneaux",
-	url="creneau_list_direction",
-	icon="calendar"))
 
 nav.register(item(name="classes",
 	label="Classes",
 	url="classe_list",
-	icon="users",
+	icon="chalkboard-teacher",
 	))
 
 nav.register(item(name="logout",

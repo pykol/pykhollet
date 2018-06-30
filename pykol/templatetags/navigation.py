@@ -19,7 +19,7 @@
 from django import template
 register = template.Library()
 
-from pykol.navigation import nav
+from pykol.lib.navigation import nav
 
 # Cet import ne sert à rien, si ce n'est forcer l'exécution du code
 # contenu dans ce fichier afin de peupler "nav".

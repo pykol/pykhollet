@@ -3,8 +3,11 @@
   box-sizing: border-box;
 }
 
-$fa-font-path: "fa/fonts";
-@import "fa/scss/font-awesome";
+$fa-font-path: "fa/webfonts";
+@import "fa/scss/fontawesome";
+@import "fa/scss/fa-solid";
+@import "fa/scss/fa-regular";
+@import "fa/scss/fa-brands";
 
 @import "colors";
 @import "grid";

@@ -1,4 +1,13 @@
 {% extends "pykol/base.html" %}
+{% block head %}
+{{ block.super }}
+<style>
+.creneau_horaire input {
+  width: calc(50% - 1rem);
+  min-width: 4.5rem;
+}
+</style>
+{% endblock %}
 {% block content %}
 <h2>
   Créneaux de colles
@@ -6,7 +15,48 @@
 
 <form action="" method="post">
   {% csrf_token %}
-  {{ formset }}
+  {{ formset.management_form }}
+  {{ formset.non_form_errors }}
+  <table class="formset" data-formset-prefix="{{ formset.management_form.prefix }}">
+    <thead>
+      <tr>
+        <th>Classe</th>
+        <th>Matière</th>
+        <th>Colleur</th>
+        <th>Jour</th>
+        <th>Horaire</th>
+        <th>Salle</th>
+        <th>Supprimer ?</th>
+      </tr>
+      {% if form.non_field_errors %}
+      <tr>
+        <td colspan="6">
+        {{ form.non_field_errors }}
+        </td>
+      </tr>
+      {% endif %}
+    </thead>
+    <tbody>
+      {% for form in formset %}
+      {% if form.errors %}
+      <tr>
+        <td colspan="6">
+          Le créneau suivant n'est pas valide.
+        </td>
+      </tr>
+      {% endif %}
+      <tr>
+        <td>{{ form.classe }}{% if form.classe.errors %}<br>{{ form.classe.errors }}{% endif %}</td>
+        <td>{{ form.id }}{{ form.matiere }}{% if form.matiere.errors %}<br>{{ form.matiere.errors }}{% endif %}</td>
+        <td>{{ form.colleur }}{% if form.colleur.errors %}<br>{{ form.colleur.errors }}{% endif %}</td>
+        <td>{{ form.jour }}{% if form.jour.errors %}<br>{{ form.jour.errors }}{% endif %}</td>
+        <td class="creneau_horaire">{{ form.debut }} − {{ form.fin }}{% if form.debut.errors %}<br>{{ form.debut.errors }}{% endif %}</td>{% if form.fin.errors %}<br>{{ form.fin.errors }}{% endif %}</td>
+        <td>{{ form.salle }}{% if form.salle.errors %}<br>{{ form.salle.errors }}{% endif %}</td>
+        <td>{{ form.DELETE }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
   <input type="submit">
 </form>
 {% endblock %}

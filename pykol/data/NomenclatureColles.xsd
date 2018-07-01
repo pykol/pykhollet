@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+
+  <xs:annotation>
+    <xs:documentation>
+      Schéma XML décrivant l'organisation des colles (durées, fréquences, matières) par filière en CPGE
+    </xs:documentation>
+  </xs:annotation>
+
+  <xs:simpleType name="frequence">
+    <xs:restriction base="xs:normalizedString">
+      <xs:enumeration value="hebdomadaire"/>
+      <xs:enumeration value="trimestrielle"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="code_mef">
+    <xs:restriction base="xs:normalizedString"/>
+  </xs:simpleType>
+
+  <xs:simpleType name="code_matiere">
+    <xs:restriction base="xs:normalizedString"/>
+  </xs:simpleType>
+
+  <xs:element name="codes_matieres">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="code_matiere" type="code_matiere" maxOccurs="unbounded"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="colle">
+    <xs:complexType>
+      <xs:all>
+        <xs:element name="code_mef" type="code_mef" maxOccurs="unbounded"/>
+        <xs:element ref="codes_matieres"/>
+        <xs:element name="frequence" type="frequence"/>
+        <xs:element name="duree" type="xs:duration"/>
+      </xs:all>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="colles">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="colle" maxOccurs="unbounded"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="colles_mef">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="nombre_semaines" type="xs:nonNegativeInteger"/>
+        <xs:element name="nombre_trimestres" type="xs:nonNegativeInteger"/>
+      </xs:sequence>
+      <xs:attribute name="code_mef" type="code_mef"/>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="colles_mefs">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="colles_mef" maxOccurs="unbounded"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="pykol_nomenclatures">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="colles"/>
+        <xs:element ref="colles_mefs"/>
+      </xs:sequence>
+      <xs:attribute name="version" type="xs:string"/>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>

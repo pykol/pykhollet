@@ -54,6 +54,13 @@ accounts_urlpatterns = [
 	path('', include('django.contrib.auth.urls')),
 ]
 
+releves_urlpatterns = [
+	path('', views.direction.ReleveListView.as_view(), name='releve_list'),
+	path('creer/', views.direction.releve_creer, name='releve_creer'),
+	path('<int:pk>/', views.direction.ReleveDetailView.as_view(), name='releve_detail'),
+	path('<int:pk>/payer/', views.direction.releve_payer, name='releve_payer'),
+]
+
 urlpatterns = [
 	path('', views.home, name='home'),
 	path('accounts/', include(accounts_urlpatterns)),
@@ -63,4 +70,5 @@ urlpatterns = [
 	path('annees/', include(annees_urlpatterns)),
 	path('classes/', include(classes_urlpatterns)),
 	path('etudiant/<int:pk>/', views.EtudiantDetailView.as_view(), name='etudiant'),
+	path('releves/', include(releves_urlpatterns)),
 ]

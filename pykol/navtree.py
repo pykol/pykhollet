@@ -28,7 +28,7 @@ nav.register(item(name="home",
 
 nav.register(item(name="home",
 	label="Mon profil",
-	url="home",
+	url="mon_profil",
 	icon="bar-chart",
 	))
 
@@ -77,6 +77,7 @@ parametrage = item(
 
 		item(name="utilisateurs",
 			label="Utilisateurs",
+			url='direction_list_user',
 			icon="users",
 		),
 	)

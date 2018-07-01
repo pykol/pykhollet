@@ -1,0 +1,40 @@
+{% extends "pykol/base.html" %}
+{% block content %}
+<h2>Mon profil</h2>
+
+<h3>Informations de connexion</h3>
+<form method="post" action="">
+  {% csrf_token %}
+  <table>
+    <tr>
+      <td>Nom</td>
+      <td>{{ user.last_name }}</td>
+    </tr>
+  
+    <tr>
+      <td>Prénom</td>
+      <td>{{ user.first_name }}</td>
+    </tr>
+
+    {{ profil_form.as_table }}
+    {{ pass_form.as_table }}
+  </table>
+
+  <input type="submit">
+</form>
+
+{% if user.professeur %}
+<h3>Professeur</h3>
+<table>
+  <tr>
+    <th>Corps</th>
+    <th>{{ user.get_corps_display }}</th>
+  </tr>
+</table>
+{% endif %}
+
+{% if user.etudiant %}
+<h3>Étudiant</h3>
+{% endif %}
+
+{% endblock %}

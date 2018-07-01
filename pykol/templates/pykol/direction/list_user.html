@@ -1,0 +1,31 @@
+{% extends "pykol/base.html" %}
+{% block content %}
+<h2>Liste des utilisateurs</h2>
+
+<table>
+  <thead>
+    <tr>
+      <th>Nom</th>
+      <th>E-mail</th>
+      <th>Statut particulier</th>
+    </tr>
+  </thead>
+
+  <tbody>
+    {% for pykol_user in user_list %}
+    <tr>
+      <td><a href="{% url 'direction_edit_user' pykol_user.pk %}">{{ pykol_user }}</a></td>
+      <td>{{ pykol_user.email|default_if_none:"-" }}</td>
+      <td>{% if pykol_user.professeur %}
+        Professeur
+        {% elif pykol_user.etudiant %}
+        Étudiant
+        {% else %}
+        -
+        {% endif %}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+{% endblock %}

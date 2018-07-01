@@ -45,9 +45,18 @@ classes_urlpatterns = [
 	path('<slug:slug>/', views.ClasseDetailView.as_view(), name='classe_detail'),
 ]
 
+accounts_urlpatterns = [
+	path('', views.DirectionListUser.as_view(), name='direction_list_user'),
+	path('profile/', views.mon_profil, name='mon_profil'),
+	path('create/', views.direction_create_user, name='direction_create_user'),
+	path('edit/<int:pk>/', views.direction_edit_user, name='direction_edit_user'),
+	path('delete/<int:pk>/', views.direction_delete_user, name='direction_delete_user'),
+	path('', include('django.contrib.auth.urls')),
+]
+
 urlpatterns = [
 	path('', views.home, name='home'),
-    path('accounts/', include('django.contrib.auth.urls')),
+	path('accounts/', include(accounts_urlpatterns)),
 	path('colles/', include(colles_urlpatterns)),
 	path('colloscopes/', views.colles.colloscope_home, name='colloscope_home'),
 	path('direction/', include(direction_urlpatterns)),

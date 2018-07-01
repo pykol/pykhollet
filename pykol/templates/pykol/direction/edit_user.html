@@ -1,0 +1,42 @@
+{% extends "pykol/base.html" %}
+{% block content %}
+<h2>{% if concerned_user %}
+Profil de {{ concerned_user }}
+{% else %}
+Création d'un utilisateur
+{% endif %}</h2>
+
+<form method="post" action="">
+  {% csrf_token %}
+
+  <fieldset>
+    <legend>Informations d'identification</legend>
+    <table>
+      {{ form.as_table }}
+    </table>
+  <input type="submit">
+  </fieldset>
+
+{% if concerned_user.professeur %}
+<fieldset>
+  <legend>Professeur</legend>
+  <table>
+    {{ prof_form.as_table }}
+  </table>
+  <input type="submit">
+</fieldset>
+{% endif %}
+
+{% if concerned_user.etudiant %}
+<fieldset>
+  <legend>Étudiant</legend>
+  <table>
+    {{ etudiant_form.as_table }}
+  </table>
+  <input type="submit">
+</fieldset>
+{% endif %}
+
+</form>
+
+{% endblock %}

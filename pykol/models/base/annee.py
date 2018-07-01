@@ -81,6 +81,9 @@ class Annee(Periode):
 				return False
 		return True
 
+	def dotation_totale(self):
+		return self.dotation_set.aggregate(total=models.Sum('heures'))['total']
+
 	def __str__(self):
 		return self.nom
 

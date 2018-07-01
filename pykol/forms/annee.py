@@ -1,4 +1,4 @@
-# -*- coding: utf-8
+# -*- coding: utf-8 -*-
 
 # pyKol - Gestion de colles en CPGE
 # Copyright (c) 2018 Florian Hatat
@@ -16,10 +16,10 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-from .colles import Colle, ColleDetails, ColleNote
-from .releve import ColleReleve
-from .conception import Semaine, Creneau, Trinome, \
-		Roulement, RoulementLigne, RoulementGraine, \
-		CollesParMatiere, CollesReglages
-from .perms import ColloscopePermission
-from .dotation import Dotation
+from django.forms import inlineformset_factory
+
+from pykol.models.base import Annee
+from pykol.models.colles import Dotation
+
+DotationFormSet = inlineformset_factory(Annee, Dotation, fields=('date',
+	'heures'), extra=1, can_delete=True)

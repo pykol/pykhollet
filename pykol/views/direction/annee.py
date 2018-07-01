@@ -16,17 +16,36 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-from django.views import generic
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.views import generic, View
+from django.shortcuts import render, redirect, get_object_or_404
+from django.contrib.auth.mixins import LoginRequiredMixin, \
+	PermissionRequiredMixin
 from django.contrib.auth.decorators import login_required, permission_required
 
 from pykol.models.base import Annee
+from pykol.models.colles import Dotation
+from pykol.forms.annee import DotationFormSet
 
 class AnneeListView(LoginRequiredMixin, generic.ListView):
 	model = Annee
+	ordering = ('debut',)
 
-class AnneeDetailView(LoginRequiredMixin, generic.DetailView):
-	model = Annee
+@login_required
+@permission_required('pykol.direction')
+def annee_detail(request, pk):
+	annee = get_object_or_404(Annee, pk=pk)
+
+	if request.method == 'POST':
+		dotation_formset = DotationFormSet(request.POST, instance=annee,
+				extra=1)
+		if dotation_formset.is_valid():
+			dotation_formset.save()
+			return redirect('annee_detail', pk=annee.pk)
+	else:
+		dotation_formset = DotationFormSet(instance=annee)
+
+	return render(request, 'pykol/annee_detail.html', context={
+		'annee' : annee, 'dotation_formset': dotation_formset})
 
 @login_required
 @permission_required('pykol.direction')

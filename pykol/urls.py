@@ -36,7 +36,7 @@ direction_urlpatterns = [
 
 annees_urlpatterns = [
 	path('', views.direction.AnneeListView.as_view(), name='annee_list'),
-	path('<int:pk>/', views.direction.AnneeDetailView.as_view(), name='annee_detail'),
+	path('<int:pk>/', views.direction.annee_detail, name='annee_detail'),
 	path('<int:pk>/supprimer', views.direction.annee_supprimer, name='annee_supprimer'),
 ]
 

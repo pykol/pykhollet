@@ -24,6 +24,11 @@ Création d'un utilisateur
     {{ prof_form.as_table }}
   </table>
   <input type="submit">
+
+  <p>Ce professeur intervient dans les classes suivantes :
+  <ul>
+    {{ concerned_user.professeur.mes_classes|unordered_list }}
+  </ul>
 </fieldset>
 {% endif %}
 

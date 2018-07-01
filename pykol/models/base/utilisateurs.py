@@ -85,6 +85,13 @@ class User(AbstractUser):
 
 	objects = UserManager()
 
+	class Meta:
+		verbose_name = "utilisateur"
+		verbose_name_plural = "utilisateurs"
+		permissions = (
+			('direction', "Droits de paramétrage de l'équipe de direction"),
+			)
+
 	def civilite(self, abrege=True):
 		if self.sexe == SEXE_HOMME:
 			if abrege:
@@ -128,12 +135,14 @@ class User(AbstractUser):
 				initials=re.sub(r'(\w)\w*', r'\1.', self.first_name),
 				last_name=self.last_name.upper())
 
-	class Meta:
-		verbose_name = "utilisateur"
-		verbose_name_plural = "utilisateurs"
-		permissions = (
-			('direction', "Droits de paramétrage de l'équipe de direction"),
-			)
+	def mes_classes(self):
+		"""Retourne la liste des classes pertinentes pour cet
+		utilisateur"""
+		from pykol.models.base import Classe
+		if self.has_perm('pykol.direction'):
+			return Classe.objects.all()
+		else:
+			return Classe.objects.none()
 
 class Etudiant(User):
 	"""
@@ -190,3 +199,11 @@ class Professeur(User):
 	class Meta:
 		verbose_name = "professeur"
 		verbose_name_plural = "professeurs"
+
+	def mes_classes(self):
+		"""Liste des classes où le professeur intervient"""
+		from pykol.models.base import Classe
+		qs = Classe.objects.filter(enseignements__service__professeur=self).union(
+				Classe.objects.filter(coordonnateur=self)).union(
+				Classe.objects.filter(creneau__colleur=self))
+		return qs

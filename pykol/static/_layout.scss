@@ -45,18 +45,29 @@ nav {
   background: $nav-background;
   color: $nav-color;
 
-  // Menu de premier niveau
-  & > ul > li {
+  ul {
+    display: block;
+  }
+
+  li {
+    display: block;
     min-height: 50px;
     line-height: 20px;
 
-    & > a {
+    & > *:first-child {
+      display: block;
       padding: 13px 15px 12px;
-      margin-bottom: 6px;
     }
-    & > ul {
-      padding: 0px 15px 12px;
+
+    &.current {
+      color: $nav-current-color;
+      background-color: $nav-current-background;
     }
+  }
+
+  // Menu de deuxième niveau
+  & > ul > li > ul {
+    padding: 0px 0px 0px 12px;
   }
 
   .fa-chevron-down {
@@ -98,11 +109,6 @@ nav {
     }
   }
 
-  // Menu de deuxième niveau
-  & > ul > li > ul > li {
-    padding: 9px;
-  }
-
   a {
     display: block;
 
@@ -110,23 +116,12 @@ nav {
       color: inherit;
       text-decoration: none;
     }
+  }
 
+  a, li > *:first-child {
     &:hover {
       background-color: $nav-hover-background;
       color: $nav-hover-color;
-    }
-  }
-
-  ul {
-    display: block;
-  }
-
-  li {
-    display: block;
-
-    &.current {
-      color: $nav-current-color;
-      background-color: $nav-current-background;
     }
   }
 }

@@ -17,7 +17,6 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 from django import forms
-from django.utils.translation import gettext, gettext_lazy as _
 from django.contrib.auth.forms import PasswordChangeForm
 
 from pykol.models.base import User, Professeur, Etudiant

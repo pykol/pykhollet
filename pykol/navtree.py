@@ -106,6 +106,23 @@ nav.register(item(name="classes",
 	icon="chalkboard-teacher",
 	))
 
+gestion = item(name="gestion",
+	label="Gestion",
+	children=(
+		item(name="utilisateurs",
+			label="Utilisateurs",
+			url='direction_list_user',
+			icon="users",
+		),
+		item(name="releve_list",
+			label="Relevés",
+			url='releve_list',
+			icon="users",
+		),
+	)
+)
+nav.register(gestion)
+
 nav.register(item(name="logout",
 	label="Déconnexion",
 	url="logout",

@@ -4,12 +4,16 @@
   <li>
       {% if item.url %}
       <a href="{% url item.url %}">
+      {% else %}
+      <span>
       {% endif %}
         <i class="fas fa-{{ item.icon }}"></i>
         {{ item.label }}
         {% if item.has_children %}<i class="fas fa-chevron-down"></i>{% endif %}
       {% if item.url %}
       </a>
+      {% else %}
+      </span>
       {% endif %}
       {% if item.has_children %}
       <ul>
@@ -17,10 +21,15 @@
         <li>
           {% if child_item.url %}
           <a href="{% url child_item.url %}">
+          {% else %}
+          <span>
           {% endif %}
-            <i class="fas fa-{{ child_item.icon }}"></i>{{ child_item.label }}
+            <i class="fas fa-{{ child_item.icon }}"></i>
+            {{ child_item.label }}
           {% if child_item.url %}
           </a>
+          {% else %}
+          </span>
           {% endif %}
         </li>
         {% endfor %}

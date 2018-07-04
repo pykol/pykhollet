@@ -1,5 +1,5 @@
 function menu_toggle() {
-  elt = $(this);
+  elt = $(this).parent();
   elt.siblings().removeClass("menu_current");
   elt.toggleClass("menu_current");
 }
@@ -10,9 +10,9 @@ $(document).ready(function () {
   document.head.appendChild(style);
   var sheet = style.sheet;
 
-  sheet.insertRule("nav > ul > li { cursor: pointer; }", 0);
+  sheet.insertRule("nav > ul > li > *:first-child { cursor: pointer; }", 0);
   sheet.insertRule("nav > ul > li > ul { max-height: 0px; overflow: hidden; transition: max-height 0.25s ease; }", 0);
   sheet.insertRule("nav > ul > li.menu_current > ul { max-height: 1000px; transition: max-height 1s ease; }", 0);
 
-  $("nav > ul > li").click(menu_toggle);
+  $("nav > ul > li > *:first-child").click(menu_toggle);
 });

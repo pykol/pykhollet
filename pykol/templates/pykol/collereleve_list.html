@@ -2,5 +2,15 @@
 {% block content %}
 <h2>Relevés des colles</h2>
 
-{% endblock %}
+{% if collereleve_list %}
+<ul>
+  {% for releve in collereleve_list %}
+  <li><a href="{{ releve.get_absolute_url }}">Relevé du
+      {{ releve.date }}</a></li>
+  {% endfor %}
+</ul>
+{% else %}
+<p>Aucun relevé pour cette année.
+{% endif %}
 
+{% endblock %}

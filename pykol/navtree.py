@@ -23,13 +23,13 @@ from pykol.lib.navigation import item, nav
 nav.register(item(name="home",
 	label="Tableau de bord",
 	url="home",
-	icon="bar-chart",
+	icon="chart-bar",
 	))
 
 nav.register(item(name="home",
 	label="Mon profil",
 	url="mon_profil",
-	icon="bar-chart",
+	icon="user",
 	))
 
 mes_colles = item(
@@ -45,6 +45,7 @@ mes_colles = item(
 		item(
 			name="colles_planning",
 			label="Planning",
+			icon="calendar-alt",
 		),
 		item(
 			name="colles_releve_heures",
@@ -91,7 +92,7 @@ colloscopes = item(name="colloscope_home",
 		item(name="creneau_list_direction",
 			label="Créneaux",
 			url="creneau_list_direction",
-			icon="fort-awesome"),
+			icon="stream"),
 		item(name="reservation_ponctuelle",
 			label="Réservations ponctuelles",
 			icon="calendar"),
@@ -108,6 +109,7 @@ nav.register(item(name="classes",
 
 gestion = item(name="gestion",
 	label="Gestion",
+	icon="paperclip",
 	children=(
 		item(name="utilisateurs",
 			label="Utilisateurs",
@@ -117,7 +119,7 @@ gestion = item(name="gestion",
 		item(name="releve_list",
 			label="Relevés",
 			url='releve_list',
-			icon="users",
+			icon="tasks",
 		),
 	)
 )

@@ -86,7 +86,6 @@ nav.register(parametrage)
 
 colloscopes = item(name="colloscope_home",
 	label="Colloscopes",
-	url="colloscope_home",
 	icon="calendar",
 	children=(
 		item(name="creneau_list_direction",

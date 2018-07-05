@@ -31,7 +31,9 @@
   <tbody>
     {% for creneau in matiere.list %}
     <tr>
-      <th>{% ifchanged creneau.matiere %}{{ creneau.matiere }}{% endifchanged %}</th>
+      {% ifchanged creneau.matiere %}
+      <th rowspan="{{ creneau.matiere|length }}">{{ creneau.matiere }}</th>
+      {% endifchanged %}
       <th>{{ creneau.colleur.short_display_name }}</th>
       <th>{{ creneau.get_jour_display }}</th>
       <th>{{ creneau.debut | heure_pour_colloscope }}−{{ creneau.fin | heure_pour_colloscope}}</th>

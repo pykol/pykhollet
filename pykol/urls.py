@@ -23,6 +23,7 @@ from . import views
 
 colles_urlpatterns = [
 	path('', views.colles.colle_list, name='colle_list'),
+	path('<int:pk>/', views.colles.colle_declarer, name='colle_declarer'),
 	path('<slug:slug>/', views.colles.colloscope, name='colloscope'),
 	path('<slug:slug>/trinomes', views.colles.trinomes, name='colloscope_trinomes'),
 	path('<slug:slug>/semaines', views.colles.semaines, name='colloscope_semaines'),

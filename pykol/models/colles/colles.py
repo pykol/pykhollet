@@ -52,6 +52,11 @@ class Colle(models.Model):
 	releve = models.ForeignKey('ColleReleve', blank=True, null=True,
 			on_delete=models.SET_NULL)
 
+	@property
+	def details(self):
+		"""Renvoie le dernier ColleDetails actif pour cette colle"""
+		return self.colledetails_set.get(actif=True)
+
 class ColleDetails(models.Model):
 	colle = models.ForeignKey(Colle, on_delete=models.CASCADE)
 	horaire = models.DateTimeField()

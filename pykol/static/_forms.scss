@@ -107,3 +107,7 @@ form {
     @include button-danger;
   }
 }
+
+.button-add {
+  @include button-primary;
+}

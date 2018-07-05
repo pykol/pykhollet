@@ -37,7 +37,7 @@ def releve_creer(request):
 	# On attache à ce relevé toutes les colles qui sont notées mais qui
 	# n'ont pas encore été payées
 	colles_faites = Colle.objects.filter(etat=Colle.ETAT_NOTEE,
-			releve__is_null=True)
+			releve__isnull=True)
 	colles_faites.update(
 			etat=Colle.ETAT_RELEVEE,
 			releve=releve)

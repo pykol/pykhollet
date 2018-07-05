@@ -16,7 +16,15 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+from django.views import generic, View
+from django.shortcuts import render, redirect, get_object_or_404
+from django.contrib.auth.mixins import LoginRequiredMixin, \
+	PermissionRequiredMixin
+from django.contrib.auth.decorators import login_required, permission_required
 
-from .base import *
-from .colles import *
-from .permissions import *
+from pykol.forms.permissions import ColloscopePermFormSet
+
+@login_required
+@permission_required('pykol.direction')
+def ajout_permission(request):
+	pass

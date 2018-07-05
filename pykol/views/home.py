@@ -26,6 +26,7 @@ from django.views.generic.list import ListView
 
 from pykol.forms.user import MonProfilForm, MonProfilPasswordForm, \
 		FullUserForm, ProfesseurForm, EtudiantForm
+from pykol.forms.permissions import ColloscopePermFormSet
 from pykol.models.base import User
 
 @login_required
@@ -77,8 +78,11 @@ def direction_edit_user(request, pk):
 		try:
 			prof_form = ProfesseurForm(request.POST,
 					instance=user.professeur)
+			perm_form = ColloscopePermFormSet(request.POST,
+					prefix='perm', instance=user)
 		except ObjectDoesNotExist:
 			prof_form = None
+			perm_form = None
 
 		try:
 			etudiant_form = EtudiantForm(request.POST,
@@ -87,17 +91,10 @@ def direction_edit_user(request, pk):
 			etudiant_form = None
 
 		need_redirect = False
-		if form.is_valid():
-			form.save()
-			need_redirect = True
-
-		if prof_form is not None and prof_form.is_valid():
-			prof_form.save()
-			need_redirect = True
-
-		if etudiant_form is not None and etudiant_form.is_valid():
-			etudiant_form.save()
-			need_redirect = True
+		for f in (form, prof_form, etudiant_form, perm_form):
+			if f is not None and f.is_valid():
+				f.save()
+				need_redirect = True
 
 		if need_redirect:
 			return redirect('direction_edit_user', pk=user.pk)
@@ -105,8 +102,11 @@ def direction_edit_user(request, pk):
 	else:
 		try:
 			prof_form = ProfesseurForm(instance=user.professeur)
+			perm_form = ColloscopePermFormSet(instance=user,
+					prefix='perm')
 		except ObjectDoesNotExist:
 			prof_form = None
+			perm_form = None
 
 		try:
 			etudiant_form = EtudiantForm(instance=user.etudiant)
@@ -120,6 +120,7 @@ def direction_edit_user(request, pk):
 				'concerned_user': user,
 				'form': form,
 				'prof_form': prof_form,
+				'perm_form': perm_form,
 				'etudiant_form': etudiant_form,
 			}
 		)

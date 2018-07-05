@@ -16,11 +16,25 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+"""
+Module des gestion des permissions sur les colloscopes
+
+La gestion des permissions sur les colloscopes n'est pas globale
+(contrairement au modèle standard de permissions de Django), mais
+se fait classe par classe et utilisateur par utilisateur.
+
+Il est possible d'accorder à un utilisateur donné dans une classe donnée
+le droit de modifier tout le colloscope, ou celui de modifier uniquement
+les colles de sa propre matière.
+"""
+
 from django.db import models
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import Permission
+from django.contrib.contenttypes.models import ContentType
 
 from pykol.models.base import Classe
+from .colles import Colle
 
 class ColloscopePermission(models.Model):
 	"""Gestion des permissions d'édition des colloscopes
@@ -34,17 +48,17 @@ class ColloscopePermission(models.Model):
 	donner les droits de lecture sur un colloscope à un professeur
 	extérieur à la classe.
 	"""
-	user = models.ForeignKey(get_user_model(), on_delete=models.CASCADE)
+	def droit_choices():
+		return {'content_type':
+				ContentType.objects.get_for_model(Colle)}
+	user = models.ForeignKey(get_user_model(), on_delete=models.CASCADE,
+			verbose_name="utilisateur")
 	classe = models.ForeignKey(Classe, on_delete=models.CASCADE)
-	droit = models.ForeignKey(Permission, on_delete=models.CASCADE)
+	matiere_seulement = models.BooleanField(verbose_name="Restreindre à"
+			" sa matière")
+	droit = models.ForeignKey(Permission, on_delete=models.CASCADE,
+			limit_choices_to=droit_choices)
 
 	class Meta:
 		verbose_name = "permission sur le colloscope"
 		verbose_name_plural = "permissions sur le colloscope"
-		permissions = (
-				('colloscope_voir', "Consulter le colloscope de la classe"),
-				('colloscope_complet', "Modifier l'intégralité du colloscope de la classe"),
-				('colloscope_matiere', "Modifier le colloscope pour sa propre matière"),
-				('colloscope_trinome', "Modifier la composition des groupes de colles"),
-			)
-

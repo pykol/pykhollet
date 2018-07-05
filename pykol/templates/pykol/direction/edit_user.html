@@ -32,6 +32,34 @@ Création d'un utilisateur
 </fieldset>
 {% endif %}
 
+{% if perm_form %}
+<fieldset>
+  <legend>Permissions sur les colloscopes</legend>
+  {{ perm_form.management_form }}
+  <table class="formset">
+    <thead>
+      <tr>
+        <th>Classe</th>
+        <th>Permission</th>
+        <th>Uniquement pour sa matière ?</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for form in perm_form %}
+      <tr>
+        <td>{{ form.id }}{{ form.classe }}</td>
+        <td>{{ form.droit }}</td>
+        <td>{{ form.matiere_seulement }}</td>
+        <td>{{ form.DELETE }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  <input type="submit">
+</fieldset>
+{% endif %}
+
 {% if concerned_user.etudiant %}
 <fieldset>
   <legend>Étudiant</legend>

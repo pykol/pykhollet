@@ -16,7 +16,9 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+from django.contrib import admin
 
-from .base import *
-from .colles import *
-from .permissions import *
+from pykol.admin.base import admin_site
+from pykol.models.colles import ColloscopePermission
+
+admin_site.register(ColloscopePermission)

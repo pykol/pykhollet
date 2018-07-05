@@ -16,7 +16,11 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+from django.forms import inlineformset_factory
 
-from .base import *
-from .colles import *
-from .permissions import *
+from pykol.models.colles import ColloscopePermission
+from pykol.models.base import Professeur
+
+ColloscopePermFormSet = inlineformset_factory(
+		Professeur, ColloscopePermission, fields=('classe',
+			'matiere_seulement', 'droit'), can_delete=True)

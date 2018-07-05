@@ -19,3 +19,4 @@
 from .import_bee import import_bee
 from .annee import *
 from .releve import *
+from .permissions import *

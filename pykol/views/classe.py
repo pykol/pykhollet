@@ -26,8 +26,12 @@ class ClasseDetailView(LoginRequiredMixin, generic.DetailView):
 
 	def get_context_data(self, **kwargs):
 		context = super().get_context_data(**kwargs)
-		context['etudiant_list'] = self.get_object().etudiant_set.order_by(
+		classe = self.get_object()
+		context['etudiant_list'] = classe.etudiant_set.order_by(
 				'last_name', 'first_name')
+		context['can_edit_colloscope'] = self.request.user.has_perm(
+				'pykol.add_colle',
+				classe)
 		return context
 
 class ClasseListView(LoginRequiredMixin, generic.ListView):

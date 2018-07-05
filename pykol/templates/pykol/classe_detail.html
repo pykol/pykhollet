@@ -2,6 +2,7 @@
 {% block content %}
 <h2>Détail de la classe {{ classe.nom }}</h2>
 
+{% if can_edit_colloscope %}
 <h3>Gestion du colloscope</h3>
 <ul>
   <li><a href="{% url 'colloscope_semaines' classe.slug %}">Gestion des
@@ -11,6 +12,7 @@
   <li><a href="{% url 'colloscope_creneaux' classe.slug %}">Gestion des
       créneaux de colles</a></li>
 </ul>
+{% endif %}
 
 <h3>Étudiants</h3>
 <ul>

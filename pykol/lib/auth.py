@@ -38,9 +38,13 @@ class PykolBackend(ModelBackend):
 		if obj is None:
 			return super().get_all_permissions(user_obj, obj)
 
+		# Permissions du colloscope
 		if isinstance(obj, Classe):
-			# Permission de colloscope
-			pass
+			perms = ColloscopePermission.objects.filter(user=user_obj,
+					classe=obj).values_list('droit__content_type__app_label',
+							'droit__codename').order_by()
+			return {"%s.%s" % (ct, name) for ct, name in perms}
+
 		return set()
 
 def user_has_object_perm(user, model, perm, **kwargs):

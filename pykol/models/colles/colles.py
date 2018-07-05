@@ -76,6 +76,7 @@ class ColleNote(models.Model):
 	eleve = models.ForeignKey(Etudiant, on_delete=models.CASCADE)
 	note = NoteField()
 	horaire = models.DateTimeField()
+	duree = models.DurationField(verbose_name="durée d'interrogation")
 
 	class Meta:
 		verbose_name = "note de colle"

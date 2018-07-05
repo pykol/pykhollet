@@ -23,7 +23,14 @@ effectuées et leur mise en paiement."""
 from django.db import models, transaction
 from django.utils.timezone import localtime
 
+from pykol.models.base import Annee
+
 class ColleReleve(models.Model):
+	def default_annee():
+		return Annee.actuelle.get().pk
+
+	annee = models.ForeignKey(Annee, default=default_annee,
+			on_delete=models.CASCADE)
 	date = models.DateTimeField()
 	date_paiement = models.DateTimeField(blank=True, null=True)
 

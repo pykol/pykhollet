@@ -88,6 +88,7 @@ nav.register(parametrage)
 colloscopes = item(name="colloscope_home",
 	label="Colloscopes",
 	icon="calendar",
+	permissions=('pykol.direction',),
 	children=(
 		item(name="creneau_list_direction",
 			label="Créneaux",
@@ -111,6 +112,7 @@ nav.register(classes)
 gestion = item(name="gestion",
 	label="Gestion",
 	icon="paperclip",
+	permissions=('pykol.direction',),
 	children=(
 		item(name="utilisateurs",
 			label="Utilisateurs",

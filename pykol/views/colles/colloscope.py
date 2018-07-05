@@ -21,6 +21,7 @@ from datetime import timedelta
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required, permission_required
 from django.db import transaction
+from django.core.exceptions import PermissionDenied
 
 from pykol.models.base import Classe
 from pykol.models.colles import Semaine, CollesReglages, Creneau
@@ -47,12 +48,18 @@ def colloscope(request, slug):
 @login_required
 def trinomes(request, slug):
 	classe = get_object_or_404(Classe, slug=slug)
+	if not request.user.has_perm('pykol.add_colle', classe):
+		raise PermissionDenied
+
 	trinomes = classe.trinomes
 	return render(request, 'pykol/base.html')
 
 @login_required
 def create_trinome(request, slug):
 	classe = get_object_or_404(Classe, slug=slug)
+	if not request.user.has_perm('pykol.add_colle', classe):
+		raise PermissionDenied
+
 	return render(request, 'pykol/base.html')
 
 #@object_permission_required(Classe, 'pykol.colloscope.complet', 'slug')
@@ -70,6 +77,8 @@ def semaines(request, slug):
 	ou bien fournir un format pour générer automatiquement les numéros.
 	"""
 	classe = get_object_or_404(Classe, slug=slug)
+	if not request.user.has_perm('pykol.add_colle', classe):
+		raise PermissionDenied
 
 	try:
 		colles_reglages = CollesReglages.objects.get(classe=classe)
@@ -190,17 +199,28 @@ def semaines(request, slug):
 @login_required
 def colle_creer(request, slug):
 	"""Créer une colle dans une classe donnée"""
+	classe = get_object_or_404(Classe, slug=slug)
+	if not request.user.has_perm('pykol.add_colle', classe):
+		raise PermissionDenied
+
 	pass
 
 @login_required
 def colle_supprimer(request, pk):
 	"""Supprimer une colle"""
+	classe = get_object_or_404(Classe, slug=slug)
+	if not request.user.has_perm('pykol.delete_colle', classe):
+		raise PermissionDenied
+
 	pass
 
 @login_required
 def creneaux(request, slug):
 	"""Liste des créneaux de colles pour une classe"""
 	classe = get_object_or_404(Classe, slug=slug)
+	if not request.user.has_perm('pykol.add_colle', classe):
+		raise PermissionDenied
+
 	creneaux_qs = Creneau.objects.filter(classe=classe).order_by('jour',
 			'colleur', 'debut')
 
@@ -246,4 +266,7 @@ def creneau_list_direction(request):
 @login_required
 def creneau_supprimer(request, pk):
 	"""Suppression d'un créneau de colle"""
+	if not request.user.has_perm('pykol.delete_creneau', classe):
+		raise PermissionDenied
+
 	pass

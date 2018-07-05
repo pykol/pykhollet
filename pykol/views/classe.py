@@ -24,5 +24,11 @@ from pykol.models.base import Classe
 class ClasseDetailView(LoginRequiredMixin, generic.DetailView):
 	model = Classe
 
+	def get_context_data(self, **kwargs):
+		context = super().get_context_data(**kwargs)
+		context['etudiant_list'] = self.get_object().etudiant_set.order_by(
+				'last_name', 'first_name')
+		return context
+
 class ClasseListView(LoginRequiredMixin, generic.ListView):
 	model = Classe

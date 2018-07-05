@@ -18,7 +18,7 @@
 
 from django.urls import reverse
 
-from pykol.lib.navigation import item, nav
+from pykol.lib.navigation import item, nav, MesClassesChildren
 
 nav.register(item(name="home",
 	label="Tableau de bord",
@@ -101,11 +101,12 @@ colloscopes = item(name="colloscope_home",
 )
 nav.register(colloscopes)
 
-nav.register(item(name="classes",
+classes = item(name="classes",
 	label="Classes",
-	url="classe_list",
 	icon="chalkboard-teacher",
-	))
+	)
+classes.children = MesClassesChildren()
+nav.register(classes)
 
 gestion = item(name="gestion",
 	label="Gestion",

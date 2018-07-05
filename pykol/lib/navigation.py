@@ -16,20 +16,60 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+import copy
 from importlib import import_module
 from django.utils import six
+from django.urls import reverse
+
+class NavigationChildrenList:
+	def __init__(self, children_list):
+		self.children_list = children_list
+
+	def __len__(self):
+		return len(self.children_list)
+
+	def append(self, x):
+		self.children_list.append(x)
+
+	def __call__(self, user):
+		return NavigationChildrenListUser(self.children_list, user)
+
+class NavigationChildrenListUser:
+	def __init__(self, children_list, user):
+		self.children_list = children_list
+		self.user = user
+
+	def __iter__(self):
+		for child in self.children_list:
+			if child.is_allowed(self.user):
+				yield(child.get_for_user(self.user))
 
 class NavigationItem:
-	def __init__(self, label, url=None, priority=0, permissions=[],
-			icon=None, name=None, parent=None, children=[]):
+	"""
+	Une entrée dans le menu de navigation
+	"""
+	def __init__(self, label, url=None, absolute_url=None, priority=0,
+			permissions=[], icon=None, name=None, parent=None,
+			children=[]):
 		self.label = label
 		self.url = url
+		self.url_args = []
+		self.absolute_url = absolute_url
 		self.priority = priority
 		self.permissions = permissions
 		self.icon = icon
 		self.name = name
-		self.children = children
+		self.children = NavigationChildrenList(children)
 		self.parent = None
+
+	def is_link(self):
+		return self.url is not None or self.absolute_url is not None
+
+	def get_link(self):
+		if self.absolute_url is not None:
+			return self.absolute_url
+		if self.url is not None:
+			return reverse(self.url, args=self.url_args)
 
 	def __iter__(self):
 		return iter(self.children)
@@ -43,7 +83,39 @@ class NavigationItem:
 	def has_children(self):
 		return len(self.children) > 0
 
+	def get_for_user(self, user):
+		return NavigationItemUser(self, user)
+
+class NavigationItemUser(NavigationItem):
+	def __new__(cls, navitem, user):
+		instance = copy.copy(navitem)
+		instance.__class__ = cls
+		return instance
+
+	def __init__(self, _, user):
+		self.user = user
+
+	def __iter__(self):
+		return iter(self.children(self.user))
+
+class MesClassesChildren:
+	def __call__(self, user):
+		def iter_classes():
+			for classe in user.mes_classes():
+				yield NavigationItem(
+						label=str(classe),
+						name="classe-{}".format(classe.slug),
+						absolute_url=classe.get_absolute_url(),
+						icon='users')
+		return iter_classes()
+
+	def __len__(self):
+		return 42
+
 class Navigation:
+	"""
+	Menu de navigation complet
+	"""
 	_all_navigation = {}
 
 	def __init__(self, name="main"):
@@ -70,10 +142,8 @@ class Navigation:
 	def __iter__(self):
 		return iter(self.root_item)
 
-	def iter_allowed(self, user):
-		for item in self.root_item:
-			if item.is_allowed(user):
-				yield(item)
+	def get_for_user(self, user):
+		return self.root_item.get_for_user(user)
 
 nav = Navigation()
 

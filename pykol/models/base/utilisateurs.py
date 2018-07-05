@@ -21,6 +21,7 @@ import re
 from django.db import models
 from django.contrib.auth.models import AbstractUser, BaseUserManager
 from django.core.validators import RegexValidator
+from django.core.exceptions import ObjectDoesNotExist
 from django.urls import reverse
 
 from pykol.models.fields import Lettre23Field
@@ -141,7 +142,9 @@ class User(AbstractUser):
 		from pykol.models.base import Classe
 		if self.has_perm('pykol.direction'):
 			return Classe.objects.all()
-		else:
+		try:
+			return self.professeur.mes_classes()
+		except ObjectDoesNotExist:
 			return Classe.objects.none()
 
 class Etudiant(User):

@@ -11,6 +11,12 @@
       groupes de colles</a></li>
   <li><a href="{% url 'colloscope_creneaux' classe.slug %}">Gestion des
       créneaux de colles</a></li>
+  <li><a href="{% url 'colloscope' classe.slug %}">Colloscope</a></li>
+</ul>
+{% else %}
+<h3>Colloscope</h3>
+<ul>
+  <li><a href="{% url 'colloscope' classe.slug %}">Colloscope</a></li>
 </ul>
 {% endif %}
 

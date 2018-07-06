@@ -25,7 +25,7 @@ from django.core.exceptions import PermissionDenied
 
 from pykol.models.base import Classe
 from pykol.models.colles import Semaine, CollesReglages, Creneau
-from pykol.forms.colles import SemaineFormSet, \
+from pykol.forms.colloscope import SemaineFormSet, \
 		SemaineNumeroGenerateurForm, \
 		CreneauFormSet, CreneauSansClasseFormSet
 

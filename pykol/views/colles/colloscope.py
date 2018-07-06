@@ -27,7 +27,8 @@ from pykol.models.base import Classe
 from pykol.models.colles import Semaine, CollesReglages, Creneau
 from pykol.forms.colloscope import SemaineFormSet, \
 		SemaineNumeroGenerateurForm, \
-		CreneauFormSet, CreneauSansClasseFormSet
+		CreneauFormSet, CreneauSansClasseFormSet, \
+		TrinomeFormSet
 
 @login_required
 def colloscope_home(request):
@@ -52,7 +53,38 @@ def trinomes(request, slug):
 		raise PermissionDenied
 
 	trinomes = classe.trinomes
-	return render(request, 'pykol/base.html')
+	etudiants = classe.etudiant_set.order_by('last_name', 'first_name')
+	initial = []
+	for etudiant in etudiants:
+		initial.append({
+			'etudiant': etudiant,
+			'groupes': ','.join([g[0] for g in
+				trinomes.filter(etudiants=etudiant).values_list('nom')]),
+			})
+
+	if request.method == 'POST':
+		formset = TrinomeFormSet(request.POST, initial=initial)
+		if formset.is_valid():
+			# On construit d'abord le dictionnaire qui à chaque trinôme
+			# associe la liste des étudiants membres
+			trinomes_membres = {}
+			for form in formset:
+				etudiant = form.etudiant
+				for groupe in form.cleaned_data['groupes']:
+					trinomes_membres.setdefault(groupe, []).append(etudiant)
+			# On met ensuite à jour la liste des trinômes
+			for groupe in trinomes_membres:
+				trinome, _ = trinomes.update_or_create(dans_classe=classe, nom=groupe,
+						defaults={})
+				trinome.etudiants.set(trinomes_membres[groupe])
+				trinome.save()
+			return redirect('colloscope_trinomes', classe.slug)
+	else:
+		formset = TrinomeFormSet(initial=initial)
+
+	return render(request, 'pykol/colles/trinomes.html',
+			context={'formset': formset,
+				'classe': classe,})
 
 @login_required
 def create_trinome(request, slug):
@@ -256,10 +288,10 @@ def creneau_list_direction(request):
 
 		if formset.is_valid():
 			formset.save()
-	
+
 	else:
 		formset = CreneauFormSet(queryset=creneaux_qs)
-	
+
 	return render(request, 'pykol/direction/creneau_list.html',
 			context={'formset': formset})
 

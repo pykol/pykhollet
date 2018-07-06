@@ -1,0 +1,40 @@
+{% extends "pykol/base.html" %}
+{% block content %}
+<h2>
+  Groupes de colles
+  <small>{{ classe }} − {{ classe.annee }}</small>
+</h2>
+
+<p>Pour chaque étudiant dans la liste suivante, indiquez le groupe de
+colle auquel il appartient. Vous pouvez indiquer plusieurs groupes en
+les séparant par des virgules. Ceci permet par exemple de changer les
+groupes en cours d'année mais en conservant l'historique des groupes du
+début d'année.</p>
+
+<p>Il n'y a pas de restriction particulière sur les identifiants que
+vous pouvez utiliser (chiffres, lettres, etc.). Ils seront utilisés dans
+l'affichage du colloscope pour désigner les groupes.</p>
+
+<form method="POST" action="">
+  {% csrf_token %}
+  {{ formset.management_form }}
+  <table class="formset">
+    <thead>
+      <tr>
+        <th>Étudiant</th>
+        <th>Groupes</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for form in formset %}
+      <tr>
+        <td>{{ form.etudiant }}</td>
+        <td>{{ form.groupes }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  <input type="submit">
+</form>
+
+{% endblock %}

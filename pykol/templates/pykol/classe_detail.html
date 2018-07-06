@@ -20,10 +20,24 @@
 </ul>
 {% endif %}
 
+<h3>Groupes de colles</h3>
+<ul class="trinomes">
+  {% for trinome in classe.trinomes.all %}
+  <li>{{ trinome.nom }}
+    <ul>
+      {% for etudiant in trinome.etudiants.all %}
+      <li>{{ etudiant }}</li>
+      {% endfor %}
+    </ul>
+  </li>
+  {% endfor %}
+</ul>
+
 <h3>Étudiants</h3>
 <ul>
   {% for etudiant in etudiant_list %}
   <li><a href="{{ etudiant.get_absolute_url }}">{{ etudiant }}</a></li>
   {% endfor %}
 </ul>
+
 {% endblock %}

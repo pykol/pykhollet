@@ -6,3 +6,11 @@
     font-weight: inherit;
   }
 }
+
+.trinomes {
+  @include make-row;
+
+  & > ul {
+    @include make-col(3);
+  }
+}

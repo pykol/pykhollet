@@ -20,8 +20,9 @@ from django import forms
 from django.forms import formset_factory, modelformset_factory, \
 		inlineformset_factory
 
-from pykol.models.base import Matiere
+from pykol.models.base import Matiere, Etudiant
 from pykol.models.colles import Semaine, CollesReglages, Creneau
+from pykol.forms import CommaSeparatedCharField
 
 class SemaineForm(forms.Form):
 	debut = forms.DateField(label="début")
@@ -69,3 +70,14 @@ CreneauSansClasseFormSet = modelformset_factory(Creneau,
 		form=CreneauForm, can_delete=True, extra=3,
 		fields = ('jour', 'debut', 'fin', 'salle', 'colleur',
 			'matiere',))
+
+class TrinomeForm(forms.Form):
+	groupes = CommaSeparatedCharField(required=False)
+
+	def __init__(self, *args, initial={}, **kwargs):
+		super().__init__(*args, initial=initial, **kwargs)
+		if 'etudiant' in initial:
+			self.etudiant = initial['etudiant']
+
+TrinomeFormSet = formset_factory(TrinomeForm, can_delete=False, extra=0,
+		can_order=False)

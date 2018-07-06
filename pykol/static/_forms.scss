@@ -1,54 +1,31 @@
-@mixin base-button {
-  display: inline-block;
-  padding: 6px 12px;
-  margin-bottom: 0;
-  font-size: 14px;
-  font-weight: 400;
-  white-space: nowrap;
-  vertical-align: middle;
-  cursor: pointer;
-  border: 1px solid #a7a9aa;
-  border-radius: 3px;
-  color: white;
-  background-color: #a7a9aa;
-  text-align: center;
-
-  &:hover, &:focus, &:active {
-    color: #333;
-    text-decoration: none;
-    background-color: #e6e6e6;
-    border-color: #adadad;
-  }
-}
-
 @mixin button-success {
-  @include base-button;
-  @include color-success;
+  @extend .btn;
+  @extend .btn-success;
 }
 
 @mixin button-danger {
-  @include base-button;
-  @include color-danger;
+  @extend .btn;
+  @extend .btn-danger;
 }
 
 @mixin button-primary {
-  @include base-button;
-  @include color-primary;
+  @extend .btn;
+  @extend .btn-primary;
 }
 
 @mixin button-warning {
-  @include base-button;
-  @include color-warning;
+  @extend .btn;
+  @extend .btn-warning;
 }
 
 @mixin button-info {
-  @include base-button;
-  @include color-info;
+  @extend .btn;
+  @extend .btn-info;
 }
 
 @mixin button-dark {
-  @include base-button;
-  @include color-dark;
+  @extend .btn;
+  @extend .btn-dark;
 }
 
 label {
@@ -72,6 +49,8 @@ input {
 input[type="submit"] {
   @include button-success;
   width: auto;
+  height: auto;
+  line-height: auto;
 }
 
 form {
@@ -105,6 +84,7 @@ form {
   }
   .delete-row {
     @include button-danger;
+    @extend .btn-sm;
   }
 }
 

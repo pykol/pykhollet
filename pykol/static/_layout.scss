@@ -1,13 +1,11 @@
 body {
   min-height: 100vh;
-  display: flex;
+  @include make-row()
 }
 
 /* Barre de menu à gauche */
 header {
-  @include make-cell(2);
-  flex: none;
-  zoom: 1;
+  @include make-col(2);
   border-bottom: 1px solid #38383D;
   color: $header-color;
   background: $header-background;
@@ -127,8 +125,7 @@ nav {
 }
 
 #content {
-  flex: 1 0;
-  max-width: 100%;
+  @include make-container;
   color: $content-color;
   background: $content-background;
   padding: 10px 20px 0;

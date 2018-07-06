@@ -9,8 +9,13 @@ $fa-font-path: "fa/webfonts";
 @import "fa/scss/fa-regular";
 @import "fa/scss/fa-brands";
 
+@import "bootstrap/scss/functions";
+@import "bootstrap/scss/variables";
+@import "bootstrap/scss/mixins";
+@import "bootstrap/scss/alert";
+@import "bootstrap/scss/buttons";
+
 @import "colors";
-@import "grid";
 @import "typography";
 @import "layout";
 @import "forms";

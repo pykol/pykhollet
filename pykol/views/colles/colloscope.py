@@ -22,13 +22,14 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required, permission_required
 from django.db import transaction
 from django.core.exceptions import PermissionDenied
+from django.forms import formset_factory
 
 from pykol.models.base import Classe
 from pykol.models.colles import Semaine, CollesReglages, Creneau
 from pykol.forms.colloscope import SemaineFormSet, \
 		SemaineNumeroGenerateurForm, \
 		CreneauFormSet, CreneauSansClasseFormSet, \
-		TrinomeFormSet
+		TrinomeForm
 
 @login_required
 def colloscope_home(request):

@@ -71,13 +71,25 @@ CreneauSansClasseFormSet = modelformset_factory(Creneau,
 		fields = ('jour', 'debut', 'fin', 'salle', 'colleur',
 			'matiere',))
 
+class LabelledHiddenWidget(forms.HiddenInput):
+	def __init__(self, *args, **kwargs):
+		super(LabelledHiddenWidget, self).__init__(*args, **kwargs)
+
+	def render(self, name, value, attrs=None):
+		input_html = super(LabelledHiddenWidget, self).render(name, value, attrs)
+		for pk, val in self.choices:
+			if pk == value:
+				input_html += val
+				break
+		return input_html
+
 class TrinomeForm(forms.Form):
+	etudiant = forms.ModelChoiceField(required=True,
+			queryset=Etudiant.objects.none(),
+			widget=LabelledHiddenWidget())
 	groupes = CommaSeparatedCharField(required=False)
 
-	def __init__(self, *args, initial={}, **kwargs):
-		super().__init__(*args, initial=initial, **kwargs)
-		if 'etudiant' in initial:
-			self.etudiant = initial['etudiant']
-
-TrinomeFormSet = formset_factory(TrinomeForm, can_delete=False, extra=0,
-		can_order=False)
+	def __init__(self, *args, queryset=None, **kwargs):
+		super().__init__(*args, **kwargs)
+		if queryset is not None:
+			self.fields['etudiant'].queryset = queryset

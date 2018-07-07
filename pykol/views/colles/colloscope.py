@@ -63,8 +63,12 @@ def trinomes(request, slug):
 				trinomes.filter(etudiants=etudiant).values_list('nom')]),
 			})
 
+	TrinomeFormSet = formset_factory(TrinomeForm, can_delete=False, extra=0,
+		can_order=False, max_num=len(etudiants), min_num=len(etudiants))
+
 	if request.method == 'POST':
-		formset = TrinomeFormSet(request.POST, initial=initial)
+		formset = TrinomeFormSet(request.POST, form_kwargs={'queryset':
+			etudiants}, initial=initial)
 		if formset.is_valid():
 			# On construit d'abord le dictionnaire qui à chaque trinôme
 			# associe la liste des étudiants membres
@@ -81,7 +85,8 @@ def trinomes(request, slug):
 				trinome.save()
 			return redirect('colloscope_trinomes', classe.slug)
 	else:
-		formset = TrinomeFormSet(initial=initial)
+		formset = TrinomeFormSet(initial=initial,
+				form_kwargs={'queryset': etudiants})
 
 	return render(request, 'pykol/colles/trinomes.html',
 			context={'formset': formset,

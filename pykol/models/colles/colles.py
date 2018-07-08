@@ -59,13 +59,14 @@ class Colle(models.Model):
 		return self.colledetails_set.get(actif=True)
 
 class ColleDetails(models.Model):
-	colle = models.ForeignKey(Colle, on_delete=models.CASCADE)
+	colle = models.ForeignKey(Colle, on_delete=models.CASCADE,
+			db_index=True)
 	horaire = models.DateTimeField()
 	salle = models.CharField(max_length=30)
 	colleur = models.ForeignKey(Professeur, blank=True, null=True,
-			on_delete=models.SET_NULL)
+			on_delete=models.SET_NULL, db_index=True)
 	eleves = models.ManyToManyField(Etudiant, blank=True,
-			verbose_name="élèves")
+			verbose_name="élèves", db_index=True)
 	actif = models.BooleanField(default=True)
 
 	class Meta:
@@ -73,8 +74,10 @@ class ColleDetails(models.Model):
 		verbose_name_plural = "détails de la colle"
 
 class ColleNote(models.Model):
-	colle = models.ForeignKey(Colle, on_delete=models.CASCADE)
-	eleve = models.ForeignKey(Etudiant, on_delete=models.CASCADE)
+	colle = models.ForeignKey(Colle, on_delete=models.CASCADE,
+			db_index=True)
+	eleve = models.ForeignKey(Etudiant, on_delete=models.CASCADE,
+			db_index=True)
 	note = NoteField()
 	horaire = models.DateTimeField()
 	duree = models.DurationField(verbose_name="durée d'interrogation")

@@ -51,6 +51,7 @@ class Colle(models.Model):
 			on_delete=models.SET_NULL, related_name='+')
 	releve = models.ForeignKey('ColleReleve', blank=True, null=True,
 			on_delete=models.SET_NULL)
+	duree = models.DurationField(verbose_name="durée d'interrogation")
 
 	@property
 	def details(self):

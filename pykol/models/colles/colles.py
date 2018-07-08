@@ -16,20 +16,19 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-from django.db import models
+from django.db import models, transaction
 
 from pykol.models.base import Classe, Professeur, Matiere, Etudiant, Groupe
 from pykol.models.fields import NoteField
-from .conception import Creneau, Semaine
 
 # Liste des jours de la semaine, numérotation ISO
 LISTE_JOURS = enumerate(["lundi", "mardi", "mercredi", "jeudi",
 	"vendredi", "samedi", "dimanche"], 1)
 
 class Colle(models.Model):
-	creneau = models.ForeignKey(Creneau, blank=True, null=True,
+	creneau = models.ForeignKey('Creneau', blank=True, null=True,
 			on_delete=models.SET_NULL, verbose_name="créneau")
-	semaine = models.ForeignKey(Semaine, blank=True, null=True,
+	semaine = models.ForeignKey('Semaine', blank=True, null=True,
 			on_delete=models.SET_NULL)
 	classe = models.ForeignKey(Classe, on_delete=models.CASCADE)
 
@@ -58,11 +57,48 @@ class Colle(models.Model):
 		"""Renvoie le dernier ColleDetails actif pour cette colle"""
 		return self.colledetails_set.get(actif=True)
 
+	@transaction.atomic
+	def ajout_details(self, horaire=None, salle='', colleur=None,
+			eleves=[]):
+		"""
+		Ajouter un ColleDetails qui met à jour le précédent.
+
+		Si les élèves, le colleur ou l'horaire ne sont pas précisés, on
+		reprend ceux qui existaient déjà dans le ColleDetails précédent.
+
+		Si la salle n'est pas indiquée, on ne reprend l'ancienne salle
+		que si l'horaire de la colle n'a pas changé. Sinon, la
+		réservation de salle n'est pas garantie et il vaut mieux laisser
+		le champ vide.
+		"""
+		try:
+			ancien_detail = self.details
+			if not colleur:
+				colleur = ancien_detail.colleur
+			if not eleves:
+				eleves = ancien_detail.eleves
+			if not horaire:
+				horaire = ancien_detail.horaire
+			if not salle and horaire == ancien_detail.horaire:
+				salle = ancien_horaire.salle
+
+		except ColleDetails.DoesNotExist:
+			ancien_detail = None
+
+		self.colledetails_set.update(actif=False)
+
+		detail = ColleDetails(colle=self, horaire=horaire, salle=salle,
+				colleur=colleur)
+		detail.save()
+		detail.eleves.set(eleves)
+
+		return detail
+
 class ColleDetails(models.Model):
 	colle = models.ForeignKey(Colle, on_delete=models.CASCADE,
 			db_index=True)
 	horaire = models.DateTimeField()
-	salle = models.CharField(max_length=30)
+	salle = models.CharField(max_length=30, blank=True)
 	colleur = models.ForeignKey(Professeur, blank=True, null=True,
 			on_delete=models.SET_NULL, db_index=True)
 	eleves = models.ManyToManyField(Etudiant, blank=True,

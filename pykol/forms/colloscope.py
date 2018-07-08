@@ -21,7 +21,9 @@ from django.forms import formset_factory, modelformset_factory, \
 		inlineformset_factory
 
 from pykol.models.base import Matiere, Etudiant
-from pykol.models.colles import Semaine, CollesReglages, Creneau
+from pykol.models.colles import Semaine, CollesReglages, Creneau, \
+		Roulement, RoulementLigne, RoulementApplication, \
+		RoulementGraineLigne
 from pykol.forms import CommaSeparatedCharField
 
 class SemaineForm(forms.Form):
@@ -93,3 +95,14 @@ class TrinomeForm(forms.Form):
 		super().__init__(*args, **kwargs)
 		if queryset is not None:
 			self.fields['etudiant'].queryset = queryset
+
+class RoulementApplicationForm(forms.ModelForm):
+	class Meta:
+		model = RoulementApplication
+		fields = ('semaines',)
+
+RoulementLigneFormSet = forms.inlineformset_factory(Roulement,
+		RoulementLigne, fields=('ordre', 'creneau',), can_delete=True)
+
+RoulementGraineFormSet = forms.inlineformset_factory(RoulementApplication,
+		RoulementGraineLigne, fields=('trinome', 'decalage'))

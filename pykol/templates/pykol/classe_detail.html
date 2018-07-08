@@ -11,6 +11,12 @@
       groupes de colles</a></li>
   <li><a href="{% url 'colloscope_creneaux' classe.slug %}">Gestion des
       créneaux de colles</a></li>
+  <li><a href="{% url 'roulement_creer' classe.slug %}">Enchainement des
+      colles</a>
+    {% for roulement in classe.roulement_set.all %}
+    (<a href="{% url 'roulement_editer' roulement.pk %}">{{ roulement.pk }}</a>)
+    {% endfor %}
+  </li>
   <li><a href="{% url 'colloscope' classe.slug %}">Colloscope</a></li>
 </ul>
 {% else %}

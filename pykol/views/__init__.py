@@ -7,3 +7,4 @@ from .classe import ClasseDetailView, ClasseListView
 from .etudiant import EtudiantDetailView
 from . import colles
 from . import direction
+from . import colloscope

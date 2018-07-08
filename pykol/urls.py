@@ -28,6 +28,15 @@ colles_urlpatterns = [
 	path('<slug:slug>/trinomes', views.colles.trinomes, name='colloscope_trinomes'),
 	path('<slug:slug>/semaines', views.colles.semaines, name='colloscope_semaines'),
 	path('<slug:slug>/creneaux', views.colles.creneaux, name='colloscope_creneaux'),
+	path('<slug:slug>/roulement/creer', views.colloscope.roulement_creer, name='roulement_creer'),
+]
+
+colloscopes_urlpatterns = [
+	path('', views.colles.colloscope_home, name='colloscope_home'),
+	path('roulement/<int:pk>', views.colloscope.roulement_editer, name='roulement_editer'),
+	path('roulement/<int:pk>/application_creer', views.colloscope.roulement_application_creer, name='roulement_application_creer'),
+	path('roulement/application/<int:pk>/', views.colloscope.roulement_application_editer, name='roulement_application_editer'),
+	path('roulement/application/<int:pk>/generer', views.colloscope.roulement_generer_colles, name='roulement_generer_colles'),
 ]
 
 direction_urlpatterns = [
@@ -66,7 +75,7 @@ urlpatterns = [
 	path('', views.home, name='home'),
 	path('accounts/', include(accounts_urlpatterns)),
 	path('colles/', include(colles_urlpatterns)),
-	path('colloscopes/', views.colles.colloscope_home, name='colloscope_home'),
+	path('colloscopes/', include(colloscopes_urlpatterns)),
 	path('direction/', include(direction_urlpatterns)),
 	path('annees/', include(annees_urlpatterns)),
 	path('classes/', include(classes_urlpatterns)),

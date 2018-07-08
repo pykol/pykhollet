@@ -1,0 +1,24 @@
+{% extends "pykol/base.html" %}
+{% block content %}
+<h2>Appliquer la permutation des colles
+  <small>− {{ appli.roulement.classe }}</small>
+</h2>
+
+<form method="post" action="">
+  {% csrf_token %}
+
+  <h3>Semaines concernées</h3>
+  <table>
+    {{ form.as_table }}
+  </table>
+
+  <h3>Groupes initiaux</h3>
+  <table>
+    {{ formset.as_table }}
+  </table>
+
+  <input type="submit">
+</form>
+
+<p><a href="{% url 'roulement_generer_colles' appli.roulement.pk %}">Générer les colles</a></p>
+{% endblock %}

@@ -1,0 +1,50 @@
+{% extends "pykol/base.html" %}
+{% block content %}
+<h2>Enchainement des colles
+  <small>− {{ roulement.classe }}</small>
+</h2>
+
+{% if messages %}
+<ul class="messages">
+    {% for message in messages %}
+    <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+    {% endfor %}
+</ul>
+{% endif %}
+
+<form method="post" action="">
+  {% csrf_token %}
+
+  <h3>Permutation des colles</h3>
+  {{ formset.management_form }}
+  <table class="formset">
+    <thead>
+      <tr>
+        <th>Ordre</th>
+        <th>Créneau</th>
+        <th>Supprimer ?</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% if formset.non_form_errors %}
+      <tr>
+        <td colspan="3">
+          {{ formset.non_form_errors }}
+        </td>
+      </tr>
+      {% endif %}
+      {% for form in formset %}
+      <tr>
+        <td>{{ form.id }}{{ form.ordre }}</td>
+        <td>{{ form.creneau }}</td>
+        <td>{{ form.DELETE }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+  <input type="submit">
+</form>
+
+<p><a href="{% url 'roulement_application_creer' roulement.pk %}">Appliquer cette permutation</a></p>
+{% endblock %}

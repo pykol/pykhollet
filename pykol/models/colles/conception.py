@@ -16,12 +16,15 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-from django.db import models
+import datetime
+
+from django.db import models, transaction
 from django.db.models import Q, F
 from django.core.exceptions import ValidationError
 
 from pykol.models.base import Classe, Professeur, Matiere, Groupe, \
 		Enseignement
+from .colles import Colle
 
 # Liste des jours de la semaine, numérotation ISO
 LISTE_JOURS = enumerate(["lundi", "mardi", "mercredi", "jeudi",
@@ -63,7 +66,38 @@ class Creneau(models.Model):
 		verbose_name_plural = 'créneaux'
 	
 	def __str__(self):
-		return "{} {:%H:%M}-{:%H:%M}".format(self.get_jour_display(), self.debut, self.fin)
+		return "{} ({}) {} {:%H:%M}-{:%H:%M}".format(self.matiere,
+				self.colleur, self.get_jour_display(),
+				self.debut, self.fin)
+
+	@transaction.atomic
+	def update_or_create_colle(self, semaine, trinome):
+		"""Créer une colle sur le modèle du créneau, sur la semaine
+		donnée et pour le groupe donné.
+		
+		On considère que la colle est identifiée par sa semaine et son
+		créneau. Si le trinôme change, on met simplement à jour la
+		colle.
+		"""
+		# TODO Durée d'interrogation ?
+		colle, _ = Colle.objects.update_or_create(creneau=self,
+				semaine=semaine,
+				defaults={'classe': self.classe,
+					'matiere': self.matiere,
+					'groupe': trinome,
+					'duree': 'PT10M'})
+
+		# TODO timezone ?
+		horaire = datetime.datetime.combine(semaine.debut, self.debut)
+		# On trouve ensuite le premier jour de la semaine qui est égal à
+		# self.jour
+		while horaire.isoweekday() != self.jour:
+			horaire += datetime.timedelta(days=1)
+
+		colle.ajout_details(horaire=horaire, salle=self.salle,
+				colleur=self.colleur, eleves=trinome.etudiants.all())
+
+		return colle
 
 class Trinome(Groupe):
 	"""Groupe de colle dans une classe"""
@@ -76,30 +110,50 @@ class Trinome(Groupe):
 		super().save(*args, **kwargs)
 
 class Roulement(models.Model):
+	"""
+	Modèle qui permet de stocker la liste des colles que doit suivre un
+	groupe fixé, dans l'ordre des semaines.
+	"""
 	classe = models.ForeignKey(Classe, on_delete=models.CASCADE)
-	semaines = models.ManyToManyField(Semaine, blank=True)
-
-	#def clean(self):
-	#	errors = []
-	#	for semaine in self.semaines:
-	#		if semaine.classe != self.classe:
-	#			errors.append(ValidationError("Vous ne pouvez pas "
-	#			"sélectionner la semaine %(semaine)s car elle "
-	#			"n'appartient pas à la classe %(classe)s.",
-	#			code='invalid',
-	#			params={'semaine': semaine,
-	#				'classe': self.classe,}))
-	#	if len(errors) > 0:
-	#		raise ValidationError({'semaines': errors})
+	creneaux = models.ManyToManyField(Creneau, through='RoulementLigne')
 
 class RoulementLigne(models.Model):
+	"""
+	Un élément d'un Roulement
+	"""
+	roulement = models.ForeignKey(Roulement, on_delete=models.CASCADE,
+			related_name='lignes')
+	# On considère que l'ordre doit commencer à 0 dans la base de
+	# données.
 	ordre = models.PositiveSmallIntegerField()
 	creneau = models.ForeignKey(Creneau, on_delete=models.CASCADE)
-	roulement = models.ForeignKey(Roulement, on_delete=models.CASCADE,
-			related_name="lignes")
 
-class RoulementGraine(models.Model):
-	trinomes = models.ManyToManyField(Trinome)
+class RoulementApplication(models.Model):
+	"""
+	Application d'un roulement à une liste de trinômes sur un ensemble
+	de semaines.
+	"""
+	roulement = models.ForeignKey(Roulement, on_delete=models.CASCADE,
+			related_name='graines')
+	semaines = models.ManyToManyField(Semaine, blank=True)
+	trinomes = models.ManyToManyField(Trinome, through='RoulementGraineLigne')
+
+	def generer_colles(self):
+		pass
+
+class RoulementGraineLigne(models.Model):
+	application = models.ForeignKey(RoulementApplication,
+			on_delete=models.CASCADE,
+			related_name='lignes')
+	trinome = models.ForeignKey(Trinome,
+			on_delete=models.CASCADE, related_name='+')
+	decalage = models.PositiveSmallIntegerField()
+
+	class Meta:
+		unique_together = ['trinome', 'application']
+
+	def generer_colles(self):
+		pass
 
 class CollesParMatiere(models.Model):
 	enseignement = models.ForeignKey(Enseignement, on_delete=models.CASCADE)

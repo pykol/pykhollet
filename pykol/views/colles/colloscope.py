@@ -23,6 +23,7 @@ from django.contrib.auth.decorators import login_required, permission_required
 from django.db import transaction
 from django.core.exceptions import PermissionDenied
 from django.forms import formset_factory
+from django.contrib import messages
 
 from pykol.models.base import Classe
 from pykol.models.colles import Semaine, CollesReglages, Creneau
@@ -74,7 +75,7 @@ def trinomes(request, slug):
 			# associe la liste des étudiants membres
 			trinomes_membres = {}
 			for form in formset:
-				etudiant = form.etudiant
+				etudiant = form.cleaned_data['etudiant']
 				for groupe in form.cleaned_data['groupes']:
 					trinomes_membres.setdefault(groupe, []).append(etudiant)
 			# On met ensuite à jour la liste des trinômes
@@ -83,6 +84,10 @@ def trinomes(request, slug):
 						defaults={})
 				trinome.etudiants.set(trinomes_membres[groupe])
 				trinome.save()
+
+			messages.success(request, "Les groupes de colles en "
+					" {classe} ont été mis à jour.".format(
+						classe=classe))
 			return redirect('colloscope_trinomes', classe.slug)
 	else:
 		formset = TrinomeFormSet(initial=initial,

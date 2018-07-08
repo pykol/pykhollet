@@ -32,6 +32,7 @@ class ClasseDetailView(LoginRequiredMixin, generic.DetailView):
 		context['can_edit_colloscope'] = self.request.user.has_perm(
 				'pykol.add_colle',
 				classe)
+		context['trinomes'] = classe.trinomes.order_by('nom')
 		return context
 
 class ClasseListView(LoginRequiredMixin, generic.ListView):

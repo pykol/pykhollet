@@ -9,8 +9,10 @@
 
 .trinomes {
   @include make-row;
+  @include make-container;
 
-  & > ul {
+  & > li {
     @include make-col(3);
+    @include x-panel;
   }
 }

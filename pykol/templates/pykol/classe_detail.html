@@ -22,8 +22,8 @@
 
 <h3>Groupes de colles</h3>
 <ul class="trinomes">
-  {% for trinome in classe.trinomes.all %}
-  <li>{{ trinome.nom }}
+  {% for trinome in trinomes %}
+  <li><strong>{{ trinome.nom }}</strong>
     <ul>
       {% for etudiant in trinome.etudiants.all %}
       <li>{{ etudiant }}</li>

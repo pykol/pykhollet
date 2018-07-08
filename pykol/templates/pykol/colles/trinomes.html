@@ -18,6 +18,7 @@ l'affichage du colloscope pour désigner les groupes.</p>
 <form method="POST" action="">
   {% csrf_token %}
   {{ formset.management_form }}
+  {{ formset.non_form_errors }}
   <table class="formset">
     <thead>
       <tr>
@@ -27,9 +28,22 @@ l'affichage du colloscope pour désigner les groupes.</p>
     </thead>
     <tbody>
       {% for form in formset %}
+      {% if form.non_field_errors %}
       <tr>
+        <td colspan="2" class="invalid-feedback">
+        {{ form.non_field_errors }}
+        </td>
+      </tr>
+      {% endif %}
+      <tr{% if form.errors %} class="form-error"{% endif %}>
         <td>{{ form.etudiant }}</td>
-        <td>{{ form.groupes }}</td>
+        <td>{{ form.groupes }}
+          {% if form.groupes.errors %}
+          <div class="invalid-feedback">
+            {{ form.groupes.errors }}
+          </div>
+          {% endif %}
+        </td>
       </tr>
       {% endfor %}
     </tbody>

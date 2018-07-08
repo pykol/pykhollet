@@ -34,19 +34,17 @@ class Colle(models.Model):
 	classe = models.ForeignKey(Classe, on_delete=models.CASCADE)
 
 	ETAT_PREVUE = 0
-	ETAT_ATTENTE_NOTE = 1
-	ETAT_NOTEE = 2
-	ETAT_RELEVEE = 3
-	ETAT_ANNULEE = 4
+	ETAT_NOTEE = 1
+	ETAT_RELEVEE = 2
+	ETAT_ANNULEE = 3
 	ETAT_CHOICES = (
 			(ETAT_PREVUE, "Prévue"),
-			(ETAT_ATTENTE_NOTE, "Notation en attente"),
 			(ETAT_NOTEE, "Notée"),
 			(ETAT_RELEVEE, "Relevée"),
 			(ETAT_ANNULEE, "Annulée"),
 		)
 	etat = models.PositiveSmallIntegerField(verbose_name="état",
-			choices=ETAT_CHOICES, default=0)
+			choices=ETAT_CHOICES, default=ETAT_PREVUE)
 	matiere = models.ForeignKey(Matiere, blank=True, null=True,
 			on_delete=models.SET_NULL, verbose_name="matière")
 	groupe = models.ForeignKey(Groupe, blank=True, null=True,

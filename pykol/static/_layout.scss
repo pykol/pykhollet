@@ -1,6 +1,10 @@
 body {
   min-height: 100vh;
-  @include make-row()
+  /* La suite correspond au make-row de Bootstrap 4 mais sans les marges
+   * négatives, pour s'éviter un <div class="container"> inutile dans le
+   * code HTML. */
+  display: flex;
+  flex-wrap: wrap;
 }
 
 /* Barre de menu à gauche */
@@ -129,6 +133,7 @@ nav {
   color: $content-color;
   background: $content-background;
   padding: 10px 20px 0;
+  flex: 1;
 }
 
 footer {

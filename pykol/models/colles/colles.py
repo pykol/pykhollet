@@ -20,7 +20,7 @@ from django.db import models
 
 from pykol.models.base import Classe, Professeur, Matiere, Etudiant, Groupe
 from pykol.models.fields import NoteField
-from .conception import Creneau
+from .conception import Creneau, Semaine
 
 # Liste des jours de la semaine, numérotation ISO
 LISTE_JOURS = enumerate(["lundi", "mardi", "mercredi", "jeudi",
@@ -29,6 +29,8 @@ LISTE_JOURS = enumerate(["lundi", "mardi", "mercredi", "jeudi",
 class Colle(models.Model):
 	creneau = models.ForeignKey(Creneau, blank=True, null=True,
 			on_delete=models.SET_NULL, verbose_name="créneau")
+	semaine = models.ForeignKey(Semaine, blank=True, null=True,
+			on_delete=models.SET_NULL)
 	classe = models.ForeignKey(Classe, on_delete=models.CASCADE)
 
 	ETAT_PREVUE = 0

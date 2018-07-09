@@ -4,7 +4,7 @@ body {
    * négatives, pour s'éviter un <div class="container"> inutile dans le
    * code HTML. */
   display: flex;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
 }
 
 /* Barre de menu à gauche */

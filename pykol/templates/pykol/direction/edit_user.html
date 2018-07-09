@@ -6,6 +6,8 @@ Profil de {{ concerned_user }}
 Création d'un utilisateur
 {% endif %}</h2>
 
+{% include 'pykol/messages.html' %}
+
 <form method="post" action="">
   {% csrf_token %}
 

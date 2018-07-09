@@ -4,13 +4,7 @@
   <small>− {{ roulement.classe }}</small>
 </h2>
 
-{% if messages %}
-<ul class="messages">
-    {% for message in messages %}
-    <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
-    {% endfor %}
-</ul>
-{% endif %}
+{% include 'pykol/messages.html' %}
 
 <form method="post" action="">
   {% csrf_token %}

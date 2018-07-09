@@ -12,23 +12,34 @@ Création d'un utilisateur
   <fieldset>
     <legend>Informations d'identification</legend>
     <table>
-      {{ form.as_table }}
+      {{ form.user_form.as_table }}
     </table>
   <input type="submit">
   </fieldset>
 
-{% if concerned_user.professeur %}
+  <fieldset>
+    <legend>Type d'utilisateur</legend>
+    {{ form }}
+  </fieldset>
+
+{% if not concerned_user or concerned_user.professeur %}
 <fieldset>
   <legend>Professeur</legend>
   <table>
-    {{ prof_form.as_table }}
+    {{ form.prof_form.as_table }}
   </table>
   <input type="submit">
 
+  {% if concerned_user %}
+  {% if concerned_user.professeur.mes_classes|length > 0 %}
   <p>Ce professeur intervient dans les classes suivantes :
   <ul>
     {{ concerned_user.professeur.mes_classes|unordered_list }}
   </ul>
+  {% else %}
+  <p>Ce professeur n'intervient dans aucune classe.</p>
+  {% endif %}
+  {% endif %}
 </fieldset>
 {% endif %}
 
@@ -60,11 +71,11 @@ Création d'un utilisateur
 </fieldset>
 {% endif %}
 
-{% if concerned_user.etudiant %}
+{% if not concerned_user or concerned_user.etudiant %}
 <fieldset>
   <legend>Étudiant</legend>
   <table>
-    {{ etudiant_form.as_table }}
+    {{ form.etu_form.as_table }}
   </table>
   <input type="submit">
 </fieldset>

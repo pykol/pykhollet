@@ -56,11 +56,11 @@ classes_urlpatterns = [
 ]
 
 accounts_urlpatterns = [
-	path('', views.DirectionListUser.as_view(), name='direction_list_user'),
+	path('', views.direction.DirectionListUser.as_view(), name='direction_list_user'),
 	path('profile/', views.mon_profil, name='mon_profil'),
-	path('create/', views.direction_create_user, name='direction_create_user'),
-	path('edit/<int:pk>/', views.direction_edit_user, name='direction_edit_user'),
-	path('delete/<int:pk>/', views.direction_delete_user, name='direction_delete_user'),
+	path('create/', views.direction.direction_create_user, name='direction_create_user'),
+	path('edit/<int:pk>/', views.direction.direction_edit_user, name='direction_edit_user'),
+	path('delete/<int:pk>/', views.direction.direction_delete_user, name='direction_delete_user'),
 	path('', include('django.contrib.auth.urls')),
 ]
 

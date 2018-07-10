@@ -1,4 +1,27 @@
 {% extends "pykol/base.html" %}
+{% block head %}
+{{ block.super }}
+<script>
+  $(document).ready(function() {
+    $('input[name=categorie]').change(function() {
+      $('#tabs .tab_content').hide();
+      $('#tab-' + $(this).val()).show();
+    });
+    $('input[name=categorie]:checked').change();
+  });
+</script>
+<style>
+#id_categorie {
+  display: flex;
+  width: 100%;
+}
+#id_categorie li {
+  display: block;
+  flex: 1;
+  text-align: center;
+}
+</style>
+{% endblock %}
 {% block content %}
 <h2>{% if concerned_user %}
 Profil de {{ concerned_user }}
@@ -19,69 +42,73 @@ Création d'un utilisateur
   <input type="submit">
   </fieldset>
 
-  <fieldset>
-    <legend>Type d'utilisateur</legend>
+<div id="tabs">
     {{ form }}
+    <div id="tab-0" class="tab_content">
+    </div>
+{% if not concerned_user or concerned_user.professeur %}
+<div id="tab-1" class="tab_content">
+  <fieldset>
+    <legend>Professeur</legend>
+    <table>
+      {{ form.prof_form.as_table }}
+    </table>
+    <input type="submit">
+
+    {% if concerned_user %}
+    {% if concerned_user.professeur.mes_classes|length > 0 %}
+    <p>Ce professeur intervient dans les classes suivantes :
+    <ul>
+      {{ concerned_user.professeur.mes_classes|unordered_list }}
+    </ul>
+    {% else %}
+    <p>Ce professeur n'intervient dans aucune classe.</p>
+    {% endif %}
+    {% endif %}
   </fieldset>
 
-{% if not concerned_user or concerned_user.professeur %}
-<fieldset>
-  <legend>Professeur</legend>
-  <table>
-    {{ form.prof_form.as_table }}
-  </table>
-  <input type="submit">
-
-  {% if concerned_user %}
-  {% if concerned_user.professeur.mes_classes|length > 0 %}
-  <p>Ce professeur intervient dans les classes suivantes :
-  <ul>
-    {{ concerned_user.professeur.mes_classes|unordered_list }}
-  </ul>
-  {% else %}
-  <p>Ce professeur n'intervient dans aucune classe.</p>
+  {% if perm_form %}
+  <fieldset>
+    <legend>Permissions sur les colloscopes</legend>
+    {{ perm_form.management_form }}
+    <table class="formset">
+      <thead>
+        <tr>
+          <th>Classe</th>
+          <th>Permission</th>
+          <th>Uniquement pour sa matière ?</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for form in perm_form %}
+        <tr>
+          <td>{{ form.id }}{{ form.classe }}</td>
+          <td>{{ form.droit }}</td>
+          <td>{{ form.matiere_seulement }}</td>
+          <td>{{ form.DELETE }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    <input type="submit">
+  </fieldset>
   {% endif %}
-  {% endif %}
-</fieldset>
-{% endif %}
-
-{% if perm_form %}
-<fieldset>
-  <legend>Permissions sur les colloscopes</legend>
-  {{ perm_form.management_form }}
-  <table class="formset">
-    <thead>
-      <tr>
-        <th>Classe</th>
-        <th>Permission</th>
-        <th>Uniquement pour sa matière ?</th>
-        <th></th>
-      </tr>
-    </thead>
-    <tbody>
-      {% for form in perm_form %}
-      <tr>
-        <td>{{ form.id }}{{ form.classe }}</td>
-        <td>{{ form.droit }}</td>
-        <td>{{ form.matiere_seulement }}</td>
-        <td>{{ form.DELETE }}</td>
-      </tr>
-      {% endfor %}
-    </tbody>
-  </table>
-  <input type="submit">
-</fieldset>
+</div>
 {% endif %}
 
 {% if not concerned_user or concerned_user.etudiant %}
-<fieldset>
-  <legend>Étudiant</legend>
-  <table>
-    {{ form.etu_form.as_table }}
-  </table>
-  <input type="submit">
-</fieldset>
+<div id="tab-2" class="tab_content">
+  <fieldset>
+    <legend>Étudiant</legend>
+    <table>
+      {{ form.etu_form.as_table }}
+    </table>
+    <input type="submit">
+  </fieldset>
+</div>
 {% endif %}
+</div>
 
 </form>
 

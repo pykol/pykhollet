@@ -58,15 +58,16 @@ form {
 }
 
 .formset {
-  input {
-    display: inline;
-    width: calc(100% - 2em);
-  }
-
   .custom-combobox {
     position: relative;
     display: inline-block;
     height: 34px;
+    width: 100%;
+
+    input {
+      display: inline;
+      width: calc(100% - 2em);
+    }
   }
   .custom-combobox-toggle {
     position: absolute;
@@ -90,4 +91,38 @@ form {
 
 .button-add {
   @include button-primary;
+}
+
+.form_roulement {
+  table-layout: fixed;
+
+  tr > * {
+    &:nth-child(1) {
+      width: 100% * 2 / 12;
+    }
+    &:nth-child(2) {
+      width: 100% * 8 / 12;
+    }
+    &:nth-child(3) {
+      width: 100% * 2 / 12;
+    }
+  }
+}
+
+.form_creneaux {
+  table-layout: fixed;
+
+  tr > * {
+    &:nth-child(1) { width: 100% * 3 / 12; }
+    &:nth-child(2) { width: 100% * 2 / 12; }
+    &:nth-child(3) { width: 100% * 2 / 12; }
+    &:nth-child(4) { width: 100% * 2 / 12; }
+    &:nth-child(5) { width: 100% * 1 / 12; }
+    &:nth-child(6) { width: 100% * 2 / 12; }
+  }
+  .creneau_horaire input {
+    display: inline;
+    width: calc(50% - 1rem);
+    /* min-width: 4.5rem; */
+  }
 }

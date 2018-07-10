@@ -1,13 +1,4 @@
 {% extends "pykol/base.html" %}
-{% block head %}
-{{ block.super }}
-<style>
-.creneau_horaire input {
-  width: calc(50% - 1rem);
-  min-width: 4.5rem;
-}
-</style>
-{% endblock %}
 {% block content %}
 <h2>
   Créneaux de colles
@@ -18,7 +9,7 @@
   {% csrf_token %}
   {{ formset.management_form }}
   {{ formset.non_form_errors }}
-  <table class="formset">
+  <table class="formset form_creneaux">
     <thead>
       <tr>
         <th>Matière</th>

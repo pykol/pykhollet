@@ -120,6 +120,27 @@ form {
     &:nth-child(5) { width: 100% * 1 / 12; }
     &:nth-child(6) { width: 100% * 2 / 12; }
   }
+}
+
+.form_creneaux, .form_direction_creneaux {
+  .creneau_horaire input {
+    display: inline;
+    width: calc(50% - 1rem);
+  }
+}
+
+.form_direction_creneaux {
+  table-layout: fixed;
+
+  tr > * {
+    &:nth-child(1) { width: 100% * 1 / 12; }
+    &:nth-child(2) { width: 100% * 2 / 12; }
+    &:nth-child(3) { width: 100% * 2 / 12; }
+    &:nth-child(4) { width: 100% * 2 / 12; }
+    &:nth-child(5) { width: 100% * 2 / 12; }
+    &:nth-child(6) { width: 100% * 1 / 12; }
+    &:nth-child(7) { width: 100% * 2 / 12; }
+  }
   .creneau_horaire input {
     display: inline;
     width: calc(50% - 1rem);

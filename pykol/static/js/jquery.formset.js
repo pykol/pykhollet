@@ -14,6 +14,12 @@
   $.fn.formset = function(opts) {
     var options = $.extend({}, $.fn.formset.defaults, opts);
 
+    // Guess prefix by searching for a field named prefix-TOTAL_FORMS
+    if(!options.prefix) {
+      var total_input_name = this.closest('form').find('input[name $= "-TOTAL_FORMS"]').attr('name');
+      options.prefix = total_input_name.substring(0, total_input_name.length - "-TOTAL_FORMS".length);
+    }
+
     var flatExtraClasses = options.extraClasses.join(' ');
     var totalForms = $('#id_' + options.prefix + '-TOTAL_FORMS');
     var maxForms = $('#id_' + options.prefix + '-MAX_NUM_FORMS');
@@ -249,7 +255,7 @@
 
   /* Setup plugin defaults */
   $.fn.formset.defaults = {
-    prefix: 'form',               // The form prefix for your django formset
+    prefix: undefined,               // The form prefix for your django formset
     formTemplate: null,           // The jQuery selection cloned to generate new form instances
     createAddButton: createAddButton, // Text for the add link
     createDeleteButton: createDeleteButton, // Text for the delete link

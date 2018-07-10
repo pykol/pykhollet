@@ -143,8 +143,8 @@
     };
 
     $$.each(function(i) {
-      var row = $(this),
-        del = row.find('input:checkbox[id $= "-DELETE"]');
+      var row = $(this);
+      var del = row.find('input:checkbox[id $= "-DELETE"]');
       if (del.length) {
         // If you specify "can_delete = True" when creating an inline formset,
         // Django adds a checkbox to each form in the formset.
@@ -246,11 +246,11 @@
   };
 
   function createAddButton() {
-    return $('<button class="' + this.addCssClass + '">' + "Ajouter" + "</button>");
+    return $('<button type="button" class="' + this.addCssClass + '">' + "Ajouter" + "</button>");
   }
 
   function createDeleteButton() {
-    return $('<button class="' + this.deleteCssClass + '">' + "Supprimer" + "</button>");
+    return $('<button type="button" class="' + this.deleteCssClass + '">' + "Supprimer" + "</button>");
   }
 
   /* Setup plugin defaults */

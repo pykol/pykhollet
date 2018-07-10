@@ -131,10 +131,10 @@ $( function() {
 $(document).ready(function() {
   $(".formset tbody tr").formset({
     createAddButton: function() {
-      return $('<button class="' + this.addCssClass + '"><i class="fa fa-plus"></i> Ajouter un nouvel élément</button>');
+      return $('<button type="button" class="' + this.addCssClass + '"><i class="fa fa-plus"></i> Ajouter un nouvel élément</button>');
     },
     createDeleteButton: function() {
-      return $('<button class="' + this.deleteCssClass + '"><i class="fa fa-trash"></i> Supprimer</button>');
+      return $('<button type="button" class="' + this.deleteCssClass + '"><i class="fa fa-trash"></i> Supprimer</button>');
     },
     deleteText: '<i class="fa fa-trash"></i> Supprimer',
     added: function (row) { $( ".formset select" ).combobox(); }

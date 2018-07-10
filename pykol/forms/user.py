@@ -125,6 +125,9 @@ class FullUserForm(forms.Form):
 	def full_clean(self):
 		super().full_clean()
 
+		if not self.is_bound:
+			return
+
 		self.user_form.full_clean()
 
 		if self.is_professeur():

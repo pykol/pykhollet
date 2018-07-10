@@ -37,7 +37,7 @@ def direction_create_user(request):
 		if form.is_valid():
 			user = form.save()
 			messages.success(request, "Utilisateur créé avec succès")
-			return redirect('direction_edit_user', user.pk)
+			return redirect('direction_list_user')
 		else:
 			messages.error(request, "Le formulaire contient des erreurs")
 	else:

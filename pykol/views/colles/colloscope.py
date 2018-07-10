@@ -264,8 +264,8 @@ def creneaux(request, slug):
 	if not request.user.has_perm('pykol.add_colle', classe):
 		raise PermissionDenied
 
-	creneaux_qs = Creneau.objects.filter(classe=classe).order_by('jour',
-			'colleur', 'debut')
+	creneaux_qs = Creneau.objects.filter(classe=classe).order_by('matiere',
+			'colleur', 'jour', 'debut')
 
 	if request.method == 'POST':
 		formset = CreneauSansClasseFormSet(request.POST, queryset=creneaux_qs,

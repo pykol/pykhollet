@@ -1,0 +1,35 @@
+{% extends 'pykol/base.html' %}
+{% block content %}
+<h2>Colle du {{ colle.details.horaire }}</h2>
+
+<table>
+  <tr>
+    <th>Étudiants</th>
+    <td>{{ colle.details.eleves }}</td>
+  </tr>
+</table>
+
+{% if anciens_details %}
+<h3>Historique</h3>
+<table>
+  <thead>
+    <tr>
+      <th>Colleur</th>
+      <th>Horaire</th>
+      <th>Salle</th>
+      <th>Étudiants</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for detail in anciens_details %}
+    <tr>
+      <td>{{ detail.colleur }}</td>
+      <td>{{ detail.horaire }}</td>
+      <td>{{ detail.salle }}</td>
+      <td>{{ detail.eleves }}</td>
+    {% endfor %}
+  </tbody>
+</table>
+{% endif %}
+
+{% endblock content %}

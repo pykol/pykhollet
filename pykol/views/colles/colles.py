@@ -35,12 +35,20 @@ ces tâches relèvent de la gestion du colloscope, et se trouvent dans le
 fichier colloscope.py
 """
 
-@login_required
-def colle_detail(request, pk):
+class ColleDetailView(LoginRequiredMixin, generic.DetailView):
 	"""
 	Affichage de tous les détails d'une colle
 	"""
-	pass
+	template_name = 'pykol/colles/colle_detail.html'
+	model = Colle
+
+	def get_context_data(self, **kwargs):
+		context = super().get_context_data(**kwargs)
+		context['anciens_details'] = \
+				self.object.colledetails_set.filter(actif=False)
+		return context
+
+colle_detail = ColleDetailView.as_view()
 
 @login_required
 def colle_declarer(request, pk):
@@ -69,6 +77,8 @@ class ColleListView(LoginRequiredMixin, generic.ListView):
 	"""
 	Affichage des colles pour le colleur actuellement connecté
 	"""
+	template_name = 'pykol/colles/colle_list.html'
+
 	def get_queryset(self):
 		return Colle.objects.filter(
 			colledetails__colleur=self.request.user,

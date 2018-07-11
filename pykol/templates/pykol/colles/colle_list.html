@@ -1,0 +1,26 @@
+{% extends 'pykol/base.html' %}
+{% block content %}
+<h2>Planning des colles</h2>
+<table>
+  <thead>
+    <tr>
+      <th>Classe</th>
+      <th>Horaire</th>
+      <th>Matière</th>
+      <th>État</th>
+      <th>Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for colle in colle_list %}
+    <tr> 
+      <td>{{ colle.classe }}</td>
+      <td><a href="{{ colle.get_absolute_url }}">{{ colle.details.horaire }}</a></td>
+      <td>{{ colle.matiere }}</td>
+      <td>{{ colle.get_etat_display }}</td>
+      <td><a href="{% url 'colle_declarer' colle.pk %}">Noter</a></td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endblock content %}

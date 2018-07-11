@@ -16,6 +16,10 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+"""
+Formulaires pour manipuler les données des comptes utilisateurs.
+"""
+
 from django import forms
 from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib.auth import get_user_model
@@ -25,6 +29,10 @@ User = get_user_model()
 from .permissions import ColloscopePermFormSet
 
 class MonProfilForm(forms.ModelForm):
+	"""
+	Formulaire d'édition des informations utilisateur, destiné à être
+	utilisé par l'utilisateur lui-même.
+	"""
 	prefix = 'profil'
 
 	class Meta:
@@ -32,9 +40,15 @@ class MonProfilForm(forms.ModelForm):
 		fields = ('email', )
 
 class MonProfilPasswordForm(PasswordChangeForm):
+	"""
+	Changement de mot de passe par l'utilisateur lui-même.
+	"""
 	prefix = 'pass'
 
 class UserForm(forms.ModelForm):
+	"""
+	Édition complète du profil d'un utilisateur.
+	"""
 	prefix = 'user'
 
 	class Meta:
@@ -42,6 +56,9 @@ class UserForm(forms.ModelForm):
 		fields = ('last_name', 'first_name', 'email', 'sexe',)
 
 class ProfesseurForm(forms.ModelForm):
+	"""
+	Édition des informations spécifiques aux professeurs.
+	"""
 	prefix = 'prof'
 
 	class Meta:
@@ -49,6 +66,9 @@ class ProfesseurForm(forms.ModelForm):
 		fields = ('corps', 'etablissement',)
 
 class EtudiantForm(forms.ModelForm):
+	"""
+	Édition des informations spécifiques aux étudiants.
+	"""
 	prefix = 'etudiant'
 
 	class Meta:
@@ -56,6 +76,24 @@ class EtudiantForm(forms.ModelForm):
 		fields = ('ine', 'classe', 'origine', 'entree', 'sortie',)
 
 class FullUserForm(forms.Form):
+	"""
+	Formulaire d'édition d'un compte utilisateur.
+
+	PyKol possède les modèles User, Professeur et Etudiant. Professeur
+	et Etudiant héritent (multi-table) de User. Ce formulaire possède
+	un bouton radio permettant de choisir quelle catégorie d'utilisateur
+	il faut créer. Il propose trois sous-formulaires :
+	- self.user_form est un UserForm qui permet d'éditer les
+	  informations communes aux trois profils ;
+	- self.prof_form est un ProfesseurForm qui permet de remplir les
+	  informations spécifiques à un professeur ;
+	- self.etu_form est un EtudiantForm qui permet de remplir les
+	  informations spécifiques à un étudiant.
+
+	Le champ categorie n'est modifiable que lorsque l'on crée un nouvel
+	utilisateur (changer le type d'utilisateur est une plaie avec
+	Django, donc ce n'est pas encore implémenté).
+	"""
 	CATEGORIE_BASE = 0
 	CATEGORIE_PROF = 1
 	CATEGORIE_ETUDIANT = 2
@@ -70,6 +108,9 @@ class FullUserForm(forms.Form):
 
 	@staticmethod
 	def _unrequire_fields(form):
+		"""
+		Mettre required=False sur tous les champs d'un formulaire.
+		"""
 		for field_name in form.fields:
 			form.fields[field_name].required = False
 
@@ -109,6 +150,7 @@ class FullUserForm(forms.Form):
 
 		super().__init__(*args, initial=initial, **kwargs)
 
+		# On ne peut choisir le type d'utilisateur qu'à la création
 		if instance is not None:
 			self.fields['categorie'].readonly = True
 
@@ -148,6 +190,11 @@ class FullUserForm(forms.Form):
 		return self.cleaned_data['categorie'] == FullUserForm.CATEGORIE_ETUDIANT
 
 	def save(self, commit=True):
+		# On commence par créer l'objet User de base. Ce n'est pas
+		# nécessairement lui qui sera vraiment stocké dans la base, mais
+		# peut-être l'une des sous-classes Professeur ou Etudiant.
+		# Cet objet de base permettra alors de recopier rapidement les
+		# champs.
 		res = self.user_form.save(commit=False)
 
 		if self.is_professeur():
@@ -160,6 +207,7 @@ class FullUserForm(forms.Form):
 			etu.__dict__.update(res.__dict__)
 			res = etu
 
-		res.save()
+		if commit:
+			res.save()
 
 		return res

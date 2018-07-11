@@ -60,6 +60,24 @@ class UserManager(BaseUserManager):
 
 		return self._create_user(email, password, **extra_fields)
 
+	# On redéfinit cette méthode, présente dans BaseUserManager, car
+	# celle d'origine ne prend pas en compte l'option null=True sur le
+	# champ email : elle renvoie '' au lieu de None.
+	@classmethod
+	def normalize_email(cls, email):
+		"""
+		Normalize the email address by lowercasing the domain part of it.
+		"""
+		email = email or ''
+		try:
+			email_name, domain_part = email.strip().rsplit('@', 1)
+		except ValueError:
+			pass
+		else:
+			email = email_name + '@' + domain_part.lower()
+		return email or None
+
+
 class User(AbstractUser):
 	"""
 	Compte utilisateur de pyKol
@@ -105,23 +123,6 @@ class User(AbstractUser):
 				return 'Mme'
 			else:
 				return 'Madame'
-
-	# On redéfinit cette méthode, présente dans BaseUserManager, car
-	# celle d'origine ne prend pas en compte l'option null=True sur le
-	# champ email : elle renvoie '' au lieu de None.
-	@classmethod
-	def normalize_email(cls, email):
-		"""
-		Normalize the email address by lowercasing the domain part of it.
-		"""
-		email = email or None
-		try:
-			email_name, domain_part = email.strip().rsplit('@', 1)
-		except ValueError:
-			pass
-		else:
-			email = email_name + '@' + domain_part.lower()
-		return email
 
 	def __str__(self):
 		nom = '{last} {first}'.format(last=self.last_name.upper(),

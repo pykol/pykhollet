@@ -130,11 +130,12 @@ class FullUserForm(forms.Form):
 
 		self.user_form.full_clean()
 
-		if self.is_professeur():
-			self.prof_form.full_clean()
+		if 'categorie' in self.cleaned_data:
+			if self.is_professeur():
+				self.prof_form.full_clean()
 
-		if self.is_etudiant():
-			self.etu_form.full_clean()
+			if self.is_etudiant():
+				self.etu_form.full_clean()
 
 	def is_professeur(self):
 		if self.instance is not None:

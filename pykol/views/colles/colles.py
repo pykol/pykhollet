@@ -17,7 +17,12 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 from django.shortcuts import render, get_object_or_404
+from django.views import generic
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.utils import timezone
+
+from pykol.models.colles import Colle
 
 """
 Vues de gestion des colles destinées aux colleurs.
@@ -29,6 +34,13 @@ Elles ne permettent ni de créer des colles, ni de supprimer des colles :
 ces tâches relèvent de la gestion du colloscope, et se trouvent dans le
 fichier colloscope.py
 """
+
+@login_required
+def colle_detail(request, pk):
+	"""
+	Affichage de tous les détails d'une colle
+	"""
+	pass
 
 @login_required
 def colle_declarer(request, pk):
@@ -53,9 +65,23 @@ def colle_annuler(request, pk):
 	"""
 	pass
 
-@login_required
-def colle_list(request):
+class ColleListView(LoginRequiredMixin, generic.ListView):
 	"""
-	Affichage de toutes les colles du colleur
+	Affichage des colles pour le colleur actuellement connecté
 	"""
-	pass
+	def get_queryset(self):
+		return Colle.objects.filter(
+			colledetails__colleur=self.request.user,
+			colledetails__actif=True).order_by('colledetails__horaire')
+
+colle_list = ColleListView.as_view()
+
+class ColleANoterListView(ColleListView):
+	"""
+	Affichage des colles en attente de notation pour le colleur
+	"""
+	def get_queryset(self):
+		return super().get_queryset().filter(etat=Colle.ETAT_PREVUE,
+				colledetails__horaire__lte=timezone.localtime())
+
+colle_a_noter_list = ColleANoterListView.as_view()

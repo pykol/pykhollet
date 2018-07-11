@@ -23,16 +23,18 @@ from . import views
 
 colles_urlpatterns = [
 	path('', views.colles.colle_list, name='colle_list'),
-	path('<int:pk>/', views.colles.colle_declarer, name='colle_declarer'),
+	path('a_noter/', views.colles.colle_a_noter_list, name="colles_a_noter"),
+	path('<int:pk>/', views.colles.colle_detail, name='colle_detail'),
+	path('<int:pk>/noter', views.colles.colle_declarer, name='colle_declarer'),
 	path('<slug:slug>/', views.colles.colloscope, name='colloscope'),
-	path('<slug:slug>/trinomes', views.colles.trinomes, name='colloscope_trinomes'),
-	path('<slug:slug>/semaines', views.colles.semaines, name='colloscope_semaines'),
-	path('<slug:slug>/creneaux', views.colles.creneaux, name='colloscope_creneaux'),
 	path('<slug:slug>/roulement/creer', views.colloscope.roulement_creer, name='roulement_creer'),
 ]
 
 colloscopes_urlpatterns = [
 	path('', views.colles.colloscope_home, name='colloscope_home'),
+	path('<slug:slug>/trinomes', views.colles.trinomes, name='colloscope_trinomes'),
+	path('<slug:slug>/semaines', views.colles.semaines, name='colloscope_semaines'),
+	path('<slug:slug>/creneaux', views.colles.creneaux, name='colloscope_creneaux'),
 	path('roulement/<int:pk>', views.colloscope.roulement_editer, name='roulement_editer'),
 	path('roulement/<int:pk>/application_creer', views.colloscope.roulement_application_creer, name='roulement_application_creer'),
 	path('roulement/application/<int:pk>/', views.colloscope.roulement_application_editer, name='roulement_application_editer'),

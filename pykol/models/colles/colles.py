@@ -17,6 +17,7 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 from django.db import models, transaction
+from django.urls import reverse
 
 from pykol.models.base import Classe, Professeur, Matiere, Etudiant, Groupe
 from pykol.models.fields import NoteField
@@ -93,6 +94,9 @@ class Colle(models.Model):
 		detail.eleves.set(eleves)
 
 		return detail
+
+	def get_absolute_url(self):
+		return reverse('colle_detail', kwargs={'pk': self.pk})
 
 class ColleDetails(models.Model):
 	colle = models.ForeignKey(Colle, on_delete=models.CASCADE,

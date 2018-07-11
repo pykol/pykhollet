@@ -41,16 +41,19 @@ mes_colles = item(
 			name="colles_a_noter",
 			label="À noter",
 			icon="edit",
+			url="colles_a_noter",
 		),
 		item(
 			name="colles_planning",
 			label="Planning",
 			icon="calendar-alt",
+			url="colle_list",
 		),
 		item(
 			name="colles_releve_heures",
 			label="Relevés d'heures",
 			icon="clone",
+			url="releve_list",
 		),
 	)
 )

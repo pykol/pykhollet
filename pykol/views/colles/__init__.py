@@ -22,7 +22,8 @@ from .colloscope import semaines
 from .colloscope import creneaux, creneau_list_direction
 
 from .colles import colle_declarer, colle_deplacer, \
-		colle_list, colle_annuler
+		colle_list, colle_annuler, colle_a_noter_list, \
+		colle_detail
 
 from .decompte import decompte_list, decompte_detail, \
 		decompte_creer

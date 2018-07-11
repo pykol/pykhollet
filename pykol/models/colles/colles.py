@@ -27,6 +27,9 @@ LISTE_JOURS = enumerate(["lundi", "mardi", "mercredi", "jeudi",
 	"vendredi", "samedi", "dimanche"], 1)
 
 class Colle(models.Model):
+	"""
+	Représentation d'une séance de colle
+	"""
 	creneau = models.ForeignKey('Creneau', blank=True, null=True,
 			on_delete=models.SET_NULL, verbose_name="créneau")
 	semaine = models.ForeignKey('Semaine', blank=True, null=True,
@@ -99,6 +102,14 @@ class Colle(models.Model):
 		return reverse('colle_detail', kwargs={'pk': self.pk})
 
 class ColleDetails(models.Model):
+	"""
+	Détails sur le déroulement d'une colle (date, heure, lieu, élèves).
+
+	Un seul ColleDetails peut être actif par colle. La liste des
+	ColleDetails pour une même colle permet de conserver l'historique
+	des modifications apportées à une colle (déplacement, changement de
+	groupe ou de colleur).
+	"""
 	colle = models.ForeignKey(Colle, on_delete=models.CASCADE,
 			db_index=True)
 	horaire = models.DateTimeField()
@@ -114,6 +125,9 @@ class ColleDetails(models.Model):
 		verbose_name_plural = "détails de la colle"
 
 class ColleNote(models.Model):
+	"""
+	Note attribuée à une colle pour un étudiant.
+	"""
 	colle = models.ForeignKey(Colle, on_delete=models.CASCADE,
 			db_index=True)
 	eleve = models.ForeignKey(Etudiant, on_delete=models.CASCADE,

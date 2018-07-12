@@ -55,6 +55,7 @@ annees_urlpatterns = [
 classes_urlpatterns = [
 	path('', views.ClasseListView.as_view(), name="classe_list"),
 	path('<slug:slug>/', views.ClasseDetailView.as_view(), name='classe_detail'),
+	path('<slug:slug>/resultats', views.colles.classe_resultats, name='classe_colle_resultats'),
 ]
 
 accounts_urlpatterns = [

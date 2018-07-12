@@ -27,3 +27,5 @@ from .colles import colle_declarer, colle_deplacer, \
 
 from .decompte import decompte_list, decompte_detail, \
 		decompte_creer
+
+from .resultats import classe_resultats

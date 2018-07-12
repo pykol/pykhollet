@@ -159,8 +159,7 @@ class Enseignement(models.Model):
 	matiere = models.ForeignKey(Matiere, on_delete=models.SET_NULL,
 			blank=True, null=True, verbose_name="matière",
 			limit_choices_to={'virtuelle': False,})
-	groupe = models.ForeignKey('Groupe', on_delete=models.CASCADE,
-			related_name='+')
+	groupe = models.ForeignKey('Groupe', on_delete=models.CASCADE)
 	option = models.BooleanField()
 	specialite = models.BooleanField(verbose_name="spécialité")
 	professeurs = models.ManyToManyField(Professeur, through=Service)

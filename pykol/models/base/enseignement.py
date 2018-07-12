@@ -278,3 +278,11 @@ class Classe(Groupe):
 		if self.niveau == Classe.NIVEAU_PREMIERE_ANNEE:
 			return 3
 		return 2
+
+	def profs_de(self, matiere):
+		"""
+		Renvoie la liste des professeurs qui enseignent la matière
+		donnée dans cette classe.
+		"""
+		return Professeur.objects.filter(service__enseignement__classe=self,
+				service__enseignement__matiere=matiere)

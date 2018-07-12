@@ -22,7 +22,7 @@ from django.contrib.auth.backends import ModelBackend
 from django.contrib.auth.decorators import user_passes_test
 
 from pykol.models.base import Classe
-from pykol.models.colles import ColloscopePermission
+from pykol.models.colles import ColloscopePermission, Colle
 
 class PykolBackend(ModelBackend):
 	def get_user_permissions(self, user_obj, obj=None):
@@ -44,6 +44,13 @@ class PykolBackend(ModelBackend):
 					classe=obj).values_list('droit__content_type__app_label',
 							'droit__codename').order_by()
 			return {"%s.%s" % (ct, name) for ct, name in perms}
+
+		# Permission pour chaque colle
+		if isinstance(obj, Colle):
+			# TODO le responsable du colloscope aussi devrait avoir
+			# cette permission
+			if user_obj == obj.colleur:
+				return {"pykol.change_colle"}
 
 		return set()
 

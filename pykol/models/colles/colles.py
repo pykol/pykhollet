@@ -61,6 +61,11 @@ class Colle(models.Model):
 		"""Renvoie le dernier ColleDetails actif pour cette colle"""
 		return self.colledetails_set.get(actif=True)
 
+	@property
+	def colleur(self):
+		"""Renvoie le colleur qui assure cette colle"""
+		return self.details.colleur
+
 	@transaction.atomic
 	def ajout_details(self, horaire=None, salle='', colleur=None,
 			eleves=[]):

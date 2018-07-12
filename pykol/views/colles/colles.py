@@ -16,10 +16,12 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+from django.core.exceptions import PermissionDenied
 from django.shortcuts import render, get_object_or_404
 from django.views import generic
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.mixins import LoginRequiredMixin, \
+		UserPassesTestMixin
 from django.utils import timezone
 
 from pykol.models.colles import Colle
@@ -35,7 +37,22 @@ ces tâches relèvent de la gestion du colloscope, et se trouvent dans le
 fichier colloscope.py
 """
 
-class ColleDetailView(LoginRequiredMixin, generic.DetailView):
+def colle_visible_par(user, colle):
+	"""Renvoie True si et seulement si l'utilisateur a le droit de
+	consulter les détails de la colle."""
+	return self.request.user == colle.colleur or \
+		self.request.user.has_perm('pykol.change_colle', colle.classe) or \
+		self.request.user in colle.classe.profs_de(colle.matiere)
+
+class ColleVisibleMixin(generic.detail.SingleObjectMixin,
+		UserPassesTestMixin):
+	"""Application du test colle_visible_par à une vue sur la colle"""
+	model = Colle
+	def test_func(self):
+		return colle_visible_par(self.request.user, self.get_object)
+
+class ColleDetailView(LoginRequiredMixin, ColleVisibleMixin, \
+		generic.DetailView):
 	"""
 	Affichage de tous les détails d'une colle
 	"""
@@ -71,7 +88,20 @@ def colle_annuler(request, pk):
 	"""
 	Annulation d'une colle par le colleur
 	"""
-	pass
+	colle = get_object_or_404(Colle, pk=pk)
+
+	# On ne change pas les colles des copains
+	if not request.user.has_perm('pykol.change_colle', colle):
+		raise PermissionDenied
+
+	if colle.etat == Colle.ETAT_PREVUE:
+		colle.etat = Colle.ETAT_ANNULEE
+		colle.save()
+		messages.sucess(request, "La colle a bien été annulée")
+	else:
+		messages.error(request, "On ne peut pas annuler une colle déjà notée ou déjà relevée")
+
+	return redirect('colle_list')
 
 class ColleListView(LoginRequiredMixin, generic.ListView):
 	"""

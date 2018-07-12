@@ -5,7 +5,7 @@
 <table>
   <tr>
     <th>Étudiants</th>
-    <td>{{ colle.details.eleves }}</td>
+    <td>{{ colle.details.eleves.all|join:", " }}</td>
   </tr>
 </table>
 
@@ -26,7 +26,7 @@
       <td>{{ detail.colleur }}</td>
       <td>{{ detail.horaire }}</td>
       <td>{{ detail.salle }}</td>
-      <td>{{ detail.eleves }}</td>
+      <td>{{ detail.eleves.all|join:", " }}</td>
     {% endfor %}
   </tbody>
 </table>

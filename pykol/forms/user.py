@@ -45,6 +45,24 @@ class MonProfilPasswordForm(PasswordChangeForm):
 	"""
 	prefix = 'pass'
 
+	def __init__(self, *args, **kwargs):
+		super().__init__(*args, **kwargs)
+		self.fields['new_password1'].required = False
+		self.fields['new_password2'].required = False
+		self.fields['old_password'].required = False
+
+	def clean_new_password2(self):
+		password1 = self.cleaned_data.get('password1')
+		password2 = self.cleaned_data.get('password2')
+		if password1 or password2:
+			return super().clean_new_password2()
+		return None
+
+	def save(self, commit=True):
+		if self.cleaned_data.get('password2'):
+			super().save(commit)
+		return self.user
+
 class UserForm(forms.ModelForm):
 	"""
 	Édition complète du profil d'un utilisateur.

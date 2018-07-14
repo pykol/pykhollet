@@ -24,13 +24,15 @@ from django.core.exceptions import PermissionDenied
 from django.shortcuts import render, get_object_or_404
 from django.contrib.auth.decorators import login_required
 
-from pykol.models.base import Classe
+from pykol.models.base import Classe, Matiere, Etudiant
+from pykol.models.colles import Semaine, ColleNote
+
+from collections import defaultdict, OrderedDict
 
 @login_required
 def classe_resultats(request, slug):
 	"""
 	Affichage du tableau des résultats de colle pour la classe donnée
-
 	Cette vue affiche les résultats de la classe uniquement pour les
 	colles dans une matière enseignée dans la classe par le professeur
 	actuellement connecté. Dans tous les autres cas (si le professeur
@@ -39,10 +41,49 @@ def classe_resultats(request, slug):
 	"""
 	classe = get_object_or_404(Classe, slug=slug)
 
-	# TODO récupérer les résultats et les mettre en forme
+	# L'accès n'est autorisé qu'aux professeurs de la classe
+	try:
+		if classe not in request.user.professeur.mes_classes():
+			raise PermissionDenied
+	except:
+		raise PermissionDenied
 
-	return render(request, 'pykol/colles/classe_resultats.html',
-			context={})
+	matieres = Matiere.objects.filter(enseignement__classe = classe, enseignement__service__professeur = request.user)
+	semaines = Semaine.objects.filter(classe = classe)
+
+	matiereDict = {}
+	for matiere in matieres:
+		etudiants = Etudiant.objects.filter(classe = classe, groupe__enseignement__matiere = matiere).order_by('last_name','first_name')
+
+		notesParEtudiant = OrderedDict()
+		for etudiant in etudiants:
+			notesParEtudiant[etudiant] = defaultdict(list)
+
+		colleNoteEtudiant_s = ColleNote.objects.filter(
+			colle__matiere = matiere,
+			eleve__in = etudiants
+		)
+		for colleNoteEtudiant in colleNoteEtudiant_s:
+			# quelle semaine ? ATTENTION : ne règle pas le problème de colle HORS semaine de colle (langue)
+			if colleNoteEtudiant.colle.semaine:
+				semaineColle = colleNoteEtudiant.colle.semaine
+			else:
+				horaire = colleNoteEtudiant.horaire
+				for semaine in semaines:
+					if semaine.debut <= horaire.date() <= semaine.fin:
+						semaineColle = semaine
+
+			notesParEtudiant[colleNoteEtudiant.eleve][semaineColle].append(colleNoteEtudiant.note)
+
+		# à cause du html et la notation point
+		for etudiant in etudiants:
+			notesParEtudiant[etudiant] = dict(notesParEtudiant[etudiant])
+
+		matiereDict[matiere] = notesParEtudiant
+
+	context = {'matieres':matiereDict, 'semaines':semaines}
+
+	return render(request, 'pykol/colles/classe_resultats.html', context=context)
 
 @login_required
 def etudiant_resultats(request, pk):

@@ -26,6 +26,11 @@
 </ul>
 {% endif %}
 
+<h3>Notes de colles</h3>
+<ul>
+  <li><a href="{% url 'classe_colle_resultats' classe.slug %}">Notes de la classe</a></li>
+</ul>
+
 <h3>Groupes de colles</h3>
 <ul class="trinomes">
   {% for trinome in trinomes %}

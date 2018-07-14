@@ -16,7 +16,10 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+from datetime import timedelta
+
 from django import forms
+from django.utils import timezone
 
 from pykol.models.colles import Colle, ColleNote
 from . import LabelledHiddenWidget
@@ -24,11 +27,23 @@ from . import LabelledHiddenWidget
 class ColleNoteForm(forms.ModelForm):
 	class Meta:
 		model = ColleNote
-		fields = ('eleve', 'horaire', 'note')
+		fields = ('eleve', 'note')
 		widgets = {
 			'eleve': LabelledHiddenWidget,
 		}
 
+	def save(self, commit=True):
+		note = super().save(commit)
+		if not note.horaire:
+			note.horaire = timezone.now()
+		if not note.duree:
+			note.duree = timedelta(minutes=20)
+
+		if commit:
+			note.save()
+
+		return note
+
 ColleNoteFormSet = forms.inlineformset_factory(Colle, ColleNote,
 		form=ColleNoteForm,
-		fields=('eleve', 'horaire', 'note'), can_delete=False)
+		fields=('eleve', 'note'), can_delete=False, extra=0)

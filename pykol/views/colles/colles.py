@@ -24,6 +24,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin, \
 		UserPassesTestMixin
 from django.utils import timezone
 
+from pykol.models.base import Etudiant
 from pykol.models.colles import Colle
 from pykol.forms.colles import ColleNoteFormSet
 
@@ -73,21 +74,30 @@ def colle_declarer(request, pk):
 	"""
 	Vue qui permet de déclarer les notes pour une colle déjà existante
 	dans la base de données, identifiée par sa clé pk.
-
-	# ATTENTION : horaire de ColleNote et horaire de ColleDetail ????
 	"""
 	colle = get_object_or_404(Colle, pk=pk)
+
+	# Seul le colleur peut noter sa colle
+	if request.user.professeur != colle.details.colleur:
+		raise PermissionDenied
+
+	# On peuple le formulaire avec les élèves qui n'ont pas encore été
+	# notés
+	eleves_sans_note = colle.details.eleves.difference(
+		Etudiant.objects.filter(collenote__colle=colle))
 	initial = []
-	for eleve in colle.details.eleves.all():
-		initial.append({'eleve' : eleve, 'horaire' : colle.details.horaire})
+	for eleve in eleves_sans_note:
+		initial.append({'eleve' : eleve})
+
 	if request.method == 'POST':
-		form = ColleNoteFormSet(request.POST, instance = colle, initial = initial) # si le colleur change le nom d'un étudiant ????
+		form = ColleNoteFormSet(request.POST, instance=colle, initial=initial)
 		if form.is_valid():
 			form.save()
 			return redirect('colle_detail', colle.pk)
 	else:
-		form = ColleNoteFormSet(instance = colle, initial = initial)
-	return render(request, 'pykol/colles/noter.html', {'form':form})
+		form = ColleNoteFormSet(instance=colle, initial=initial)
+
+	return render(request, 'pykol/colles/noter.html', {'colle': colle, 'form': form})
 
 @login_required
 def colle_deplacer(request, pk):

@@ -26,40 +26,40 @@ class Note:
 	NON_NOTE = 4
 	VU = 5
 	def __init__(self, initial=None):
-		self.kind = NON_NOTE
+		self.kind = Note.NON_NOTE
 		self.value = None
 		if initial is not None:
 			self.set(initial)
 
 	def set(self, value):
 		if value == 'a':
-			self.kind = ABSENCE
+			self.kind = Note.ABSENCE
 			self.value = 0
 		if value == 'ae':
-			self.kind = ABSENCE_EXCUSEE
+			self.kind = Note.ABSENCE_EXCUSEE
 			self.value = None
 		if value == 'nn':
-			self.kind = NON_NOTE
+			self.kind = Note.NON_NOTE
 			self.value = 0
 		if value == 'vu':
-			self.kind = VU
+			self.kind = Note.VU
 			self.value = None
 		try:
 			self.value = float(value)
-			self.kind = NOTE
+			self.kind = Note.NOTE
 		except ValueError:
 			raise ValueError("Une note doit être soit un nombre, soit l'une des valeur particulières suivantes: 'nn' (non noté, compte dans une moyenne), 'vu' (non noté, ne compte pas dans une moyenne), 'a' (absence, compte dans une moyenne), 'ae' (absence excusée, ne compte pas dans une moyenne)")
 
 	def __repr__(self):
-		if self.kind == NOTE:
+		if self.kind == Note.NOTE:
 			return repr(self.value)
-		if self.kind == ABSENCE:
+		if self.kind == Note.ABSENCE:
 			return 'a'
-		if self.kind == ABSENCE_EXCUSEE:
+		if self.kind == Note.ABSENCE_EXCUSEE:
 			return 'ae'
-		if self.kind == NON_NOTE:
+		if self.kind == Note.NON_NOTE:
 			return 'nn'
-		if self.kind == VU:
+		if self.kind == Note.VU:
 			return 'vu'
 
 class NoteField(models.Field):

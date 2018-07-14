@@ -87,9 +87,7 @@ def colle_declarer(request, pk):
 			return redirect('colle_detail', colle.pk)
 	else:
 		form = ColleNoteFormSet(instance = colle, initial = initial)
-	return render(request, 'pykol/colles/note.html', {'form':form})
-
-
+	return render(request, 'pykol/colles/noter.html', {'form':form})
 
 @login_required
 def colle_deplacer(request, pk):

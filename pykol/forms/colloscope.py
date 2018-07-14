@@ -25,6 +25,7 @@ from pykol.models.colles import Semaine, CollesReglages, Creneau, \
 		Roulement, RoulementLigne, RoulementApplication, \
 		RoulementGraineLigne
 from pykol.forms import CommaSeparatedCharField
+from . import LabelledHiddenWidget
 
 class SemaineForm(forms.Form):
 	debut = forms.DateField(label="début")
@@ -72,18 +73,6 @@ CreneauSansClasseFormSet = modelformset_factory(Creneau,
 		form=CreneauForm, can_delete=True, extra=3,
 		fields = ('jour', 'debut', 'fin', 'salle', 'colleur',
 			'matiere',))
-
-class LabelledHiddenWidget(forms.HiddenInput):
-	def __init__(self, *args, **kwargs):
-		super(LabelledHiddenWidget, self).__init__(*args, **kwargs)
-
-	def render(self, name, value, attrs=None):
-		input_html = super(LabelledHiddenWidget, self).render(name, value, attrs)
-		for pk, val in self.choices:
-			if pk == value:
-				input_html += val
-				break
-		return input_html
 
 class TrinomeForm(forms.Form):
 	etudiant = forms.ModelChoiceField(required=True,

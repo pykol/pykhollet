@@ -19,6 +19,16 @@
 from django import forms
 
 from pykol.models.colles import Colle, ColleNote
+from . import LabelledHiddenWidget
+
+class ColleNoteForm(forms.ModelForm):
+	class Meta:
+		model = ColleNote
+		fields = ('eleve', 'horaire', 'note')
+		widgets = {
+			'eleve': LabelledHiddenWidget,
+		}
 
 ColleNoteFormSet = forms.inlineformset_factory(Colle, ColleNote,
-		fields=('eleve', 'horaire', 'note'))
+		form=ColleNoteForm,
+		fields=('eleve', 'horaire', 'note'), can_delete=False)

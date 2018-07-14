@@ -36,3 +36,19 @@ class CommaSeparatedCharField(forms.Field):
 		self.validate(value)
 		self.run_validators(value)
 		return value
+
+class LabelledHiddenWidget(forms.HiddenInput):
+	def __init__(self, *args, **kwargs):
+		super(LabelledHiddenWidget, self).__init__(*args, **kwargs)
+
+	@property
+	def is_hidden(self):
+		return False
+
+	def render(self, name, value, attrs=None):
+		input_html = super(LabelledHiddenWidget, self).render(name, value, attrs)
+		for pk, val in self.choices:
+			if pk == value:
+				input_html += val
+				break
+		return input_html

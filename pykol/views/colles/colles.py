@@ -17,7 +17,7 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 from django.core.exceptions import PermissionDenied
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, redirect
 from django.views import generic
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin, \
@@ -25,6 +25,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin, \
 from django.utils import timezone
 
 from pykol.models.colles import Colle
+from pykol.forms.colles import ColleNoteFormSet
 
 """
 Vues de gestion des colles destinées aux colleurs.
@@ -72,8 +73,23 @@ def colle_declarer(request, pk):
 	"""
 	Vue qui permet de déclarer les notes pour une colle déjà existante
 	dans la base de données, identifiée par sa clé pk.
+
+	# ATTENTION : horaire de ColleNote et horaire de ColleDetail ????
 	"""
-	pass
+	colle = get_object_or_404(Colle, pk=pk)
+	initial = []
+	for eleve in colle.details.eleves.all():
+		initial.append({'eleve' : eleve, 'horaire' : colle.details.horaire})
+	if request.method == 'POST':
+		form = ColleNoteFormSet(request.POST, instance = colle, initial = initial) # si le colleur change le nom d'un étudiant ????
+		if form.is_valid():
+			form.save()
+			return redirect('colle_detail', colle.pk)
+	else:
+		form = ColleNoteFormSet(instance = colle, initial = initial)
+	return render(request, 'pykol/colles/note.html', {'form':form})
+
+
 
 @login_required
 def colle_deplacer(request, pk):

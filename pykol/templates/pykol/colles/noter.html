@@ -1,0 +1,12 @@
+{% extends 'pykol/base.html' %}
+{% block content %}
+<h2>Noter la colle du {{ colle.horaire }}</h2>
+
+<form method="post" action="">
+  {% csrf_token %}
+  <table>
+    {{ form.as_table }}
+  </table>
+  <input type="submit">
+</form>
+{% endblock %}

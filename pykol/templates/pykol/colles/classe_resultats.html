@@ -6,7 +6,7 @@ Les notes des étudiants en {{matiere}}.
   <tr>
     <th> étudiant </th>
     {% for semaine in semaines %}
-    <th> {{semaine}} </th>
+    <th> {{semaine.numero }} </th>
     {% endfor %}
   </tr>
   {% for etudiant, sems in etudiants.items %}

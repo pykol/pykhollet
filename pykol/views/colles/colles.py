@@ -41,16 +41,16 @@ fichier colloscope.py
 def colle_visible_par(user, colle):
 	"""Renvoie True si et seulement si l'utilisateur a le droit de
 	consulter les détails de la colle."""
-	return self.request.user == colle.colleur or \
-		self.request.user.has_perm('pykol.change_colle', colle.classe) or \
-		self.request.user in colle.classe.profs_de(colle.matiere)
+	return user == colle.colleur or \
+		user.has_perm('pykol.change_colle', colle.classe) or \
+		user in colle.classe.profs_de(colle.matiere)
 
 class ColleVisibleMixin(generic.detail.SingleObjectMixin,
 		UserPassesTestMixin):
 	"""Application du test colle_visible_par à une vue sur la colle"""
 	model = Colle
 	def test_func(self):
-		return colle_visible_par(self.request.user, self.get_object)
+		return colle_visible_par(self.request.user, self.get_object())
 
 class ColleDetailView(LoginRequiredMixin, ColleVisibleMixin, \
 		generic.DetailView):

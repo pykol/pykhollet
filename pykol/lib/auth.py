@@ -67,3 +67,13 @@ def user_has_object_perm(user, model, perm, **kwargs):
 def object_permission_required(model, perm, **kwargs):
 	return user_passes_test(
 			lambda u: user_has_object_perm(u, model, perm, **kwargs))
+
+def professeur_dans(user, classe):
+	"""
+	Teste si un utilisateur est un professeur et s'il enseigne dans la
+	classe.
+	"""
+	try:
+		return classe in user.professeur.mes_classes()
+	except:
+		return False

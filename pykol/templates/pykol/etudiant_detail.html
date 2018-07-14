@@ -4,4 +4,10 @@
   Renseignement sur {{ etudiant }}
   <small>− {{ etudiant.classe }}</small>
 </h2>
+
+<h3>Notes par matière </h3>
+<ul>
+  <li><a href="{% url 'classe_etudiant_resultats' etudiant.pk %}">Notes</a></li>
+</ul>
+
 {% endblock %}

@@ -26,6 +26,7 @@ from django.contrib.auth.decorators import login_required
 
 from pykol.models.base import Classe, Matiere, Etudiant
 from pykol.models.colles import Semaine, ColleNote
+from pykol.lib.auth import professeur_dans
 
 from collections import defaultdict, OrderedDict
 
@@ -42,10 +43,7 @@ def classe_resultats(request, slug):
 	classe = get_object_or_404(Classe, slug=slug)
 
 	# L'accès n'est autorisé qu'aux professeurs de la classe
-	try:
-		if classe not in request.user.professeur.mes_classes():
-			raise PermissionDenied
-	except:
+	if not professeur_dans(request.user, classe):
 		raise PermissionDenied
 
 	matieres = Matiere.objects.filter(enseignement__classe = classe, enseignement__service__professeur = request.user)
@@ -95,7 +93,44 @@ def etudiant_resultats(request, pk):
 	"""
 	etudiant = get_object_or_404(Etudiant, pk=pk)
 
-	# TODO récupérer les résultats
+	if not (etudiant == request.user or
+			professeur_dans(request.user, etudiant.classe)):
+		raise PermissionDenied
+
+	try:
+		matieres = Matiere.objects.filter(
+			enseignement__classe__etudiant = etudiant,
+			enseignement__service__professeur = request.user
+		)
+	except:
+		try:
+			matieres = Matiere.objects.filter(etudiant = user.request)
+		except:
+			matieres = []
+
+	semaines = Semaine.objects.filter(classe__etudiant = etudiant)
+	notesParMatiere = {}
+	for matiere in matieres:
+		notesParMatiere[matiere] = defaultdict(list)
+
+		colleNoteEtudiant_s = ColleNote.objects.filter(
+			colle__matiere = matiere,
+			eleve = etudiant
+		)
+		for colleNoteEtudiant in colleNoteEtudiant_s:
+			# quelle semaine ?
+			if colleNoteEtudiant.colle.semaine:
+				semaineColle = colleNoteEtudiant.colle.semaine
+			else:
+				horaire = colleNoteEtudiant.horaire
+				for semaine in semaines:
+					if semaine.debut <= horaire <= semaine.fin:
+						semaineColle = semaine
+
+			notesParMatiere[matiere][semaineColle].append(colleNoteEtudiant.note)
+		notesParMatiere[matiere] = dict(notesParMatiere[matiere])
+
+	context = {'matieres':notesParMatiere, 'semaines':semaines}
 
 	return render(request, 'pykol/colles/etudiant_resultats.html',
-			context={})
+			context=context)

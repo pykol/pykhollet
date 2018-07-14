@@ -58,6 +58,11 @@ classes_urlpatterns = [
 	path('<slug:slug>/resultats', views.colles.classe_resultats, name='classe_colle_resultats'),
 ]
 
+etudiants_urlpatterns = [
+    path('<int:pk>/', views.EtudiantDetailView.as_view(), name='etudiant'),
+    path('<int:pk>/resultats', views.colles.resultats.etudiant_resultats, name='classe_etudiant_resultats'),
+]
+
 accounts_urlpatterns = [
 	path('', views.direction.DirectionListUser.as_view(), name='direction_list_user'),
 	path('profile/', views.mon_profil, name='mon_profil'),
@@ -82,6 +87,6 @@ urlpatterns = [
 	path('direction/', include(direction_urlpatterns)),
 	path('annees/', include(annees_urlpatterns)),
 	path('classes/', include(classes_urlpatterns)),
-	path('etudiant/<int:pk>/', views.EtudiantDetailView.as_view(), name='etudiant'),
+	path('etudiant/', include(etudiants_urlpatterns)),
 	path('releves/', include(releves_urlpatterns)),
 ]

@@ -1,0 +1,25 @@
+{% extends "pykol/base.html" %}
+{% block content %}
+<table>
+    <tr>
+        <th> matière <th>
+        {% for semaine in semaines %}
+        <th> {{semaine}} </th>
+        {% endfor %}
+    </tr>
+    {% for matiere, notesParSemaine in matieres.items %}
+    <tr>
+        <td> {{matiere}} </td>
+		{% for semaine in semaines %}
+        <td> 
+			{% for sem, notes in notesParSemaine.items %}
+			{% if sem == semaine %}
+			{% for note in notes %} {{note}},{% endfor %} 
+			{% endif %}
+			{% endfor %}
+		</td>
+        {% endfor %}
+    </tr>
+    {% endfor %}
+</table>
+{% endblock %}

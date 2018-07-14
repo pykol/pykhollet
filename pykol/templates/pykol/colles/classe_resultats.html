@@ -1,0 +1,34 @@
+﻿{% extends "pykol/base.html" %}
+{% block content %}
+{% for matiere, etudiants in matieres.items %}
+Les notes des étudiants en {{matiere}}.
+<table>
+  <tr>
+    <th> étudiant </th>
+    {% for semaine in semaines %}
+    <th> {{semaine}} </th>
+    {% endfor %}
+  </tr>
+  {% for etudiant, sems in etudiants.items %}
+  <tr>
+    <td> {{etudiant}} </td>
+    {% for semaine in semaines %}
+        <td> 
+      <!--   ne marche pas     
+      {% if semaine in sems %}
+      {% for note in sems.semaine %} {{note}},{% endfor %} 
+      {% endif %} 
+      -->
+      
+      {% for sem, notes in sems.items %}
+      {% if sem == semaine %}
+      {% for note in notes %} {{note}},{% endfor %} 
+      {% endif %}
+      {% endfor %}
+    </td>
+        {% endfor %}
+    </tr>
+    {% endfor %}
+</table>
+{% endfor %}
+{% endblock %}

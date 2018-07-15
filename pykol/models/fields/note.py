@@ -16,15 +16,18 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+from functools import total_ordering
 from django.db import models
 from django.core.exceptions import ValidationError
 
+@total_ordering
 class Note:
 	NOTE = 1
-	ABSENCE = 2
-	ABSENCE_EXCUSEE = 3
-	NON_NOTE = 4
-	VU = 5
+	NON_NOTE = 2
+	VU = 3
+	ABSENCE = 4
+	ABSENCE_EXCUSEE = 5
+
 	def __init__(self, initial=None):
 		self.kind = Note.NON_NOTE
 		self.value = None
@@ -35,20 +38,26 @@ class Note:
 		if value == 'a':
 			self.kind = Note.ABSENCE
 			self.value = 0
-		if value == 'ae':
+		elif value == 'ae':
 			self.kind = Note.ABSENCE_EXCUSEE
 			self.value = None
-		if value == 'nn':
+		elif value == 'nn':
 			self.kind = Note.NON_NOTE
 			self.value = 0
-		if value == 'vu':
+		elif value == 'vu':
 			self.kind = Note.VU
 			self.value = None
-		try:
-			self.value = float(value)
-			self.kind = Note.NOTE
-		except ValueError:
-			raise ValueError("Une note doit être soit un nombre, soit l'une des valeur particulières suivantes: 'nn' (non noté, compte dans une moyenne), 'vu' (non noté, ne compte pas dans une moyenne), 'a' (absence, compte dans une moyenne), 'ae' (absence excusée, ne compte pas dans une moyenne)")
+		else:
+			try:
+				self.value = float(value)
+				self.kind = Note.NOTE
+			except ValueError:
+				raise ValueError("Une note doit être soit un nombre, "
+					"soit l'une des valeurs particulières suivantes: "
+					"'nn' (non noté, compte dans une moyenne), "
+					"'vu' (non noté, ne compte pas dans une moyenne), "
+					"'a' (absence, compte dans une moyenne), "
+					"'ae' (absence excusée, ne compte pas dans une moyenne)")
 
 	def __repr__(self):
 		if self.kind == Note.NOTE:
@@ -61,6 +70,71 @@ class Note:
 			return 'nn'
 		if self.kind == Note.VU:
 			return 'vu'
+
+	def compte_dans_moyenne(self):
+		return self.value is not None
+
+	def __add__(self, note):
+		# Le premier Moyenne() de la liste permet d'appeler ensuite la
+		# méthode __add__ de la classe Moyenne au lieu de celle de Note.
+		return Moyenne() + self + note
+
+	def __eq__(self, note):
+		if self.kind == Note.NOTE:
+			return note.kind == Note.NOTE and self.value == note.value
+		else:
+			return self.kind == note.kind
+
+	def __le__(self, note):
+		if self.kind == note.NOTE == note.kind:
+			return self.value <= note.value
+		else:
+			return self.kind >= note.kind
+
+class Moyenne(Note):
+	def __init__(self):
+		self.points = None
+		self.nb_notes = 0
+		self.kind = Note.NON_NOTE
+
+	@property
+	def value(self):
+		if self.points is not None:
+			return self.points / self.nb_notes
+		else:
+			return None
+
+	def __add__(self, note):
+		if not isinstance(note, Note):
+			note = Note(note)
+
+		res = Moyenne()
+
+		res.points = self.points
+
+		if self.nb_notes == 0:
+			res.kind = note.kind
+
+		if note.compte_dans_moyenne():
+			res.nb_notes = self.nb_notes + 1
+			res.points = int(self.points) + int(note.value)
+			res.kind = min(self.kind, note.kind)
+
+		return res
+
+	def __iadd__(self, note):
+		if not isinstance(note, Note):
+			note = Note(note)
+
+		if self.nb_notes == 0:
+			self.kind = note.kind
+
+		if note.compte_dans_moyenne():
+			self.nb_notes = self.nb_notes + 1
+			self.points = int(self.points) + int(note.value)
+			self.kind = min(self.kind, note.kind)
+
+		return self
 
 class NoteField(models.Field):
 	description = "Note représentant une évaluation chiffrée"

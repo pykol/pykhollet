@@ -90,12 +90,15 @@ def colle_declarer(request, pk):
 		initial.append({'eleve' : eleve})
 
 	if request.method == 'POST':
-		form = ColleNoteFormSet(request.POST, instance=colle, initial=initial)
+		form = ColleNoteFormSet(request.POST, instance=colle,
+				initial=initial)
+		form.extra = len(initial)
 		if form.is_valid():
 			form.save()
 			return redirect('colle_detail', colle.pk)
 	else:
 		form = ColleNoteFormSet(instance=colle, initial=initial)
+		form.extra = len(initial)
 
 	return render(request, 'pykol/colles/noter.html', {'colle': colle, 'form': form})
 

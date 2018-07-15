@@ -32,6 +32,10 @@ class ColleNoteForm(forms.ModelForm):
 			'eleve': LabelledHiddenWidget,
 		}
 
+	def __init__(self, *args, **kwargs):
+		super().__init__(*args, **kwargs)
+		self.fields['eleve'].disabled = True
+
 	def save(self, commit=True):
 		note = super().save(commit)
 		if not note.horaire:
@@ -46,4 +50,4 @@ class ColleNoteForm(forms.ModelForm):
 
 ColleNoteFormSet = forms.inlineformset_factory(Colle, ColleNote,
 		form=ColleNoteForm,
-		fields=('eleve', 'note'), can_delete=False, extra=0)
+		fields=('eleve', 'note'), can_delete=False)

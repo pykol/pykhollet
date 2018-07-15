@@ -18,4 +18,4 @@
 
 from .uppercasecharfield import UppercaseCharField
 from .lettre23 import Lettre23Field, validateur_lettre23
-from .note import NoteField, Note
+from .note import NoteField, Note, Moyenne

@@ -32,10 +32,11 @@ from django.utils.safestring import mark_safe
 
 from pykol.models.base import Classe, Matiere, Etudiant
 from pykol.models.colles import Semaine, ColleNote, Colle
-from pykol.models.fields import Note
+from pykol.models.fields import Moyenne
+from pykol.lib.auth import professeur_dans
 
 def moyenne(notes):
-	return reduce(operator.add, notes.values())
+	return reduce(operator.add, notes.values(), Moyenne())
 
 @login_required
 def classe_resultats(request, slug):

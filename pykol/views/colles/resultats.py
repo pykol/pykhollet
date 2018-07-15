@@ -22,6 +22,7 @@ Vues d'affichage des résultats de colles des étudiants.
 
 from collections import defaultdict, OrderedDict
 import operator
+from functools import reduce
 
 from django.core.exceptions import PermissionDenied
 from django.shortcuts import render, get_object_or_404
@@ -34,7 +35,7 @@ from pykol.models.fields import Note
 from pykol.lib.auth import professeur_dans
 
 def moyenne(notes):
-	return reduce(operators.add, notes.values())
+	return reduce(operator.add, notes.values())
 
 @login_required
 def classe_resultats(request, slug):

@@ -74,6 +74,9 @@ class Note:
 	def compte_dans_moyenne(self):
 		return self.value is not None
 
+	def est_note(self):
+		return self.kind == Note.NOTE
+
 	def __add__(self, note):
 		# Le premier Moyenne() de la liste permet d'appeler ensuite la
 		# méthode __add__ de la classe Moyenne au lieu de celle de Note.

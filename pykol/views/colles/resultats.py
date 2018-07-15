@@ -28,11 +28,11 @@ from django.core.exceptions import PermissionDenied
 from django.shortcuts import render, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.utils import timezone
+from django.utils.safestring import mark_safe
 
 from pykol.models.base import Classe, Matiere, Etudiant
 from pykol.models.colles import Semaine, ColleNote, Colle
 from pykol.models.fields import Note
-from pykol.lib.auth import professeur_dans
 
 def moyenne(notes):
 	return reduce(operator.add, notes.values())
@@ -126,7 +126,7 @@ def classe_resultats(request, slug):
 
 		for colle in colles:
 			for eleve in colle.details.eleves.all():
-				notesParEtudiant[eleve][colle.semaine] = [Note('enn')]
+				notesParEtudiant[eleve][colle.semaine] = [mark_safe('<i class="far fa-hourglass"></i>')]
 		notesParEtudiantParMatiere[matiere] = notesParEtudiant
 
 	context = {

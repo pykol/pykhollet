@@ -21,8 +21,6 @@ Vues d'affichage des résultats de colles des étudiants.
 """
 
 from collections import defaultdict, OrderedDict
-import operator
-from functools import reduce
 
 from django.core.exceptions import PermissionDenied
 from django.shortcuts import render, get_object_or_404
@@ -34,9 +32,6 @@ from pykol.models.base import Classe, Matiere, Etudiant
 from pykol.models.colles import Semaine, ColleNote, Colle
 from pykol.models.fields import Moyenne
 from pykol.lib.auth import professeur_dans
-
-def moyenne(notes):
-	return reduce(operator.add, notes.values(), Moyenne())
 
 @login_required
 def classe_resultats(request, slug):
@@ -61,12 +56,8 @@ def classe_resultats(request, slug):
 					semaineColle = semaine
 		return semaineColle
 
-	def calculerMoyennesParEtudiant(etudiants,notesParEtudiant):
-		return {etudiant: moyenne(notes) for etudiant, notes in
-				notesParEtudiant.items()}
-
 	def calculerRangs(etudiants, moyennesParEtudiant):
-		rangParEtudiant = {}
+		rangParEtudiant = defaultdict(lambda: '')
 		couplesEtudiantMoyenne = sorted(moyennesParEtudiant.items(),
 				key=lambda v:v[1], reverse=True)
 		noteCourante = couplesEtudiantMoyenne[0][1] # noteMax
@@ -92,17 +83,14 @@ def classe_resultats(request, slug):
 	semaines = Semaine.objects.filter(classe = classe)
 
 	notesParEtudiantParMatiere = {}
-	moyennesParEtudiantParMatiere = {}
-	rangsParEtudiantParMatiere = {}
 
 	for matiere in matieres:
 		etudiants = Etudiant.objects.filter(classe = classe, groupe__enseignement__matiere = matiere).order_by('last_name','first_name')
 
 		notesParEtudiant = OrderedDict()
+		moyennesParEtudiant = defaultdict(Moyenne)
 		for etudiant in etudiants:
-			notesParEtudiant[etudiant] = {}
-			for semaine in semaines:
-				notesParEtudiant[etudiant][semaine] = []
+			notesParEtudiant[etudiant] = defaultdict(list)
 
 		colleNoteEtudiant_s = ColleNote.objects.filter(
 			colle__matiere = matiere,
@@ -112,10 +100,9 @@ def classe_resultats(request, slug):
 		for colleNoteEtudiant in colleNoteEtudiant_s:
 			semaineColle = getSemaine(colleNoteEtudiant)
 			notesParEtudiant[colleNoteEtudiant.eleve][semaineColle].append(colleNoteEtudiant.note)
+			moyennesParEtudiant[colleNoteEtudiant.eleve] += colleNoteEtudiant.note
 
-		moyennesParEtudiant = calculerMoyennesParEtudiant(etudiants,notesParEtudiant)
-		moyennesParEtudiantParMatiere[matiere] = moyennesParEtudiant
-		rangsParEtudiantParMatiere[matiere] = calculerRangs(etudiants, moyennesParEtudiant)
+		rangsParEtudiant = calculerRangs(etudiants, moyennesParEtudiant)
 
 		# remarque : les deux requetes peuvent être mises avant la boucle sur les matieres si c'est plus rapide
 		colles = Colle.objects.filter(
@@ -127,14 +114,22 @@ def classe_resultats(request, slug):
 
 		for colle in colles:
 			for eleve in colle.details.eleves.all():
-				notesParEtudiant[eleve][colle.semaine] = [mark_safe('<i class="far fa-hourglass"></i>')]
+				notesParEtudiant[eleve][colle.semaine].append(
+					mark_safe('<i class="far fa-hourglass"></i>'))
+
+		# On remplace les dictionnaires des semaines par des listes pour faciliter
+		# l'affichage
+		for etudiant in etudiants:
+			notesParEtudiant[etudiant] = [[moyennesParEtudiant[etudiant]],
+					[rangsParEtudiant[etudiant]]] + \
+					[notesParEtudiant[etudiant][semaine] for semaine in
+							semaines]
+
 		notesParEtudiantParMatiere[matiere] = notesParEtudiant
 
 	context = {
 		'matieres':notesParEtudiantParMatiere,
 		'semaines':semaines,
-		'moyennesParMatiere':moyennesParEtudiantParMatiere,
-		'rangsParMatiere':rangsParEtudiantParMatiere,
 	}
 
 	return render(request, 'pykol/colles/classe_resultats.html', context=context)

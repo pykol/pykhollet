@@ -26,7 +26,7 @@ from django.forms import formset_factory
 from django.contrib import messages
 
 from pykol.models.base import Classe
-from pykol.models.colles import Semaine, CollesReglages, Creneau
+from pykol.models.colles import Semaine, CollesReglages, Creneau, Colle
 from pykol.forms.colloscope import SemaineFormSet, \
 		SemaineNumeroGenerateurForm, \
 		CreneauFormSet, CreneauSansClasseFormSet, \
@@ -41,11 +41,35 @@ def colloscope(request, slug):
 	classe = get_object_or_404(Classe, slug=slug)
 	semaines = classe.semaine_set.order_by('debut')
 	creneaux = classe.creneau_set.order_by('matiere', 'jour', 'debut')
+	colles = classe.colle_set.order_by('matiere')
+	groupesParSemaineParCreneauParMatiere = {}
+	for colle in colles:
+		groupesParSemaineParCreneau = {}
+		for creneau in creneaux:
+			groupesParSemaine = {}
+			for semaine in semaines:
+				groupesParSemaine[semaine] = ''
+			groupesParSemaineParCreneau[creneau] = groupesParSemaine
+		groupesParSemaineParCreneauParMatiere[colle.matiere] = groupesParSemaineParCreneau
+	for colle in colles:
+		matiere = colle.matiere
+		creneau = colle.creneau
+		semaine = colle.semaine
+		groupe = colle.groupe
+		groupesParSemaineParCreneauParMatiere[matiere][creneau][semaine] = groupe
+
+	groupesParMatiere = {}
+	for colle in colles:
+		groupesParMatiere[colle.matiere] = []
+		for creneau in creneaux:
+			groupesParMatiere[colle.matiere].append([creneau, [groupesParSemaineParCreneauParMatiere[colle.matiere][creneau][semaine] for semaine in semaines] ])
+
 	return render(request, 'pykol/colles/colloscope.html',
 			context={
 				'classe': classe,
 				'semaines': semaines,
 				'creneaux' : creneaux,
+				'groupesParMatiere' : groupesParMatiere,
 				})
 
 @login_required

@@ -17,6 +17,7 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 from datetime import timedelta
+from collections import defaultdict, OrderedDict
 
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required, permission_required
@@ -38,38 +39,32 @@ def colloscope_home(request):
 
 @login_required
 def colloscope(request, slug):
+	"""
+	Affichage du colloscope complet d'une classe
+	"""
 	classe = get_object_or_404(Classe, slug=slug)
 	semaines = classe.semaine_set.order_by('debut')
 	creneaux = classe.creneau_set.order_by('matiere', 'jour', 'debut')
-	colles = classe.colle_set.order_by('matiere')
-	groupesParSemaineParCreneauParMatiere = {}
-	for colle in colles:
-		groupesParSemaineParCreneau = {}
-		for creneau in creneaux:
-			groupesParSemaine = {}
-			for semaine in semaines:
-				groupesParSemaine[semaine] = ''
-			groupesParSemaineParCreneau[creneau] = groupesParSemaine
-		groupesParSemaineParCreneauParMatiere[colle.matiere] = groupesParSemaineParCreneau
-	for colle in colles:
-		matiere = colle.matiere
-		creneau = colle.creneau
-		semaine = colle.semaine
-		groupe = colle.groupe
-		groupesParSemaineParCreneauParMatiere[matiere][creneau][semaine] = groupe
+	colles = classe.colle_set.all()
 
-	groupesParMatiere = {}
-	for colle in colles:
-		groupesParMatiere[colle.matiere] = []
-		for creneau in creneaux:
-			groupesParMatiere[colle.matiere].append([creneau, [groupesParSemaineParCreneauParMatiere[colle.matiere][creneau][semaine] for semaine in semaines] ])
+	colloscope = defaultdict(OrderedDict)
+	for creneau in creneaux:
+		colloscope[creneau.matiere][creneau] = OrderedDict([
+				(semaine, []) for semaine in semaines])
 
+	for colle in colles:
+		if colle.creneau is not None and colle.semaine is not None:
+			colloscope[colle.matiere][colle.creneau][colle.semaine].append(colle.groupe)
+
+	# La conversion de colloscope en dict est obligatoire, car les
+	# gabarits Django ne peuvent pas itérer sur les defaultdict
+	# facilement : l'appel colloscope.items est d'abord converti en
+	# colloscope['items'] et non en colloscope.items().
 	return render(request, 'pykol/colles/colloscope.html',
 			context={
 				'classe': classe,
 				'semaines': semaines,
-				'creneaux' : creneaux,
-				'groupesParMatiere' : groupesParMatiere,
+				'colloscope': dict(colloscope),
 				})
 
 @login_required

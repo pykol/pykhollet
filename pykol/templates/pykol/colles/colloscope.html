@@ -26,27 +26,23 @@
     </tr>
   </thead>
 
-  {% for matiere, groupes in groupesParMatiere.items %}
   <tbody>
-  {% for groupe in groupes %}
-    {% with creneau=groupe.0 %}
-    {% with gpes=groupe.1 %}
-      <tr>
-        {% ifchanged matiere %}
-        <th rowspan="{{ matiere|length }}">{{ matiere }}</th>
-        {% endifchanged %}
-        <th>{{ creneau.colleur.short_display_name }}</th>
-        <th>{{ creneau.get_jour_display }}</th>
-        <th>{{ creneau.debut | heure_pour_colloscope }}−{{ creneau.fin | heure_pour_colloscope}}</th>
-        <th>{{ creneau.salle }}</th>
-        {% for gpe in gpes %}
-        <th>{{ gpe }}</th>
-        {% endfor %}
-      </tr>
-    {% endwith %}
-    {% endwith %}
-  {% endfor %}
+    {% for matiere, creneaux in colloscope.items %}
+    {% for creneau, semaines in creneaux.items %}
+    <tr>
+      {% ifchanged matiere %}
+      <th rowspan="{{ creneaux|length }}">{{ matiere }}</th>
+      {% endifchanged %}
+      <th>{{ creneau.colleur.short_display_name }}</th>
+      <th>{{ creneau.get_jour_display }}</th>
+      <th>{{ creneau.debut | heure_pour_colloscope }}−{{ creneau.fin | heure_pour_colloscope}}</th>
+      <th>{{ creneau.salle }}</th>
+      {% for semaine, groupes in semaines.items %}
+      <td>{{ groupes|join:', ' }}</td>
+      {% endfor %}
+    </tr>
+    {% endfor %}
+    {% endfor %}
   </tbody>
-  {% endfor %}
 </table>
 {% endblock content %}

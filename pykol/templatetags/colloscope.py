@@ -24,4 +24,4 @@ def heure_pour_colloscope(value):
 	if value.minute == 0:
 		return "{:%H}".format(value)
 	else:
-		return "{:%H-%M}".format(value)
+		return "{:%H:%M}".format(value)

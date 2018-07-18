@@ -109,6 +109,7 @@ def classe_resultats(request, slug):
 			classe = classe,
 			matiere = matiere,
 			etat = Colle.ETAT_PREVUE,
+			colledetails__actif=True,
 			colledetails__horaire__lte=timezone.localtime(),
 		).exclude(collenote__isnull = False)
 

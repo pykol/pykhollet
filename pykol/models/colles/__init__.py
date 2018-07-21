@@ -21,6 +21,6 @@ from .releve import ColleReleve
 from .conception import Semaine, Creneau, Trinome, \
 		Roulement, RoulementLigne, RoulementApplication, \
 		RoulementGraineLigne, \
-		CollesParMatiere, CollesReglages
+		CollesReglages
 from .perms import ColloscopePermission
-from .dotation import Dotation
+from .dotation import Dotation, CollesEnseignement

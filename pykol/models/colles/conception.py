@@ -155,12 +155,6 @@ class RoulementGraineLigne(models.Model):
 	def generer_colles(self):
 		pass
 
-class CollesParMatiere(models.Model):
-	enseignement = models.ForeignKey(Enseignement, on_delete=models.CASCADE)
-	reglages = models.ForeignKey('CollesReglages',
-			on_delete=models.CASCADE)
-	duree = models.PositiveSmallIntegerField(verbose_name="durée hebdomadaire")
-
 class CollesReglages(models.Model):
 	"""Sauvegarde des paramètres utilisés pour générer les semaines de
 	colles."""
@@ -169,7 +163,6 @@ class CollesReglages(models.Model):
 			verbose_name="numérotation automatique")
 	numeros_format = models.CharField(max_length=100, blank=True,
 			default="{numero}", verbose_name="format des numéros")
-	durees = models.ManyToManyField(Enseignement, through=CollesParMatiere)
 
 	def clean(self):
 		errors = {}

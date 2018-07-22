@@ -1,12 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <pykol_nomenclatures version="1.0">
+  <!--
+    Ce document décrit les horaires de colles en CPGE, tels qu'ils sont
+    décrits par la réglementation. Il sert de base pour peupler une
+    base de données pyKol en attribuant les horaires de colles aux
+    différents enseignements.
+
+    Sources :
+    * ECS et ECE : arrêté du 23 mars 1995 (NOR: RESK9500107A) ;
+    * CPGE scientifiques : arrêté du 10 février 1995 (NOR: RESK9500109A) ;
+    * CPGE littéraires : arrêté du 27 juin 1995 (NOR: MENU9501179A).
+  -->
   <colles>
 
     <!-- Colles en ECS1 et ECS2 -->
     <colle>
       <!-- Mathématiques -->
-      <code_mef>30112012210</code_mef>
-      <code_mef>30112013220</code_mef>
+      <codes_mefs>
+        <code_mef>30112012210</code_mef>
+        <code_mef>30112013220</code_mef>
+      </codes_mefs>
       <codes_matieres>
         <code_matiere>061600</code_matiere>
       </codes_matieres>
@@ -15,8 +28,10 @@
     </colle>
     <colle>
       <!-- Informatique -->
-      <code_mef>30112012210</code_mef>
-      <code_mef>30112013220</code_mef>
+      <codes_mefs>
+        <code_mef>30112012210</code_mef>
+        <code_mef>30112013220</code_mef>
+      </codes_mefs>
       <codes_matieres>
         <code_matiere>061600</code_matiere>
       </codes_matieres>
@@ -25,8 +40,10 @@
     </colle>
     <colle>
       <!-- Culture générale -->
-      <code_mef>30112012210</code_mef>
-      <code_mef>30112013220</code_mef>
+      <codes_mefs>
+        <code_mef>30112012210</code_mef>
+        <code_mef>30112013220</code_mef>
+      </codes_mefs>
       <codes_matieres>
         <code_matiere>001700</code_matiere>
       </codes_matieres>
@@ -35,8 +52,10 @@
     </colle>
     <colle>
       <!-- Histoire-géo -->
-      <code_mef>30112012210</code_mef>
-      <code_mef>30112013220</code_mef>
+      <codes_mefs>
+        <code_mef>30112012210</code_mef>
+        <code_mef>30112013220</code_mef>
+      </codes_mefs>
       <codes_matieres>
         <code_matiere>043600</code_matiere>
       </codes_matieres>
@@ -45,8 +64,10 @@
     </colle>
     <colle>
       <!-- Langues -->
-      <code_mef>30112012210</code_mef>
-      <code_mef>30112013220</code_mef>
+      <codes_mefs>
+        <code_mef>30112012210</code_mef>
+        <code_mef>30112013220</code_mef>
+      </codes_mefs>
       <codes_matieres>
         <!-- Allemand -->
         <code_matiere>030101</code_matiere>
@@ -71,8 +92,10 @@
     <!-- Colles en ECE1 et ECE2 -->
     <colle>
       <!-- Mathématiques -->
-      <code_mef>30112013210</code_mef>
-      <code_mef>30112013220</code_mef>
+      <codes_mefs>
+        <code_mef>30112013210</code_mef>
+        <code_mef>30112013220</code_mef>
+      </codes_mefs>
       <codes_matieres>
         <code_matiere>061600</code_matiere>
       </codes_matieres>
@@ -81,8 +104,10 @@
     </colle>
     <colle>
       <!-- Informatique -->
-      <code_mef>30112013210</code_mef>
-      <code_mef>30112013220</code_mef>
+      <codes_mefs>
+        <code_mef>30112013210</code_mef>
+        <code_mef>30112013220</code_mef>
+      </codes_mefs>
       <codes_matieres>
         <code_matiere>061600</code_matiere>
       </codes_matieres>
@@ -91,8 +116,10 @@
     </colle>
     <colle>
       <!-- Culture générale -->
-      <code_mef>30112013210</code_mef>
-      <code_mef>30112013220</code_mef>
+      <codes_mefs>
+        <code_mef>30112013210</code_mef>
+        <code_mef>30112013220</code_mef>
+      </codes_mefs>
       <codes_matieres>
         <code_matiere>001700</code_matiere>
       </codes_matieres>
@@ -101,8 +128,10 @@
     </colle>
     <colle>
       <!-- ASH -->
-      <code_mef>30112013210</code_mef>
-      <code_mef>30112013220</code_mef>
+      <codes_mefs>
+        <code_mef>30112013210</code_mef>
+        <code_mef>30112013220</code_mef>
+      </codes_mefs>
       <codes_matieres>
         <code_matiere>052300</code_matiere>
       </codes_matieres>
@@ -111,8 +140,10 @@
     </colle>
     <colle>
       <!-- Langues -->
-      <code_mef>30112013210</code_mef>
-      <code_mef>30112013220</code_mef>
+      <codes_mefs>
+        <code_mef>30112013210</code_mef>
+        <code_mef>30112013220</code_mef>
+      </codes_mefs>
       <codes_matieres>
         <!-- Allemand -->
         <code_matiere>030101</code_matiere>
@@ -136,9 +167,11 @@
 
     <!-- Colles en MPSI, MP et MP* -->
     <colle>
-      <code_mef>30111018210</code_mef>
-      <code_mef>30111027220</code_mef>
-      <code_mef>30111031220</code_mef>
+      <codes_mefs>
+        <code_mef>30111018210</code_mef>
+        <code_mef>30111027220</code_mef>
+        <code_mef>30111031220</code_mef>
+      </codes_mefs>
       <codes_matieres>
         <code_matiere>061300</code_matiere>
       </codes_matieres>
@@ -146,9 +179,11 @@
       <duree>PT20M</duree>
     </colle>
     <colle>
-      <code_mef>30111018210</code_mef>
-      <code_mef>30111027220</code_mef>
-      <code_mef>30111031220</code_mef>
+      <codes_mefs>
+        <code_mef>30111018210</code_mef>
+        <code_mef>30111027220</code_mef>
+        <code_mef>30111031220</code_mef>
+      </codes_mefs>
       <codes_matieres>
         <code_matiere>065700</code_matiere>
       </codes_matieres>
@@ -156,9 +191,11 @@
       <duree>PT10M</duree>
     </colle>
     <colle>
-      <code_mef>30111018210</code_mef>
-      <code_mef>30111027220</code_mef>
-      <code_mef>30111031220</code_mef>
+      <codes_mefs>
+        <code_mef>30111018210</code_mef>
+        <code_mef>30111027220</code_mef>
+        <code_mef>30111031220</code_mef>
+      </codes_mefs>
       <codes_matieres>
         <!-- Allemand -->
         <code_matiere>030101</code_matiere>
@@ -180,9 +217,11 @@
       <duree>PT10M</duree>
     </colle>
     <colle>
-      <code_mef>30111018210</code_mef>
-      <code_mef>30111027220</code_mef>
-      <code_mef>30111031220</code_mef>
+      <codes_mefs>
+        <code_mef>30111018210</code_mef>
+        <code_mef>30111027220</code_mef>
+        <code_mef>30111031220</code_mef>
+      </codes_mefs>
       <codes_matieres>
         <code_matiere>022700</code_matiere>
       </codes_matieres>
@@ -192,7 +231,9 @@
 
     <!-- Colles en PCSI -->
     <colle>
-      <code_mef>30111019210</code_mef>
+      <codes_mefs>
+        <code_mef>30111019210</code_mef>
+      </codes_mefs>
       <codes_matieres>
         <code_matiere>061300</code_matiere>
       </codes_matieres>
@@ -200,63 +241,77 @@
       <duree>PT10M</duree>
     </colle>
     <colle>
-      <code_mef>30111018210</code_mef>
+      <codes_mefs>
+        <code_mef>30111018210</code_mef>
+      </codes_mefs>
       <codes_matieres>
         <code_matiere>065700</code_matiere>
       </codes_matieres>
       <frequence>hebdomadaire</frequence>
       <duree>PT15M</duree>
-      <periode ref="pcsi_periode1"/>
+      <periode>premiere_periode</periode>
     </colle>
     <colle>
-      <code_mef>30111018210</code_mef>
+      <codes_mefs>
+        <code_mef>30111018210</code_mef>
+      </codes_mefs>
       <codes_matieres>
         <code_matiere>065700</code_matiere>
       </codes_matieres>
       <frequence>hebdomadaire</frequence>
       <duree>PT15M</duree>
-      <periode ref="pcsi_periode2"/>
+      <periode>deuxieme_periode</periode>
       <si_option>06700</si_option>
     </colle>
     <colle>
-      <code_mef>30111018210</code_mef>
+      <codes_mefs>
+        <code_mef>30111018210</code_mef>
+      </codes_mefs>
       <codes_matieres>
         <code_matiere>065700</code_matiere>
       </codes_matieres>
       <frequence>hebdomadaire</frequence>
       <duree>PT10M</duree>
-      <periode ref="pcsi_periode2"/>
+      <periode>deuxieme_periode</periode>
       <si_option>063300</si_option>
     </colle>
     <colle>
-      <code_mef>30111018210</code_mef>
+      <codes_mefs>
+        <code_mef>30111018210</code_mef>
+      </codes_mefs>
       <codes_matieres>
         <code_matiere>063300</code_matiere>
       </codes_matieres>
       <frequence>hebdomadaire</frequence>
       <duree>PT10M</duree>
-      <periode ref="pcsi_periode2"/>
+      <periode>deuxieme_periode</periode>
     </colle>
     <colle>
-      <code_mef>30111018210</code_mef>
+      <codes_mefs>
+        <code_mef>30111018210</code_mef>
+      </codes_mefs>
       <codes_matieres>
         <code_matiere>067000</code_matiere>
       </codes_matieres>
       <frequence>hebdomadaire</frequence>
       <duree>PT5M</duree>
-      <periode ref="pcsi_periode1"/>
+      <periode>premiere_periode</periode>
     </colle>
     <colle>
-      <code_mef>30111018210</code_mef>
+      <codes_mefs>
+        <code_mef>30111018210</code_mef>
+      </codes_mefs>
       <codes_matieres>
         <code_matiere>067000</code_matiere>
       </codes_matieres>
       <frequence>hebdomadaire</frequence>
       <duree>PT5M</duree>
-      <periode ref="pcsi_periode2"/>
+      <periode>deuxieme_periode</periode>
     </colle>
     <colle>
-      <code_mef>30111018210</code_mef>
+      <codes_mefs>
+        <code_mef>30111018210</code_mef>
+      </codes_mefs>
       <codes_matieres>
         <!-- Allemand -->
         <code_matiere>030101</code_matiere>
@@ -278,7 +333,9 @@
       <duree>PT10M</duree>
     </colle>
     <colle>
-      <code_mef>30111018210</code_mef>
+      <codes_mefs>
+        <code_mef>30111018210</code_mef>
+      </codes_mefs>
       <codes_matieres>
         <code_matiere>022700</code_matiere>
       </codes_matieres>
@@ -288,8 +345,10 @@
 
     <!-- Colles en PC et PC* -->
     <colle>
-      <code_mef>30111032220</code_mef>
-      <code_mef>30111028220</code_mef>
+      <codes_mefs>
+        <code_mef>30111032220</code_mef>
+        <code_mef>30111028220</code_mef>
+      </codes_mefs>
       <codes_matieres>
         <code_matiere>061300</code_matiere>
       </codes_matieres>
@@ -297,8 +356,10 @@
       <duree>PT10M</duree>
     </colle>
     <colle>
-      <code_mef>30111032220</code_mef>
-      <code_mef>30111028220</code_mef>
+      <codes_mefs>
+        <code_mef>30111032220</code_mef>
+        <code_mef>30111028220</code_mef>
+      </codes_mefs>
       <codes_matieres>
         <code_matiere>065700</code_matiere>
       </codes_matieres>
@@ -306,8 +367,10 @@
       <duree>PT10M</duree>
     </colle>
     <colle>
-      <code_mef>30111032220</code_mef>
-      <code_mef>30111028220</code_mef>
+      <codes_mefs>
+        <code_mef>30111032220</code_mef>
+        <code_mef>30111028220</code_mef>
+      </codes_mefs>
       <codes_matieres>
         <code_matiere>063300</code_matiere>
       </codes_matieres>
@@ -315,8 +378,10 @@
       <duree>PT10M</duree>
     </colle>
     <colle>
-      <code_mef>30111032220</code_mef>
-      <code_mef>30111028220</code_mef>
+      <codes_mefs>
+        <code_mef>30111032220</code_mef>
+        <code_mef>30111028220</code_mef>
+      </codes_mefs>
       <codes_matieres>
         <!-- Allemand -->
         <code_matiere>030101</code_matiere>
@@ -338,8 +403,10 @@
       <duree>PT10M</duree>
     </colle>
     <colle>
-      <code_mef>30111032220</code_mef>
-      <code_mef>30111028220</code_mef>
+      <codes_mefs>
+        <code_mef>30111032220</code_mef>
+        <code_mef>30111028220</code_mef>
+      </codes_mefs>
       <codes_matieres>
         <code_matiere>022700</code_matiere>
       </codes_matieres>
@@ -349,7 +416,9 @@
 
     <!-- Colles en PSI* -->
     <colle>
-      <code_mef>30111033220</code_mef>
+      <codes_mefs>
+        <code_mef>30111033220</code_mef>
+      </codes_mefs>
       <codes_matieres>
         <code_matiere>061300</code_matiere>
       </codes_matieres>
@@ -357,7 +426,9 @@
       <duree>PT10M</duree>
     </colle>
     <colle>
-      <code_mef>30111033220</code_mef>
+      <codes_mefs>
+        <code_mef>30111033220</code_mef>
+      </codes_mefs>
       <codes_matieres>
         <code_matiere>065700</code_matiere>
       </codes_matieres>
@@ -365,7 +436,9 @@
       <duree>PT15M</duree>
     </colle>
     <colle>
-      <code_mef>30111033220</code_mef>
+      <codes_mefs>
+        <code_mef>30111033220</code_mef>
+      </codes_mefs>
       <codes_matieres>
         <code_matiere>067000</code_matiere>
       </codes_matieres>
@@ -373,7 +446,9 @@
       <duree>PT5M</duree>
     </colle>
     <colle>
-      <code_mef>30111033220</code_mef>
+      <codes_mefs>
+        <code_mef>30111033220</code_mef>
+      </codes_mefs>
       <codes_matieres>
         <!-- Allemand -->
         <code_matiere>030101</code_matiere>
@@ -395,7 +470,9 @@
       <duree>PT10M</duree>
     </colle>
     <colle>
-      <code_mef>30111033220</code_mef>
+      <codes_mefs>
+        <code_mef>30111033220</code_mef>
+      </codes_mefs>
       <codes_matieres>
         <code_matiere>022700</code_matiere>
       </codes_matieres>
@@ -455,10 +532,6 @@
     <colles_mef code_mef="30111019210">
       <nombre_semaines>30</nombre_semaines>
       <nombre_trimestres>3</nombre_trimestres>
-      <periodes>
-        <periode id="pcsi_periode1" nb_semaines="18"/>
-        <periode id="pcsi_periode2" nb_semaines="12"/>
-      </periodes>
     </colles_mef>
 
     <!-- PC* -->

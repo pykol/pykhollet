@@ -14,6 +14,14 @@
     </xs:restriction>
   </xs:simpleType>
 
+  <xs:simpleType name="periode">
+    <xs:restriction base="xs:normalizedString">
+      <xs:enumeration value="annuel"/>
+      <xs:enumeration value="premiere_periode"/>
+      <xs:enumeration value="deuxieme_periode"/>
+    </xs:restriction>
+  </xs:simpleType>
+
   <xs:simpleType name="code_mef">
     <xs:restriction base="xs:normalizedString"/>
   </xs:simpleType>
@@ -30,13 +38,23 @@
     </xs:complexType>
   </xs:element>
 
+  <xs:element name="codes_mefs">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="code_mef" type="code_mef" maxOccurs="unbounded"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
   <xs:element name="colle">
     <xs:complexType>
       <xs:all>
-        <xs:element name="code_mef" type="code_mef" maxOccurs="unbounded"/>
+        <xs:element ref="codes_mefs"/>
         <xs:element ref="codes_matieres"/>
         <xs:element name="frequence" type="frequence"/>
         <xs:element name="duree" type="xs:duration"/>
+        <xs:element name="periode" type="periode" minOccurs="0" default="annuel"/>
+        <xs:element name="si_option" type="code_matiere" minOccurs="0"/>
       </xs:all>
     </xs:complexType>
   </xs:element>

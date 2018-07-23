@@ -382,7 +382,6 @@ def dict_matieres(matieres_et):
 	Un tel fragment XML se retrouve presque à l'identique dans les
 	fichiers de nomenclatures SIECLE ou d'emploi du temps STS.
 	"""
-	# TODO regrouper les LV dans une matière parent
 	matieres = {}
 	for matiere in matieres_et.findall('MATIERE'):
 		if 'CODE_MATIERE' in matiere.attrib:
@@ -392,10 +391,54 @@ def dict_matieres(matieres_et):
 		else:
 			continue
 
+		nom_matiere = matiere.find('LIBELLE_EDITION').text
+
+		# On regroupe les langues dans une même matière parent. On
+		# identifie les groupes de matières avec les deux derniers
+		# chiffres du code matière. Ils sont en général nuls, sauf pour
+		# les langues où toutes les LV1 se retrouvent par exemple sous
+		# un code de la forme 03xx01.
+		# Le nom de la matière générique est choisi en prenant la plus
+		# longue sous-chaine commune (algorithme non optimal de
+		# programmation dynamique ici, les chaines sont peu nombreuses
+		# et de petite taille).
+		# Le code de la matière générique est de la forme xx00xx, où on
+		# remplace la partie entre les différentes sous-matières par 00.
+		def longest_common_substring(s1, s2):
+			m = [[0] * (1 + len(s2)) for i in range(1 + len(s1))]
+			longest, x_longest = 0, 0
+			for x in range(1, 1 + len(s1)):
+				for y in range(1, 1 + len(s2)):
+					if s1[x - 1] == s2[y - 1]:
+						m[x][y] = m[x - 1][y - 1] + 1
+						if m[x][y] > longest:
+							longest = m[x][y]
+							x_longest = x
+					else:
+						m[x][y] = 0
+			return s1[x_longest - longest: x_longest]
+
+		if code_matiere[-2:] != "00":
+			code_parent = code_matiere[0:2] + "00" + code_matiere[4:6]
+			try:
+				nom_parent = longest_common_substring(nom_matiere.upper(),
+						matieres[code_parent]['nom'])
+			except:
+				nom_parent = nom_matiere.upper()
+
+			matieres[code_parent] = {
+					'code_matiere': code_parent,
+					'nom': nom_parent,
+					'virtuelle': True,
+			}
+		else:
+			code_parent = None
+
 		matieres[code_matiere] = {
 				'code_matiere': code_matiere,
 				'nom': matiere.find('LIBELLE_EDITION').text,
 				'virtuelle': False,
+				'code_parent': code_parent,
 				}
 	return matieres
 
@@ -466,6 +509,15 @@ def import_programmes(programmes_et, matieres):
 
 		# On crée ou on met à jour la matière en base de données
 		code_matiere = programme.find('CODE_MATIERE').text
+
+		# Si nécessaire, on construit la matière parent
+		code_parent = matieres[code_matiere].get('code_parent', None)
+		if code_parent is not None:
+			matiere_parent, _ = Matiere.objects.update_or_create(
+					code_matiere=code_parent,
+					defaults=matieres[code_parent])
+			matiere[code_matiere]['parent'] = matiere_parent
+		matiere[code_matiere].pop('code_parent', None)
 
 		matiere, _ = Matiere.objects.update_or_create(
 				code_matiere=code_matiere,

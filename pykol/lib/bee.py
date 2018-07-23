@@ -633,11 +633,15 @@ def import_stsemp(stsemp_xml):
 		else:
 			grade = Professeur.CORPS_AUTRE
 
-		# XXX La recherche n'est absolument pas robuste aux homonymes
+		# XXX La recherche n'est absolument pas robuste aux homonymes,
+		# mais les fichiers XML de STS ne donnent pour identifiant
+		# qu'une clé primaire opaque, non documentée et probablement
+		# instable avec le temps.
 		if fonction == "ENS":
 			dict_profs[individu_id], _ = Professeur.objects.update_or_create(
 					last_name=nom,
 					first_name=prenom,
+					sexe=sexe,
 					defaults={
 						'last_name': nom,
 						'first_name': prenom,

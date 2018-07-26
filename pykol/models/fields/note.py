@@ -83,6 +83,12 @@ class Note:
 		return Moyenne() + self + note
 
 	def __eq__(self, note):
+		if not isinstance(note, Note):
+			try:
+				note = Note(note)
+			except ValueError:
+				return False
+
 		if self.kind == Note.NOTE:
 			return note.kind == Note.NOTE and self.value == note.value
 		else:

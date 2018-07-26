@@ -161,6 +161,15 @@ def import_etudiants(eleves_xml):
 		num_eleve = struct_eleve.attrib['ELENOET']
 		if code_structure in divisions:
 			classe_etudiant[num_eleve] = divisions[code_structure]
+	
+	# On construit le dictionnaire qui à chaque élève associe la liste
+	# des matières qu'il suit en options. La clé est constituée du
+	# numéro élève interne à l'établissement.
+	options_eleves = defaultdict(list)
+	for option_et in eleves_et.getroot().findall('DONNEES/OPTIONS/OPTION'):
+		num_eleve = option_et.attrib['ELENOET']
+		for matiere_et in option_et.findall('OPTIONS_ELEVE/CODE_MATIERE'):
+			options_eleves[num_eleve].append(matiere_et.text)
 
 	# Enfin on peut créer ou mettre à jour les élèves dans la base de
 	# données. Le dictionnaire classe_etudiant permet de mettre la main
@@ -202,8 +211,9 @@ def import_etudiants(eleves_xml):
 		etudiant_db, _ = Etudiant.objects.update_or_create(
 				ine=eleve.find('INE_RNIE').text,
 				defaults=etudiant_data)
-
-		# TODO enregistrer les options suivies par chaque étudiant
+	
+		options = Matiere.objects.filter(code_matiere__in=options_eleves[num_eleve])
+		etudiant_db.options.set(options)
 
 	# Une fois que tous les étudiants ont été importés, on met à jour
 	# les compositions des classes
@@ -520,8 +530,8 @@ def import_programmes(programmes_et, matieres):
 			matiere_parent, _ = Matiere.objects.update_or_create(
 					code_matiere=code_parent,
 					defaults=matieres[code_parent])
-			matiere[code_matiere]['parent'] = matiere_parent
-		matiere[code_matiere].pop('code_parent', None)
+			matieres[code_matiere]['parent'] = matiere_parent
+		matieres[code_matiere].pop('code_parent', None)
 
 		matiere, _ = Matiere.objects.update_or_create(
 				code_matiere=code_matiere,

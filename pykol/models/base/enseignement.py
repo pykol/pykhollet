@@ -170,6 +170,13 @@ class Enseignement(models.Model):
 	def __str__(self):
 		return "{} - {}".format(self.groupe, self.matiere)
 
+	def etudiants_classe(self, classe):
+		"""
+		Renvoie la liste des étudiants qui suivent cet enseignement et
+		qui sont présents également dans la classe donnée.
+		"""
+		return self.groupe.etudiants.filter(classe=classe)
+
 class ProfClasseManager(models.Manager):
 	def get_queryset(self):
 		pass

@@ -81,8 +81,7 @@ class CollesEnseignement(models.Model):
 		Calcule la dotation en heures de colles théorique pour cet
 		enseignement dans la classe donnée.
 		"""
-		nb_etudiants = classe.etudiants.filter(
-				options__contains=self.matiere).count()
+		nb_etudiants = self.enseignement.etudiants_classe(classe).count()
 
 		if self.frequence == CollesEnseignement.FREQUENCE_HEBDOMADAIRE:
 			if self.periode == CollesEnseignement.PERIODE_ANNEE:

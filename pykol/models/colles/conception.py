@@ -101,15 +101,11 @@ class Creneau(models.Model):
 					'groupe': trinome,
 					'duree': 'PT10M'})
 
-		# TODO timezone ?
-		horaire = datetime.datetime.combine(semaine.debut, self.debut)
-		# On trouve ensuite le premier jour de la semaine qui est égal à
-		# self.jour
-		while horaire.isoweekday() != self.jour:
-			horaire += datetime.timedelta(days=1)
-
-		colle.ajout_details(horaire=horaire, salle=self.salle,
-				colleur=self.colleur, eleves=trinome.etudiants.all())
+		colle.ajout_details(
+			horaire=semaine.horaire_creneau(self),
+			salle=self.salle,
+			colleur=self.colleur,
+			etudiants=trinome.etudiants.all())
 
 		return colle
 

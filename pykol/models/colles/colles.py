@@ -68,11 +68,11 @@ class Colle(models.Model):
 
 	@transaction.atomic
 	def ajout_details(self, horaire=None, salle='', colleur=None,
-			eleves=[]):
+			etudiants=[]):
 		"""
 		Ajouter un ColleDetails qui met à jour le précédent.
 
-		Si les élèves, le colleur ou l'horaire ne sont pas précisés, on
+		Si les étudiants, le colleur ou l'horaire ne sont pas précisés, on
 		reprend ceux qui existaient déjà dans le ColleDetails précédent.
 
 		Si la salle n'est pas indiquée, on ne reprend l'ancienne salle
@@ -84,8 +84,8 @@ class Colle(models.Model):
 			ancien_detail = self.details
 			if not colleur:
 				colleur = ancien_detail.colleur
-			if not eleves:
-				eleves = ancien_detail.eleves
+			if not etudiants:
+				etudiants = ancien_detail.eleves
 			if not horaire:
 				horaire = ancien_detail.horaire
 			if not salle and horaire == ancien_detail.horaire:
@@ -99,7 +99,7 @@ class Colle(models.Model):
 		detail = ColleDetails(colle=self, horaire=horaire, salle=salle,
 				colleur=colleur)
 		detail.save()
-		detail.eleves.set(eleves)
+		detail.eleves.set(etudiants)
 
 		return detail
 

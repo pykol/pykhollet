@@ -16,11 +16,14 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+import os
+
 import zipfile
 
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required, permission_required
 from django.contrib import messages
+from django.conf import settings
 
 from pykol.forms.import_bee import ImportBEEForm
 import pykol.lib.bee
@@ -60,6 +63,11 @@ def import_bee(request):
 					eleves_xml = eleves_zip.open(xml_name)
 					pykol.lib.bee.import_etudiants(eleves_xml)
 				import_success.append('Élèves')
+
+			# Import des données des colles
+			nomcolles_file = os.path.join(settings.BASE_DIR, 'pykol/data/NomenclatureColles.xml')
+			with open(nomcolles_file) as nomcolles_xml:
+				pykol.lib.bee.import_nomenclature_colles(nomcolles_xml)
 
 			# TODO améliorer la gestion des erreurs
 

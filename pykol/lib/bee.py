@@ -27,13 +27,17 @@ options choisies par les étudiants.
 import xml.etree.ElementTree as ET
 import datetime
 import re
+from collections import defaultdict
 
 from django.utils.text import slugify
+
+import isodate
 
 from pykol.models.base import User, Etudiant, Professeur, \
 		Annee, Classe, Etablissement, \
 		Groupe, Matiere, Enseignement, Service, \
 		ModuleElementaireFormation
+from pykol.models.colles import CollesEnseignement
 
 class CodeMEF:
 	"""Gestion d'un code de Module Élémentaire de Formation
@@ -668,3 +672,39 @@ def import_stsemp(stsemp_xml):
 	# Services d'enseignement dans des groupes
 	import_groupes(stsemp_et.getroot().find('DONNEES/STRUCTURE/GROUPES'),
 			dict_profs)
+
+### Import des dotations horaires en colles
+def import_nomenclature_colles(nomcolles_xml):
+	nomcolles_et = ET.parse(nomcolles_xml)
+	for colle_et in nomcolles_et.getroot().findall('colles/colle'):
+		mefs = [x.text for x in colle_et.findall('codes_mefs/code_mef')]
+		matieres = [x.text for x in colle_et.findall('codes_matieres/code_matiere')]
+		duree = isodate.parse_duration(colle_et.find('duree').text)
+
+		periode_et = colle_et.find('periode')
+		if periode_et is None:
+			periode = CollesEnseignement.PERIODE_ANNEE
+		elif periode_et.text == 'premiere_periode':
+			periode = CollesEnseignement.PERIODE_PREMIERE
+		elif periode_et.text == 'deuxieme_periode':
+			periode = CollesEnseignement.PERIODE_DEUXIEME
+
+		frequence_text = colle_et.find('frequence').text
+		if frequence_text == 'hebdomadaire':
+			frequence = CollesEnseignement.FREQUENCE_HEBDOMADAIRE
+		elif frequence_text == 'trimestrielle':
+			frequence = CollesEnseignement.FREQUENCE_TRIMESTRIELLE
+
+		enseignements = Enseignement.objects.filter(
+				classe__mef__code_mef__in=mefs,
+				matiere__code_matiere__in=matieres).distinct()
+
+		CollesEnseignement.objects.filter(enseignement__in=enseignements).delete()
+
+		for enseignement in enseignements:
+			CollesEnseignement(
+					enseignement=enseignement,
+					frequence=frequence,
+					duree_frequentielle=duree,
+					periode=periode,
+				).save()

@@ -58,6 +58,7 @@ class CollesEnseignement(models.Model):
 	periode = models.SmallIntegerField(verbose_name="période",
 			choices=PERIODE_CHOICES, default=PERIODE_ANNEE)
 
+	@property
 	def duree(self):
 		"""
 		Durée d'une interrogation.

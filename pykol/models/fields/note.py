@@ -51,7 +51,7 @@ class Note:
 			try:
 				self.value = float(value)
 				self.kind = Note.NOTE
-			except ValueError:
+			except (ValueError, TypeError):
 				raise ValueError("Une note doit être soit un nombre, "
 					"soit l'une des valeurs particulières suivantes: "
 					"'nn' (non noté, compte dans une moyenne), "

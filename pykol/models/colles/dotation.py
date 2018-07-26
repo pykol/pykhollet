@@ -96,3 +96,6 @@ class CollesEnseignement(models.Model):
 			mult = classe.get_nb_trimestres()
 
 		return nb_etudiants * self.duree_frequentielle * mult
+
+	def __str__(self):
+		return str(self.enseignement)

@@ -43,6 +43,20 @@ class Semaine(models.Model):
 	def __str__(self):
 		return "{} ({}/{}-{}/{})".format(self.numero, self.debut.day,
 				self.debut.month, self.fin.day, self.fin.month)
+	
+	def horaire_creneau(self, creneau):
+		"""
+		Renvoie un objet datetime.datetime qui donne l'horaire (jour et
+		heure) de début d'une colle placée sur le créneau donné dans
+		la semaine.
+		"""
+		# TODO timezone ?
+		horaire = datetime.datetime.combine(self.debut, creneau.debut)
+		# On trouve ensuite le premier jour de la semaine qui est égal à
+		# creneau.jour
+		delta = (7 + creneau.jour - horaire.isoweekday()) % 7
+		horaire += datetime.timedelta(days=delta)
+		return horaire
 
 class Creneau(models.Model):
 	"""Créneau de colle programmé au colloscope

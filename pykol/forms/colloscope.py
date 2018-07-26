@@ -20,12 +20,81 @@ from django import forms
 from django.forms import formset_factory, modelformset_factory, \
 		inlineformset_factory
 
-from pykol.models.base import Matiere, Etudiant
+from pykol.models.base import Matiere, Etudiant, Professeur
 from pykol.models.colles import Semaine, CollesReglages, Creneau, \
 		Roulement, RoulementLigne, RoulementApplication, \
-		RoulementGraineLigne
+		RoulementGraineLigne, Colle, Trinome, CollesEnseignement
 from pykol.forms import CommaSeparatedCharField
 from . import LabelledHiddenWidget
+
+class ColleForm(forms.Form):
+	"""
+	Formulaire de création d'une colle
+	"""
+	colleur = forms.ModelChoiceField(
+			queryset=Professeur.objects.order_by('last_name',
+				'first_name'))
+	salle = forms.CharField(max_length=30, required=False)
+	enseignement = forms.ModelChoiceField(queryset=None)
+
+	creneau = forms.ModelChoiceField(queryset=None, required=False)
+	semaine = forms.ModelChoiceField(queryset=None, required=False)
+	horaire = forms.DateTimeField(required=False)
+
+	trinome = forms.ModelChoiceField(queryset=None, required=False)
+	etudiants = forms.ModelMultipleChoiceField(queryset=None,
+			required=False, widget=forms.CheckboxSelectMultiple)
+
+	def __init__(self, *args, classe, **kwargs):
+		super().__init__(*args, **kwargs)
+
+		self.fields['creneau'].queryset = Creneau.objects.filter(classe=classe).order_by(
+				'matiere', 'colleur', 'jour')
+		self.fields['semaine'].queryset = Semaine.objects.filter(classe=classe).order_by('debut')
+		self.fields['trinome'].queryset = Trinome.objects.filter(dans_classe=classe).order_by('nom')
+		self.fields['etudiants'].queryset = classe.etudiants.order_by('last_name', 'first_name')
+		self.fields['enseignement'].queryset = CollesEnseignement.objects.filter(
+				enseignement__classe=classe)
+
+	def clean(self):
+		cleaned_data = super().clean()
+
+		# On vérifie que l'on peut bien déterminer l'heure, soit parce
+		# que le créneau et la semaine ont été donnés, soit parce que
+		# l'horaire a été donné.
+		creneau = cleaned_data.get('creneau')
+		semaine = cleaned_data.get('semaine')
+		horaire = cleaned_data.get('horaire')
+
+		erreurs = []
+
+		if (creneau is not None and semaine is not None) == (horaire is not None):
+			erreurs.append(forms.ValidationError(
+					"Vous devez renseigner un horaire "
+					"pour la colle, soit en indiquant un créneau et "
+					"une semaine, soit en indiquant un horaire.",
+					code='horaire_incorrect'))
+
+		# On vérifie que l'on peut bien déterminer le groupe
+		# d'étudiants, soit parce qu'un trinôme a été renseigné, soit
+		# parce qu'une liste d'étudiants spécifique a été renseignée.
+		trinome = cleaned_data.get('trinome')
+		etudiants = cleaned_data.get('etudiants')
+		if (trinome is None) != bool(etudiants):
+			erreurs.append(forms.ValidationError(
+				"Vous devez indiquer la liste des étudiants "
+				"participant à la colle, soit en choisissant un "
+				"trinôme de la classe, soit en sélectionnant "
+				"manuellement les étudiants.",
+				code='etudiants_inconnus'))
+
+		if len(erreurs) > 0:
+			if len(erreurs) > 1:
+				raise forms.ValidationError(erreurs)
+			else:
+				raise erreurs[0]
+
+		return cleaned_data
 
 class SemaineForm(forms.Form):
 	debut = forms.DateField(label="début")

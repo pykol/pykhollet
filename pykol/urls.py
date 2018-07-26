@@ -35,6 +35,7 @@ colloscopes_urlpatterns = [
 	path('<slug:slug>/trinomes', views.colles.trinomes, name='colloscope_trinomes'),
 	path('<slug:slug>/semaines', views.colles.semaines, name='colloscope_semaines'),
 	path('<slug:slug>/creneaux', views.colles.creneaux, name='colloscope_creneaux'),
+	path('<slug:slug>/colle_creer', views.colles.colle_creer, name='colle_creer'),
 	path('roulement/<int:pk>', views.colloscope.roulement_editer, name='roulement_editer'),
 	path('roulement/<int:pk>/application_creer', views.colloscope.roulement_application_creer, name='roulement_application_creer'),
 	path('roulement/application/<int:pk>/', views.colloscope.roulement_application_editer, name='roulement_application_editer'),

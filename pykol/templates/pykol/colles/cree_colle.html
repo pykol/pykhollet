@@ -1,0 +1,73 @@
+{% extends "pykol/base.html" %}
+{% block content %}
+<h2>Création d'une colle
+<small>{{ classe }} − {{ classe.annee }}</small>
+</h2>
+
+<form action="" method="post">
+  {% csrf_token %}
+
+  {{ form.non_field_errors }}
+
+  <fieldset>
+    <legend>Informations générales</legend>
+    <table>
+      <tr>
+        <th>{{ form.colleur.label_tag }}</th>
+        <td>{{ form.colleur }}{{ form.colleur.errors }}</td>
+      </tr>
+      <tr>
+        <th>{{ form.enseignement.label_tag }}</th>
+        <td>{{ form.enseignement }}{{form.enseignement.errors }}</td>
+      </tr>
+      <tr>
+        <th>{{ form.salle.label_tag }}</th>
+        <td>{{ form.salle }}{{form.salle.errors }}</td>
+      </tr>
+    </table>
+  </fieldset>
+
+  <fieldset>
+    <legend>Horaire</legend>
+    <p>Indiquez l'horaire de la colle :
+    <ul>
+      <li>soit en remplissant le champ {{ form.horaire.name }} ;</li>
+      <li>soit en indiquant la semaine et le créneau de colle.</li>
+    </ul>
+    <table>
+      <tr>
+        <th colspan="2">{{ form.horaire.label_tag }}</th>
+        <td>{{ form.horaire }}</td>
+      </tr>
+      <tr>
+        <th rowspan="2">Par créneau</th>
+        <th>{{ form.creneau.label_tag }}</th>
+        <td>{{ form.creneau }}</td>
+      </tr>
+      <tr>
+        <th>{{ form.semaine.label_tag }}</th>
+        <td>{{ form.semaine }}</td>
+      </tr>
+    </table>
+  </fieldset>
+
+  <fieldset>
+    <legend>Étudiants</legend>
+    <p>Choisissez la liste des étudiants participant à la colle, soit en
+    sélectionnant un trinôme de la classe déjà existant, soit en cochant
+    explicitement les étudiants.</p>
+    <table>
+      <tr>
+        <th>{{ form.trinome.label_tag }}</th>
+        <td>{{ form.trinome }}</td>
+      </tr>
+      <tr>
+        <th>{{ form.etudiants.label_tag }}</th>
+        <td>{{ form.etudiants }}</td>
+      </tr>
+    </table>
+  </fieldset>
+
+  <input type="submit" value="Enregister">
+</form>
+{% endblock %}

@@ -31,7 +31,7 @@ from pykol.models.colles import Semaine, CollesReglages, Creneau, Colle
 from pykol.forms.colloscope import SemaineFormSet, \
 		SemaineNumeroGenerateurForm, \
 		CreneauFormSet, CreneauSansClasseFormSet, \
-		TrinomeForm
+		TrinomeForm, ColleForm
 
 @login_required
 def colloscope_home(request):
@@ -56,6 +56,7 @@ def colloscope(request, slug):
 		if colle.creneau is not None and colle.semaine is not None:
 			colloscope[colle.matiere][colle.creneau][colle.semaine].append(colle.groupe)
 
+	perm_creation = request.user.has_perm('pykol.add_colle', classe)
 	# La conversion de colloscope en dict est obligatoire, car les
 	# gabarits Django ne peuvent pas itérer sur les defaultdict
 	# facilement : l'appel colloscope.items est d'abord converti en
@@ -65,6 +66,7 @@ def colloscope(request, slug):
 				'classe': classe,
 				'semaines': semaines,
 				'colloscope': dict(colloscope),
+				'perm_creation': perm_creation,
 				})
 
 @login_required
@@ -107,7 +109,7 @@ def trinomes(request, slug):
 			messages.success(request, "Les groupes de colles en "
 					" {classe} ont été mis à jour.".format(
 						classe=classe))
-			return redirect('colloscope_trinomes', classe.slug)
+			return redirect('colloscope_trinomes', slug=classe.slug)
 	else:
 		formset = TrinomeFormSet(initial=initial,
 				form_kwargs={'queryset': etudiants})
@@ -265,7 +267,38 @@ def colle_creer(request, slug):
 	if not request.user.has_perm('pykol.add_colle', classe):
 		raise PermissionDenied
 
-	pass
+	if request.method == 'POST':
+		form = ColleForm(request.POST, classe=classe)
+		if form.is_valid():
+			colleenseignement = form.cleaned_data['enseignement']
+			colle = Colle(
+				creneau=form.cleaned_data['creneau'],
+				semaine=form.cleaned_data['semaine'],
+				classe=classe,
+				matiere=colleenseignement.enseignement.matiere,
+				groupe=form.cleaned_data['trinome'],
+				duree=colleenseignement.duree)
+			colle.save()
+
+			etudiants = form.cleaned_data['etudiants'] or \
+				form.cleaned_data['trinome'].etudiants
+			horaire = form.cleaned_data['horaire'] or \
+				form.cleaned_data['semaine'].horaire_creneau(
+					form.cleaned_data['creneau'])
+			colle.ajout_details(horaire=horaire,
+				colleur=form.cleaned_data['colleur'],
+				etudiants=etudiants.all(),
+				salle=form.cleaned_data['salle'])
+
+			return redirect('colloscope', slug=classe.slug)
+	else:
+		form = ColleForm(classe=classe)
+
+	return render(request, 'pykol/colles/cree_colle.html',
+			context={
+				'classe': classe,
+				'form': form,
+			})
 
 @login_required
 def colle_supprimer(request, pk):

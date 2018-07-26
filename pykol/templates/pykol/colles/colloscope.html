@@ -6,6 +6,10 @@
   <small>{{ classe }} − {{ classe.annee }}</small>
 </h2>
 
+{% if perm_creation %}
+<p><a href="{% url 'colle_creer' classe.slug %}">Créer une colle</a></p>
+{% endif %}
+
 <table class="colloscope">
   <thead>
     <tr>

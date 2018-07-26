@@ -95,6 +95,15 @@ def colle_declarer(request, pk):
 		form.extra = len(initial)
 		if form.is_valid():
 			form.save()
+
+			# Quand tous les élèves sont notés, on indique que la colle
+			# est notée.
+			eleves_sans_note = colle.details.eleves.difference(
+				Etudiant.objects.filter(collenote__colle=colle))
+			if not eleves_sans_note:
+				colle.etat = Colle.ETAT_NOTEE
+				colle.save()
+
 			return redirect('colle_detail', colle.pk)
 	else:
 		form = ColleNoteFormSet(instance=colle, initial=initial)

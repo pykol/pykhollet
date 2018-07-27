@@ -17,7 +17,12 @@
     // Guess prefix by searching for a field named prefix-TOTAL_FORMS
     if(!options.prefix) {
       var total_input_name = this.closest('form').find('input[name $= "-TOTAL_FORMS"]').attr('name');
-      options.prefix = total_input_name.substring(0, total_input_name.length - "-TOTAL_FORMS".length);
+      if(total_input_name) {
+        options.prefix = total_input_name.substring(0, total_input_name.length - "-TOTAL_FORMS".length);
+      }
+      else {
+        options.prefix = 'form';
+      }
     }
 
     var flatExtraClasses = options.extraClasses.join(' ');

@@ -142,5 +142,5 @@ $(document).ready(function() {
 
   // Ne placer la combobx qu'après avoir appelé formset, qui crée son
   // modèle avec le formulaire d'origine.
-  $( ".formset select" ).combobox();
+  $( "select" ).combobox();
 });

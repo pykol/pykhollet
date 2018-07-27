@@ -57,29 +57,34 @@ form {
   @include x-panel;
 }
 
-.formset {
-  .custom-combobox {
-    position: relative;
-    display: inline-block;
-    height: 34px;
-    width: 100%;
+fieldset legend {
+  @extend h3;
+}
 
-    input {
-      display: inline;
-      width: calc(100% - 2em);
-    }
+.custom-combobox {
+  position: relative;
+  display: inline-block;
+  height: 34px;
+  width: 100%;
+
+  input {
+    display: inline;
+    width: calc(100% - 2em);
   }
-  .custom-combobox-toggle {
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    margin-left: -1px;
-    padding: 0;
-  }
-  .custom-combobox-input {
-    margin: 0;
-    padding: 5px 10px;
-  }
+}
+.custom-combobox-toggle {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  margin-left: -1px;
+  padding: 0;
+}
+.custom-combobox-input {
+  margin: 0;
+  padding: 5px 10px;
+}
+
+.formset {
   .add-row {
     @include button-primary;
   }

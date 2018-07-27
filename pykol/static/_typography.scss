@@ -37,3 +37,14 @@ h3 { font-size: 18px;}
 i.#{$fa-css-prefix} {
   width: 1.25em;
 }
+
+#content {
+  li:before { content: "\2013 "; }
+  .trinomes li:before { content: none; }
+}
+
+.trinomes {
+  strong {
+    @extend h4;
+  }
+}

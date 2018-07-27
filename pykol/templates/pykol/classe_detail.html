@@ -37,7 +37,7 @@
   <li><strong>{{ trinome.nom }}</strong>
     <ul>
       {% for etudiant in trinome.etudiants.all %}
-      <li>{{ etudiant }}</li>
+      <li><a href="{{ etudiant.get_absolute_url }}">{{ etudiant }}</a></li>
       {% endfor %}
     </ul>
   </li>

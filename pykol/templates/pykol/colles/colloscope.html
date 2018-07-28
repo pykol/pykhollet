@@ -41,8 +41,8 @@
       <th>{{ creneau.get_jour_display }}</th>
       <th>{{ creneau.debut | heure_pour_colloscope }}−{{ creneau.fin | heure_pour_colloscope}}</th>
       <th>{{ creneau.salle }}</th>
-      {% for semaine, groupes in semaines.items %}
-      <td>{{ groupes|join:', ' }}</td>
+      {% for semaine, colles in semaines.items %}
+      <td>{% for colle in colles %}<a href="{{ colle.get_absolute_url }}">{{ colle.groupe}}</a>{% if not forloop.last %}, {% endif %}{% endfor %}</td>
       {% endfor %}
     </tr>
     {% endfor %}

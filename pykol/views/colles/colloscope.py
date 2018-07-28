@@ -54,7 +54,7 @@ def colloscope(request, slug):
 
 	for colle in colles:
 		if colle.creneau is not None and colle.semaine is not None:
-			colloscope[colle.matiere][colle.creneau][colle.semaine].append(colle.groupe)
+			colloscope[colle.matiere][colle.creneau][colle.semaine].append(colle)
 
 	perm_creation = request.user.has_perm('pykol.add_colle', classe)
 	# La conversion de colloscope en dict est obligatoire, car les

@@ -52,9 +52,12 @@ def colloscope(request, slug):
 		colloscope[creneau.matiere][creneau] = OrderedDict([
 				(semaine, []) for semaine in semaines])
 
+	autres_colles = []
 	for colle in colles:
 		if colle.creneau is not None and colle.semaine is not None:
 			colloscope[colle.matiere][colle.creneau][colle.semaine].append(colle)
+		else:
+			autres_colles.append(colle)
 
 	perm_creation = request.user.has_perm('pykol.add_colle', classe)
 	# La conversion de colloscope en dict est obligatoire, car les
@@ -67,6 +70,7 @@ def colloscope(request, slug):
 				'semaines': semaines,
 				'colloscope': dict(colloscope),
 				'perm_creation': perm_creation,
+				'autres_colles': autres_colles,
 				})
 
 @login_required

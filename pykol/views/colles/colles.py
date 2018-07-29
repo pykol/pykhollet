@@ -63,8 +63,14 @@ class ColleDetailView(LoginRequiredMixin, ColleVisibleMixin, \
 
 	def get_context_data(self, **kwargs):
 		context = super().get_context_data(**kwargs)
+		colle = self.get_object()
 		context['anciens_details'] = \
-				self.object.colledetails_set.filter(actif=False)
+				colle.colledetails_set.filter(actif=False)
+		context['supprimer_perm'] = \
+				self.request.user.has_perm('pykol.change_colle',
+						colle.classe)
+		context['noter_perm'] = \
+				self.request.user.professeur == colle.colleur
 		return context
 
 colle_detail = ColleDetailView.as_view()

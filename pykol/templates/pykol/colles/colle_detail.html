@@ -1,11 +1,34 @@
 {% extends 'pykol/base.html' %}
 {% block content %}
-<h2>Colle du {{ colle.details.horaire }}</h2>
+<h2>Colle du {{ colle.details.horaire }}{% if colle.semaine %} − {{ colle.semaine }}{% endif %}</h2>
 
 <table>
   <tr>
+    <th>Trinôme</th>
+    <td>{{ colle.groupe }}</td>
     <th>Étudiants</th>
     <td>{{ colle.details.eleves.all|join:", " }}</td>
+  </tr>
+  <tr>
+    <th>Horaire</th>
+    <td>{{ colle.details.horaire }}</td>
+    <th>Salle</th>
+    <td>{{ colle.details.salle }}</td>
+  </tr>
+  <tr>
+    <th>Colleur</th>
+    <td>{{ colle.details.colleur }}</td>
+    <td colspan="2">{{ colle.matiere }}</td>
+  </tr>
+  <tr>
+    <td colspan="4">
+      {% if noter_perm %}
+      <a href="{% url 'colle_declarer' colle.pk %}">Noter</a>
+      {% endif %}
+      {% if supprimer_perm %}
+      <a href="{% url 'colle_supprimer' colle.pk %}">Supprimer</a>
+      {% endif %}
+    </td>
   </tr>
 </table>
 

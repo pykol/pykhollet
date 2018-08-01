@@ -17,7 +17,7 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 from .colles import Colle, ColleDetails, ColleNote
-from .releve import ColleReleve
+from .releve import ColleReleve, ColleReleveLigne
 from .conception import Semaine, Creneau, Trinome, \
 		Roulement, RoulementLigne, RoulementApplication, \
 		RoulementGraineLigne, \

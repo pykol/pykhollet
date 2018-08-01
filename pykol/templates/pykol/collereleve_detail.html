@@ -2,4 +2,36 @@
 {% block content %}
 <h2>Relevé des colles du {{ collereleve.date }}</h2>
 
+<table>
+  <tr>
+    <th>État</th>
+    <td>{{ collereleve.get_etat_display }}{% if collereleve.etat == collereleve.ETAT_PAYE %} − {{ collereleve.date_paiement }}{% endif %}</td>
+  </tr>
+  <tr>
+    <th colspan="2">{{ collereleve.total_heures }} heures</th>
+  </tr>
+</table>
+
+<h3>Détails</h3>
+
+<table>
+  <tr>
+    <th>Professeur</th>
+    <th>Taux</th>
+    <th>Heures</th>
+    <th>État</th>
+    <th>Actions</th>
+  </tr>
+  {% for ligne in collereleve.lignes.all %}
+  <tr>
+    <td>{{ ligne.colleur }}</td>
+    <td>{{ ligne.get_taux_display }}</td>
+    <td>{{ ligne.heures }}</td>
+    <td>{{ ligne.get_etat_display }}{% if ligne.etat == ligne.ETAT_PAYE %} − {{ ligne.date_paiement }}{% endif %}</td>
+    <td>{% if ligne.etat != ligne.ETAT_PAYE %}<a href="{% url 'releveligne_payer' ligne.pk %}">Payer</a>{% endif %}</td>
+  </tr>
+  {% endfor %}
+</table>
+
+
 {% endblock %}

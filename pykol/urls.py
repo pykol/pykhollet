@@ -78,7 +78,7 @@ releves_urlpatterns = [
 	path('', views.direction.ReleveListView.as_view(), name='releve_list'),
 	path('creer/', views.direction.releve_creer, name='releve_creer'),
 	path('<int:pk>/', views.direction.ReleveDetailView.as_view(), name='releve_detail'),
-	path('<int:pk>/payer/', views.direction.releve_payer, name='releve_payer'),
+	path('<int:pk>/payer/', views.direction.releveligne_payer, name='releveligne_payer'),
 ]
 
 urlpatterns = [

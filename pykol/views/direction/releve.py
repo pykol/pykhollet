@@ -24,7 +24,7 @@ from django.contrib.auth.decorators import login_required, permission_required
 from django.utils.timezone import localtime
 from django.db import transaction
 
-from pykol.models.colles import ColleReleve, Colle
+from pykol.models.colles import ColleReleve, Colle, ColleReleveLigne
 
 @login_required
 @permission_required('pykol.add_collereleve')
@@ -38,9 +38,9 @@ def releve_creer(request):
 	# n'ont pas encore été payées
 	colles_faites = Colle.objects.filter(etat=Colle.ETAT_NOTEE,
 			releve__isnull=True)
-	colles_faites.update(
-			etat=Colle.ETAT_RELEVEE,
-			releve=releve)
+
+	for colle in colles_faites:
+		releve.ajout_colle(colle)
 
 	# On redirige ensuite vers la vue qui affiche le détail de ce relevé
 	return redirect('releve_detail', pk=releve.pk)
@@ -58,7 +58,7 @@ class ReleveListView(LoginRequiredMixin, PermissionRequiredMixin,
 
 @login_required
 @permission_required('pykol.change_collereleve')
-def releve_payer(request, pk):
-	releve = get_object_or_404(Releve, pk=pk)
-	relever.payer()
-	return redirect('releve_detail', pk=releve.pk)
+def releveligne_payer(request, pk):
+	ligne = get_object_or_404(ColleReleveLigne, pk=pk)
+	ligne.payer()
+	return redirect('releve_detail', pk=ligne.releve.pk)

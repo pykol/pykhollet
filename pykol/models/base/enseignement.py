@@ -117,6 +117,10 @@ class Groupe(models.Model):
 	def __str__(self):
 		return self.nom
 
+	@property
+	def effectif(self):
+		return self.etudiants.count()
+
 class Service(models.Model):
 	"""
 	Service d'enseignement

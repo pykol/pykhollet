@@ -89,8 +89,10 @@ class ColleReleve(models.Model):
 		colle.etat = Colle.ETAT_RELEVEE
 		colle.releve = self
 		colle.save()
-		for collenote in colle.collenote_set.all():
-			ligne.ajout_collenote(collenote)
+		ligne.ajout_colle(colle)
+
+	def lignes_par_prof(self):
+		return self.lignes.order_by('colleur', 'taux')
 
 class ColleReleveLigne(models.Model):
 	releve = models.ForeignKey(ColleReleve, on_delete=models.CASCADE,
@@ -114,6 +116,8 @@ class ColleReleveLigne(models.Model):
 		)
 	taux = models.PositiveSmallIntegerField(verbose_name="taux",
 			choices=TAUX_CHOICES)
+	duree_interrogation = models.DurationField(
+			verbose_name="durée d'interrogation", default=timedelta)
 	duree = models.DurationField(verbose_name="nombre d'heures",
 			default=timedelta)
 
@@ -152,13 +156,19 @@ class ColleReleveLigne(models.Model):
 	def heures(self):
 		return self.duree.total_seconds() / 3600
 
-	def ajout_collenote(self, collenote):
+	@property
+	def heures_interrogation(self):
+		return self.duree_interrogation.total_seconds() / 3600
+
+	def ajout_colle(self, colle):
 		"""
-		Ajout d'un ColleNote à la ligne de relevé actuelle
+		Ajout d'une Colle à la ligne de relevé actuelle
 		"""
 		# Cette fonction ne vérifie rien du tout (ni que le colleur est
 		# le même, ni que la colle a été notée, ni le code de paiement).
-		self.duree += collenote.duree
+		for collenote in colle.collenote_set.all():
+			self.duree_interrogation += collenote.duree
+		self.duree += timedelta(hours=1)
 		self.save()
 
 	@transaction.atomic

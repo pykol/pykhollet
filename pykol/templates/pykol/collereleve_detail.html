@@ -19,14 +19,16 @@
     <th>Professeur</th>
     <th>Taux</th>
     <th>Heures</th>
+    <th>Durée d'interrogation</th>
     <th>État</th>
     <th>Actions</th>
   </tr>
-  {% for ligne in collereleve.lignes.all %}
+  {% for ligne in collereleve.lignes_par_prof %}
   <tr>
     <td>{{ ligne.colleur }}</td>
     <td>{{ ligne.get_taux_display }}</td>
     <td>{{ ligne.heures }}</td>
+    <td>{{ ligne.heures_interrogation }}</td>
     <td>{{ ligne.get_etat_display }}{% if ligne.etat == ligne.ETAT_PAYE %} − {{ ligne.date_paiement }}{% endif %}</td>
     <td>{% if ligne.etat != ligne.ETAT_PAYE %}<a href="{% url 'releveligne_payer' ligne.pk %}">Payer</a>{% endif %}</td>
   </tr>

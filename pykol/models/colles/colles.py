@@ -16,6 +16,8 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+from datetime import timedelta
+
 from django.db import models, transaction
 from django.urls import reverse
 
@@ -54,7 +56,8 @@ class Colle(models.Model):
 			on_delete=models.SET_NULL, related_name='+')
 	releve = models.ForeignKey('ColleReleve', blank=True, null=True,
 			on_delete=models.SET_NULL)
-	duree = models.DurationField(verbose_name="durée d'interrogation")
+	duree = models.DurationField(verbose_name="durée",
+			default=timedelta(hours=1))
 
 	@property
 	def details(self):

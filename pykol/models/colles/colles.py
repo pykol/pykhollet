@@ -40,13 +40,15 @@ class Colle(models.Model):
 
 	ETAT_PREVUE = 0
 	ETAT_NOTEE = 1
+	ETAT_EFFECTUEE = 4
 	ETAT_RELEVEE = 2
 	ETAT_ANNULEE = 3
 	ETAT_CHOICES = (
-			(ETAT_PREVUE, "Prévue"),
-			(ETAT_NOTEE, "Notée"),
-			(ETAT_RELEVEE, "Relevée"),
-			(ETAT_ANNULEE, "Annulée"),
+			(ETAT_PREVUE, "prévue"),
+			(ETAT_NOTEE, "notée"),
+			(ETAT_EFFECTUEE, "effectuée"),
+			(ETAT_RELEVEE, "relevée"),
+			(ETAT_ANNULEE, "annulée"),
 		)
 	etat = models.PositiveSmallIntegerField(verbose_name="état",
 			choices=ETAT_CHOICES, default=ETAT_PREVUE)

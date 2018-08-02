@@ -168,7 +168,7 @@ class ColleReleveLigne(models.Model):
 		# le même, ni que la colle a été notée, ni le code de paiement).
 		for collenote in colle.collenote_set.all():
 			self.duree_interrogation += collenote.duree
-		self.duree += timedelta(hours=1)
+		self.duree += colle.duree
 		self.save()
 
 	@transaction.atomic

@@ -48,3 +48,7 @@ def mon_profil(request):
 				'profil_form': profil_form,
 				'pass_form': pass_form,}
 		)
+
+@login_required
+def mentions_legales(request):
+	return render(request, 'pykol/mentions_legales.html')

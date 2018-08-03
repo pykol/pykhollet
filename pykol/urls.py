@@ -83,6 +83,7 @@ releves_urlpatterns = [
 
 urlpatterns = [
 	path('', views.home, name='home'),
+	path('about/', views.mentions_legales, name='mentions_legales'),
 	path('accounts/', include(accounts_urlpatterns)),
 	path('colles/', include(colles_urlpatterns)),
 	path('colloscopes/', include(colloscopes_urlpatterns)),

@@ -5,7 +5,7 @@
 <table>
   <tr>
     <th>État</th>
-    <td>{{ collereleve.get_etat_display }}{% if collereleve.etat == collereleve.ETAT_PAYE %} − {{ collereleve.date_paiement }}{% endif %}</td>
+    <td>{{ collereleve.get_etat_html }}</td>
   </tr>
   <tr>
     <th colspan="2">{{ collereleve.total_heures }} heures</th>

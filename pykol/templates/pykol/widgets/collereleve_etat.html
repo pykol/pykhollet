@@ -1,0 +1,5 @@
+{% if object.etat == object.ETAT_PAYE %}
+<span class="btn-sm btn-success">{{ object.get_etat_display }}</span> − {{ object.date_paiement }}
+{% else %}
+<span class="btn-sm btn-primary">{{ object.get_etat_display }}</span>
+{% endif %}

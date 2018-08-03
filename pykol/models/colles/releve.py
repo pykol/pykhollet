@@ -24,6 +24,7 @@ from datetime import timedelta
 
 from django.db import models, transaction
 from django.utils.timezone import localtime
+from django.template.loader import get_template
 
 from pykol.models.base import Annee, Professeur, Classe
 from pykol.models.colles import Colle
@@ -93,6 +94,10 @@ class ColleReleve(models.Model):
 
 	def lignes_par_prof(self):
 		return self.lignes.order_by('colleur', 'taux')
+
+	def get_etat_html(self):
+		template = get_template('pykol/widgets/collereleve_etat.html')
+		return template.render(context={'object': self})
 
 class ColleReleveLigne(models.Model):
 	releve = models.ForeignKey(ColleReleve, on_delete=models.CASCADE,
@@ -181,3 +186,8 @@ class ColleReleveLigne(models.Model):
 		self.save()
 
 		self.releve.maj_etat()
+
+	def get_etat_html(self):
+		template = get_template('pykol/widgets/collereleve_etat.html')
+		return template.render(context={'object': self})
+

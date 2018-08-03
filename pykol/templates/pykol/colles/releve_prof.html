@@ -21,7 +21,7 @@
     {% for releve in releves %}
     <tr>
       <td rowspan="{{ releve.list|length }}">{{ releve.grouper.date }}</td>
-      <td rowspan="{{ releve.list|length }}">{{ releve.grouper.get_etat_display }}{% if releve.grouper.etat == releve.grouper.ETAT_PAYE %} − {{ releve.grouper.date_paiement }}{% endif %}</td>
+      <td rowspan="{{ releve.list|length }}">{{ releve.grouper.get_etat_html }}</td>
       {% for ligne in releve.list %}
       <td>{{ ligne.get_taux_display }}</td>
       <td>{{ ligne.heures }}</td>

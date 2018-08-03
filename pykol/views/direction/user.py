@@ -93,10 +93,5 @@ class DirectionListUser(PermissionRequiredMixin, ListView):
 
 @login_required
 @permission_required('pykol.direction')
-def direction_list_user(request):
-	return render(request, 'pykol/direction/list_user.html')
-
-@login_required
-@permission_required('pykol.direction')
 def direction_delete_user(request):
 	pass

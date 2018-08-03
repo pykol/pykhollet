@@ -11,6 +11,7 @@
       <th>Nom</th>
       <th>E-mail</th>
       <th>Statut particulier</th>
+      <th>État</th>
     </tr>
   </thead>
 
@@ -26,6 +27,16 @@
         {% else %}
         -
         {% endif %}</td>
+      <td>
+        {% if pykol_user.is_active %}
+        {% if pykol_user.last_login %}
+        <span class="btn-success btn-sm">Actif</span>
+        {% else %}
+        <span class="btn-warning btn-sm">Jamais connecté</span>
+        {% endif %}
+        {% else %}
+        <span class="btn-dark btn-sm">Désactivé</span>
+        {% endif %}
     </tr>
     {% endfor %}
   </tbody>

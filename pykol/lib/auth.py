@@ -68,6 +68,9 @@ def object_permission_required(model, perm, **kwargs):
 	return user_passes_test(
 			lambda u: user_has_object_perm(u, model, perm, **kwargs))
 
+user_est_professeur = user_passes_test(
+	lambda user: user.professeur is not None)
+
 def professeur_dans(user, classe):
 	"""
 	Teste si un utilisateur est un professeur et s'il enseigne dans la

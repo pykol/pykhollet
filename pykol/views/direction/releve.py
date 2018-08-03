@@ -25,6 +25,7 @@ from django.utils.timezone import localtime
 from django.db import transaction
 
 from pykol.models.colles import ColleReleve, Colle, ColleReleveLigne
+from pykol.lib.auth import user_est_professeur
 
 @login_required
 @permission_required('pykol.add_collereleve')
@@ -55,6 +56,21 @@ class ReleveListView(LoginRequiredMixin, PermissionRequiredMixin,
 	permission_required = ('pykol.view_collereleve',)
 	model = ColleReleve
 	ordering = ('date',)
+
+@login_required
+@user_est_professeur
+def releve_prof_detail(request):
+	lignes = ColleReleveLigne.objects.filter(colleur=request.user.professeur).order_by(
+		'releve__date', 'releve', 'taux')
+
+	return render(request, 'pykol/colles/releve_prof.html', context={
+		'lignes': lignes,})
+
+def releve_dispatch(request):
+	if request.user.has_perm('pkyol.view_collereleve'):
+		return ReleveListView.as_view()(request)
+	else:
+		return releve_prof_detail(request)
 
 @login_required
 @permission_required('pykol.change_collereleve')

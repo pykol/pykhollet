@@ -1,0 +1,37 @@
+{% extends 'pykol/base.html' %}
+{% block content %}
+<h2>Relevés des heures de colles</h2>
+
+{% if lignes %}
+<table>
+  <thead>
+    <tr>
+      <th rowspan="2">Date</th>
+      <th rowspan="2">État</th>
+      <th colspan="3">Heures</th>
+    </tr>
+    <tr>
+      <th>Taux</th>
+      <th>Heures</th>
+      <th>Durée d'interrogation</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% regroup lignes by releve as releves %}
+    {% for releve in releves %}
+    <tr>
+      <td rowspan="{{ releve.list|length }}">{{ releve.grouper.date }}</td>
+      <td rowspan="{{ releve.list|length }}">{{ releve.grouper.get_etat_display }}{% if releve.grouper.etat == releve.grouper.ETAT_PAYE %} − {{ releve.grouper.date_paiement }}{% endif %}</td>
+      {% for ligne in releve.list %}
+      <td>{{ ligne.get_taux_display }}</td>
+      <td>{{ ligne.heures }}</td>
+      <td>{{ ligne.heures_interrogation }}</td>
+      {% endfor %}
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% else %}
+<p>Aucun relevé d'heures n'a été effectué pour le moment.</p>
+{% endif %}
+{% endblock %}

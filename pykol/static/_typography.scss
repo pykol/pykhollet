@@ -41,6 +41,10 @@ i.#{$fa-css-prefix} {
 #content {
   li:before { content: "\2013 "; }
   .trinomes li:before { content: none; }
+
+  p {
+    margin-bottom: 0.3em;
+  }
 }
 
 .trinomes {

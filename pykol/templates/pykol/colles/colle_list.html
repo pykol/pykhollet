@@ -18,7 +18,7 @@
       <td><a href="{{ colle.get_absolute_url }}">{{ colle.details.horaire }}</a></td>
       <td>{{ colle.matiere }}</td>
       <td>{{ colle.get_etat_display }}</td>
-      <td><a href="{% url 'colle_declarer' colle.pk %}">Noter</a></td>
+      <td><a class="btn-primary btn-sm" href="{% url 'colle_declarer' colle.pk %}">Noter</a></td>
     </tr>
     {% endfor %}
   </tbody>

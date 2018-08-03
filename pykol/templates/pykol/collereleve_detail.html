@@ -30,7 +30,7 @@
     <td>{{ ligne.heures }}</td>
     <td>{{ ligne.heures_interrogation }}</td>
     <td>{{ ligne.get_etat_display }}{% if ligne.etat == ligne.ETAT_PAYE %} − {{ ligne.date_paiement }}{% endif %}</td>
-    <td>{% if ligne.etat != ligne.ETAT_PAYE %}<a href="{% url 'releveligne_payer' ligne.pk %}">Payer</a>{% endif %}</td>
+    <td>{% if ligne.etat != ligne.ETAT_PAYE %}<a class="btn-primary btn-sm" href="{% url 'releveligne_payer' ligne.pk %}">Payer</a>{% endif %}</td>
   </tr>
   {% endfor %}
 </table>

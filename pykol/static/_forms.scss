@@ -1,33 +1,3 @@
-@mixin button-success {
-  @extend .btn;
-  @extend .btn-success;
-}
-
-@mixin button-danger {
-  @extend .btn;
-  @extend .btn-danger;
-}
-
-@mixin button-primary {
-  @extend .btn;
-  @extend .btn-primary;
-}
-
-@mixin button-warning {
-  @extend .btn;
-  @extend .btn-warning;
-}
-
-@mixin button-info {
-  @extend .btn;
-  @extend .btn-info;
-}
-
-@mixin button-dark {
-  @extend .btn;
-  @extend .btn-dark;
-}
-
 label {
   font-weight: 700;
 }

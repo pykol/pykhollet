@@ -7,7 +7,7 @@
 </h2>
 
 {% if perm_creation %}
-<p><a href="{% url 'colle_creer' classe.slug %}">Créer une colle</a></p>
+<p><a class="btn-primary btn" href="{% url 'colle_creer' classe.slug %}">Créer une colle</a></p>
 {% endif %}
 
 <table class="colloscope">
@@ -70,7 +70,7 @@ semaine de colle.
     <td>{{ colle.colleur }}</td>
     <td>{{ colle.details.horaire }}</td>
     <td>{{ colle.groupe }}</td>
-    <td><a href="{{ colle.get_absolute_url }}">Détails</a></td>
+    <td><a class="btn-primary btn-sm" href="{{ colle.get_absolute_url }}">Détails</a></td>
   </tr>
   {% endfor %}
 </table>

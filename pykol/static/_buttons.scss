@@ -1,0 +1,59 @@
+@mixin button-success {
+  @extend .btn;
+  @extend .btn-success;
+}
+
+@mixin button-danger {
+  @extend .btn;
+  @extend .btn-danger;
+}
+
+@mixin button-primary {
+  @extend .btn;
+  @extend .btn-primary;
+}
+
+@mixin button-warning {
+  @extend .btn;
+  @extend .btn-warning;
+}
+
+@mixin button-info {
+  @extend .btn;
+  @extend .btn-info;
+}
+
+@mixin button-dark {
+  @extend .btn;
+  @extend .btn-dark;
+}
+
+@mixin button-small-success {
+  @include button-success;
+  @extend .btn-sm;
+}
+
+@mixin button-small-danger {
+  @include button-danger;
+  @extend .btn-sm;
+}
+@mixin button-small-primary {
+  @include button-primary;
+  @extend .btn-sm;
+}
+@mixin button-small-warning {
+  @include button-warning;
+  @extend .btn-sm;
+}
+@mixin button-small-info {
+  @include button-info;
+  @extend .btn-sm;
+}
+@mixin button-small-dark {
+  @include button-dark;
+  @extend .btn-sm;
+}
+
+a.btn, a.btn-sm, a.btn-lg, a.button-add {
+  text-decoration: none;
+}

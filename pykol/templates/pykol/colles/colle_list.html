@@ -22,7 +22,7 @@
         {% else %}
         <span class="btn-sm btn-outline-success">{{ colle.get_etat_display|title }}</span>
         {% endif %}</td>
-      <td><a class="btn-primary btn-sm" href="{% url 'colle_declarer' colle.pk %}">Noter</a></td>
+      <td><a class="btn-sm btn-primary" href="{% url 'colle_declarer' colle.pk %}">{% if colle.mode == colle.MODE_INTERROGATION %}Noter{% else %}Déclarer{% endif %}</a></td>
     </tr>
     {% endfor %}
   </tbody>

@@ -171,8 +171,12 @@ class ColleReleveLigne(models.Model):
 		"""
 		# Cette fonction ne vérifie rien du tout (ni que le colleur est
 		# le même, ni que la colle a été notée, ni le code de paiement).
-		for collenote in colle.collenote_set.all():
-			self.duree_interrogation += collenote.duree
+		if colle.mode == Colle.MODE_INTERROGATION:
+			for collenote in colle.collenote_set.all():
+				self.duree_interrogation += collenote.duree
+		else:
+			self.duree_interrogation += colle.duree
+
 		self.duree += colle.duree
 		self.save()
 

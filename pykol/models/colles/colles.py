@@ -34,9 +34,7 @@ class ColleConfirmeeManager(models.Manager):
 	que les colles confirmées.
 	"""
 	def get_queryset(self):
-		return super().get_queryset().filter(
-				etat__neq=Colle.ETAT_BROUILLON
-			)
+		return super().get_queryset().exclude(etat=Colle.ETAT_BROUILLON)
 
 class Colle(models.Model):
 	"""
@@ -72,6 +70,17 @@ class Colle(models.Model):
 			on_delete=models.SET_NULL)
 	duree = models.DurationField(verbose_name="durée",
 			default=timedelta(hours=1))
+
+	MODE_INTERROGATION = 0
+	MODE_TD = 1
+	MODE_CHOICES = (
+			(MODE_INTERROGATION, "interrogation"),
+			(MODE_TD, "travaux dirigés"),
+		)
+	mode = models.PositiveSmallIntegerField(
+			verbose_name="mode de déroulement",
+			choices=MODE_CHOICES,
+			default=MODE_INTERROGATION)
 
 	# On remplace le gestionnaire objects, mais en prenant soin de
 	# laisser le gestionnaire par défaut all_objects en première

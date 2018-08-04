@@ -121,6 +121,14 @@ class Groupe(models.Model):
 	def effectif(self):
 		return self.etudiants.count()
 
+	@property
+	def emails(self):
+		"""
+		Liste des e-mails des étudiants du groupe
+		"""
+		return list(self.etudiants.filter(email__isnull=False
+				).values_list('email', flat=True))
+
 class Service(models.Model):
 	"""
 	Service d'enseignement

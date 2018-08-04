@@ -35,6 +35,14 @@
 <ul class="trinomes">
   {% for trinome in trinomes %}
   <li><strong>{{ trinome.nom }}</strong>
+    {% with emails=trinome.emails %}
+    {% if emails %}
+    <span class="trinome-email">
+      <a href="mailto:{{ emails|join:","}}"
+         title="Envoyer un e-mail au groupe {{ trinome.nom }}"><i class="far fa-envelope"></i></a>
+    </span>
+    {% endif %}
+    {% endwith %}
     <ul>
       {% for etudiant in trinome.etudiants.all %}
       <li><a href="{{ etudiant.get_absolute_url }}">{{ etudiant }}</a></li>

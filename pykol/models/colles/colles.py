@@ -28,6 +28,16 @@ from pykol.models.fields import NoteField
 LISTE_JOURS = enumerate(["lundi", "mardi", "mercredi", "jeudi",
 	"vendredi", "samedi", "dimanche"], 1)
 
+class ColleConfirmeeManager(models.Manager):
+	"""
+	Gestionnaire personnalisé sur les colles qui permet de n'afficher
+	que les colles confirmées.
+	"""
+	def get_queryset(self):
+		return super().get_queryset().filter(
+				etat__neq=Colle.ETAT_BROUILLON
+			)
+
 class Colle(models.Model):
 	"""
 	Représentation d'une séance de colle
@@ -43,7 +53,9 @@ class Colle(models.Model):
 	ETAT_EFFECTUEE = 4
 	ETAT_RELEVEE = 2
 	ETAT_ANNULEE = 3
+	ETAT_BROUILLON = 5
 	ETAT_CHOICES = (
+			(ETAT_BROUILLON, "brouillon"),
 			(ETAT_PREVUE, "prévue"),
 			(ETAT_NOTEE, "notée"),
 			(ETAT_EFFECTUEE, "effectuée"),
@@ -60,6 +72,13 @@ class Colle(models.Model):
 			on_delete=models.SET_NULL)
 	duree = models.DurationField(verbose_name="durée",
 			default=timedelta(hours=1))
+
+	# On remplace le gestionnaire objects, mais en prenant soin de
+	# laisser le gestionnaire par défaut all_objects en première
+	# position (c'est lui qui est utilisé par Django comme gestionnaire
+	# de base).
+	all_objects = models.Manager()
+	objects = ColleConfirmeeManager()
 
 	@property
 	def details(self):

@@ -23,10 +23,10 @@
   <tr>
     <td colspan="4">
       {% if noter_perm %}
-      <a href="{% url 'colle_declarer' colle.pk %}">Noter</a>
+      <a class="btn btn-primary" href="{% url 'colle_declarer' colle.pk %}">Noter</a>
       {% endif %}
       {% if supprimer_perm %}
-      <a href="{% url 'colle_supprimer' colle.pk %}">Supprimer</a>
+      <a class="btn btn-danger" href="{% url 'colle_supprimer' colle.pk %}">Supprimer</a>
       {% endif %}
     </td>
   </tr>

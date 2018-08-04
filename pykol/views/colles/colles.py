@@ -23,6 +23,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin, \
 		UserPassesTestMixin
 from django.utils import timezone
+from django.db.models import Func, F
 
 from pykol.models.base import Etudiant
 from pykol.models.colles import Colle
@@ -154,7 +155,11 @@ class ColleListView(LoginRequiredMixin, generic.ListView):
 	def get_queryset(self):
 		return Colle.objects.filter(
 			colledetails__colleur=self.request.user,
-			colledetails__actif=True).order_by('colledetails__horaire')
+			colledetails__actif=True).order_by('colledetails__horaire').annotate(
+				a_noter=Func(F('colledetails__horaire'),
+					timezone.localtime(), arity=2, arg_joiner='<',
+					function='')
+				)
 
 colle_list = ColleListView.as_view()
 

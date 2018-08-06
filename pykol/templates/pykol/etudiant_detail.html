@@ -11,10 +11,12 @@
     <th>E-mail</th>
     <td>{% if etudiant.email %}<a href="mailto:{{ etudiant.email }}">{{ etudiant.email }}</a>{% else %}Adresse inconnue{% endif %}</td>
   </tr>
+  {% if etudiant.options %}
   <tr>
     <th>Options</th>
-    <td>{{ etudiant.options.all|join:", " }}</td>
+    <td><ul>{{ etudiant.options.all|unordered_list }}</ul></td>
   </tr>
+  {% endif %}
 </table>
 
 <h3>Notes par matière </h3>

@@ -164,3 +164,13 @@ RoulementLigneFormSet = forms.inlineformset_factory(Roulement,
 
 RoulementGraineFormSet = forms.inlineformset_factory(RoulementApplication,
 		RoulementGraineLigne, fields=('trinome', 'decalage'))
+
+class ColleSupprimerForm(forms.ModelForm):
+	"""
+	Formulaire qui référence une colle mais sans permettre la
+	modification du moindre champ. Il permet de gérer la confirmation de
+	suppression d'une colle.
+	"""
+	class Meta:
+		model = Colle
+		fields = ()

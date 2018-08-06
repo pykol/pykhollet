@@ -1,0 +1,14 @@
+{% extends "pykol/base.html" %}
+{% block content %}
+<h2>Suppression de la colle du {{ colle.details.horaire }}
+  <small>− {{ colle.classe }}</small>
+</h2>
+
+<form method="post" action="">
+  <p>Confirmez-vous la suppression de la colle ?</p>
+  {% csrf_token %}
+  <p><input type="submit" value="Je confirme la suppression" class="btn btn-danger">
+  <a class="btn btn-info" href="{% url 'colle_detail' colle.pk %}">Non,
+    emmenez-moi loin d'ici</a></p>
+</form>
+{% endblock %}

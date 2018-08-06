@@ -31,7 +31,7 @@ from pykol.models.colles import Semaine, CollesReglages, Creneau, Colle
 from pykol.forms.colloscope import SemaineFormSet, \
 		SemaineNumeroGenerateurForm, \
 		CreneauFormSet, CreneauSansClasseFormSet, \
-		TrinomeForm, ColleForm
+		TrinomeForm, ColleForm, ColleSupprimerForm
 
 @login_required
 def colloscope_home(request):
@@ -307,11 +307,29 @@ def colle_creer(request, slug):
 @login_required
 def colle_supprimer(request, pk):
 	"""Supprimer une colle"""
-	classe = get_object_or_404(Classe, slug=slug)
-	if not request.user.has_perm('pykol.delete_colle', classe):
+	colle = get_object_or_404(Colle, pk=pk)
+	if not request.user.has_perm('pykol.change_colle', colle.classe):
 		raise PermissionDenied
 
-	pass
+	if request.method == 'POST':
+		form = ColleSupprimerForm(request.POST, instance=colle)
+		if form.is_valid():
+			if colle.etat in (Colle.ETAT_ANNULEE,
+					Colle.ETAT_BROUILLON, Colle.ETAT_PREVUE):
+				colle.delete()
+			else:
+				messages.error(request, "Vous ne pouvez pas supprimer "
+						"une colle qui a été notée ou relevée.")
+
+			return redirect('colloscope', slug=classe.slug)
+		else:
+			return redirect('colle_detail', pk=colle.pk)
+
+	form = ColleSupprimerForm(instance=colle)
+	return render(request, 'pykol/colles/supprimer.html',
+			context={
+				'colle': colle,
+			})
 
 @login_required
 def creneaux(request, slug):

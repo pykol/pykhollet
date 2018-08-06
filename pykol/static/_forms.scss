@@ -21,6 +21,10 @@ input[type="submit"] {
   width: auto;
   height: auto;
   line-height: auto;
+
+  &.btn-danger {
+    @include button-danger;
+  }
 }
 
 form {

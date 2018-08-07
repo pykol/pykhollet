@@ -4,31 +4,33 @@
   <small>− {{ colle.classe }}</small>
 </h2>
 
-Les colles ne sont mises en paiement que lorsqu'elles ont été
-effectuées. Pour confirmer que cette colle a été effectuée, vous devez
-indiquer les notes attribuées aux étudiants.
+<section>
+  Les colles ne sont mises en paiement que lorsqu'elles ont été
+  effectuées. Pour confirmer que cette colle a été effectuée, vous devez
+  indiquer les notes attribuées aux étudiants.
 
-Vous pouvez indiquer :
-<ul>
-  <li>une note chiffrée ;</li>
-  <li>l'indication <em>ae</em> pour indiquer une absence excusée.
-    L'absence n'influera pas sur la moyenne d'oral de l'étudiant mais
-    ce dernier doit la justifier auprès de la vie scolaire ;</li>
-  <li>l'indication <em>a</em> pour indiquer une absence non justifiée.
-    Cette absence fait baisser la moyenne d'oral de l'étudiant.
-    L'absence doit être régularisée auprès de la vie scolaire ;</li>
-  <li>l'indication <em>nn</em> pour indiquer que vous ne souhaitez pas
-    attribuer de note à la colle. Cette indication est comptée dans la
-    moyenne d'oral (de la même manière que la note 0) ;</li>
-  <li>l'indication <em>vu</em> pour indiquer que vous ne souhaitez pas
-    attribuer de note à la colle et que vous souhaitez que cette colle
-    n'intervienne pas dans la moyenne d'oral.</li>
+  Vous pouvez indiquer :
+  <ul>
+    <li>une note chiffrée ;</li>
+    <li>l'indication <em>ae</em> pour indiquer une absence excusée.
+      L'absence n'influera pas sur la moyenne d'oral de l'étudiant mais
+      ce dernier doit la justifier auprès de la vie scolaire ;</li>
+    <li>l'indication <em>a</em> pour indiquer une absence non justifiée.
+      Cette absence fait baisser la moyenne d'oral de l'étudiant.
+      L'absence doit être régularisée auprès de la vie scolaire ;</li>
+    <li>l'indication <em>nn</em> pour indiquer que vous ne souhaitez pas
+      attribuer de note à la colle. Cette indication est comptée dans la
+      moyenne d'oral (de la même manière que la note 0) ;</li>
+    <li>l'indication <em>vu</em> pour indiquer que vous ne souhaitez pas
+      attribuer de note à la colle et que vous souhaitez que cette colle
+      n'intervienne pas dans la moyenne d'oral.</li>
 
-<form method="post" action="">
-  {% csrf_token %}
-  <table>
-    {{ form.as_table }}
-  </table>
-  <input type="submit">
-</form>
+  <form method="post" action="">
+    {% csrf_token %}
+    <table>
+      {{ form.as_table }}
+    </table>
+    <input type="submit">
+  </form>
+</section>
 {% endblock %}

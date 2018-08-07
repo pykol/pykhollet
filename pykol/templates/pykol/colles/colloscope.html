@@ -51,28 +51,30 @@
 </table>
 
 {% if autres_colles %}
-<h3>Autres colles</h3>
-Les colles suivantes sont programmées dans la classe, et ne
-correspondent à aucun créneau dans la tableau précédent ou à aucune
-semaine de colle.
+<section>
+  <h3>Autres colles</h3>
+  Les colles suivantes sont programmées dans la classe, et ne
+  correspondent à aucun créneau dans la tableau précédent ou à aucune
+  semaine de colle.
 
-<table>
-  <tr>
-    <th>Matière</th>
-    <th>Colleur</th>
-    <th>Date</th>
-    <th>Groupe</th>
-    <th>Actions</th>
-  </tr>
-  {% for colle in autres_colles %}
-  <tr>
-    <td>{{ colle.matiere }}</td>
-    <td>{{ colle.colleur }}</td>
-    <td>{{ colle.details.horaire }}</td>
-    <td>{{ colle.groupe }}</td>
-    <td><a class="btn-primary btn-sm" href="{{ colle.get_absolute_url }}">Détails</a></td>
-  </tr>
-  {% endfor %}
-</table>
+  <table>
+    <tr>
+      <th>Matière</th>
+      <th>Colleur</th>
+      <th>Date</th>
+      <th>Groupe</th>
+      <th>Actions</th>
+    </tr>
+    {% for colle in autres_colles %}
+    <tr>
+      <td>{{ colle.matiere }}</td>
+      <td>{{ colle.colleur }}</td>
+      <td>{{ colle.details.horaire }}</td>
+      <td>{{ colle.groupe }}</td>
+      <td><a class="btn-primary btn-sm" href="{{ colle.get_absolute_url }}">Détails</a></td>
+    </tr>
+    {% endfor %}
+  </table>
+</section>
 {% endif %}
 {% endblock content %}

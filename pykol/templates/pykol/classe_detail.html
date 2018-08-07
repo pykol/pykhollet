@@ -2,61 +2,69 @@
 {% block content %}
 <h2>Détail de la classe {{ classe.nom }}</h2>
 
-{% if can_edit_colloscope %}
-<h3>Gestion du colloscope</h3>
-<ul>
-  <li><a href="{% url 'colloscope_semaines' classe.slug %}">Gestion des
-      semaines de colles</a></li>
-  <li><a href="{% url 'colloscope_trinomes' classe.slug %}">Gestion des
-      groupes de colles</a></li>
-  <li><a href="{% url 'colloscope_creneaux' classe.slug %}">Gestion des
-      créneaux de colles</a></li>
-  <li><a href="{% url 'roulement_creer' classe.slug %}">Enchainement des
-      colles</a>
-    {% for roulement in classe.roulement_set.all %}
-    (<a href="{% url 'roulement_editer' roulement.pk %}">{{ roulement.pk }}</a>)
-    {% endfor %}
-  </li>
-  <li><a href="{% url 'colloscope' classe.slug %}">Colloscope</a></li>
-</ul>
-{% else %}
-<h3>Colloscope</h3>
-<ul>
-  <li><a href="{% url 'colloscope' classe.slug %}">Colloscope</a></li>
-</ul>
-{% endif %}
-
-<h3>Notes de colles</h3>
-<ul>
-  <li><a href="{% url 'classe_colle_resultats' classe.slug %}">Notes de la classe</a></li>
-</ul>
-
-<h3>Groupes de colles</h3>
-<ul class="trinomes">
-  {% for trinome in trinomes %}
-  <li><strong>{{ trinome.nom }}</strong>
-    {% with emails=trinome.emails %}
-    {% if emails %}
-    <span class="trinome-email">
-      <a href="mailto:{{ emails|join:","}}"
-         title="Envoyer un e-mail au groupe {{ trinome.nom }}"><i class="far fa-envelope"></i></a>
-    </span>
-    {% endif %}
-    {% endwith %}
-    <ul>
-      {% for etudiant in trinome.etudiants.all %}
-      <li><a href="{{ etudiant.get_absolute_url }}">{{ etudiant }}</a></li>
+<section>
+  {% if can_edit_colloscope %}
+  <h3>Gestion du colloscope</h3>
+  <ul>
+    <li><a href="{% url 'colloscope_semaines' classe.slug %}">Gestion des
+        semaines de colles</a></li>
+    <li><a href="{% url 'colloscope_trinomes' classe.slug %}">Gestion des
+        groupes de colles</a></li>
+    <li><a href="{% url 'colloscope_creneaux' classe.slug %}">Gestion des
+        créneaux de colles</a></li>
+    <li><a href="{% url 'roulement_creer' classe.slug %}">Enchainement des
+        colles</a>
+      {% for roulement in classe.roulement_set.all %}
+      (<a href="{% url 'roulement_editer' roulement.pk %}">{{ roulement.pk }}</a>)
       {% endfor %}
-    </ul>
-  </li>
-  {% endfor %}
-</ul>
+    </li>
+    <li><a href="{% url 'colloscope' classe.slug %}">Colloscope</a></li>
+  </ul>
+  {% else %}
+  <h3>Colloscope</h3>
+  <ul>
+    <li><a href="{% url 'colloscope' classe.slug %}">Colloscope</a></li>
+  </ul>
+  {% endif %}
+</section>
 
-<h3>Étudiants</h3>
-<ul>
-  {% for etudiant in etudiant_list %}
-  <li><a href="{{ etudiant.get_absolute_url }}">{{ etudiant }}</a></li>
-  {% endfor %}
-</ul>
+<section>
+  <h3>Notes de colles</h3>
+  <ul>
+    <li><a href="{% url 'classe_colle_resultats' classe.slug %}">Notes de la classe</a></li>
+  </ul>
+</section>
+
+<section>
+  <h3>Groupes de colles</h3>
+  <ul class="trinomes">
+    {% for trinome in trinomes %}
+    <li><strong>{{ trinome.nom }}</strong>
+      {% with emails=trinome.emails %}
+      {% if emails %}
+      <span class="trinome-email">
+        <a href="mailto:{{ emails|join:","}}"
+           title="Envoyer un e-mail au groupe {{ trinome.nom }}"><i class="far fa-envelope"></i></a>
+      </span>
+      {% endif %}
+      {% endwith %}
+      <ul>
+        {% for etudiant in trinome.etudiants.all %}
+        <li><a href="{{ etudiant.get_absolute_url }}">{{ etudiant }}</a></li>
+        {% endfor %}
+      </ul>
+    </li>
+    {% endfor %}
+  </ul>
+</section>
+
+<section>
+  <h3>Étudiants</h3>
+  <ul>
+    {% for etudiant in etudiant_list %}
+    <li><a href="{{ etudiant.get_absolute_url }}">{{ etudiant }}</a></li>
+    {% endfor %}
+  </ul>
+</section>
 
 {% endblock %}

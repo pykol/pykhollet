@@ -5,23 +5,27 @@
   <small>− {{ etudiant.classe }}</small>
 </h2>
 
-<h3>Coordonnées</h3>
-<table>
-  <tr>
-    <th>E-mail</th>
-    <td>{% if etudiant.email %}<a href="mailto:{{ etudiant.email }}">{{ etudiant.email }}</a>{% else %}Adresse inconnue{% endif %}</td>
-  </tr>
-  {% if etudiant.options %}
-  <tr>
-    <th>Options</th>
-    <td><ul>{{ etudiant.options.all|unordered_list }}</ul></td>
-  </tr>
-  {% endif %}
-</table>
+<section>
+  <h3>Coordonnées</h3>
+  <table>
+    <tr>
+      <th>E-mail</th>
+      <td>{% if etudiant.email %}<a href="mailto:{{ etudiant.email }}">{{ etudiant.email }}</a>{% else %}Adresse inconnue{% endif %}</td>
+    </tr>
+    {% if etudiant.options %}
+    <tr>
+      <th>Options</th>
+      <td><ul>{{ etudiant.options.all|unordered_list }}</ul></td>
+    </tr>
+    {% endif %}
+  </table>
+</section>
 
-<h3>Notes par matière </h3>
-<ul>
-  <li><a href="{% url 'classe_etudiant_resultats' etudiant.pk %}">Notes</a></li>
-</ul>
+<section>
+  <h3>Notes par matière </h3>
+  <ul>
+    <li><a href="{% url 'classe_etudiant_resultats' etudiant.pk %}">Notes</a></li>
+  </ul>
+</section>
 
 {% endblock %}

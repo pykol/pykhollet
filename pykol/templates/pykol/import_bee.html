@@ -2,34 +2,37 @@
 {% block content %}
 <h2>Import des données depuis la base élèves (SIECLE)</h2>
 
-<p>Cette page permet de créer les données ou de les mettre à jour grâce
-aux données stockées dans SIECLE.</p>
+<section>
+  <p>Cette page permet de créer les données ou de les mettre à jour grâce
+  aux données stockées dans SIECLE.</p>
 
-<p>Connectez-vous à l'application SIECLE. Dans le menu « Exportations »
-rendez-vous sur la page « XML ». Téléchargez et sauvegardez les fichiers
-d'export standard correspondant à chaque champ ci-dessous, puis
-importez-les depuis cette page.
+  <p>Connectez-vous à l'application SIECLE. Dans le menu « Exportations »
+  rendez-vous sur la page « XML ». Téléchargez et sauvegardez les fichiers
+  d'export standard correspondant à chaque champ ci-dessous, puis
+  importez-les depuis cette page.
 
-<p>Si vous effectuez plusieurs importations depuis cette page, les
-données (classes, élèves, matières, etc.) ne seront pas dupliquées, mais
-elles seront simplement mises à jour en fonction des modifications
-présentes dans SIECLE.
+  <p>Si vous effectuez plusieurs importations depuis cette page, les
+  données (classes, élèves, matières, etc.) ne seront pas dupliquées, mais
+  elles seront simplement mises à jour en fonction des modifications
+  présentes dans SIECLE.
 
-<p>Vous pouvez laisser certains champs vides : si vous souhaitez par
-exemple uniquement mettre à jour la liste des étudiants, importez
-uniquement le fichier élèves.
+  <p>Vous pouvez laisser certains champs vides : si vous souhaitez par
+  exemple uniquement mettre à jour la liste des étudiants, importez
+  uniquement le fichier élèves.
 
-{% if messages %}
-<ul class="messages">
-    {% for message in messages %}
-    <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
-    {% endfor %}
-</ul>
-{% endif %}
+  {% if messages %}
+  <ul class="messages">
+      {% for message in messages %}
+      <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+      {% endfor %}
+  </ul>
+  {% endif %}
 
-<form enctype="multipart/form-data" action="{% url 'import_bee' %}" method="post">
-  {% csrf_token %}
-  {{ form.as_table }}
-  <p><input type="submit" value="Importer les données">
-</form>
+  <form enctype="multipart/form-data" action="{% url 'import_bee' %}" method="post">
+    {% csrf_token %}
+    {{ form.as_table }}
+    <p><input type="submit" value="Importer les données">
+  </form>
+</section>
+
 {% endblock %}

@@ -2,8 +2,7 @@
 {% block content %}
 <h2>Année scolaire {{ annee }}</h2>
 
-<form action="" method="post">
-  {% csrf_token %}
+<section>
   <table>
     <tr>
       <th>Date de début</th>
@@ -20,36 +19,41 @@
       <td>{{ annee.dotation_totale }}</td>
     </tr>
   </table>
+</section>
 
+<section>
   <h3>Dotations</h3>
-  {{ dotation_formset.management_form }}
-  {{ dotation_formset.non_form_errors }}
-  <table class="formset">
-    <thead>
-      <tr>
-        <th>Date</th>
-        <th>Nombre d'heures</th>
-        <th>Supprimer ?</th>
-      </tr>
-    </thead>
-    <tbody>
-      {% for form in dotation_formset %}
-      {% if form.errors %}
-      <tr>
-        <td colspan="6">
-          La dotation suivante n'est pas valide.
-        </td>
-      </tr>
-      {% endif %}
-      <tr>
-        <td>{{ form.id }}{{ form.date }}{% if form.date.errors %}<br>{{ form.date.errors }}{% endif %}</td>
-        <td>{{ form.heures }}{% if form.heures.errors %}<br>{{ form.heures.errors }}{% endif %}</td>
-        <td>{{ form.DELETE }}</td>
-      </tr>
-      {% endfor %}
-    </tbody>
-  </table>
+  <form action="" method="post">
+    {% csrf_token %}
+    {{ dotation_formset.management_form }}
+    {{ dotation_formset.non_form_errors }}
+    <table class="formset">
+      <thead>
+        <tr>
+          <th>Date</th>
+          <th>Nombre d'heures</th>
+          <th>Supprimer ?</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for form in dotation_formset %}
+        {% if form.errors %}
+        <tr>
+          <td colspan="6">
+            La dotation suivante n'est pas valide.
+          </td>
+        </tr>
+        {% endif %}
+        <tr>
+          <td>{{ form.id }}{{ form.date }}{% if form.date.errors %}<br>{{ form.date.errors }}{% endif %}</td>
+          <td>{{ form.heures }}{% if form.heures.errors %}<br>{{ form.heures.errors }}{% endif %}</td>
+          <td>{{ form.DELETE }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
 
-  <input type="submit">
-</form>
+    <input type="submit">
+  </form>
+</section>
 {% endblock %}

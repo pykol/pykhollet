@@ -2,9 +2,11 @@
 {% block content %}
 <h2>Liste des classes</h2>
 
-<ul>
-  {% for classe in classe_list %}
-  <li><a href="{{ classe.get_absolute_url }}">{{ classe }}</a></li>
-  {% endfor %}
-</ul>
+<section>
+  <ul>
+    {% for classe in classe_list %}
+    <li><a href="{{ classe.get_absolute_url }}">{{ classe }}</a></li>
+    {% endfor %}
+  </ul>
+</section>
 {% endblock %}

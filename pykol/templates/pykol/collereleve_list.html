@@ -2,20 +2,22 @@
 {% block content %}
 <h2>Relevés des colles</h2>
 
-{% if perms.pykol.add_collereleve %}
-<p><a class="button-add" href="{% url 'releve_creer' %}">Créer un
-  nouveau relevé</a></p>
-{% endif %}
+<section>
+  {% if perms.pykol.add_collereleve %}
+  <p><a class="button-add" href="{% url 'releve_creer' %}">Créer un
+    nouveau relevé</a></p>
+  {% endif %}
 
-{% if collereleve_list %}
-<ul>
-  {% for releve in collereleve_list %}
-  <li><a href="{% url 'releve_detail' releve.pk %}">Relevé du
-      {{ releve.date }}</a></li>
-  {% endfor %}
-</ul>
-{% else %}
-<p>Aucun relevé pour cette année.
-{% endif %}
+  {% if collereleve_list %}
+  <ul>
+    {% for releve in collereleve_list %}
+    <li><a href="{% url 'releve_detail' releve.pk %}">Relevé du
+        {{ releve.date }}</a></li>
+    {% endfor %}
+  </ul>
+  {% else %}
+  <p>Aucun relevé pour cette année.
+  {% endif %}
+</section>
 
 {% endblock %}

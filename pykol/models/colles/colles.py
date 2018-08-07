@@ -112,13 +112,23 @@ class Colle(models.Model):
 		que si l'horaire de la colle n'a pas changé. Sinon, la
 		réservation de salle n'est pas garantie et il vaut mieux laisser
 		le champ vide.
+
+		En revanche, dans le cas où la salle n'était auparavant pas
+		connue et qu'il s'agit de la seule information renseignée lors
+		de l'appel, on ne crée pas de nouvelle ligne ColleDetails.
+		(C'est le cas d'un déplacement de colle par le professeur avec
+		réservation un peu plus tard de la salle par la direction.)
+
+		Cette méthode renvoie le nouvel objet ColleDetails actif pour la
+		colle.
 		"""
+
 		try:
 			ancien_detail = self.details
 			if not colleur:
 				colleur = ancien_detail.colleur
 			if not etudiants:
-				etudiants = ancien_detail.eleves
+				etudiants = ancien_detail.eleves.all()
 			if not horaire:
 				horaire = ancien_detail.horaire
 			if not salle and horaire == ancien_detail.horaire:
@@ -126,6 +136,18 @@ class Colle(models.Model):
 
 		except ColleDetails.DoesNotExist:
 			ancien_detail = None
+
+		# Cas où l'on ajoute une salle qui n'était précédemment pas
+		# renseignée. Dans ce cas, on ne crée pas de nouveau
+		# ColleDetails mais on met à jour l'actuel.
+		# TODO cela ne marche pas car le bloc précédent définit les
+		# variables colleur, etudiants, horaire quoi qu'il arrive
+		if ancien_detail is not None and \
+				not ancien_detail.salle and salle and \
+				colleur is None and horaire is None and not etudiants:
+			ancien_detail.salle = salle
+			ancien_detail.save()
+			return ancien_detail
 
 		self.colledetails_set.update(actif=False)
 

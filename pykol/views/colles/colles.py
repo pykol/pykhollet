@@ -27,7 +27,7 @@ from django.db.models import Func, F
 
 from pykol.models.base import Etudiant
 from pykol.models.colles import Colle
-from pykol.forms.colles import ColleNoteFormSet
+from pykol.forms.colles import ColleNoteFormSet, ColleModifierForm
 
 """
 Vues de gestion des colles destinées aux colleurs.
@@ -65,6 +65,7 @@ class ColleDetailView(LoginRequiredMixin, ColleVisibleMixin, \
 	def get_context_data(self, **kwargs):
 		context = super().get_context_data(**kwargs)
 		colle = self.get_object()
+
 		context['anciens_details'] = \
 				colle.colledetails_set.filter(actif=False)
 		context['supprimer_perm'] = \
@@ -72,6 +73,10 @@ class ColleDetailView(LoginRequiredMixin, ColleVisibleMixin, \
 						colle.classe)
 		context['noter_perm'] = \
 				self.request.user.professeur == colle.colleur
+
+		if self.request.user.has_perm('pykol.change_colle', colle):
+			context['deplacer_form'] = ColleModifierForm(colle=colle)
+
 		return context
 
 colle_detail = ColleDetailView.as_view()
@@ -131,7 +136,30 @@ def colle_deplacer(request, pk):
 	Vue qui permet de modifier les détails d'une colle (date, lieu,
 	etc.)
 	"""
-	pass
+	colle = get_object_or_404(Colle, pk=pk)
+
+	if not request.user.has_perm('pykol.change_colle', colle):
+		raise PermissionDenied
+
+	if request.method == 'POST':
+		form = ColleModifierForm(request.POST, colle=colle)
+		if form.is_valid():
+			etudiants = form.cleaned_data.get('etudiants').all()
+			if not etudiants:
+				etudiants = []
+
+			colle.ajout_details(
+				horaire=form.cleaned_data.get('horaire'),
+				salle=form.cleaned_data.get('salle'),
+				colleur=form.cleaned_data.get('colleur'),
+				etudiants=etudiants,
+			)
+			return redirect('colle_detail', colle.pk)
+	else:
+		form = ColleModifierForm(colle=colle)
+
+	return render(request, 'pykol/colles/deplacer.html', context={
+		'colle': colle, 'form': form,})
 
 @login_required
 def colle_annuler(request, pk):

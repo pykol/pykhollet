@@ -1,10 +1,10 @@
-{% extends "pykol/base.html" %}
-{% block content %}
-<h2>Création d'une colle
-<small>{{ classe }} − {{ classe.annee }}</small>
-</h2>
-
-<form action="" method="post" class="form_cree_colle">
+<form method="post" action="{% url 'colle_deplacer' colle.pk %}">
+  <p>Vous pouvez modifier les détails de la colle en remplissant les
+  champs suivants. Remplissez uniquement les champs que vous souhaitez
+  modifier, le reste sera recopié.</p>
+  <p>En revanche, la salle de colle sera effacée si vous changez
+  l'horaire de la colle. Vous pourrez renseigner la salle plus tard
+  quand vous aurez obtenu une réservation auprès de la direction.</p>
   {% csrf_token %}
 
   {{ form.non_field_errors }}
@@ -17,36 +17,12 @@
         <td>{{ form.colleur }}{{ form.colleur.errors }}</td>
       </tr>
       <tr>
-        <th>{{ form.enseignement.label_tag }}</th>
-        <td>{{ form.enseignement }}{{ form.enseignement.errors }}</td>
-      </tr>
-      <tr>
         <th>{{ form.salle.label_tag }}</th>
         <td>{{ form.salle }}{{ form.salle.errors }}</td>
       </tr>
-    </table>
-  </fieldset>
-
-  <fieldset>
-    <legend>Horaire</legend>
-    <p>Indiquez l'horaire de la colle :
-    <ul>
-      <li>soit en remplissant le champ {{ form.horaire.name }} ;</li>
-      <li>soit en indiquant la semaine et le créneau de colle.</li>
-    </ul>
-    <table>
       <tr>
-        <th colspan="2">{{ form.horaire.label_tag }}</th>
+        <th>{{ form.horaire.label_tag }}</th>
         <td>{{ form.horaire }}{{ form.horaire.errors }}</td>
-      </tr>
-      <tr>
-        <th rowspan="2">Par créneau</th>
-        <th>{{ form.creneau.label_tag }}</th>
-        <td>{{ form.creneau }}{{ form.creneau.errors }}</td>
-      </tr>
-      <tr>
-        <th>{{ form.semaine.label_tag }}</th>
-        <td>{{ form.semaine }}{{ form.semaine.errors }}</td>
       </tr>
     </table>
   </fieldset>
@@ -56,6 +32,9 @@
     <p>Choisissez la liste des étudiants participant à la colle, soit en
     sélectionnant un trinôme de la classe déjà existant, soit en cochant
     explicitement les étudiants.</p>
+    <p>Si vous n'indiquez rien dans cette partie, le groupe d'étudiants
+    ne sera tout simplement pas modifié par rapport au groupe
+    actuel.</p>
     <table>
       <tr>
         <th>{{ form.trinome.label_tag }}</th>
@@ -67,7 +46,5 @@
       </tr>
     </table>
   </fieldset>
-
-  <input type="submit" value="Enregister">
+  <p><input type="submit" value="Modifier la colle"></p>
 </form>
-{% endblock %}

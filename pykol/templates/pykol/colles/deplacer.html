@@ -1,0 +1,5 @@
+{% extends 'pykol/base.html' %}
+{% block content %}
+<h2>Modification de la colle du {{ colle.details.horaire }}{% if colle.semaine %} − {{ colle.semaine }}{% endif %}</h2>
+{% include 'pykol/colles/deplacer_generic.html' %}
+{% endblock %}

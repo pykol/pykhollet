@@ -2,57 +2,68 @@
 {% block content %}
 <h2>Colle du {{ colle.details.horaire }}{% if colle.semaine %} − {{ colle.semaine }}{% endif %}</h2>
 
-<table>
-  <tr>
-    <th>Trinôme</th>
-    <td>{{ colle.groupe }}</td>
-    <th>Étudiants</th>
-    <td>{{ colle.details.eleves.all|join:", " }}</td>
-  </tr>
-  <tr>
-    <th>Horaire</th>
-    <td>{{ colle.details.horaire }}</td>
-    <th>Salle</th>
-    <td>{{ colle.details.salle }}</td>
-  </tr>
-  <tr>
-    <th>Colleur</th>
-    <td>{{ colle.details.colleur }}</td>
-    <td colspan="2">{{ colle.matiere }}</td>
-  </tr>
-  <tr>
-    <td colspan="4">
-      {% if noter_perm %}
-      <a class="btn btn-primary" href="{% url 'colle_declarer' colle.pk %}">{% if colle.mode == colle.MODE_INTERROGATION %}Noter{% else %}Déclarer{% endif %}</a>
-      {% endif %}
-      {% if supprimer_perm %}
-      <a class="btn btn-danger" href="{% url 'colle_supprimer' colle.pk %}">Supprimer</a>
-      {% endif %}
-    </td>
-  </tr>
-</table>
-
-{% if anciens_details %}
-<h3>Historique</h3>
-<table>
-  <thead>
+<section>
+  <table>
+    <tr>
+      <th>Trinôme</th>
+      <td>{{ colle.groupe }}</td>
+      <th>Étudiants</th>
+      <td>{{ colle.details.eleves.all|join:", " }}</td>
+    </tr>
+    <tr>
+      <th>Horaire</th>
+      <td>{{ colle.details.horaire }}</td>
+      <th>Salle</th>
+      <td>{{ colle.details.salle }}</td>
+    </tr>
     <tr>
       <th>Colleur</th>
-      <th>Horaire</th>
-      <th>Salle</th>
-      <th>Étudiants</th>
+      <td>{{ colle.details.colleur }}</td>
+      <td colspan="2">{{ colle.matiere }}</td>
     </tr>
-  </thead>
-  <tbody>
-    {% for detail in anciens_details %}
     <tr>
-      <td>{{ detail.colleur }}</td>
-      <td>{{ detail.horaire }}</td>
-      <td>{{ detail.salle }}</td>
-      <td>{{ detail.eleves.all|join:", " }}</td>
-    {% endfor %}
-  </tbody>
-</table>
+      <td colspan="4">
+        {% if noter_perm %}
+        <a class="btn btn-primary" href="{% url 'colle_declarer' colle.pk %}">{% if colle.mode == colle.MODE_INTERROGATION %}Noter{% else %}Déclarer{% endif %}</a>
+        {% endif %}
+        {% if supprimer_perm %}
+        <a class="btn btn-danger" href="{% url 'colle_supprimer' colle.pk %}">Supprimer</a>
+        {% endif %}
+      </td>
+    </tr>
+  </table>
+</section>
+
+{% if deplacer_form %}
+<section>
+  <h3>Modifier la colle</h3>
+  {% include 'pykol/colles/deplacer_generic.html' with form=deplacer_form %}
+</section>
+{% endif %}
+
+{% if anciens_details %}
+<section>
+  <h3>Historique</h3>
+  <table>
+    <thead>
+      <tr>
+        <th>Colleur</th>
+        <th>Horaire</th>
+        <th>Salle</th>
+        <th>Étudiants</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for detail in anciens_details %}
+      <tr>
+        <td>{{ detail.colleur }}</td>
+        <td>{{ detail.horaire }}</td>
+        <td>{{ detail.salle }}</td>
+        <td>{{ detail.eleves.all|join:", " }}</td>
+      {% endfor %}
+    </tbody>
+  </table>
+</section>
 {% endif %}
 
 {% endblock content %}

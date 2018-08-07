@@ -151,3 +151,7 @@ footer {
   border: 1px solid $x-panel-border;
   margin-bottom: 10px;
 }
+
+section {
+  @include x-panel;
+}

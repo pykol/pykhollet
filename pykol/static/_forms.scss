@@ -27,10 +27,6 @@ input[type="submit"] {
   }
 }
 
-form {
-  @include x-panel;
-}
-
 fieldset legend {
   @extend h3;
 }

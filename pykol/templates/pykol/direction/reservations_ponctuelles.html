@@ -1,0 +1,55 @@
+{% extends "pykol/base.html" %}
+{% block content %}
+<h2>Réservations de salles ponctuelles</h2>
+
+<section>
+  {% if colles %}
+  <form action="" method="post">
+    {% csrf_token %}
+    {{ formset.management_form }}
+    {{ formset.non_form_errors }}
+    <table class="formset form_direction_creneaux">
+      <thead>
+        <tr>
+          <th>Classe</th>
+          <th>Matière</th>
+          <th>Colleur</th>
+          <th>Horaire</th>
+          <th>Salle</th>
+        </tr>
+        {% if form.non_field_errors %}
+        <tr>
+          <td colspan="5">
+          {{ form.non_field_errors }}
+          </td>
+        </tr>
+        {% endif %}
+      </thead>
+      <tbody>
+        {% for form in formset %}
+        {% if form.errors %}
+        <tr>
+          <td colspan="6">
+            Le créneau suivant n'est pas valide.
+          </td>
+        </tr>
+        {% endif %}
+        <tr>
+          {% with colle=form.instance.colle %}
+          <td>{% for hidden in form.hidden_fields %}{{ hidden }}{% endfor %}{{ colle.classe }}</td>
+          <td>{{ colle.matiere }}</td>
+          <td>{{ form.instance.colleur }}</td>
+          <td>{{ form.instance.horaire }}</td>
+          <td>{{ form.salle }}{% if form.salle.errors %}<br>{{ form.salle.errors }}{% endif %}</td>
+          {% endwith %}
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  <input type="submit">
+  </form>
+  {% else %}
+  <p>Aucune colle à venir n'est en attente d'une réservation de salle.</p>
+  {% endif %}
+</section>
+{% endblock %}

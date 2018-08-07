@@ -22,7 +22,7 @@ from django import forms
 from django.utils import timezone
 
 from pykol.models.base import Professeur
-from pykol.models.colles import Colle, ColleNote, Trinome
+from pykol.models.colles import Colle, ColleNote, Trinome, ColleDetails
 from . import LabelledHiddenWidget
 
 class ColleNoteForm(forms.ModelForm):
@@ -72,3 +72,6 @@ class ColleModifierForm(forms.Form):
 
 		self.fields['trinome'].queryset = Trinome.objects.filter(dans_classe=colle.classe).order_by('nom')
 		self.fields['etudiants'].queryset = colle.classe.etudiants.order_by('last_name', 'first_name')
+
+ResaPonctuellesFormSet = forms.modelformset_factory(ColleDetails,
+		fields=('salle',), can_delete=False)

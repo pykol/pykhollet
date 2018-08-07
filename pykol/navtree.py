@@ -99,8 +99,8 @@ colloscopes = item(name="colloscope_home",
 			icon="stream"),
 		item(name="reservation_ponctuelle",
 			label="Réservations ponctuelles",
+			url="reservations_ponctuelles",
 			icon="calendar"),
-		# TODO entrées pour les classes
 	)
 )
 nav.register(colloscopes)

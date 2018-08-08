@@ -36,10 +36,10 @@ fieldset legend {
   display: inline-block;
   height: 34px;
   width: 100%;
+  line-height: 34px;
 
-  input {
-    display: inline;
-    width: calc(100% - 2em);
+  & > * {
+    vertical-align: bottom;
   }
 }
 .custom-combobox-toggle {
@@ -48,10 +48,15 @@ fieldset legend {
   bottom: 0;
   margin-left: -1px;
   padding: 0;
+  width: 2rem;
+  height: 34px;
+  display: inline;
 }
 .custom-combobox-input {
   margin: 0;
   padding: 5px 10px;
+  display: inline;
+  width: calc(100% - 2rem);
 }
 
 .formset {

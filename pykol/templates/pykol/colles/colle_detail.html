@@ -23,18 +23,15 @@
     </tr>
     <tr>
       <td colspan="4">
-        {% if noter_perm %}
+        {% if perm_colle.noter %}
         <a class="btn btn-primary" href="{% url 'colle_declarer' colle.pk %}">{% if colle.mode == colle.MODE_INTERROGATION %}Noter{% else %}Déclarer{% endif %}</a>
-        {% endif %}
-        {% if supprimer_perm %}
-        <a class="btn btn-danger" href="{% url 'colle_supprimer' colle.pk %}">Supprimer</a>
         {% endif %}
       </td>
     </tr>
   </table>
 </section>
 
-{% if deplacer_form %}
+{% if perm_colle.deplacer %}
 <section>
   <h3>Modifier la colle</h3>
   {% include 'pykol/colles/deplacer_generic.html' with form=deplacer_form %}

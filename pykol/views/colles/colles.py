@@ -28,6 +28,7 @@ from django.db.models import Func, F
 from pykol.models.base import Etudiant
 from pykol.models.colles import Colle
 from pykol.forms.colles import ColleNoteFormSet, ColleModifierForm
+from pykol.lib.auth import colle_user_permissions
 
 """
 Vues de gestion des colles destinées aux colleurs.
@@ -68,11 +69,9 @@ class ColleDetailView(LoginRequiredMixin, ColleVisibleMixin, \
 
 		context['anciens_details'] = \
 				colle.colledetails_set.filter(actif=False)
-		context['supprimer_perm'] = \
-				self.request.user.has_perm('pykol.change_colle',
-						colle.classe)
-		context['noter_perm'] = \
-				self.request.user == colle.colleur.user_ptr
+
+		context['perm_colle'] = \
+				colle_user_permissions(self.request.user, colle)
 
 		if self.request.user.has_perm('pykol.change_colle', colle):
 			context['deplacer_form'] = ColleModifierForm(colle=colle)

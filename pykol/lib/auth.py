@@ -18,6 +18,8 @@
 
 """Fonctions utilitaires pour gérer les permissions des utilisateurs"""
 
+from collections import namedtuple
+
 from django.contrib.auth.backends import ModelBackend
 from django.contrib.auth.decorators import user_passes_test
 
@@ -80,3 +82,20 @@ def professeur_dans(user, classe):
 		return classe in user.professeur.mes_classes()
 	except:
 		return False
+
+
+# Résumé des permissions accordées à un utilisateur sur une colle donnée
+CollePermissions = namedtuple('CollePermissions', (
+	'supprimer', 'annuler', 'deplacer', 'noter',
+	))
+def colle_user_permissions(user, colle):
+	supprimer_perm = user.has_perm('pykol.change_colle', colle.classe)
+	noter_perm = user == colle.colleur.user_ptr
+	deplacer_perm = user.has_perm('pykol.change_colle', colle.classe)
+	annuler_perm = user.has_perm('pykol.change_colle', colle.classe)
+
+	return CollePermissions(
+			supprimer=supprimer_perm,
+			annuler=annuler_perm,
+			deplacer=deplacer_perm,
+			noter=noter_perm)

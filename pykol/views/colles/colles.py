@@ -72,7 +72,7 @@ class ColleDetailView(LoginRequiredMixin, ColleVisibleMixin, \
 				self.request.user.has_perm('pykol.change_colle',
 						colle.classe)
 		context['noter_perm'] = \
-				self.request.user.professeur == colle.colleur
+				self.request.user == colle.colleur.user_ptr
 
 		if self.request.user.has_perm('pykol.change_colle', colle):
 			context['deplacer_form'] = ColleModifierForm(colle=colle)

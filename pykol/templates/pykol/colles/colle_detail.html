@@ -63,4 +63,31 @@
 </section>
 {% endif %}
 
+{% if perm_colle.annuler or perm_colle.supprimer %}
+<section>
+  <h3>Annulation</h3>
+  <p>S'il n'est pas possible d'effectuer une colle, vous pouvez
+  l'annuler. La colle ne disparait pas du colloscope, mais les élèves ne
+  sont plus convoqués pour cette heure.</p>
+  {% if perm_colle.annuler %}
+  <form method="post" action="{% url 'colle_annuler' colle.pk %}">
+    {% csrf_token %}
+    <button type="submit" class="btn btn-warning">Annuler la colle</button>
+  </form>
+  {% endif %}
+
+  <p>Si une colle n'aurait jamais dû être programmée dans le colloscope,
+  vous pouvez également la supprimer définitivement. Il n'est pas
+  possible de supprimer une colle qui a été effectuée par le
+  colleur.</p>
+  {% if perm_colle.supprimer %}
+  <form method="post" action="{% url 'colle_supprimer' colle.pk %}">
+    {% csrf_token %}
+    <button type="submit" class="btn btn-danger">Supprimer la colle</button>
+  </form>
+  {% endif %}
+
+</section>
+{% endif %}
+
 {% endblock content %}

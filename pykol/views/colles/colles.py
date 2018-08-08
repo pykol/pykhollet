@@ -24,6 +24,8 @@ from django.contrib.auth.mixins import LoginRequiredMixin, \
 		UserPassesTestMixin
 from django.utils import timezone
 from django.db.models import Func, F
+from django.views.decorators.http import require_POST
+from django.contrib import messages
 
 from pykol.models.base import Etudiant
 from pykol.models.colles import Colle
@@ -161,6 +163,7 @@ def colle_deplacer(request, pk):
 		'colle': colle, 'form': form,})
 
 @login_required
+@require_POST
 def colle_annuler(request, pk):
 	"""
 	Annulation d'une colle par le colleur

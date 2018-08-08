@@ -27,6 +27,7 @@ colles_urlpatterns = [
 	path('<int:pk>/', views.colles.colle_detail, name='colle_detail'),
 	path('<int:pk>/noter', views.colles.colle_declarer, name='colle_declarer'),
 	path('<int:pk>/supprimer', views.colles.colle_supprimer, name='colle_supprimer'),
+	path('<int:pk>/annuler', views.colles.colle_annuler, name='colle_annuler'),
 	path('<int:pk>/deplacer', views.colles.colle_deplacer, name='colle_deplacer'),
 	path('<slug:slug>/', views.colles.colloscope, name='colloscope'),
 	path('<slug:slug>/roulement/creer', views.colloscope.roulement_creer, name='roulement_creer'),

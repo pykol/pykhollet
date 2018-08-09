@@ -128,22 +128,20 @@ fieldset legend {
   }
 }
 
-.form_choix_etudiants {
-  ul#id_etudiants {
-    display: flex;
-    flex-wrap: wrap;
+.form_choix_etudiants ul#id_etudiants, .form_radio_ligne ul {
+  display: flex;
+  flex-wrap: wrap;
 
-    li {
-      &:before {
-        content: none;
-      }
-      input {
-        display: inline;
-        width: auto;
-        height: auto;
-      }
-      display: inline;
-      width: 18rem;
+  li {
+    &:before {
+      content: none;
     }
+    input {
+      display: inline;
+      width: auto;
+      height: auto;
+    }
+    display: inline;
+    width: 18rem;
   }
 }

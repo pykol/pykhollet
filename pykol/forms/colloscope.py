@@ -36,6 +36,10 @@ class ColleForm(forms.Form):
 				'first_name'))
 	salle = forms.CharField(max_length=30, required=False)
 	enseignement = forms.ModelChoiceField(queryset=None)
+	mode = forms.TypedChoiceField(label="Mode de déroulement",
+			choices=Colle.MODE_CHOICES,
+			initial=Colle.MODE_INTERROGATION, coerce=int,
+			widget=forms.RadioSelect())
 
 	creneau = forms.ModelChoiceField(queryset=None, required=False)
 	semaine = forms.ModelChoiceField(queryset=None, required=False)

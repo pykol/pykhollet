@@ -7,10 +7,15 @@
 <form action="" method="post" class="form_cree_colle">
   {% csrf_token %}
 
-  {{ form.non_field_errors }}
+  {% if form.non_field_errors %}
+  <section>
+    <h3>Erreurs</h3>
+    {{ form.non_field_errors }}
+  </section>
+  {% endif %}
 
   <fieldset>
-    <legend>Informations générales</legend>
+    <h3>Informations générales</h3>
     <table>
       <tr>
         <th>{{ form.colleur.label_tag }}</th>
@@ -24,11 +29,15 @@
         <th>{{ form.salle.label_tag }}</th>
         <td>{{ form.salle }}{{ form.salle.errors }}</td>
       </tr>
+      <tr>
+        <th>{{ form.mode.label_tag }}</th>
+        <td class="form_radio_ligne">{{ form.mode }}{{ form.mode.errors }}</td>
+      </tr>
     </table>
   </fieldset>
 
   <fieldset>
-    <legend>Horaire</legend>
+    <h3>Horaire</h3>
     <p>Indiquez l'horaire de la colle :
     <ul>
       <li>soit en remplissant le champ {{ form.horaire.name }} ;</li>
@@ -52,7 +61,7 @@
   </fieldset>
 
   <fieldset class="form_choix_etudiants">
-    <legend>Étudiants</legend>
+    <h3>Étudiants</h3>
     <p>Choisissez la liste des étudiants participant à la colle, soit en
     sélectionnant un trinôme de la classe déjà existant, soit en cochant
     explicitement les étudiants.</p>

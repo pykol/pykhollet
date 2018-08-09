@@ -287,7 +287,8 @@ def colle_creer(request, slug):
 				classe=classe,
 				matiere=colleenseignement.enseignement.matiere,
 				groupe=form.cleaned_data['trinome'],
-				duree=colleenseignement.duree)
+				duree=colleenseignement.duree,
+				mode=forms.cleaned_data['mode'])
 
 			# La matière est connue, on vérifie que l'utilisateur peut
 			# effectivement créer la colle.

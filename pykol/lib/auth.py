@@ -105,9 +105,12 @@ class PykolBackend(ModelBackend):
 
 			# Le colleur peut apporter des modifications à ses colles et
 			# les noter.
-			if user_obj == obj.colleur.user_ptr:
-				perms.update(('pykol.change_colle',
-					'pykol.add_collenote', 'pykol.add_colledetails'))
+			try:
+				if user_obj == obj.colleur.user_ptr:
+					perms.update(('pykol.change_colle',
+						'pykol.add_collenote', 'pykol.add_colledetails'))
+			except:
+				pass
 
 			return perms
 

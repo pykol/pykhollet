@@ -27,8 +27,12 @@ input[type="submit"] {
   }
 }
 
-fieldset legend {
-  @extend h3;
+fieldset {
+  @include x-panel;
+
+  legend {
+    @extend h3;
+  }
 }
 
 .custom-combobox {

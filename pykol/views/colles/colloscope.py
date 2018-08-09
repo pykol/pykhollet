@@ -288,11 +288,11 @@ def colle_creer(request, slug):
 				matiere=colleenseignement.enseignement.matiere,
 				groupe=form.cleaned_data['trinome'],
 				duree=colleenseignement.duree,
-				mode=forms.cleaned_data['mode'])
+				mode=form.cleaned_data['mode'])
 
 			# La matière est connue, on vérifie que l'utilisateur peut
 			# effectivement créer la colle.
-			if not request.user.has_per('pykol.add_colle', colle):
+			if not request.user.has_perm('pykol.add_colle', colle):
 				raise PermissionDenied
 
 			colle.save()

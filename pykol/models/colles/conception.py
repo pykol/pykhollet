@@ -21,6 +21,7 @@ import datetime
 from django.db import models, transaction
 from django.db.models import Q, F
 from django.core.exceptions import ValidationError
+from django.utils.timezone import make_aware
 
 from pykol.models.base import Classe, Professeur, Matiere, Groupe, \
 		Enseignement
@@ -50,8 +51,7 @@ class Semaine(models.Model):
 		heure) de début d'une colle placée sur le créneau donné dans
 		la semaine.
 		"""
-		# TODO timezone ?
-		horaire = datetime.datetime.combine(self.debut, creneau.debut)
+		horaire = make_aware(datetime.datetime.combine(self.debut, creneau.debut))
 		# On trouve ensuite le premier jour de la semaine qui est égal à
 		# creneau.jour
 		delta = (7 + creneau.jour - horaire.isoweekday()) % 7

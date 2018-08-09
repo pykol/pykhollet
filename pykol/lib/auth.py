@@ -20,6 +20,7 @@
 
 from collections import namedtuple
 
+from django.db.models import F
 from django.contrib.auth.backends import ModelBackend
 from django.contrib.auth.decorators import user_passes_test
 
@@ -36,7 +37,7 @@ def perm_colloscope(professeur, classe, matiere):
 	# Requête de base pour chercher la permission
 	# pykol.change_colloscope sur la classe pour ce professeur
 	colloscope_base_qs = ColloscopePermission.objects.filter(
-			user=user_obj,
+			user=professeur,
 			classe=classe,
 			droit__content_type__app_label='pykol',
 			droit__codename='change_colloscope')
@@ -50,8 +51,8 @@ def perm_colloscope(professeur, classe, matiere):
 	# est applicable à une matière enseignée par le professeur
 	colloscope_matiere_qs = colloscope_base_qs.filter(
 			matiere_seulement=True,
-			classe__enseignements__professeurs=user_obj,
-			classe__enseignements__matiere=matiere_colle)
+			classe__enseignements__professeurs=F('user'),
+			classe__enseignements__matiere=matiere)
 
 	return colloscope_global_qs.exists() or colloscope_matiere_qs.exists()
 

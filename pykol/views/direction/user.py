@@ -60,7 +60,7 @@ def direction_edit_user(request, pk):
 			perm_form = None
 
 		need_redirect = False
-		for f in (form, prof_form, etudiant_form, perm_form):
+		for f in (form, perm_form):
 			if f is not None and f.is_valid():
 				f.save()
 				need_redirect = True

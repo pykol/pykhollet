@@ -128,7 +128,7 @@ nav {
   }
 }
 
-#content {
+.content {
   @include make-container;
   color: $content-color;
   background: $content-background;

@@ -65,7 +65,6 @@ classes_urlpatterns = [
 
 etudiants_urlpatterns = [
     path('<int:pk>/', views.EtudiantDetailView.as_view(), name='etudiant'),
-    path('<int:pk>/resultats', views.colles.resultats.etudiant_resultats, name='classe_etudiant_resultats'),
 ]
 
 accounts_urlpatterns = [

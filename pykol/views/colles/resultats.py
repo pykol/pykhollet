@@ -20,7 +20,7 @@
 Vues d'affichage des résultats de colles des étudiants.
 """
 
-from collections import defaultdict, OrderedDict, namedtuple
+from collections import defaultdict, OrderedDict
 
 from django.core.exceptions import PermissionDenied
 from django.shortcuts import render, get_object_or_404
@@ -134,61 +134,3 @@ def classe_resultats(request, slug):
 	}
 
 	return render(request, 'pykol/colles/classe_resultats.html', context=context)
-
-
-@login_required
-def etudiant_resultats(request, pk):
-	"""
-	Affichage des notes obtenues par un étudiant donné.
-
-	L'accès n'est autorisé qu'aux professeurs de la classe ou qu'à
-	l'étudiant lui-même.
-	"""
-	etudiant = get_object_or_404(Etudiant, pk=pk)
-
-	if not (etudiant.user_ptr == request.user or
-			professeur_dans(request.user, etudiant.classe)):
-		raise PermissionDenied
-
-	# Récupération de la liste des matières, selon le profil de
-	# l'utilisateur (professeur ou étudiant)
-	try:
-		matieres = list(Matiere.objects.filter(
-			enseignement__classe__etudiant = etudiant,
-			enseignement__service__professeur = request.user
-		))
-	except:
-		try:
-			matieres = list(Matiere.objects.filter(etudiant=request.user))
-		except:
-			matieres = []
-
-	semaines = Semaine.objects.filter(classe__etudiant=etudiant).order_by('debut')
-
-	collenotes = ColleNote.objects.filter(eleve=etudiant, colle__matiere__in=matieres)
-
-	NotesMatiere = namedtuple('NotesMatiere', ('moyenne', 'semaines'))
-	notes = defaultdict(lambda: NotesMatiere(moyenne=Moyenne(),
-		semaines=OrderedDict([(semaine, []) for semaine in semaines])))
-
-	for collenote in collenotes:
-		matiere = collenote.colle.matiere
-
-		# notes[matiere].moyenne += collenote.note
-
-		if collenote.colle.semaine:
-			semaine = collenote.colle.semaine
-		else:
-			for sem in semaines:
-				if sem.debut <= collenote.horaire <= sem.fin:
-					semaine = sem
-		notes[matiere].semaines[semaine].append(collenote.note)
-
-	context = {
-		'notes': dict(notes),
-		'semaines': semaines,
-		'etudiant': etudiant,
-	}
-
-	return render(request, 'pykol/colles/etudiant_resultats.html',
-			context=context)

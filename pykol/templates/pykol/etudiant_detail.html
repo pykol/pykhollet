@@ -23,9 +23,24 @@
 
 <section>
   <h3>Notes par matière </h3>
-  <ul>
-    <li><a href="{% url 'classe_etudiant_resultats' etudiant.pk %}">Notes</a></li>
-  </ul>
+  <table>
+    <tr>
+      <th>Matière</th>
+      <th>Moyenne</th>
+      {% for semaine in semaines %}
+      <th>{{ semaine.numero }}</th>
+      {% endfor %}
+    </tr>
+    {% for matiere, notes_matiere in notes.items %}
+    <tr>
+      <td>{{ matiere }}</td>
+      <td>{{ notes_matiere.moyenne }}</td>
+      {% for notes in notes_matiere.semaines.values %}
+      <td>{{ notes|join:", " }}</td>
+      {% endfor %}
+    </tr>
+    {% endfor %}
+  </table>
 </section>
 
 {% endblock %}

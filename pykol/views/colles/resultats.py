@@ -20,7 +20,7 @@
 Vues d'affichage des résultats de colles des étudiants.
 """
 
-from collections import defaultdict, OrderedDict
+from collections import defaultdict, OrderedDict, namedtuple
 
 from django.core.exceptions import PermissionDenied
 from django.shortcuts import render, get_object_or_404
@@ -136,7 +136,6 @@ def classe_resultats(request, slug):
 	return render(request, 'pykol/colles/classe_resultats.html', context=context)
 
 
-
 @login_required
 def etudiant_resultats(request, pk):
 	"""
@@ -147,50 +146,48 @@ def etudiant_resultats(request, pk):
 	"""
 	etudiant = get_object_or_404(Etudiant, pk=pk)
 
-	if not (etudiant == request.user or
+	if not (etudiant.user_ptr == request.user or
 			professeur_dans(request.user, etudiant.classe)):
 		raise PermissionDenied
 
+	# Récupération de la liste des matières, selon le profil de
+	# l'utilisateur (professeur ou étudiant)
 	try:
-		matieres = Matiere.objects.filter(
+		matieres = list(Matiere.objects.filter(
 			enseignement__classe__etudiant = etudiant,
 			enseignement__service__professeur = request.user
-		)
+		))
 	except:
 		try:
-			matieres = Matiere.objects.filter(etudiant = user.request)
+			matieres = list(Matiere.objects.filter(etudiant=request.user))
 		except:
 			matieres = []
 
-	semaines = Semaine.objects.filter(classe__etudiant = etudiant)
-	notesParMatiere = {}
-	moyennesParMatiere = {}
-	for matiere in matieres:
-		notesParMatiere[matiere] = defaultdict(list)
+	semaines = Semaine.objects.filter(classe__etudiant=etudiant).order_by('debut')
 
-		colleNoteEtudiant_s = ColleNote.objects.filter(
-			colle__matiere = matiere,
-			eleve = etudiant
-		)
-		for colleNoteEtudiant in colleNoteEtudiant_s:
-			# quelle semaine ?
-			if colleNoteEtudiant.colle.semaine:
-				semaineColle = colleNoteEtudiant.colle.semaine
-			else:
-				horaire = colleNoteEtudiant.horaire
-				for semaine in semaines:
-					if semaine.debut <= horaire <= semaine.fin:
-						semaineColle = semaine
+	collenotes = ColleNote.objects.filter(eleve=etudiant, colle__matiere__in=matieres)
 
-			notesParMatiere[matiere][semaineColle].append(colleNoteEtudiant.note)
-		notesParMatiere[matiere] = dict(notesParMatiere[matiere])
+	NotesMatiere = namedtuple('NotesMatiere', ('moyenne', 'semaines'))
+	notes = defaultdict(lambda: NotesMatiere(moyenne=Moyenne(),
+		semaines=OrderedDict([(semaine, []) for semaine in semaines])))
 
-		moyennesParMatiere[matiere] = calculerMoyennes(notesParMatiere[matiere])
+	for collenote in collenotes:
+		matiere = collenote.colle.matiere
+
+		# notes[matiere].moyenne += collenote.note
+
+		if collenote.colle.semaine:
+			semaine = collenote.colle.semaine
+		else:
+			for sem in semaines:
+				if sem.debut <= collenote.horaire <= sem.fin:
+					semaine = sem
+		notes[matiere].semaines[semaine].append(collenote.note)
 
 	context = {
-		'matieres':notesParMatiere,
-		'semaines':semaines,
-		'moyennesParMatiere':moyennesParMatiere
+		'notes': dict(notes),
+		'semaines': semaines,
+		'etudiant': etudiant,
 	}
 
 	return render(request, 'pykol/colles/etudiant_resultats.html',

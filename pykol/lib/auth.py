@@ -86,7 +86,7 @@ class PykolBackend(ModelBackend):
 			# éventuellement d'ajouter des créneaux
 			if 'pykol.change_colloscope' in perms:
 				perms.update(('pykol.view_colloscope',
-					'pykol.add_creneau'))
+					'pykol.add_creneau', 'pykol.add_colle'))
 
 			return perms
 

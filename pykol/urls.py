@@ -29,12 +29,12 @@ colles_urlpatterns = [
 	path('<int:pk>/supprimer', views.colles.colle_supprimer, name='colle_supprimer'),
 	path('<int:pk>/annuler', views.colles.colle_annuler, name='colle_annuler'),
 	path('<int:pk>/deplacer', views.colles.colle_deplacer, name='colle_deplacer'),
-	path('<slug:slug>/', views.colles.colloscope, name='colloscope'),
 	path('<slug:slug>/roulement/creer', views.colloscope.roulement_creer, name='roulement_creer'),
 ]
 
 colloscopes_urlpatterns = [
 	path('', views.colles.colloscope_home, name='colloscope_home'),
+	path('<slug:slug>/', views.colles.colloscope, name='colloscope'),
 	path('<slug:slug>/trinomes', views.colles.trinomes, name='colloscope_trinomes'),
 	path('<slug:slug>/semaines', views.colles.semaines, name='colloscope_semaines'),
 	path('<slug:slug>/creneaux', views.colles.creneaux, name='colloscope_creneaux'),

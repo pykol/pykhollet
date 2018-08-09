@@ -46,8 +46,7 @@ fichier colloscope.py
 def colle_visible_par(user, colle):
 	"""Renvoie True si et seulement si l'utilisateur a le droit de
 	consulter les détails de la colle."""
-	return user == colle.colleur or \
-		user.has_perm('pykol.change_colle', colle.classe) or \
+	return user.has_perm('pykol.change_colle', colle) or \
 		user in colle.classe.profs_de(colle.matiere)
 
 class ColleVisibleMixin(generic.detail.SingleObjectMixin,
@@ -91,7 +90,7 @@ def colle_declarer(request, pk):
 	colle = get_object_or_404(Colle, pk=pk)
 
 	# Seul le colleur peut noter sa colle
-	if request.user.professeur != colle.details.colleur:
+	if not request.user.has_perm('pykol.add_collenote', colle):
 		raise PermissionDenied
 
 	# Les colles sous la forme de TD n'ont pas de notes, il suffit de

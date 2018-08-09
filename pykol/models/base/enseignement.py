@@ -237,7 +237,11 @@ class Classe(Groupe):
 
 	class Meta:
 		ordering = ['annee', 'niveau', 'nom']
-	
+		permissions = (
+			('change_colloscope', "Modification du colloscope de la classe"),
+			('view_colloscope', "Consultation du colloscope de la classe"),
+		)
+
 	def __str__(self):
 		return self.nom
 

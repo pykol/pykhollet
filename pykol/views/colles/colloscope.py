@@ -43,6 +43,9 @@ def colloscope(request, slug):
 	Affichage du colloscope complet d'une classe
 	"""
 	classe = get_object_or_404(Classe, slug=slug)
+	if not request.user.has_perm('pykol.view_colloscope', classe):
+		raise PermissionDenied
+
 	semaines = classe.semaine_set.order_by('debut')
 	creneaux = classe.creneau_set.order_by('matiere', 'jour', 'debut')
 	colles = classe.colle_set.all()
@@ -76,7 +79,7 @@ def colloscope(request, slug):
 @login_required
 def trinomes(request, slug):
 	classe = get_object_or_404(Classe, slug=slug)
-	if not request.user.has_perm('pykol.add_colle', classe):
+	if not request.user.has_perm('pykol.change_colloscope', classe):
 		raise PermissionDenied
 
 	trinomes = classe.trinomes
@@ -125,12 +128,11 @@ def trinomes(request, slug):
 @login_required
 def create_trinome(request, slug):
 	classe = get_object_or_404(Classe, slug=slug)
-	if not request.user.has_perm('pykol.add_colle', classe):
+	if not request.user.has_perm('pykol.change_colloscope', classe):
 		raise PermissionDenied
 
 	return render(request, 'pykol/base.html')
 
-#@object_permission_required(Classe, 'pykol.colloscope.complet', 'slug')
 @login_required
 def semaines(request, slug):
 	"""
@@ -145,7 +147,7 @@ def semaines(request, slug):
 	ou bien fournir un format pour générer automatiquement les numéros.
 	"""
 	classe = get_object_or_404(Classe, slug=slug)
-	if not request.user.has_perm('pykol.add_colle', classe):
+	if not request.user.has_perm('pykol.change_colloscope', classe):
 		raise PermissionDenied
 
 	try:
@@ -268,6 +270,10 @@ def semaines(request, slug):
 def colle_creer(request, slug):
 	"""Créer une colle dans une classe donnée"""
 	classe = get_object_or_404(Classe, slug=slug)
+
+	# On vérifie à priori que l'utilisateur a le droit de créer une
+	# colle dans la classe. Pour l'instant, il n'y a aucun moyen de
+	# tester si ce droit est accordé uniquement pour sa matière.
 	if not request.user.has_perm('pykol.add_colle', classe):
 		raise PermissionDenied
 
@@ -282,6 +288,12 @@ def colle_creer(request, slug):
 				matiere=colleenseignement.enseignement.matiere,
 				groupe=form.cleaned_data['trinome'],
 				duree=colleenseignement.duree)
+
+			# La matière est connue, on vérifie que l'utilisateur peut
+			# effectivement créer la colle.
+			if not request.user.has_per('pykol.add_colle', colle):
+				raise PermissionDenied
+
 			colle.save()
 
 			etudiants = form.cleaned_data['etudiants'] or \
@@ -308,7 +320,7 @@ def colle_creer(request, slug):
 def colle_supprimer(request, pk):
 	"""Supprimer une colle"""
 	colle = get_object_or_404(Colle, pk=pk)
-	if not request.user.has_perm('pykol.change_colle', colle.classe):
+	if not request.user.has_perm('pykol.delete_colle', colle.classe):
 		raise PermissionDenied
 
 	if request.method == 'POST':
@@ -335,7 +347,11 @@ def colle_supprimer(request, pk):
 def creneaux(request, slug):
 	"""Liste des créneaux de colles pour une classe"""
 	classe = get_object_or_404(Classe, slug=slug)
-	if not request.user.has_perm('pykol.add_colle', classe):
+
+	# On vérifie à priori que l'utilisateur possède la permission
+	# d'ajouter un créneau (sans savoir pour le moment si cette
+	# permission est restreinte à une matière ou non).
+	if not request.user.has_perm('pykol.add_creneau', classe):
 		raise PermissionDenied
 
 	creneaux_qs = Creneau.objects.filter(classe=classe).order_by('matiere',
@@ -349,8 +365,17 @@ def creneaux(request, slug):
 			creneaux = formset.save(commit=False)
 			for creneau in creneaux:
 				creneau.classe = classe
-				creneau.save()
+				# On vérifie que l'utilisateur a le droit de créer ce
+				# créneau.
+				# TODO signaler l'erreur en cas de refus
+				if request.user.has_perm('pykol.add_creneau', creneau):
+					creneau.save()
 			for creneau in formset.deleted_objects:
+				# On vérifie que l'utilisateur a le droit de supprimer
+				# ce créneau.
+				# TODO signaler l'erreur en cas de refus
+				if request.user.has_perm('pykol.delete_creneau', creneau):
+					creneau.save()
 				creneau.delete()
 
 			return redirect('colloscope_creneaux', slug=classe.slug)
@@ -383,7 +408,9 @@ def creneau_list_direction(request):
 @login_required
 def creneau_supprimer(request, pk):
 	"""Suppression d'un créneau de colle"""
-	if not request.user.has_perm('pykol.delete_creneau', classe):
+	creneau = get_object_or_404(Creneau, pk=pk)
+	if not request.user.has_perm('pykol.delete_creneau', creneau):
 		raise PermissionDenied
 
+	# TODO implémenter cette vue
 	pass

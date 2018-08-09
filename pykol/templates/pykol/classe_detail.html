@@ -3,7 +3,7 @@
 <h2>Détail de la classe {{ classe.nom }}</h2>
 
 <section>
-  {% if can_edit_colloscope %}
+  {% if perm_change_colloscope %}
   <h3>Gestion du colloscope</h3>
   <ul>
     <li><a href="{% url 'colloscope_semaines' classe.slug %}">Gestion des

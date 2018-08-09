@@ -21,5 +21,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 
 from pykol.models.base import Etudiant
 
+# TODO restreindre l'accès aux professeurs et colleurs qui ont
+# l'étudiant en classe, à l'étudiant lui-même et à la direction.
 class EtudiantDetailView(LoginRequiredMixin, generic.DetailView):
 	model = Etudiant

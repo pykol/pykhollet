@@ -34,7 +34,6 @@ from django.contrib.auth.models import Permission
 from django.contrib.contenttypes.models import ContentType
 
 from pykol.models.base import Classe
-from .colles import Colle
 
 class ColloscopePermission(models.Model):
 	"""Gestion des permissions d'édition des colloscopes
@@ -50,7 +49,7 @@ class ColloscopePermission(models.Model):
 	"""
 	def droit_choices():
 		return {'content_type':
-				ContentType.objects.get_for_model(Colle)}
+				ContentType.objects.get_for_model(Classe)}
 	user = models.ForeignKey(get_user_model(), on_delete=models.CASCADE,
 			verbose_name="utilisateur")
 	classe = models.ForeignKey(Classe, on_delete=models.CASCADE)

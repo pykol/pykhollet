@@ -36,7 +36,7 @@ from pykol.forms.colloscope import RoulementLigneFormSet, \
 def roulement_creer(request, slug):
 	classe = get_object_or_404(Classe, slug=slug)
 
-	if not request.user.has_perm('pykol.add_colle', classe):
+	if not request.user.has_perm('pykol.change_colloscope', classe):
 		raise PermissionDenied
 
 	roulement = Roulement(classe=classe)
@@ -47,7 +47,7 @@ def roulement_creer(request, slug):
 @login_required
 def roulement_editer(request, pk):
 	roulement = get_object_or_404(Roulement, pk=pk)
-	if not request.user.has_perm('pykol.add_colle', roulement.classe):
+	if not request.user.has_perm('pykol.change_colloscope', roulement.classe):
 		raise PermissionDenied
 
 	if request.method == 'POST':
@@ -71,7 +71,7 @@ def roulement_editer(request, pk):
 @login_required
 def roulement_application_creer(request, pk):
 	roulement = get_object_or_404(Roulement, pk=pk)
-	if not request.user.has_perm('pykol.add_colle', roulement.classe):
+	if not request.user.has_perm('pykol.change_colloscope', roulement.classe):
 		raise PermissionDenied
 
 	app = RoulementApplication(roulement=roulement)
@@ -82,7 +82,7 @@ def roulement_application_creer(request, pk):
 @login_required
 def roulement_application_editer(request, pk):
 	appli = get_object_or_404(RoulementApplication, pk=pk)
-	if not request.user.has_perm('pykol.add_colle', appli.roulement.classe):
+	if not request.user.has_perm('pykol.change_colloscope', appli.roulement.classe):
 		raise PermissionDenied
 
 	if request.method == 'POST':
@@ -114,7 +114,7 @@ def roulement_application_editer(request, pk):
 @login_required
 def roulement_generer_colles(request, pk):
 	roulement = get_object_or_404(Roulement, pk=pk)
-	if not request.user.has_perm('pykol.add_colle', roulement.classe):
+	if not request.user.has_perm('pykol.change_colloscope', roulement.classe):
 		raise PermissionDenied
 
 	roulement_lignes = roulement.lignes.all()

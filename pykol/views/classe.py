@@ -29,8 +29,8 @@ class ClasseDetailView(LoginRequiredMixin, generic.DetailView):
 		classe = self.get_object()
 		context['etudiant_list'] = classe.etudiant_set.order_by(
 				'last_name', 'first_name')
-		context['can_edit_colloscope'] = self.request.user.has_perm(
-				'pykol.add_colle',
+		context['perm_change_colloscope'] = self.request.user.has_perm(
+				'pykol.change_colloscope',
 				classe)
 		context['trinomes'] = classe.trinomes.order_by('nom')
 		return context

@@ -60,15 +60,16 @@ def classe_resultats(request, slug):
 		rangParEtudiant = defaultdict(lambda: '')
 		couplesEtudiantMoyenne = sorted(moyennesParEtudiant.items(),
 				key=lambda v:v[1], reverse=True)
-		noteCourante = couplesEtudiantMoyenne[0][1] # noteMax
-		rangCourant = 1 # pour la gestion des exaequo
-		idRang = 1
-		for (etudiant, moyenne) in couplesEtudiantMoyenne:
-			if moyenne < noteCourante:
-				noteCourante = moyenne
-				rangCourant = idRang
-			idRang += 1
-			rangParEtudiant[etudiant] = rangCourant
+		if couplesEtudiantMoyenne:
+			noteCourante = couplesEtudiantMoyenne[0][1] # noteMax
+			rangCourant = 1 # pour la gestion des exaequo
+			idRang = 1
+			for (etudiant, moyenne) in couplesEtudiantMoyenne:
+				if moyenne < noteCourante:
+					noteCourante = moyenne
+					rangCourant = idRang
+				idRang += 1
+				rangParEtudiant[etudiant] = rangCourant
 		return rangParEtudiant
 
 	classe = get_object_or_404(Classe, slug=slug)

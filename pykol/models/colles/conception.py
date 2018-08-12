@@ -98,8 +98,7 @@ class Creneau(models.Model):
 				semaine=semaine,
 				defaults={'classe': self.classe,
 					'matiere': self.matiere,
-					'groupe': trinome,
-					'duree': 'PT10M'})
+					'groupe': trinome})
 
 		colle.ajout_details(
 			horaire=semaine.horaire_creneau(self),

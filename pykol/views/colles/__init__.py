@@ -16,7 +16,7 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-from .colloscope import colloscope_home, colloscope
+from .colloscope import colloscope_home
 from .colloscope import creneaux, creneau_list_direction
 from .colloscope import colle_creer, colle_supprimer
 

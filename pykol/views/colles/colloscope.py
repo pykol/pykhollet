@@ -36,45 +36,6 @@ def colloscope_home(request):
 	return render(request, 'pykol/base.html')
 
 @login_required
-def colloscope(request, slug):
-	"""
-	Affichage du colloscope complet d'une classe
-	"""
-	classe = get_object_or_404(Classe, slug=slug)
-	if not request.user.has_perm('pykol.view_colloscope', classe):
-		raise PermissionDenied
-
-	semaines = classe.semaine_set.order_by('debut')
-	creneaux = classe.creneau_set.order_by('matiere', 'jour', 'debut')
-	colles = classe.colle_set.all()
-
-	colloscope = defaultdict(OrderedDict)
-	for creneau in creneaux:
-		colloscope[creneau.matiere][creneau] = OrderedDict([
-				(semaine, []) for semaine in semaines])
-
-	autres_colles = []
-	for colle in colles:
-		if colle.creneau is not None and colle.semaine is not None:
-			colloscope[colle.matiere][colle.creneau][colle.semaine].append(colle)
-		else:
-			autres_colles.append(colle)
-
-	perm_creation = request.user.has_perm('pykol.add_colle', classe)
-	# La conversion de colloscope en dict est obligatoire, car les
-	# gabarits Django ne peuvent pas itérer sur les defaultdict
-	# facilement : l'appel colloscope.items est d'abord converti en
-	# colloscope['items'] et non en colloscope.items().
-	return render(request, 'pykol/colles/colloscope.html',
-			context={
-				'classe': classe,
-				'semaines': semaines,
-				'colloscope': dict(colloscope),
-				'perm_creation': perm_creation,
-				'autres_colles': autres_colles,
-				})
-
-@login_required
 def colle_creer(request, slug):
 	"""Créer une colle dans une classe donnée"""
 	classe = get_object_or_404(Classe, slug=slug)

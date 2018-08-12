@@ -34,7 +34,7 @@ colles_urlpatterns = [
 
 colloscopes_urlpatterns = [
 	path('', views.colles.colloscope_home, name='colloscope_home'),
-	path('<slug:slug>/', views.colles.colloscope, name='colloscope'),
+	path('<slug:slug>/', views.colloscope.colloscope, name='colloscope'),
 	path('<slug:slug>/trinomes', views.colloscope.trinomes, name='colloscope_trinomes'),
 	path('<slug:slug>/semaines', views.colloscope.semaines, name='colloscope_semaines'),
 	path('<slug:slug>/creneaux', views.colles.creneaux, name='colloscope_creneaux'),

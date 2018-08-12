@@ -18,3 +18,4 @@
 
 from .conception import *
 from .semaines import *
+from .trinomes import *

@@ -28,9 +28,8 @@ from django.contrib import messages
 
 from pykol.models.base import Classe
 from pykol.models.colles import Semaine, CollesReglages, Creneau, Colle
-from pykol.forms.colloscope import SemaineFormSet, \
-		SemaineNumeroGenerateurForm, \
-		CreneauFormSet, CreneauSansClasseFormSet, \
+from pykol.forms.colloscope import CreneauFormSet, \
+		CreneauSansClasseFormSet, \
 		TrinomeForm, ColleForm, ColleSupprimerForm
 
 @login_required
@@ -132,139 +131,6 @@ def create_trinome(request, slug):
 		raise PermissionDenied
 
 	return render(request, 'pykol/base.html')
-
-@login_required
-def semaines(request, slug):
-	"""
-	Vue qui permet de créer la liste des semaines de colle pour une
-	classe donnée.
-
-	Au lieu de saisir toutes les semaines une à une, cette vue propose
-	la liste de l'ensemble des semaines (démarrant les lundis) de
-	l'année scolaire en cours. Le professeur en charge du colloscope
-	peut alors sélectionner celles qui figureront effectivement dans le
-	colloscope de la classe. Il peut numéroter les semaines manuellement
-	ou bien fournir un format pour générer automatiquement les numéros.
-	"""
-	classe = get_object_or_404(Classe, slug=slug)
-	if not request.user.has_perm('pykol.change_colloscope', classe):
-		raise PermissionDenied
-
-	try:
-		colles_reglages = CollesReglages.objects.get(classe=classe)
-	except CollesReglages.DoesNotExist:
-		colles_reglages = CollesReglages(classe=classe)
-		colles_reglages.save()
-
-	formset_prefix = "semaines"
-
-	if request.method == 'POST':
-		formset = SemaineFormSet(request.POST, prefix=formset_prefix,
-					form_kwargs={'classe': classe})
-		genform = SemaineNumeroGenerateurForm(request.POST,
-				instance=colles_reglages, prefix="gen")
-
-		formset_data = formset.data.copy()
-
-		genform.save()
-
-		if genform.is_valid() and genform.cleaned_data['numeros_auto']:
-			formset.full_clean()
-
-			id_colle = 0
-
-			for id_semaine, form in enumerate(formset.forms):
-				for field in ('debut', 'fin', 'est_colle',):
-					formset_data['semaines-{}-{}'.format(id_semaine,
-						field)] = form.cleaned_data[field]
-
-				if form.cleaned_data['est_colle']:
-					formset_data['semaines-{}-numero'.format(id_semaine)] = \
-							genform.cleaned_data['numeros_format'].format(
-							numero=id_colle + 1,
-							quinzaine=id_colle // 2 + 1,
-							parite=(id_colle + 1) % 2,
-							parite_alpha='AB'[id_colle % 2])
-
-					id_colle += 1
-
-			for field in ('TOTAL_FORMS', 'INITIAL_FORMS',
-					'MAX_NUM_FORMS',):
-				field_name = '{}-{}'.format(formset_prefix, field)
-				formset_data[field_name] = formset.data[field_name]
-
-			formset = SemaineFormSet(formset_data,
-					prefix=formset_prefix,
-					form_kwargs={'classe': classe})
-
-		if formset.is_valid():
-			with transaction.atomic():
-				for id_semaine, data in enumerate(formset.cleaned_data):
-					if not data['est_colle']:
-						formset_data['{}-{}-numero'.format(formset_prefix,
-							id_semaine)] = None
-
-					if data['semaine'] and not data['est_colle']:
-						formset_data['{}-{}-semaine'.format(formset_prefix,
-							id_semaine)] = None
-						data['semaine'].delete()
-
-					if not data['semaine'] and data['est_colle']:
-						semaine = Semaine(debut=data['debut'],
-								fin=data['fin'],
-								numero=data['numero'],
-								classe=classe)
-						semaine.save()
-						formset_data['{}-{}-semaine'.format(formset_prefix,
-							id_semaine)] = semaine.pk
-
-					if data['semaine'] and data['est_colle']:
-						semaine = data['semaine']
-						semaine.debut = data['debut']
-						semaine.fin = data['fin']
-						semaine.numero = data['numero']
-						semaine.save()
-
-			formset = SemaineFormSet(formset_data,
-					prefix=formset_prefix,
-					form_kwargs={'classe': classe})
-
-	else:
-		annee = classe.annee
-		# Calcul des semaines de toute l'année
-		lundi = annee.debut - timedelta(days=annee.debut.weekday())
-		toutes_semaines = []
-		while lundi < annee.fin:
-			try:
-				semaine = Semaine.objects.get(debut=lundi)
-				toutes_semaines.append({
-					'debut': semaine.debut,
-					'fin': semaine.fin,
-					'est_colle': True,
-					'numero': semaine.numero,
-					'semaine': semaine,
-					})
-			except Semaine.DoesNotExist:
-				toutes_semaines.append({
-					'debut': lundi,
-					'fin': lundi + timedelta(days=6),
-					'est_colle': False,
-					'numero': None,
-					})
-			lundi += timedelta(days=7)
-		formset = SemaineFormSet(initial=toutes_semaines,
-				prefix=formset_prefix,
-				form_kwargs={'classe': classe})
-		genform = SemaineNumeroGenerateurForm(
-				instance=colles_reglages,
-				prefix="gen")
-
-	return render(request, 'pykol/colles/semaines.html',
-			context={
-				'classe': classe,
-				'formset': formset,
-				'genform': genform,
-				})
 
 @login_required
 def colle_creer(request, slug):

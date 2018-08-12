@@ -47,6 +47,33 @@
       {% endfor %}
     </table>
 
+    <h3>Numérotation des semaines</h3>
+    <p>Pour chaque semaine cochée dans la liste précédente, vous devez
+    indiquer un identifiant unique (souvent un numéro) pour cette
+    semaine. Si vous le souhaitez, il est possible de générer
+    automatiquement les numéros grâce aux deux champs ci-dessous.</p>
+
+    <p>Le champ <em>Format des numéros</em> vous permet d'indiquer
+    comment les numéros de semaines doivent être générés. Le texte que
+    vous indiqué est recopié, mais certaines chaines spéciales sont
+    remplacées en fonction de la semaine :</p>
+    <ul>
+      <li>la chaine <em>{numero}</em> est remplacée par le numéro de la
+        semaine (la première semaine de colle porte le numéro 1). Si
+        vous souhaitez simplement numéroter les colles par des entiers
+        dans l'ordre croissant, c'est ceci qu'il faut utiliser ;</li>
+      <li>la chaine <em>{quinzaine}</em> donne le numéro de la quinzaine
+        de colle ;</li>
+      <li>la chaine <em>{parite}</em> est remplacée par <em>0</em> pour
+        la première semaine d'une quinzaine donnée, et par <em>1</em>
+        pour la deuxième semaine de la quinzaine ;</li>
+      <li>la chaine <em>{parite_alpha}</em> fonctionne comme
+        <em>{parite}</em> mais avec les lettres <em>A</em> et
+        <em>B</em>. Par exemple, pour avoir la numérotation <em>Q1A,
+          Q1B, Q2A, Q2B, ...</em> pour les semaines de colles, il faut
+        indiquer comme format :
+        <em>Q{quinzaine}{parite_alpha}</em>.</li>
+    </ul>
     <table>
     {{ genform.as_table }}
     </table>

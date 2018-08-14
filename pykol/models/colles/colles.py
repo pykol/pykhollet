@@ -132,7 +132,7 @@ class Colle(models.Model):
 			if not horaire:
 				horaire = ancien_detail.horaire
 			if not salle and horaire == ancien_detail.horaire:
-				salle = ancien_horaire.salle
+				salle = ancien_detail.salle
 
 		except ColleDetails.DoesNotExist:
 			ancien_detail = None

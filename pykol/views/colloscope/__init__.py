@@ -19,4 +19,4 @@
 from .conception import *
 from .semaines import *
 from .trinomes import *
-from .colloscope import colloscope
+from .colloscope import colloscope, import_odf

@@ -12,6 +12,10 @@
 <p><a class="btn-primary btn" href="{% url 'colle_creer' classe.slug %}">Créer une colle</a></p>
 {% endif %}
 
+{% if perm_change_colloscope %}
+<p><a class="btn btn-primary" href="{% url 'colloscope_import_odf' classe.slug %}">Import du colloscope</a></p>
+{% endif %}
+
 <table class="colloscope">
   <thead>
     <tr>

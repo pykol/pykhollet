@@ -20,12 +20,12 @@
 
 from collections import defaultdict, OrderedDict
 
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
 from django.core.exceptions import PermissionDenied
 from django.http import HttpResponse
 
-from odf.opendocument import OpenDocumentSpreadsheet
+from odf.opendocument import OpenDocumentSpreadsheet, load
 from odf.table import Table, TableColumn, TableRow, TableCell
 from odf.style import Style, TableColumnProperties, TableRowProperties, \
         TextProperties, ParagraphProperties
@@ -33,6 +33,8 @@ import odf.number
 from odf.text import P
 
 from pykol.models.base import Classe
+from pykol.models.colles import Colle
+from pykol.forms.colloscope import ColloscopeImportForm
 
 @login_required
 def colloscope(request, slug):
@@ -71,6 +73,7 @@ def colloscope_html(request, classe):
 			autres_colles.append(colle)
 
 	perm_creation = request.user.has_perm('pykol.add_colle', classe)
+	perm_change_colloscope = request.user.has_perm('pykol.change_colloscope', classe)
 	# La conversion de colloscope en dict est obligatoire, car les
 	# gabarits Django ne peuvent pas itérer sur les defaultdict
 	# facilement : l'appel colloscope.items est d'abord converti en
@@ -81,6 +84,7 @@ def colloscope_html(request, classe):
 				'semaines': semaines,
 				'colloscope': dict(colloscope),
 				'perm_creation': perm_creation,
+				'perm_change_colloscope': perm_change_colloscope,
 				'autres_colles': autres_colles,
 				})
 
@@ -154,3 +158,70 @@ def colloscope_odf(request, classe):
 
 	ods.write(response)
 	return response
+
+@login_required
+def import_odf(request, slug):
+	"""
+	Import du colloscope au format OpenDocument
+
+	Le fichier doit avoir le même format que celui produit par la vue
+	colloscope_odf. L'utilisateur doit seulement avoir indiqué les
+	numéros des groupes pour chaque créneau et pour chaque semaine.
+	"""
+	classe = get_object_or_404(Classe, slug=slug)
+
+	if not request.user.has_perm('pykol.change_colloscope', classe):
+		raise PermissionDenied
+
+	semaines = list(classe.semaine_set.order_by('debut'))
+	creneaux = dict([(c.pk, c) for c in classe.creneau_set.all()])
+	groupes = dict([(g.nom, g) for g in classe.trinomes.all()])
+
+	def tablecell_to_text(cell):
+		"""
+		Récupère le contenu textuel d'une case d'un tableau
+		"""
+		res = ""
+		for par in cell.getElementsByType(P):
+			res += "".join([t.data for t in par.childNodes
+				if t.nodeType == t.TEXT_NODE])
+		return res
+
+	if request.method == 'POST':
+		form = ColloscopeImportForm(request.POST, request.FILES)
+
+		if form.is_valid():
+			# Supprimer toutes les anciennes colles pas encore réalisées
+			if form.cleaned_data.get('supprimer'):
+				Colle.objects.filter(classe=classe,
+						etat__in=(Colle.ETAT_PREVUE,
+							Colle.ETAT_BROUILLON)).delete()
+
+			# Créer les colles à partir du fichier
+			colloscope_ods = load(request.FILES['colloscope_ods'])
+			table = colloscope_ods.spreadsheet.getElementsByType(Table)[0]
+			lignes = table.getElementsByType(TableRow)
+			for ligne in lignes[1:]:
+				cells = ligne.getElementsByType(TableCell)
+
+				id_creneau = int(tablecell_to_text(cells[0]))
+				creneau = creneaux[id_creneau]
+
+				for sem_num, sem_cell in enumerate(cells[6:]):
+					semaine = semaines[sem_num]
+
+					groupes_colles = [g.strip()
+							for g in tablecell_to_text(sem_cell).split(",")
+							if g.strip()]
+
+					for num_groupe in groupes_colles:
+						groupe = groupes[num_groupe]
+						creneau.update_or_create_colle(semaine, groupe)
+
+			return redirect('colloscope', slug=classe.slug)
+	else:
+		form = ColloscopeImportForm()
+
+	return render(request, 'pykol/colloscope/import_odf.html', context={
+		'classe': classe,
+		'form': form})

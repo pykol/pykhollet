@@ -1,0 +1,55 @@
+{% extends 'pykol/base.html' %}
+{% block content %}
+<h2>Import du colloscope
+  <small>− {{ classe }}</small>
+</h2>
+
+<p>Vous pouvez créer les colles pour la classe en important le
+colloscope depuis un tableur au format OpenDocument (extension
+<code>.ods</code>, créé par exemple avec
+<a href="http://libreoffice.org">LibreOffice</a>).</p>
+
+<p>Pour cela :</p>
+<ol>
+  <li>renseignez l'intégralité des <a href="{% url 'colloscope_creneaux' classe.slug %}">créneaux de colles</a> ;</li>
+  <li>renseignez les <a href="{% url 'colloscope_trinomes' classe.slug %}">groupes de colles</a> ;</li>
+  <li>renseignez les <a href="{% url 'colloscope_semaines' classe.slug %}">semaines de colles</a> ;</li>
+  <li>téléchargez le <a href="{% url 'colloscope' classe.slug %}?format=odf">colloscope actuel au format OpenDocument</a> ;</li>
+  <li>complétez ce tableau sur votre tableur en indiquant les groupes de
+    colles dans les cases du tableau ;</li>
+  <li>sauvegardez puis importez le fichier avec le formulaire
+    ci-dessous.</li>
+</ol>
+
+<p>Lors de l'édition du tableau, vous ne devez pas changer la colonne
+<em>ID</em> (c'est elle qui permet au logiciel de retrouver le créneau
+de colle). Vous pouvez changer l'ordre des lignes (si vous souhaitez
+travailler avec un autre ordre sur les créneaux lors de la conception du
+colloscope), et vous pouvez supprimer des lignes (si vous ne souhaitez
+par exemple placer aucune colle sur un créneau).</p>
+
+<p>La toute première ligne ne doit pas être supprimée. Vous ne devez pas
+non plus modifier l'ordre des colonnes. Les premières colonnes indiquent
+les détails de chaque créneau : elles sont là pour vous aider à
+concevoir le colloscope, les informations ne seront pas mises à jour si
+vous modifiez le contenu des colonnes. Pour modifier un créneau de
+colle, rendez-vous plutôt sur la
+<a href="{% url 'colloscope_creneaux' classe.slug %}">page d'édition des
+  créneaux</a>.</p>
+
+<p>Si vous cochez la case <em>Supprimer</em>, toutes les colles
+actuellement existantes et qui n'ont pas encore été effectuées par les
+colleurs seront supprimées, puis les colles définies par le fichier
+seront créées. Les colles déjà effectuées ne seront pas affectées : si
+vous modifiez le colloscope en cours d'année, vous pouvez donc
+réimporter un fichier en demandant la suppression des colles
+existantes.</p>
+
+<section>
+  <form enctype="multipart/form-data" action="" method="post">
+    {% csrf_token %}
+    {{ form.as_table }}
+    <input type="submit">
+  </form>
+</section>
+{% endblock %}

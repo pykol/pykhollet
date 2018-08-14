@@ -178,3 +178,8 @@ class ColleSupprimerForm(forms.ModelForm):
 	class Meta:
 		model = Colle
 		fields = ()
+
+
+class ColloscopeImportForm(forms.Form):
+	colloscope_ods = forms.FileField()
+	supprimer = forms.BooleanField(required=False)

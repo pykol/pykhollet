@@ -23,6 +23,14 @@ from collections import defaultdict, OrderedDict
 from django.shortcuts import render, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.core.exceptions import PermissionDenied
+from django.http import HttpResponse
+
+from odf.opendocument import OpenDocumentSpreadsheet
+from odf.table import Table, TableColumn, TableRow, TableCell
+from odf.style import Style, TableColumnProperties, TableRowProperties, \
+        TextProperties, ParagraphProperties
+import odf.number
+from odf.text import P
 
 from pykol.models.base import Classe
 
@@ -80,4 +88,69 @@ def colloscope_odf(request, classe):
 	"""
 	Affichage du colloscope d'une classe au format OpenDocument
 	"""
-	pass
+	response = HttpResponse(content_type='application/vnd.oasis.opendocument.spreadsheet')
+	response['Content-Disposition'] = 'attachment; filename="colloscope_{}.ods"'.format(classe.slug)
+
+	semaines = classe.semaine_set.order_by('debut')
+	creneaux = classe.creneau_set.order_by('matiere', 'jour', 'debut')
+	colles = classe.colle_set.filter(semaine__in=semaines,
+			creneau__in=creneaux)
+
+	# On crée le dictionnaire qui à chaque créneau puis à chaque semaine
+	# associe les groupes de colle
+	colloscope = defaultdict(lambda: defaultdict(list))
+	for colle in colles:
+		colloscope[colle.creneau][colle.semaine].append(colle)
+
+	ods = OpenDocumentSpreadsheet()
+	# Styles
+	style_entete = Style(parent=ods.automaticstyles,
+			name='cell_entete', family='table-cell')
+	TextProperties(parent=style_entete, fontweight='bold')
+
+	table = Table(name=str(classe), parent=ods.spreadsheet)
+
+	# Ajout des colonnes
+	table.addElement(TableColumn()) # ID
+	table.addElement(TableColumn()) # Matière
+	table.addElement(TableColumn()) # Colleur
+	table.addElement(TableColumn()) # Jour
+	table.addElement(TableColumn()) # Horaire
+	table.addElement(TableColumn()) # Salle
+	for _ in semaines:
+		table.addElement(TableColumn()) # Semaine
+
+	# Ligne d'en-tête avec les semaines
+	tr = TableRow(parent=table)
+	P(parent=TableCell(parent=tr, valuetype='string', stylename=style_entete), text="ID")
+	P(parent=TableCell(parent=tr, valuetype='string', stylename=style_entete), text="Matière")
+	P(parent=TableCell(parent=tr, valuetype='string', stylename=style_entete), text="Colleur")
+	P(parent=TableCell(parent=tr, valuetype='string', stylename=style_entete), text="Jour")
+	P(parent=TableCell(parent=tr, valuetype='string', stylename=style_entete), text="Horaire")
+	P(parent=TableCell(parent=tr, valuetype='string', stylename=style_entete), text="Salle")
+	for semaine in semaines:
+		P(parent=TableCell(parent=tr, valuetype='string',
+			stylename=style_entete), text=semaine.numero)
+
+	# Colles par créneau
+	for creneau in creneaux:
+		tr = TableRow(parent=table)
+		P(parent=TableCell(parent=tr, valuetype='string'),
+				text=creneau.pk)
+		P(parent=TableCell(parent=tr, valuetype='string'),
+				text=creneau.matiere)
+		P(parent=TableCell(parent=tr, valuetype='string'),
+				text=creneau.colleur)
+		P(parent=TableCell(parent=tr, valuetype='string'),
+				text=creneau.get_jour_display())
+		P(parent=TableCell(parent=tr, valuetype='string'),
+				text=creneau.debut)
+		P(parent=TableCell(parent=tr, valuetype='string'),
+				text=creneau.salle)
+		for semaine in semaines:
+			P(parent=TableCell(parent=tr, valuetype='string'),
+				text=','.join([str(c.groupe) for c in
+					colloscope[creneau][semaine] if c.groupe]))
+
+	ods.write(response)
+	return response

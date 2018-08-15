@@ -20,7 +20,7 @@ from datetime import timedelta
 
 from django.db import models
 
-from pykol.models.base import Annee, Enseignement
+from pykol.models.base import Annee, Enseignement, Classe
 
 class Dotation(models.Model):
 	"""Délégation d'heures de colles par le rectorat"""
@@ -99,3 +99,8 @@ class CollesEnseignement(models.Model):
 
 	def __str__(self):
 		return str(self.enseignement)
+
+class DotationClasse(models.Model):
+	classe = models.OneToOneField(Classe, on_delete=models.CASCADE,
+			primary_key=True, related_name="dotation_heures")
+	heures = models.PositiveIntegerField(verbose_name="nombre d'heures")

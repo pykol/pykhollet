@@ -66,7 +66,7 @@ def import_bee(request):
 
 			# Import des données des colles
 			nomcolles_file = os.path.join(settings.BASE_DIR, 'pykol/data/NomenclatureColles.xml')
-			with open(nomcolles_file) as nomcolles_xml:
+			with open(nomcolles_file, encoding="utf-8") as nomcolles_xml:
 				pykol.lib.bee.import_nomenclature_colles(nomcolles_xml)
 
 			# TODO améliorer la gestion des erreurs

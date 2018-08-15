@@ -24,8 +24,7 @@ from pykol.models.base import Matiere, Etudiant, Professeur
 from pykol.models.colles import Semaine, CollesReglages, Creneau, \
 		Roulement, RoulementLigne, RoulementApplication, \
 		RoulementGraineLigne, Colle, Trinome, CollesEnseignement
-from pykol.forms import CommaSeparatedCharField
-from . import LabelledHiddenWidget
+from pykol.forms import CommaSeparatedCharField, LabelledHiddenWidget
 
 class ColleForm(forms.Form):
 	"""

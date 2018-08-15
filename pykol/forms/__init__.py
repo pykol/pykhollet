@@ -45,8 +45,9 @@ class LabelledHiddenWidget(forms.HiddenInput):
 	def is_hidden(self):
 		return False
 
-	def render(self, name, value, attrs=None):
-		input_html = super(LabelledHiddenWidget, self).render(name, value, attrs)
+	def render(self, name, value, attrs=None, renderer=None):
+		input_html = super(LabelledHiddenWidget, self).render(name,
+				value, attrs=attrs, renderer=renderer)
 		for pk, val in self.choices:
 			if pk == value:
 				input_html += val

@@ -1,0 +1,20 @@
+{% extends 'pykol/base.html' %}
+{% block content %}
+<h2>Import de la liste des colleurs extérieurs</h2>
+<section>
+  <p>Vous pouvez créer les comptes pour les colleurs extérieurs en
+  important depuis cette page un tableur au format OpenDocument
+  (<code>.ods</code>) qui contient quatre colonnes :
+  <ol>
+    <li>la première colonne indiquer si le colleur est un homme
+      (<code>M.</code>) ou une femme (<code>Mme</code>) ;</li>
+    <li>la deuxième colonne indique le nom de famille du colleur ;</li>
+    <li>la troisième colonne indique son prénom ;</li>
+    <li>la quatrième colonne indique son adresse e-mail ;</li>
+  <form enctype="multipart/form-data" action="" method="post">
+    {% csrf_token %}
+    {{ form.as_table }}
+    <p><input type="submit" value="Importer la liste">
+  </form>
+</section>
+{% endblock %}

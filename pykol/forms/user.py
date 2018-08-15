@@ -229,3 +229,10 @@ class FullUserForm(forms.Form):
 			res.save()
 
 		return res
+
+class ColleursImportForm(forms.Form):
+	"""
+	Formulaire d'import d'un fichier OpenDocument listant les colleurs
+	extérieurs.
+	"""
+	colleurs = forms.FileField()

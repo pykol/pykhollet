@@ -48,6 +48,7 @@ colloscopes_urlpatterns = [
 
 direction_urlpatterns = [
 	path('import_bee/', views.direction.import_bee, name='import_bee'),
+	path('import_colleurs/', views.direction.import_colleurs_odf, name='import_colleurs'),
 	path('creneaux/', views.colles.creneau_list_direction, name='creneau_list_direction'),
 	path('reservations_ponctuelles/', views.direction.reservations_ponctuelles, name='reservations_ponctuelles'),
 ]

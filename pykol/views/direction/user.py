@@ -24,9 +24,15 @@ from django.contrib import messages
 from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.views.generic.list import ListView
 from django.contrib.auth import get_user_model
+from django.db.models import Q
 
-from pykol.forms.user import FullUserForm
+from odf.opendocument import OpenDocumentSpreadsheet, load
+from odf.table import Table, TableColumn, TableRow, TableCell
+
+from pykol.forms.user import FullUserForm, ColleursImportForm
 from pykol.forms.permissions import ColloscopePermFormSet
+from pykol.lib.odftools import tablecell_to_text
+from pykol.models.base import Professeur
 User = get_user_model()
 
 @login_required
@@ -42,7 +48,7 @@ def direction_create_user(request):
 			messages.error(request, "Le formulaire contient des erreurs")
 	else:
 		form = FullUserForm()
-	
+
 	return render(request, 'pykol/direction/edit_user.html',
 			context={'form': form, 'concerned_user': None,})
 
@@ -95,3 +101,62 @@ class DirectionListUser(PermissionRequiredMixin, ListView):
 @permission_required('pykol.direction')
 def direction_delete_user(request):
 	pass
+
+@login_required
+@permission_required('pykol.direction')
+def import_colleurs_odf(request):
+	"""
+	Import de la liste des colleurs depuis un tableur OpenDocument
+	"""
+	if request.method == 'POST':
+		form = ColleursImportForm(request.POST, request.FILES)
+
+		if form.is_valid():
+			colleurs_ods = load(request.FILES['colleurs'])
+			table = colleurs_ods.spreadsheet.getElementsByType(Table)[0]
+			lignes = table.getElementsByType(TableRow)
+			for ligne in lignes[1:]:
+				cells = ligne.getElementsByType(TableCell)
+
+				colleur_data = {}
+
+				if tablecell_to_text(cells[0]).strip() == "M.":
+					colleur_data['sexe'] = Professeur.SEXE_HOMME
+				else:
+					colleur_data['sexe'] = Professeur.SEXE_FEMME
+
+				try:
+					colleur_data['last_name'] = tablecell_to_text(cells[1]).strip()
+					colleur_data['first_name'] = tablecell_to_text(cells[2]).strip()
+				except:
+					continue
+
+				try:
+					colleur_data['email'] = tablecell_to_text(cells[3]).strip() or None
+				except:
+					colleur_data['email'] = None
+				colleur_data['corps'] = Professeur.CORPS_AUTRE
+
+				# On ne peut pas utiliser ici
+				# Professeur.objects.update_or_create à cause de la
+				# requête un peu plus compliquée pour identifier le
+				# colleur.
+				try:
+					prof = Professeur.objects.get(
+						Q(last_name__iexact=colleur_data['last_name'],
+							first_name__iexact=colleur_data['first_name'])
+						| Q(email__isnull=False, email=colleur_data['email']))
+					for field, val in colleur_data.items():
+						setattr(prof, field, val)
+					prof.save()
+				except Professeur.DoesNotExist:
+					prof = Professeur(**colleur_data)
+					prof.save()
+
+			return redirect('direction_list_user')
+
+	else:
+		form = ColleursImportForm()
+
+	return render(request, 'pykol/direction/import_colleurs.html',
+			context={'form': form})

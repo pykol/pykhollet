@@ -35,6 +35,7 @@ from odf.text import P
 from pykol.models.base import Classe
 from pykol.models.colles import Colle
 from pykol.forms.colloscope import ColloscopeImportForm
+from pykol.lib.odftools import tablecell_to_text
 
 @login_required
 def colloscope(request, slug):
@@ -176,16 +177,6 @@ def import_odf(request, slug):
 	semaines = list(classe.semaine_set.order_by('debut'))
 	creneaux = dict([(c.pk, c) for c in classe.creneau_set.all()])
 	groupes = dict([(g.nom, g) for g in classe.trinomes.all()])
-
-	def tablecell_to_text(cell):
-		"""
-		Récupère le contenu textuel d'une case d'un tableau
-		"""
-		res = ""
-		for par in cell.getElementsByType(P):
-			res += "".join([t.data for t in par.childNodes
-				if t.nodeType == t.TEXT_NODE])
-		return res
 
 	if request.method == 'POST':
 		form = ColloscopeImportForm(request.POST, request.FILES)

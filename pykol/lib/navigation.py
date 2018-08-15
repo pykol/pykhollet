@@ -101,7 +101,7 @@ class NavigationItemUser(NavigationItem):
 class MesClassesChildren:
 	def __call__(self, user):
 		def iter_classes():
-			for classe in user.mes_classes():
+			for classe in user.mes_classes().order_by('nom'):
 				yield NavigationItem(
 						label=str(classe),
 						name="classe-{}".format(classe.slug),

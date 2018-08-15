@@ -131,6 +131,10 @@ def import_colleurs_odf(request):
 				except:
 					continue
 
+				if not (colleur_data['last_name'] and
+						colleur_data['first_name']):
+					continue
+
 				try:
 					colleur_data['email'] = tablecell_to_text(cells[3]).strip() or None
 				except:

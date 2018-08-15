@@ -195,7 +195,7 @@ class Professeur(User):
 			(CORPS_CHAIRESUP, "chaire supérieure"),
 		)
 	corps = models.PositiveSmallIntegerField(choices=LISTE_CORPS,
-			default=2)
+			default=CORPS_AGREGE)
 	etablissement = models.ForeignKey(Etablissement, null=True,
 			blank=True, on_delete=models.SET_NULL,
 			verbose_name="établissement")

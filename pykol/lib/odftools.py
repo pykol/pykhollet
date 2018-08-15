@@ -21,15 +21,18 @@ OpenDocument."""
 
 from odf.text import P
 
+def concat_text_nodes(element):
+	res = ""
+	for child in element.childNodes:
+		if child.nodeType == child.TEXT_NODE:
+			res += child.data
+		elif child.nodeType == child.ELEMENT_NODE:
+			res += concat_text_nodes(child)
+	return res
+
 def tablecell_to_text(cell):
 	"""
 	Récupère le contenu textuel d'une case d'un tableau
 	"""
-	# TODO rechercher récursivement les TEXT_NODE, car il peut y avoir
-	# d'autres enfants-éléments de P (par exemple des liens, de la mise
-	# en forme dans des span, etc.).
-	res = ""
-	for par in cell.getElementsByType(P):
-		res += "".join([t.data for t in par.childNodes
-			if t.nodeType == t.TEXT_NODE])
-	return res
+	return "".join([concat_text_nodes(par)
+		for par in cell.getElementsByType(P)])

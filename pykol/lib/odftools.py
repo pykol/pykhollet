@@ -46,6 +46,6 @@ def iter_columns(row):
 	"""
 	cells = row.getElementsByType(TableCell)
 	for cell in cells:
-		repeat = cell.getAttribute('numbercolumnsrepeated') or 1
+		repeat = int(cell.getAttribute('numbercolumnsrepeated') or 1)
 		for i in range(repeat):
 			yield(cell)

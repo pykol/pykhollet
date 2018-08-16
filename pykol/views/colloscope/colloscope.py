@@ -202,7 +202,7 @@ def import_odf(request, slug):
 					next(cells)
 
 				# Et on arrive aux semaines
-				for sem_num, sem_cell in cells:
+				for sem_num, sem_cell in enumerate(cells):
 					semaine = semaines[sem_num]
 
 					groupes_colles = [g.strip()

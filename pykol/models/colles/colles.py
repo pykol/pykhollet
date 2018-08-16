@@ -125,38 +125,50 @@ class Colle(models.Model):
 
 		try:
 			ancien_detail = self.details
+
 			if not colleur:
 				colleur = ancien_detail.colleur
 			if not etudiants:
 				etudiants = ancien_detail.eleves.all()
 			if not horaire:
 				horaire = ancien_detail.horaire
+
+			# On reprend la salle uniquement quand l'horaire n'a pas
+			# changé.
 			if not salle and horaire == ancien_detail.horaire:
 				salle = ancien_detail.salle
 
+			detail_modifie = \
+				colleur != ancien_detail.colleur or \
+				set(etudiants) != set(ancien_detail.eleves.all()) or \
+				horaire != ancien_detail.horaire
+
+			# Cas où l'on ajoute une salle qui n'était précédemment pas
+			# renseignée. Dans ce cas, on ne crée pas de nouveau
+			# ColleDetails mais on met à jour l'actuel.
+			if not detail_modifie and \
+					not ancien_detail.salle and salle:
+				ancien_detail.salle = salle
+				ancien_detail.save()
+				return ancien_detail
+
+			detail_modifie = detail_modifie or \
+				ancien_detail.salle != salle
+
 		except ColleDetails.DoesNotExist:
 			ancien_detail = None
+			detail_modifie = True
 
-		# Cas où l'on ajoute une salle qui n'était précédemment pas
-		# renseignée. Dans ce cas, on ne crée pas de nouveau
-		# ColleDetails mais on met à jour l'actuel.
-		# TODO cela ne marche pas car le bloc précédent définit les
-		# variables colleur, etudiants, horaire quoi qu'il arrive
-		if ancien_detail is not None and \
-				not ancien_detail.salle and salle and \
-				colleur is None and horaire is None and not etudiants:
-			ancien_detail.salle = salle
-			ancien_detail.save()
-			return ancien_detail
+		# Ajout d'un nouveau ColleDetails s'il y a des modifications
+		if detail_modifie:
+			self.colledetails_set.update(actif=False)
 
-		self.colledetails_set.update(actif=False)
-
-		detail = ColleDetails(colle=self, horaire=horaire, salle=salle,
+			detail = ColleDetails(colle=self, horaire=horaire, salle=salle,
 				colleur=colleur)
-		detail.save()
-		detail.eleves.set(etudiants)
+			detail.save()
+			detail.eleves.set(etudiants)
 
-		return detail
+		return self.details
 
 	def get_absolute_url(self):
 		return reverse('colle_detail', kwargs={'pk': self.pk})

@@ -74,6 +74,14 @@ class Creneau(models.Model):
 	matiere = models.ForeignKey(Matiere, blank=True, null=True,
 			on_delete=models.SET_NULL, verbose_name="matière")
 
+	MODE_INTERROGATION = Colle.MODE_INTERROGATION
+	MODE_TD = Colle.MODE_TD
+	MODE_CHOICES = Colle.MODE_CHOICES
+	mode = models.PositiveSmallIntegerField(
+			verbose_name="mode d'interrogation",
+			default=MODE_INTERROGATION,
+			choices=MODE_CHOICES)
+
 	class Meta:
 		ordering = ['jour', 'debut', 'matiere']
 		verbose_name = 'créneau'
@@ -98,7 +106,9 @@ class Creneau(models.Model):
 				semaine=semaine,
 				defaults={'classe': self.classe,
 					'matiere': self.matiere,
-					'groupe': trinome})
+					'groupe': trinome,
+					'mode': self.mode,
+					})
 
 		colle.ajout_details(
 			horaire=semaine.horaire_creneau(self),

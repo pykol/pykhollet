@@ -16,7 +16,15 @@
     {% endfor %}
   </ul>
   {% else %}
-  <p>Aucun relevé pour cette année.
+  <p>Aucun relevé pour cette année.</p>
+  {% endif %}
+  {% if nouvelles_colles > 1 %}
+  <p>Actuellement, {{ nouvelles_colles }} colles ont été effectuées et n'ont
+  pas encore été relevées.</p>
+  {% elif nouvelles_colles == 1 %}
+  <p>Actuellement, une colle a été effectuée et n'a pas encore été relevée.</p>
+  {% elif nouvelles_colles == 0 %}
+  <p>Actuellement, aucune colle n'a été effectuée depuis le dernier relevé.</p>
   {% endif %}
 </section>
 

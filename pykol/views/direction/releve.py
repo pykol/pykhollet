@@ -57,6 +57,12 @@ class ReleveListView(LoginRequiredMixin, PermissionRequiredMixin,
 	model = ColleReleve
 	ordering = ('date',)
 
+	def get_context_data(self, **kwargs):
+		context = super().get_context_data(**kwargs)
+		context['nouvelles_colles'] = Colle.objects.filter(etat__in=(Colle.ETAT_NOTEE,
+			Colle.ETAT_EFFECTUEE), releve__isnull=True).count()
+		return context
+
 @login_required
 @user_est_professeur
 def releve_prof_detail(request):

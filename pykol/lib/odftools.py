@@ -48,4 +48,4 @@ def iter_columns(row):
 	for cell in cells:
 		repeat = cell.getAttribute('numbercolumnsrepeated') or 1
 		for i in range(repeat):
-			yield(repeat)
+			yield(cell)

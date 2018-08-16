@@ -20,6 +20,7 @@
 OpenDocument."""
 
 from odf.text import P
+from odf.table import TableCell
 
 def concat_text_nodes(element):
 	res = ""
@@ -36,3 +37,15 @@ def tablecell_to_text(cell):
 	"""
 	return "".join([concat_text_nodes(par)
 		for par in cell.getElementsByType(P)])
+
+def iter_columns(row):
+	"""
+	Itérateur sur les colonnes d'une ligne d'un tableau, en prenant en
+	compte les colonnes répétées implicitement avec l'attribut
+	number-columns-repeated.
+	"""
+	cells = row.getElementsByType(TableCell)
+	for cell in cells:
+		repeat = cell.getAttribute('numbercolumnsrepeated') or 1
+		for i in range(repeat):
+			yield(repeat)

@@ -29,13 +29,12 @@ from odf.opendocument import OpenDocumentSpreadsheet, load
 from odf.table import Table, TableColumn, TableRow, TableCell
 from odf.style import Style, TableColumnProperties, TableRowProperties, \
         TextProperties, ParagraphProperties
-import odf.number
 from odf.text import P
 
 from pykol.models.base import Classe
 from pykol.models.colles import Colle
 from pykol.forms.colloscope import ColloscopeImportForm
-from pykol.lib.odftools import tablecell_to_text
+from pykol.lib.odftools import tablecell_to_text, iter_columns
 
 @login_required
 def colloscope(request, slug):
@@ -193,12 +192,17 @@ def import_odf(request, slug):
 			table = colloscope_ods.spreadsheet.getElementsByType(Table)[0]
 			lignes = table.getElementsByType(TableRow)
 			for ligne in lignes[1:]:
-				cells = ligne.getElementsByType(TableCell)
+				cells = iter_columns(ligne)
 
-				id_creneau = int(tablecell_to_text(cells[0]))
+				id_creneau = int(tablecell_to_text(cells.next()))
 				creneau = creneaux[id_creneau]
 
-				for sem_num, sem_cell in enumerate(cells[6:]):
+				# On ignore les 5 colonnes suivantes
+				for _ in range(5):
+					cells.next()
+
+				# Et on arrive aux semaines
+				for sem_num, sem_cell in cells:
 					semaine = semaines[sem_num]
 
 					groupes_colles = [g.strip()

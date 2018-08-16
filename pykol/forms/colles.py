@@ -67,6 +67,11 @@ class ColleModifierForm(forms.Form):
 	etudiants = forms.ModelMultipleChoiceField(queryset=None,
 			required=False, widget=forms.CheckboxSelectMultiple)
 
+	mode = forms.TypedChoiceField(label="Mode de déroulement",
+			choices=Colle.MODE_CHOICES,
+			coerce=int, empty_value=None,
+			widget=forms.RadioSelect(), required=False)
+
 	def __init__(self, *args, colle, **kwargs):
 		super().__init__(*args, **kwargs)
 

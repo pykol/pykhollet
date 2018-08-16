@@ -148,6 +148,10 @@ def colle_deplacer(request, pk):
 			if not etudiants:
 				etudiants = []
 
+			if form.cleaned_data.get('mode') is not None:
+				colle.mode = form.cleaned_data.get('mode')
+				colle.save()
+
 			colle.ajout_details(
 				horaire=form.cleaned_data.get('horaire'),
 				salle=form.cleaned_data.get('salle'),

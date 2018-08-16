@@ -25,7 +25,7 @@
     <tr>
       <td colspan="4">
         {% if perm_colle.noter %}
-        <a class="btn btn-primary" href="{% url 'colle_declarer' colle.pk %}">{% if colle.mode == colle.MODE_INTERROGATION %}Noter{% else %}Déclarer{% endif %}</a>
+        {% include 'pykol/colles/noter_button.html' %}
         {% endif %}
       </td>
     </tr>

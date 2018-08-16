@@ -96,8 +96,9 @@ def colle_declarer(request, pk):
 	# Les colles sous la forme de TD n'ont pas de notes, il suffit de
 	# confirmer qu'elles ont été réalisées
 	if colle.mode == Colle.MODE_TD:
-		colle.etat = Colle.ETAT_EFFECTUEE
-		colle.save()
+		if request.method == 'POST':
+			colle.etat = Colle.ETAT_EFFECTUEE
+			colle.save()
 		return redirect('colle_detail', colle.pk)
 
 	# On peuple le formulaire avec les élèves qui n'ont pas encore été

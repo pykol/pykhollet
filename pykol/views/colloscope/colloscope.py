@@ -194,12 +194,12 @@ def import_odf(request, slug):
 			for ligne in lignes[1:]:
 				cells = iter_columns(ligne)
 
-				id_creneau = int(tablecell_to_text(cells.next()))
+				id_creneau = int(tablecell_to_text(next(cells)))
 				creneau = creneaux[id_creneau]
 
 				# On ignore les 5 colonnes suivantes
 				for _ in range(5):
-					cells.next()
+					next(cells)
 
 				# Et on arrive aux semaines
 				for sem_num, sem_cell in cells:

@@ -81,7 +81,8 @@ def classe_resultats(request, slug):
 		enseignement__classe = classe,
 		enseignement__service__professeur = request.user
 	)
-	semaines = Semaine.objects.filter(classe = classe)
+	semaines = Semaine.objects.filter(classe=classe,
+			debut__lte=timezone.localtime())
 
 	notesParEtudiantParMatiere = {}
 

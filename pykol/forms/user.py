@@ -182,6 +182,8 @@ class FullUserForm(forms.Form):
 		if self.is_etudiant():
 			return self.etu_form.is_valid()
 
+		return True
+
 	def full_clean(self):
 		super().full_clean()
 

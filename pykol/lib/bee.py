@@ -30,6 +30,8 @@ import re
 from collections import defaultdict
 
 from django.utils.text import slugify
+from django.contrib.auth.models import Permission
+from django.contrib.contenttypes.models import ContentType
 
 import isodate
 
@@ -663,7 +665,7 @@ def import_stsemp(stsemp_xml):
 						'sexe': sexe,
 						})
 		elif fonction == "DIR":
-			User.objects.update_or_create(
+			user, _ = User.objects.update_or_create(
 					last_name=nom,
 					first_name=prenom,
 					defaults={
@@ -671,6 +673,10 @@ def import_stsemp(stsemp_xml):
 						'first_name': prenom,
 						'sexe': sexe,
 						})
+			perm_direction = Permission.objects.get(codename='direction',
+					content_type=ContentType.objects.get_for_model(User))
+			user.user_permissions.add(perm_direction)
+
 
 	# Mise à jour des programmes, matières et MEF
 	import_nomenclature_base(stsemp_et.getroot().find('NOMENCLATURES'))

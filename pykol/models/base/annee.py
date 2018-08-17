@@ -97,6 +97,15 @@ class Vacances(Periode):
 	annee = models.ForeignKey(Annee, on_delete=models.CASCADE,
 		related_name='vacances')
 
+	TYPE_VACANCES = 1
+	TYPE_FERIE = 2
+	TYPE_CHOICES = (
+		(TYPE_VACANCES, "vacances"),
+		(TYPE_FERIE, "férié"),
+	)
+	type_vacances = models.PositiveSmallIntegerField(
+			choices=TYPE_CHOICES, default=TYPE_VACANCES)
+
 	class Meta:
 		verbose_name = 'vacances'
 		verbose_name_plural = 'vacances'

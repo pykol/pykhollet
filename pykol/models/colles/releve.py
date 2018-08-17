@@ -31,7 +31,7 @@ from pykol.models.colles import Colle
 
 class ColleReleve(models.Model):
 	def default_annee():
-		return Annee.actuelle.get().pk
+		return Annee.objects.get_actuelle()
 
 	annee = models.ForeignKey(Annee, default=default_annee,
 			on_delete=models.CASCADE)

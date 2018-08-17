@@ -151,7 +151,7 @@ def import_etudiants(eleves_xml):
 	# Préparation d'un dictionnaire des classes de l'année actuelle,
 	# pour retrouver rapidement une classe à partir de son
 	# code_structure.
-	annee_actuelle = Annee.actuelle.all().first()
+	annee_actuelle = Annee.objects.get_actuelle()
 	divisions = dict([(str(c.code_structure), c) for c in
 		Classe.objects.filter(annee=annee_actuelle)])
 
@@ -277,7 +277,7 @@ def import_divisions(divisions_et, dict_profs={}):
 	mettant à jour la table Classe.
 	"""
 	# Création (ou mise à jour) des classes
-	annee_actuelle = Annee.actuelle.all().first()
+	annee_actuelle = Annee.objects.get_actuelle()
 	for division in divisions_et.findall('DIVISION'):
 		# On ne garde que les classes de l'enseignement supérieur
 		code_mef = appartenance_mef_cpge(division.find('MEFS_APPARTENANCE'))
@@ -317,7 +317,7 @@ def import_divisions(divisions_et, dict_profs={}):
 		creer_enseignements([classe], classe, division, dict_profs)
 
 def import_groupes(groupes_et, dict_profs={}):
-	annee_actuelle = Annee.actuelle.all().first()
+	annee_actuelle = Annee.objects.get_actuelle()
 
 	for groupe_et in groupes_et.findall('GROUPE'):
 		# Récupération du code structure
@@ -595,7 +595,7 @@ def import_nomenclatures(nomenclatures_xml):
 
 	## On construit le dictionnaire qui à chaque code MEF associe la
 	## liste des classes relevant de ce code.
-	#annee_actuelle = Annee.actuelle.all().first()
+	#annee_actuelle = Annee.objects.get_actuelle()
 	#classe_par_mef = {}
 	#for classe in Classe.objects.filter(annee=annee_actuelle):
 	#	if not classe.code_mef in classe_par_mef:

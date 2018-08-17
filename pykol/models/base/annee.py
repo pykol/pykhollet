@@ -37,18 +37,17 @@ class Periode(models.Model):
 	def contains(self, date):
 		return self.debut <= date <= self.fin
 
-class AnneeActuelleManager(models.Manager):
+class AnneeManager(models.Manager):
 	"""
-	Gestionnaire de l'année actuelle
+	Gestionnaire qui ajoute l'accès à l'année actuelle.
+	"""
 
-	Ce gestionnaire ne renvoie qu'une seule année, l'année actuelle
-	trouvée en fonction de la date du jour.
-	"""
-	def get_queryset(self):
+	def get_actuelle(self):
+		"""
+		Renvoie l'année actuelle
+		"""
 		today = datetime.date.today()
-
-		return super(AnneeActuelleManager,
-				self).get_queryset().filter(fin__gte=today).order_by('debut')[:1]
+		return self.get(debut__lte=today, fin__gte=today)
 
 class Annee(Periode):
 	"""
@@ -65,8 +64,7 @@ class Annee(Periode):
 	debut = models.DateField(verbose_name="début")
 	fin = models.DateField()
 
-	objects = models.Manager()
-	actuelle = AnneeActuelleManager()
+	objects = AnneeManager()
 
 	class Meta:
 		ordering = ['debut']

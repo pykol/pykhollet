@@ -212,6 +212,14 @@ class MEFMatiere(models.Model):
 	mode_election = models.CharField(max_length=10)
 	rang = models.SmallIntegerField()
 
+class ClasseAnneeActuelleManager(models.Manager):
+	"""
+	Manager de Classe qui ne donne accès qu'aux classes de l'année en
+	cours.
+	"""
+	def get_queryset(self):
+		return super().get_queryset().filter(annee=Annee.objects.get_actuelle())
+
 class Classe(Groupe):
 	"""
 	Classe
@@ -227,6 +235,11 @@ class Classe(Groupe):
 	code_structure = models.CharField(max_length=20, unique=True)
 	mef = models.ForeignKey(ModuleElementaireFormation,
 			on_delete=models.CASCADE)
+
+	# On instancie le manager par défaut et un manager qui ne donne
+	# accès qu'aux classes de l'année en cours.
+	objects = ClasseAnneeActuelleManager()
+	all_objects = models.Manager()
 
 	NIVEAU_PREMIERE_ANNEE = 1
 	NIVEAU_DEUXIEME_ANNEE = 2

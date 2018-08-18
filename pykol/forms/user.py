@@ -238,3 +238,5 @@ class ColleursImportForm(forms.Form):
 	extérieurs.
 	"""
 	colleurs = forms.FileField()
+	mise_a_jour = forms.BooleanField(label="Mise à jour sans ajout",
+			required=False, initial=False)

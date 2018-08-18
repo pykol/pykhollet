@@ -13,8 +13,13 @@
     <li>la quatrième colonne indique son adresse e-mail ;</li>
   <form enctype="multipart/form-data" action="" method="post">
     {% csrf_token %}
-    {{ form.as_table }}
-    <p><input type="submit" value="Importer la liste">
+    <table>
+      {{ form.as_table }}
+      <tr>
+        <td colspan="2"><input type="submit"
+          value="Importer la liste"></td>
+      </tr>
+    </table>
   </form>
 </section>
 {% endblock %}

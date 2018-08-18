@@ -37,10 +37,16 @@ def import_bee(request):
 			import_success = []
 
 			if form.cleaned_data['stsemp']:
-				with zipfile.ZipFile(request.FILES['stsemp']) as stsemp_zip:
+				try:
+					stsemp_zip = zipfile.ZipFile(request.FILES['stsemp'])
 					xml_name = stsemp_zip.namelist()[0]
 					stsemp_xml = stsemp_zip.open(xml_name)
-					pykol.lib.bee.import_stsemp(stsemp_xml)
+				except zipfile.BadZipFile:
+					request.FILES['stsemp'].seek(0)
+					stsemp_xml = request.FILES['stsemp']
+
+				pykol.lib.bee.import_stsemp(stsemp_xml)
+				stsemp_xml.close()
 				import_success.append('STS-EMP')
 
 			if form.cleaned_data['structure']:

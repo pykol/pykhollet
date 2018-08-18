@@ -44,6 +44,8 @@ def main():
 				continue
 
 			# Formatage de l'adresse
+			if ligne['boite_postale_uai']:
+				ligne['boite_postale_uai'] = "BP" + ligne['boite_postale_uai']
 			adresse = norm("{adresse_uai}\n" \
 					"{lieu_dit_uai}\n" \
 					"{boite_postale_uai}\n" \

@@ -25,6 +25,8 @@ class Academie(models.Model):
 	"""
 	Académie
 	"""
+	id = models.PositiveSmallIntegerField(primary_key=True,
+			verbose_name="numéro")
 	nom = models.CharField(max_length=100)
 	slug = models.SlugField()
 	departements = models.CharField(max_length=100, verbose_name="départements",

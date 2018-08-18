@@ -36,7 +36,7 @@ from django.contrib.contenttypes.models import ContentType
 import isodate
 
 from pykol.models.base import User, Etudiant, Professeur, \
-		Annee, Classe, Etablissement, \
+		Annee, Classe, Etablissement, Academie, \
 		Groupe, Matiere, Enseignement, Service, \
 		ModuleElementaireFormation
 from pykol.models.colles import CollesEnseignement
@@ -611,11 +611,36 @@ def import_nomenclatures(nomenclatures_xml):
 	# TODO mutualiser avec l'import sts_emp qui est moins complet mais
 	# qui existe tout de même.
 
+def import_sts_etablissement(uaj_xml):
+	"""
+	Import des données de l'établissement à partir de la balise <UAJ> de
+	l'export STS-EMP.
+	"""
+	academie = Academie.objects.get(pk=int(uaj_xml.find('ACADEMIE/CODE').text))
+
+	denomination = "{} {}".format(
+			uaj_xml.find('DENOM_PRINC'),
+			uaj_xml.find('DENOM_COMPL'),
+		)
+
+	data = {
+		'numero_uai': uaj_xml.attrib['CODE'],
+		'denomination': denomination,
+		'academie': academie,
+	}
+	etab, _ = Etablissement.objects.update_or_create(numero_uai=data['numero_uai'],
+			defaults=data)
+
+	return etab
+
 def import_stsemp(stsemp_xml):
 	"""
 	Import des services et des professeurs depuis STSWEB
 	"""
 	stsemp_et = ET.parse(stsemp_xml)
+
+	# Mise à jour de l'établissement
+	etablissement = import_sts_etablissement(stsemp_et.getroot().find('PARAMETRES/UAJ'))
 
 	# Construire le dictionnaire des enseignants
 	dict_profs = {}
@@ -663,6 +688,7 @@ def import_stsemp(stsemp_xml):
 						'first_name': prenom,
 						'corps': grade,
 						'sexe': sexe,
+						'etablissement': etablissement,
 						})
 		elif fonction == "DIR":
 			user, _ = User.objects.update_or_create(

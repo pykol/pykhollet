@@ -46,7 +46,7 @@ class Etablissement(models.Model):
 	#XXX sensibilité à la casse de la lettre code UAI
 	numero_uai = Lettre23Field(length=8, unique=True,
 			verbose_name="UAI", primary_key=True)
-	appellation = models.CharField(max_length=100)
+	appellation = models.CharField(max_length=200)
 	denomination = models.CharField(max_length=100)
 	adresse = models.TextField(
 			verbose_name="adresse de l'établissement",

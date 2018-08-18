@@ -145,17 +145,30 @@ def import_colleurs_odf(request):
 				# Professeur.objects.update_or_create à cause de la
 				# requête un peu plus compliquée pour identifier le
 				# colleur.
+				compte_query = Q(last_name__iexact=colleur_data['last_name'],
+						first_name__iexact=colleur_data['first_name']) \
+						| Q(email__isnull=False, email=colleur_data['email'])
 				try:
-					prof = Professeur.objects.get(
-						Q(last_name__iexact=colleur_data['last_name'],
-							first_name__iexact=colleur_data['first_name'])
-						| Q(email__isnull=False, email=colleur_data['email']))
+					prof = Professeur.objects.get(compte_query)
 					for field, val in colleur_data.items():
 						setattr(prof, field, val)
 					prof.save()
 				except Professeur.DoesNotExist:
-					prof = Professeur(**colleur_data)
-					prof.save()
+					try:
+						prof = Professeur(**colleur_data)
+						prof.save()
+					except:
+						# On est peut-être en train de mettre à jour le
+						# compte d'un personnel de direction
+						try:
+							user = User.objects.get(compte_query)
+							for field, val in colleur_data.items():
+								setattr(user, field, val)
+							user.save()
+						except:
+							# Là, on renonce
+							# TODO signaler l'erreur
+							pass
 
 			return redirect('direction_list_user')
 

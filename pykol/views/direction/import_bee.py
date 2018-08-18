@@ -86,8 +86,7 @@ def import_bee(request):
 				messages.warning(request,
 						"Vous n'avez fourni aucun fichier à importer.")
 
-			form = ImportBEEForm()
-			# TODO redirect pour éviter double soumission
+			return redirect('import_bee')
 
 	else:
 		form = ImportBEEForm()

@@ -181,7 +181,7 @@ def colle_annuler(request, pk):
 	if colle.etat == Colle.ETAT_PREVUE:
 		colle.etat = Colle.ETAT_ANNULEE
 		colle.save()
-		messages.sucess(request, "La colle a bien été annulée")
+		messages.success(request, "La colle a bien été annulée")
 	else:
 		messages.error(request, "On ne peut pas annuler une colle déjà notée ou déjà relevée")
 

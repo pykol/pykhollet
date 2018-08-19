@@ -731,6 +731,11 @@ def import_nomenclature_colles(nomcolles_xml):
 		elif periode_et.text == 'deuxieme_periode':
 			periode = CollesEnseignement.PERIODE_DEUXIEME
 
+		try:
+			nom_enveloppe = colle_et.find('nom').text
+		except:
+			nom_enveloppe = None
+
 		frequence_text = colle_et.find('frequence').text
 		if frequence_text == 'hebdomadaire':
 			frequence = CollesEnseignement.FREQUENCE_HEBDOMADAIRE
@@ -741,12 +746,12 @@ def import_nomenclature_colles(nomcolles_xml):
 				classe__mef__code_mef__in=mefs,
 				matiere__code_matiere__in=matieres).distinct()
 
-		CollesEnseignement.objects.filter(enseignement__in=enseignements).delete()
+		# TODO delete CollesEnseignement.objects.filter(enseignement__in=enseignements).delete()
 
-		for enseignement in enseignements:
-			CollesEnseignement(
-					enseignement=enseignement,
-					frequence=frequence,
-					duree_frequentielle=duree,
-					periode=periode,
-				).save()
+		colles_ens = CollesEnseignement(
+				nom=nom_enveloppe,
+				frequence=frequence,
+				duree_frequentielle=duree,
+				periode=periode,
+			).save()
+		colles_ens.enseignements.set(enseignements)

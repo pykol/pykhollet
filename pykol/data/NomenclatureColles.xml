@@ -28,6 +28,7 @@
     </colle>
     <colle>
       <!-- Informatique -->
+      <nom>Informatique</nom>
       <codes_mefs>
         <code_mef>30112012210</code_mef>
         <code_mef>30112013220</code_mef>
@@ -64,6 +65,7 @@
     </colle>
     <colle>
       <!-- Langues -->
+      <nom>Langues vivantes</nom>
       <codes_mefs>
         <code_mef>30112012210</code_mef>
         <code_mef>30112013220</code_mef>
@@ -104,6 +106,7 @@
     </colle>
     <colle>
       <!-- Informatique -->
+      <nom>Informatique</nom>
       <codes_mefs>
         <code_mef>30112013210</code_mef>
         <code_mef>30112013220</code_mef>
@@ -140,6 +143,7 @@
     </colle>
     <colle>
       <!-- Langues -->
+      <nom>Langues vivantes</nom>
       <codes_mefs>
         <code_mef>30112013210</code_mef>
         <code_mef>30112013220</code_mef>
@@ -191,6 +195,7 @@
       <duree>PT10M</duree>
     </colle>
     <colle>
+      <nom>Langues vivantes</nom>
       <codes_mefs>
         <code_mef>30111018210</code_mef>
         <code_mef>30111027220</code_mef>
@@ -309,6 +314,7 @@
       <periode>deuxieme_periode</periode>
     </colle>
     <colle>
+      <nom>Langues vivantes</nom>
       <codes_mefs>
         <code_mef>30111019210</code_mef>
       </codes_mefs>
@@ -378,6 +384,7 @@
       <duree>PT10M</duree>
     </colle>
     <colle>
+      <nom>Langues vivantes</nom>
       <codes_mefs>
         <code_mef>30111032220</code_mef>
         <code_mef>30111028220</code_mef>
@@ -446,6 +453,7 @@
       <duree>PT5M</duree>
     </colle>
     <colle>
+      <nom>Langues vivantes</nom>
       <codes_mefs>
         <code_mef>30111033220</code_mef>
       </codes_mefs>
@@ -554,6 +562,7 @@
       <duree>PT30M</duree>
     </colle>
     <colle>
+      <nom>Langues vivantes A</nom>
       <codes_mefs>
         <code_mef>30113004210</code_mef>
         <code_mef>30113006220</code_mef>
@@ -575,6 +584,7 @@
       <duree>PT30M</duree>
     </colle>
     <colle>
+      <nom>Langues vivantes B</nom>
       <codes_mefs>
         <code_mef>30113004210</code_mef>
         <code_mef>30113006220</code_mef>

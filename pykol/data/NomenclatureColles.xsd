@@ -49,6 +49,7 @@
   <xs:element name="colle">
     <xs:complexType>
       <xs:all>
+        <xs:element name="nom" type="xs:normalizedString" minOccurs="0"/>
         <xs:element ref="codes_mefs"/>
         <xs:element ref="codes_matieres"/>
         <xs:element name="frequence" type="frequence"/>

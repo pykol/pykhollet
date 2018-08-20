@@ -31,10 +31,13 @@ class Dotation(models.Model):
 
 class CollesEnseignement(models.Model):
 	"""
-	Dotation en heures de colle pour les différents enseignements.
+	Dotation en heures de colle pour les différents enseignements d'une
+	classe.
 	"""
 
 	nom = models.CharField(max_length=100, blank=True)
+
+	classe = models.ForeignKey(Classe, on_delete=models.CASCADE)
 
 	# Liste des enseignements qui partagent cette dotation
 	enseignements = models.ManyToManyField(Enseignement)
@@ -114,7 +117,7 @@ class CollesEnseignement(models.Model):
 
 	def __str__(self):
 		if self.nom:
-			return self.nom
+			return "{} - {}".format(self.classe, self.nom)
 		else:
 			return str(self.enseignements.first())
 

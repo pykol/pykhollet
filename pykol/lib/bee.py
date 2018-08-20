@@ -718,6 +718,11 @@ def import_stsemp(stsemp_xml):
 ### Import des dotations horaires en colles
 def import_nomenclature_colles(nomcolles_xml):
 	nomcolles_et = ET.parse(nomcolles_xml)
+
+	# Table rase de ce qui pouvait déjà exister en base de données
+	CollesEnseignement.objects.filter(
+			classe__annee=Annee.objects.get_actuelle()).delete()
+
 	for colle_et in nomcolles_et.getroot().findall('colles/colle'):
 		mefs = [x.text for x in colle_et.findall('codes_mefs/code_mef')]
 		matieres = [x.text for x in colle_et.findall('codes_matieres/code_matiere')]
@@ -734,7 +739,7 @@ def import_nomenclature_colles(nomcolles_xml):
 		try:
 			nom_enveloppe = colle_et.find('nom').text
 		except:
-			nom_enveloppe = None
+			nom_enveloppe = ''
 
 		frequence_text = colle_et.find('frequence').text
 		if frequence_text == 'hebdomadaire':
@@ -742,16 +747,20 @@ def import_nomenclature_colles(nomcolles_xml):
 		elif frequence_text == 'trimestrielle':
 			frequence = CollesEnseignement.FREQUENCE_TRIMESTRIELLE
 
-		enseignements = Enseignement.objects.filter(
-				classe__mef__code_mef__in=mefs,
+		for classe in Classe.objects.filter(mef__code_mef__in=mefs):
+			enseignements = Enseignement.objects.filter(
+				classe=classe,
 				matiere__code_matiere__in=matieres).distinct()
 
-		# TODO delete CollesEnseignement.objects.filter(enseignement__in=enseignements).delete()
-
-		colles_ens = CollesEnseignement(
-				nom=nom_enveloppe,
-				frequence=frequence,
-				duree_frequentielle=duree,
-				periode=periode,
-			).save()
-		colles_ens.enseignements.set(enseignements)
+			# On n'ajoute la dotation que si l'on a les enseignements
+			# correspondants.
+			if enseignements:
+				colles_ens = CollesEnseignement(
+						classe=classe,
+						nom=nom_enveloppe,
+						frequence=frequence,
+						duree_frequentielle=duree,
+						periode=periode,
+					)
+				colles_ens.save()
+				colles_ens.enseignements.set(enseignements)

@@ -175,11 +175,11 @@ class EtudiantInline(admin.TabularInline):
 	extra = 0
 	show_change_link = True
 	readonly_fields = ('__str__',)
-	fields = ('__str__', 'entree', 'sortie',)
+	fields = ('__str__',)
 	fk_name = 'classe'
 	can_delete = False
 
-	def has_add_permission(self, request):
+	def has_add_permission(self, *args):
 		return False
 
 admin_site.register(Groupe)
@@ -188,7 +188,7 @@ admin_site.register(Groupe)
 class ClasseAdmin(admin.ModelAdmin):
 	fieldsets = (
 			(None, {
-				'fields': (('nom', 'niveau', 'annee'), 'slug', 'coordonnateur',),
+				'fields': (('nom', 'niveau', 'annee', 'mef'), 'slug', 'coordonnateur',),
 				}),
 			)
 	inlines = [EnseignementInline, EtudiantInline]

@@ -18,7 +18,7 @@
       <!-- Mathématiques -->
       <codes_mefs>
         <code_mef>30112012210</code_mef>
-        <code_mef>30112013220</code_mef>
+        <code_mef>30112012220</code_mef>
       </codes_mefs>
       <codes_matieres>
         <code_matiere>061600</code_matiere>
@@ -31,7 +31,7 @@
       <nom>Informatique</nom>
       <codes_mefs>
         <code_mef>30112012210</code_mef>
-        <code_mef>30112013220</code_mef>
+        <code_mef>30112012220</code_mef>
       </codes_mefs>
       <codes_matieres>
         <code_matiere>061600</code_matiere>
@@ -43,7 +43,7 @@
       <!-- Culture générale -->
       <codes_mefs>
         <code_mef>30112012210</code_mef>
-        <code_mef>30112013220</code_mef>
+        <code_mef>30112012220</code_mef>
       </codes_mefs>
       <codes_matieres>
         <code_matiere>001700</code_matiere>
@@ -55,7 +55,7 @@
       <!-- Histoire-géo -->
       <codes_mefs>
         <code_mef>30112012210</code_mef>
-        <code_mef>30112013220</code_mef>
+        <code_mef>30112012220</code_mef>
       </codes_mefs>
       <codes_matieres>
         <code_matiere>043600</code_matiere>
@@ -68,7 +68,7 @@
       <nom>Langues vivantes</nom>
       <codes_mefs>
         <code_mef>30112012210</code_mef>
-        <code_mef>30112013220</code_mef>
+        <code_mef>30112012220</code_mef>
       </codes_mefs>
       <codes_matieres>
         <!-- Allemand -->

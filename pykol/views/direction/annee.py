@@ -67,8 +67,6 @@ def annee_detail(request, pk):
 		dotations[classe]['total_heures'] += heures
 		total_heures += heures
 
-	print(dotations)
-
 	return render(request, 'pykol/annee_detail.html', context={
 		'annee': annee,
 		'dotation_formset': dotation_formset,

@@ -202,6 +202,9 @@ class ModuleElementaireFormation(models.Model):
 	matieres = models.ManyToManyField(Matiere, through='MEFMatiere')
 	libelle = models.CharField(max_length=100)
 
+	def __str__(self):
+		return self.code_mef
+
 class MEFMatiere(models.Model):
 	"""
 	Appartenance d'une matière à un MEF

@@ -35,9 +35,13 @@ class MonProfilForm(forms.ModelForm):
 	"""
 	prefix = 'profil'
 
+	def __init__(self, *args, **kwargs):
+		super().__init__(*args, **kwargs)
+		self.fields['email'].disabled = True
+
 	class Meta:
 		model = User
-		fields = ('email', )
+		fields = ('email',)
 
 class MonProfilPasswordForm(PasswordChangeForm):
 	"""

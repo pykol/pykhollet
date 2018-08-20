@@ -80,7 +80,8 @@ class Annee(Periode):
 		return True
 
 	def dotation_totale(self):
-		return self.dotation_set.aggregate(total=models.Sum('heures'))['total']
+		nb_heures = self.dotation_set.aggregate(total=models.Sum('heures'))['total'] or 0
+		return datetime.timedelta(hours=nb_heures)
 
 	def __str__(self):
 		return self.nom

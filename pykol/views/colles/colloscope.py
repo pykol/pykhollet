@@ -54,7 +54,8 @@ def colle_creer(request, slug):
 				creneau=form.cleaned_data['creneau'],
 				semaine=form.cleaned_data['semaine'],
 				classe=classe,
-				matiere=colleenseignement.enseignement.matiere,
+				# XXX matière mal choisie
+				matiere=colleenseignement.enseignements.first().matiere,
 				groupe=form.cleaned_data['trinome'],
 				duree=colleenseignement.duree,
 				mode=form.cleaned_data['mode'])

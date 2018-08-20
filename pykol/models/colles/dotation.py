@@ -83,24 +83,20 @@ class CollesEnseignement(models.Model):
 		else:
 			return self.duree_frequentielle
 
-	def dotation(self, classe=None, enseignement=None):
+	def dotation(self, enseignement=None):
 		"""
-		Calcule la dotation en heures de colles théorique pour ces
-		enseignements dans la classe donnée.
+		Calcule la dotation en heures de colles théorique pour un
+		enseignement donné. Si l'enseignement n'est pas précisé, on
+		calcule la dotation globale pour tous les enseignements.
 		"""
-		if classe:
-			q_classe = Q(classe=classe)
-		else:
-			q_classe = True
-
 		if enseignement:
 			# TODO vérifier que l'enseignement est bien dans la liste ?
 			q_enseignement=Q(groupe__enseignement=enseignement)
 		else:
 			q_enseignement=Q(groupe__enseignement__in=self.enseignements.all())
 
-		nb_etudiants = Etudiant.objects.filter(q_classe,
-				q_enseignement).count()
+		nb_etudiants = Etudiant.objects.filter(Q(classe=classe),
+				q_enseignement).distinct().count()
 
 		if self.frequence == CollesEnseignement.FREQUENCE_HEBDOMADAIRE:
 			if self.periode == CollesEnseignement.PERIODE_ANNEE:

@@ -57,7 +57,7 @@ class ColleForm(forms.Form):
 		self.fields['trinome'].queryset = Trinome.objects.filter(dans_classe=classe).order_by('nom')
 		self.fields['etudiants'].queryset = classe.etudiants.order_by('last_name', 'first_name')
 		self.fields['enseignement'].queryset = CollesEnseignement.objects.filter(
-				enseignement__classe=classe)
+				enseignements__classe=classe)
 
 	def clean(self):
 		cleaned_data = super().clean()

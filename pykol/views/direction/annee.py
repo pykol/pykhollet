@@ -39,8 +39,7 @@ def annee_detail(request, pk):
 	annee = get_object_or_404(Annee, pk=pk)
 
 	if request.method == 'POST':
-		dotation_formset = DotationFormSet(request.POST, instance=annee,
-				extra=1)
+		dotation_formset = DotationFormSet(request.POST, instance=annee)
 		if dotation_formset.is_valid():
 			dotation_formset.save()
 			return redirect('annee_detail', pk=annee.pk)

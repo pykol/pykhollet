@@ -19,6 +19,7 @@
 from datetime import timedelta
 
 from django.db import models
+from django.db.models import Q
 
 from pykol.models.base import Annee, Enseignement, Classe, Etudiant
 
@@ -95,19 +96,19 @@ class CollesEnseignement(models.Model):
 		else:
 			q_enseignement=Q(groupe__enseignement__in=self.enseignements.all())
 
-		nb_etudiants = Etudiant.objects.filter(Q(classe=classe),
+		nb_etudiants = Etudiant.objects.filter(Q(classe=self.classe),
 				q_enseignement).distinct().count()
 
 		if self.frequence == CollesEnseignement.FREQUENCE_HEBDOMADAIRE:
 			if self.periode == CollesEnseignement.PERIODE_ANNEE:
-				mult = classe.get_nb_semaines()
+				mult = self.classe.get_nb_semaines_colles()
 			elif self.periode == CollesEnseignement.PERIODE_PREMIERE:
 				# Fixé par l'arrêté du 10 février 1995 (RESK9500109A)
 				mult = 18
 			else: # Deuxième période
-				mult = classe.get_nb_semaines() - 18
+				mult = self.classe.get_nb_semaines_colles() - 18
 		else:
-			mult = classe.get_nb_trimestres()
+			mult = self.classe.get_nb_trimestres_colles()
 
 		return nb_etudiants * self.duree_frequentielle * mult
 

@@ -1,4 +1,5 @@
 {% extends "pykol/base.html" %}
+{% load timedelta %}
 {% block content %}
 <h2>Année scolaire {{ annee }}</h2>
 
@@ -15,9 +16,16 @@
     </tr>
 
     <tr>
-      <th>Heures de colles</th>
-      <td>{{ annee.dotation_totale }}</td>
+      <th>Heures de colles déléguées</th>
+      <td>{{ annee.dotation_totale|heures }}</td>
     </tr>
+
+    {% if dotations %}
+    <tr>
+      <th>Heures théoriques</th>
+      <td>{{ total_heures|heures }}</td>
+    </tr>
+    {% endif %}
   </table>
 </section>
 
@@ -55,5 +63,47 @@
 
     <input type="submit">
   </form>
+</section>
+
+<section>
+  <h3>Dotations par classe</h3>
+  {% if dotations %}
+  <table>
+    <thead>
+      <tr>
+        <th>Classe</th>
+        <th>Matière</th>
+        <th>Heures</th>
+        <th>Total</th>
+      </tr>
+    </thead>
+      <tbody>
+      {% for classe, dotation in dotations.items %}
+      {% for matiere in dotation.matieres %}
+      <tr>
+        {% ifchanged classe %}
+        <th rowspan="{{ dotation.matieres|length }}">{{ classe }}</th>
+        {% endifchanged %}
+        <td>{{ matiere.matiere }}</td>
+        <td>{{ matiere.heures|heures }}</td>
+        {% ifchanged classe %}
+        <td rowspan="{{ dotation.matieres|length }}">{{ dotation.total_heures|heures }}</td>
+        {% endifchanged %}
+      </tr>
+      {% endfor %}
+      {% endfor %}
+    </tbody>
+    <tfoot>
+      <tr>
+        <th colspan="3">Total</th>
+        <td>{{ total_heures|heures }}</td>
+      </tr>
+    </tfoot>
+  </table>
+  {% else %}
+  <p>La base de données ne contient pour le moment aucune information
+  concernant les colles. Les données de l'année n'ont probablement pas
+  encore été importées depuis le menu <em>Paramétrage</em>.
+  {% endif %}
 </section>
 {% endblock %}

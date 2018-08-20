@@ -16,14 +16,17 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+from datetime import timedelta
+
 from django.views import generic, View
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.mixins import LoginRequiredMixin, \
 	PermissionRequiredMixin
 from django.contrib.auth.decorators import login_required, permission_required
+from django.db.models import Sum
 
 from pykol.models.base import Annee
-from pykol.models.colles import Dotation
+from pykol.models.colles import Dotation, CollesEnseignement
 from pykol.forms.annee import DotationFormSet
 
 class AnneeListView(LoginRequiredMixin, generic.ListView):
@@ -44,8 +47,34 @@ def annee_detail(request, pk):
 	else:
 		dotation_formset = DotationFormSet(instance=annee)
 
+	# Calcul des dotations théoriques pour les classes
+	colles_ens = CollesEnseignement.objects.filter(
+			classe__annee=annee).order_by('classe__nom')
+	dotations = {}
+	total_heures = timedelta()
+	for ligne in colles_ens:
+		classe = ligne.classe
+		if classe not in dotations:
+			dotations[classe] = {
+					'total_heures': timedelta(),
+					'matieres': []
+				}
+
+		heures = ligne.dotation()
+		dotations[classe]['matieres'].append({
+			'matiere': ligne,
+			'heures': heures})
+		dotations[classe]['total_heures'] += heures
+		total_heures += heures
+
+	print(dotations)
+
 	return render(request, 'pykol/annee_detail.html', context={
-		'annee' : annee, 'dotation_formset': dotation_formset})
+		'annee': annee,
+		'dotation_formset': dotation_formset,
+		'dotations': dotations,
+		'total_heures': total_heures,
+		})
 
 @login_required
 @permission_required('pykol.direction')

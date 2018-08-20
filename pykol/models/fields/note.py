@@ -52,12 +52,7 @@ class Note:
 				self.value = float(value)
 				self.kind = Note.NOTE
 			except (ValueError, TypeError):
-				raise ValueError("Une note doit être soit un nombre, "
-					"soit l'une des valeurs particulières suivantes: "
-					"'nn' (non noté, compte dans une moyenne), "
-					"'vu' (non noté, ne compte pas dans une moyenne), "
-					"'a' (absence, compte dans une moyenne), "
-					"'ae' (absence excusée, ne compte pas dans une moyenne)")
+				raise ValueError
 
 	def __repr__(self):
 		if self.kind == Note.NOTE:
@@ -170,7 +165,14 @@ class NoteField(models.Field):
 		try:
 			return Note(value)
 		except ValueError as e:
-			raise ValidationError(e.message, code='invalid',
+			raise ValidationError(
+					"Une note doit être soit un nombre, "
+					"soit l'une des valeurs particulières suivantes: "
+					"'nn' (non noté, compte dans une moyenne), "
+					"'vu' (non noté, ne compte pas dans une moyenne), "
+					"'a' (absence, compte dans une moyenne), "
+					"'ae' (absence excusée, ne compte pas dans une moyenne)",
+					code='invalid',
 					params={'value': value})
 
 	def get_prep_value(self, note):

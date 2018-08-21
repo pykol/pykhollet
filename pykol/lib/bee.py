@@ -225,17 +225,25 @@ def import_etudiants(eleves_xml, annee):
 def creer_enseignements(classes, groupe, groupe_et, dict_profs):
 	for service in groupe_et.findall('SERVICES/SERVICE'):
 		code_matiere = service.attrib['CODE_MATIERE']
-		try:
-			matiere = Matiere.objects.get(code_matiere=code_matiere)
-		except Matiere.DoesNotExist:
-			# Il arrive que l'administration ne remplisse pas
-			# correctement ses emplois du temps et ajoute des matières
-			# qui ne sont pas dans le programme de la classe (c'est
-			# souvent un cas d'homonymie sur des matières, qui existent
-			# sous plusieurs codes selon les classes).
-			continue
+		# On préfère un .filter à un .get car :
+		# 1. il arrive que l'administration ne remplisse pas
+		#    correctement ses emplois du temps et ajoute des matières
+		#    qui ne sont pas dans le programme de la classe (c'est
+		#    souvent un cas d'homonymie sur des matières, qui existent
+		#    sous plusieurs codes selon les classes) ;
+		# 2. on obtient ainsi un itérable, ce qui convient bien au hack
+		#    pour la culture générale plus bas, qui manipule deux
+		#    matières.
+		
+		# Pour la culture générale en ECS/ECE, on fait un petit extra...
+		# TODO ne peut-on pas tester simplement si la matière est
+		# virtuelle ?
+		if code_matiere == '001700':
+			matieres = Matiere.objects.filter(parent__code_matiere=code_matiere)
+		else:
+			matieres = Matiere.objects.filter(code_matiere=code_matiere)
 
-		# Pour l'instant, on ne préoccupe que des cours généraux, la
+		# Pour l'instant, on ne se préoccupe que des cours généraux, la
 		# bonne solution serait de se contenter des programmes dans la
 		# nomenclature.
 		if service.attrib['CODE_MOD_COURS'] != 'CG':
@@ -246,24 +254,42 @@ def creer_enseignements(classes, groupe, groupe_et, dict_profs):
 		# TODO et si la clé code_prof n'existe pas ?
 		profs = [dict_profs[code_prof] for code_prof in codes_enseignants]
 
-		enseignement, _ = Enseignement.objects.update_or_create(
-				matiere=matiere,
-				groupe=groupe,
-				defaults={
-					'matiere': matiere,
-					'groupe': groupe,
-					'option': False, # TODO
-					'specialite': False, # TODO
-					})
+		# Bien souvent, cette boucle ne fait qu'une seule itération.
+		# Elle n'en fait deux que pour la culture générale en ECS/ECE
+		# (voir plus haut à la définition de matieres).
+		for matiere in matieres:
+			enseignement, _ = Enseignement.objects.update_or_create(
+					matiere=matiere,
+					groupe=groupe,
+					defaults={
+						'matiere': matiere,
+						'groupe': groupe,
+						'option': False, # TODO
+						'specialite': False, # TODO
+						})
+	
+			for prof in profs:
+				# Dernier extra pour la culture générale : on relie le
+				# prof de philo à la sous-matière philo et le prof de
+				# lettres à la sous-matière lettres.
+				disciplines_prof = prof.disciplines.values_list('code',
+						flat=True)
 
-		for prof in profs:
-			Service.objects.update_or_create(
-					enseignement=enseignement,
-					professeur=prof)
+				if matiere.code_matiere == '001701' and \
+						'L0201' not in disciplines_prof and \
+						'L0202' not in disciplines_prof:
+					continue
+				if matiere.code_matiere == '001702' and \
+						'L0100' not in disciplines_prof:
+					continue
 
-		# Ajouter l'enseignement aux classes
-		for classe in classes:
-			classe.enseignements.add(enseignement)
+				Service.objects.update_or_create(
+						enseignement=enseignement,
+						professeur=prof)
+	
+			# Ajouter l'enseignement aux classes
+			for classe in classes:
+				classe.enseignements.add(enseignement)
 
 def import_divisions(divisions_et, annee, dict_profs={}):
 	"""Import des divisions (classes) à partir du fichier Structures.xml
@@ -479,10 +505,34 @@ def dict_matieres(matieres_et):
 		else:
 			code_parent = None
 
+
+		# Exception pour la culture générale en ECS/ECE, qui possède le
+		# code 001700 et que l'on découpe artificiellement en deux
+		# sous-matières 001701 (culture générale - lettres) et 001702
+		# (culture générale - philosophie).
+		if code_matiere == '001700':
+			code_lettres = code_matiere[:4] + '01'
+			code_philo   = code_matiere[:4] + '02'
+			matieres[code_lettres] = {
+					'code_matiere': code_lettres,
+					'nom': "Lettres",
+					'virtuelle': False,
+					'code_parent': code_matiere
+				}
+			matieres[code_philo] = {
+					'code_matiere': code_philo,
+					'nom': "Philosophie",
+					'virtuelle': False,
+					'code_parent': code_matiere
+				}
+			matiere_virtuelle = True
+		else:
+			matiere_virtuelle = False
+
 		matieres[code_matiere] = {
 				'code_matiere': code_matiere,
 				'nom': matiere.find('LIBELLE_EDITION').text,
-				'virtuelle': False,
+				'virtuelle': matiere_virtuelle,
 				'code_parent': code_parent,
 				}
 	return matieres
@@ -567,6 +617,17 @@ def import_programmes(programmes_et, matieres):
 		matiere, _ = Matiere.objects.update_or_create(
 				code_matiere=code_matiere,
 				defaults=matieres[code_matiere])
+
+		# Si la matière est virtuelle, on construit les matières filles
+		if matiere.virtuelle:
+			filles = [m for m in matieres.values() if 'code_parent' in m
+					and m['code_parent'] == code_matiere]
+			for fille in filles:
+				fille.pop('code_parent', None)
+				fille['parent'] = matiere
+				Matiere.objects.update_or_create(
+					code_matiere=fille['code_matiere'],
+					defaults=fille)
 
 		#est_option = (programme.find('CODE_MODALITE_ELECT').text in ('O', 'F'))
 		#est_specialite = (programme.find('CODE_MODALITE_ELECT').text == 'O')

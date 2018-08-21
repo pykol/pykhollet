@@ -49,7 +49,7 @@ class Matiere(models.Model):
 	"""
 	nom = models.CharField(max_length=100)
 	parent = models.ForeignKey('self', null=True, blank=True,
-			on_delete=models.SET_NULL)
+			on_delete=models.SET_NULL, related_name='filles')
 	virtuelle = models.BooleanField()
 	code_matiere = models.CharField(max_length=20, null=False,
 			blank=True, unique=True)

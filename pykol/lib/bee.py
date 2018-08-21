@@ -368,7 +368,13 @@ def import_groupes(groupes_et, annee, dict_profs={}):
 		# On détaille les effectifs du groupe par classe
 		divisions_et = groupe_et.findall('DIVISIONS_APPARTENANCE/DIVISION_APPARTENANCE')
 		for division_et in divisions_et:
-			code_div = division_et.attrib['CODE']
+			try:
+				# Version STS
+				code_div = division_et.attrib['CODE']
+			except KeyError:
+				# Version SIECLE/Structure
+				code_div = division_et.find('CODE_STRUCTURE').text
+
 			classe = Classe.objects.get(code_structure=code_div)
 			try:
 				effectif_div = int(division_et.find('EFFECTIF_PREVU').text)

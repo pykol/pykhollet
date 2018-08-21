@@ -38,7 +38,7 @@ import isodate
 from pykol.models.base import User, Etudiant, Professeur, \
 		Annee, Classe, Etablissement, Academie, \
 		Groupe, Matiere, Enseignement, Service, \
-		ModuleElementaireFormation
+		ModuleElementaireFormation, GroupeEffectif
 from pykol.models.colles import CollesEnseignement
 
 class CodeMEF:
@@ -347,6 +347,14 @@ def import_groupes(groupes_et, dict_profs={}):
 				code_structure__in=codes_divisions)
 		# TODO on teste si divisions est vide ?
 
+		# L'effectif est présent dans la version STS. On l'importe dans
+		# ce cas. Le détail de l'effectif par classe est importé plus
+		# bas, une fois que le groupe est créé.
+		try:
+			effectif = int(groupe_et.find('EFFECTIF_PREVU').text)
+		except:
+			effectif = None
+
 		groupe, _ = Groupe.objects.update_or_create(
 				nom=code_structure,
 				annee=annee_actuelle,
@@ -356,9 +364,25 @@ def import_groupes(groupes_et, dict_profs={}):
 					'slug': slugify('{}-{}'.format(annee_actuelle,
 						code_structure)),
 					'mode': Groupe.MODE_AUTOMATIQUE,
+					'effectif_sts': effectif,
 					})
 
 		creer_enseignements(classes, groupe, groupe_et, dict_profs)
+
+		# On détaille les effectifs du groupe par classe
+		divisions_et = groupe_et.findall('DIVISIONS_APPARTENANCE/DIVISION_APPARTENANCE')
+		for division_et in divisions_et:
+			code_div = division_et.attrib['CODE']
+			classe = Classe.objects.get(code_structure=code_div)
+			try:
+				effectif_div = int(division_et.find('EFFECTIF_PREVU').text)
+			except:
+				effectif_div = None
+
+			GroupeEffectif.objects.update_or_create(
+					groupe=groupe, classe=classe,
+					defaults={'effectif_sts': effectif_div})
+
 
 def import_structures(structures_xml):
 	"""Import du fichier Structures.xml"""

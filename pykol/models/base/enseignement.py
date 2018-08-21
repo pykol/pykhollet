@@ -65,6 +65,17 @@ class Matiere(models.Model):
 		else:
 			return self.nom
 
+class GroupeEffectif(models.Model):
+	"""
+	Appartenance d'un groupe à une classe, en donnant la part de
+	l'effectif du groupe qui est dans cette classe tel qu'il est indiqué
+	dans l'export STS.
+	"""
+	groupe = models.ForeignKey('Groupe', on_delete=models.CASCADE)
+	classe = models.ForeignKey('Classe', on_delete=models.CASCADE,
+			related_name='+')
+	effectif_sts = models.PositiveSmallIntegerField(blank=True, null=True)
+
 class Groupe(models.Model):
 	"""
 	Groupe d'élèves
@@ -94,6 +105,11 @@ class Groupe(models.Model):
 		(MODE_AUTOMATIQUE, "automatique"),
 		), default=MODE_MANUEL)
 
+	effectif_sts = models.PositiveSmallIntegerField(blank=True,
+			null=True)
+
+	classes_appartenance = models.ManyToManyField('Classe', through=GroupeEffectif)
+
 	class Meta:
 		unique_together = ('nom', 'annee')
 
@@ -119,7 +135,30 @@ class Groupe(models.Model):
 
 	@property
 	def effectif(self):
-		return self.etudiants.count()
+		"""
+		Calcul de l'effectif du groupe. Quand la liste des étudiants est
+		renseignée, on renvoie le nombre d'étudiants d'après ce champ.
+		Cependant, il arrive que la liste des étudiants ne soit pas
+		disponible (car pas renseignée dans SIECLE ou STS) mais que
+		l'effectif soit indiqué dans l'export STS. Si cet effectif a été
+		stocké dans le champ effectif_sts, on renvoie sa valeur.
+		"""
+		if self.etudiants.all():
+			return self.etudiants.count()
+		else:
+			return self.effectif_sts or 0
+
+	def effectif_classe(self, classe=None):
+		"""
+		Renvoie l'effectif de la partie du groupe qui appartient à la
+		classe donnée en paramètre. Cet effectif est calculé d'après la
+		composition du groupe, si elle est renseignée, ou bien d'après
+		les données importées de STS.
+		"""
+		if self.etudiants.all():
+			return self.etudiants.filter(classe=classe).count()
+		else:
+			return self.groupeeffectif_set.get(classe=classe).effectif_sts or 0
 
 	@property
 	def emails(self):
@@ -178,7 +217,7 @@ class Enseignement(models.Model):
 
 	class Meta:
 		ordering = ['groupe', 'matiere']
-	
+
 	def __str__(self):
 		return "{} - {}".format(self.groupe, self.matiere)
 

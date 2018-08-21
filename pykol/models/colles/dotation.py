@@ -92,12 +92,13 @@ class CollesEnseignement(models.Model):
 		"""
 		if enseignement:
 			# TODO vérifier que l'enseignement est bien dans la liste ?
-			q_enseignement=Q(groupe__enseignement=enseignement)
+			enseignements = [enseignement]
 		else:
-			q_enseignement=Q(groupe__enseignement__in=self.enseignements.all())
+			enseignements = self.enseignements.all()
 
-		nb_etudiants = Etudiant.objects.filter(Q(classe=self.classe),
-				q_enseignement).distinct().count()
+		nb_etudiants = 0
+		for enseignement in enseignements:
+			nb_etudiants += enseignement.groupe.effectif_classe(self.classe)
 
 		if self.frequence == CollesEnseignement.FREQUENCE_HEBDOMADAIRE:
 			if self.periode == CollesEnseignement.PERIODE_ANNEE:

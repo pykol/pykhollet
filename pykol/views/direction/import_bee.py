@@ -26,6 +26,7 @@ from django.contrib import messages
 from django.conf import settings
 
 from pykol.forms.import_bee import ImportBEEForm
+from pykol.models.base import Annee
 import pykol.lib.bee
 
 @login_required
@@ -36,6 +37,8 @@ def import_bee(request):
 		if form.is_valid():
 			import_success = []
 
+			annee = form.cleaned_data.get('annee')
+
 			if form.cleaned_data['stsemp']:
 				try:
 					stsemp_zip = zipfile.ZipFile(request.FILES['stsemp'])
@@ -45,7 +48,17 @@ def import_bee(request):
 					request.FILES['stsemp'].seek(0)
 					stsemp_xml = request.FILES['stsemp']
 
-				pykol.lib.bee.import_stsemp(stsemp_xml)
+				# On privilégie l'année scolaire provenant de STS
+				annee_sts = pykol.lib.bee.import_stsemp(stsemp_xml)
+				if annee_sts != annee:
+					messages.warning(request,
+							"Le champ « Année scolaire » a été ignoré "
+							"car l'année scolaire est présente dans le "
+							"fichier STS. L'année qui se trouve dans "
+							"ce fichier a été utilisée pour stocker les "
+							"données")
+				annee = annee_sts
+
 				stsemp_xml.close()
 				import_success.append('STS-EMP')
 
@@ -53,7 +66,7 @@ def import_bee(request):
 				with zipfile.ZipFile(request.FILES['structure']) as structure_zip:
 					xml_name = structure_zip.namelist()[0]
 					structure_xml = structure_zip.open(xml_name)
-					pykol.lib.bee.import_structures(structure_xml)
+					pykol.lib.bee.import_structures(structure_xml, annee)
 				import_success.append('Structures')
 
 			if form.cleaned_data['nomenclature']:
@@ -67,13 +80,13 @@ def import_bee(request):
 				with zipfile.ZipFile(request.FILES['eleves']) as eleves_zip:
 					xml_name = eleves_zip.namelist()[0]
 					eleves_xml = eleves_zip.open(xml_name)
-					pykol.lib.bee.import_etudiants(eleves_xml)
+					pykol.lib.bee.import_etudiants(eleves_xml, annee)
 				import_success.append('Élèves')
 
 			# Import des données des colles
 			nomcolles_file = os.path.join(settings.BASE_DIR, 'pykol/data/NomenclatureColles.xml')
 			with open(nomcolles_file, encoding="utf-8") as nomcolles_xml:
-				pykol.lib.bee.import_nomenclature_colles(nomcolles_xml)
+				pykol.lib.bee.import_nomenclature_colles(nomcolles_xml, annee)
 
 			# TODO améliorer la gestion des erreurs
 
@@ -91,4 +104,7 @@ def import_bee(request):
 	else:
 		form = ImportBEEForm()
 
-	return render(request, 'pykol/import_bee.html', {'form': form})
+	return render(request, 'pykol/import_bee.html', context={
+		'form': form,
+		'annee_scolaire_none': not(Annee.objects.all()),
+	})

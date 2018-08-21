@@ -20,7 +20,17 @@
   exemple uniquement mettre à jour la liste des étudiants, importez
   uniquement le fichier élèves.
 
+  {% if annee_scolaire_none %}
+  <h3>Année scolaire</h3>
+  <p>Aucune année scolaire n'existe actuellement dans la base de
+  données. Vous devez, au choix, soit créer manuellement une année
+  scolaire, soit inclure le fichier STS lors de l'import. Ce fichier
+  contient les données qui permettent de déterminer ou de créer l'année
+  scolaire.</p>
+  {% endif %}
+
   {% if messages %}
+  <h3>Messages</h3>
   <ul class="messages">
       {% for message in messages %}
       <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
@@ -29,6 +39,7 @@
   {% endif %}
 
   <form enctype="multipart/form-data" action="{% url 'import_bee' %}" method="post">
+    <h3>Import des données</h3>
     {% csrf_token %}
     <table>
       {{ form.as_table }}

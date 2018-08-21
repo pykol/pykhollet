@@ -132,7 +132,7 @@ def appartenance_mef_cpge(mef_appartenance_et):
 
 	return None
 
-def import_etudiants(eleves_xml):
+def import_etudiants(eleves_xml, annee):
 	"""Import de la liste des étudiants à partir du fichier XML
 
 	Cette fonction peut être exécutée plusieurs fois sans créer de
@@ -151,9 +151,8 @@ def import_etudiants(eleves_xml):
 	# Préparation d'un dictionnaire des classes de l'année actuelle,
 	# pour retrouver rapidement une classe à partir de son
 	# code_structure.
-	annee_actuelle = Annee.objects.get_actuelle()
 	divisions = dict([(str(c.code_structure), c) for c in
-		Classe.objects.filter(annee=annee_actuelle)])
+		Classe.objects.filter(annee=annee)])
 
 	# On construit ensuite le dictionnaire qui à chaque numéro d'élève
 	# associe la classe dans laquelle l'étudiant est inscrit.
@@ -265,7 +264,7 @@ def creer_enseignements(classes, groupe, groupe_et, dict_profs):
 		for classe in classes:
 			classe.enseignements.add(enseignement)
 
-def import_divisions(divisions_et, dict_profs={}):
+def import_divisions(divisions_et, annee, dict_profs={}):
 	"""Import des divisions (classes) à partir du fichier Structures.xml
 
 	Cette fonction peut être exécutée plusieurs fois sans créer de
@@ -277,7 +276,6 @@ def import_divisions(divisions_et, dict_profs={}):
 	mettant à jour la table Classe.
 	"""
 	# Création (ou mise à jour) des classes
-	annee_actuelle = Annee.objects.get_actuelle()
 	for division in divisions_et.findall('DIVISION'):
 		# On ne garde que les classes de l'enseignement supérieur
 		code_mef = appartenance_mef_cpge(division.find('MEFS_APPARTENANCE'))
@@ -303,22 +301,20 @@ def import_divisions(divisions_et, dict_profs={}):
 		classe_data = {
 			'code_structure': code_structure,
 			'mef': mef,
-			'slug': slugify("{annee}-{code}".format(annee=annee_actuelle, code=code_structure)),
+			'slug': slugify("{annee}-{code}".format(annee=annee, code=code_structure)),
 			'nom': division.find('LIBELLE_LONG').text,
 			'niveau': classe_niveau,
-			'annee': annee_actuelle,
+			'annee': annee,
 			'mode': Groupe.MODE_AUTOMATIQUE,
 			}
 		classe, _ = Classe.objects.update_or_create(
 				code_structure=code_structure,
-				annee=annee_actuelle,
+				annee=annee,
 				defaults=classe_data)
 
 		creer_enseignements([classe], classe, division, dict_profs)
 
-def import_groupes(groupes_et, dict_profs={}):
-	annee_actuelle = Annee.objects.get_actuelle()
-
+def import_groupes(groupes_et, annee, dict_profs={}):
 	for groupe_et in groupes_et.findall('GROUPE'):
 		# Récupération du code structure
 		if 'CODE_STRUCTURE' in groupe_et.attrib: # Version SIECLE Structures.xml
@@ -357,11 +353,11 @@ def import_groupes(groupes_et, dict_profs={}):
 
 		groupe, _ = Groupe.objects.update_or_create(
 				nom=code_structure,
-				annee=annee_actuelle,
+				annee=annee,
 				defaults={
 					'nom': code_structure,
-					'annee': annee_actuelle,
-					'slug': slugify('{}-{}'.format(annee_actuelle,
+					'annee': annee,
+					'slug': slugify('{}-{}'.format(annee,
 						code_structure)),
 					'mode': Groupe.MODE_AUTOMATIQUE,
 					'effectif_sts': effectif,
@@ -384,11 +380,13 @@ def import_groupes(groupes_et, dict_profs={}):
 					defaults={'effectif_sts': effectif_div})
 
 
-def import_structures(structures_xml):
+def import_structures(structures_xml, annee):
 	"""Import du fichier Structures.xml"""
 	structures_et = ET.parse(structures_xml)
-	import_divisions(structures_et.getroot().find('DONNEES/DIVISIONS'))
-	import_groupes(structures_et.getroot().find('DONNEES/GROUPES'))
+	import_divisions(structures_et.getroot().find('DONNEES/DIVISIONS'),
+			annee)
+	import_groupes(structures_et.getroot().find('DONNEES/GROUPES'),
+			annee)
 
 def dict_matieres(matieres_et):
 	"""
@@ -657,14 +655,39 @@ def import_sts_etablissement(uaj_xml):
 
 	return etab
 
+def import_sts_annee(annee_et):
+	"""
+	Recherche de l'objet Annee correspondant aux données dans l'export
+	STS.
+
+	Si aucune année n'est trouvée, elle est créée et sauvegardée dans la
+	base de données.
+	"""
+	nom = annee_et.attrib['ANNEE']
+	debut = isodate.parse_date(annee_et.find('DATE_DEBUT').text)
+	fin = isodate.parse_date(annee_et.find('DATE_FIN').text)
+
+	try:
+		return Annee.objects.get(debut=debut, fin=fin)
+	except Annee.DoesNotExist:
+		annee = Annee(nom=nom, debut=debut, fin=fin)
+		annee.save()
+		return annee
+
 def import_stsemp(stsemp_xml):
 	"""
 	Import des services et des professeurs depuis STSWEB
+
+	Cette fonction renvoie l'année scolaire qui a été utilisée pour
+	importer les données.
 	"""
 	stsemp_et = ET.parse(stsemp_xml)
 
 	# Mise à jour de l'établissement
 	etablissement = import_sts_etablissement(stsemp_et.getroot().find('PARAMETRES/UAJ'))
+
+	# Détermination de l'année scolaire
+	annee = import_sts_annee(stsemp_et.find('PARAMETRES/ANNEE_SCOLAIRE'))
 
 	# Construire le dictionnaire des enseignants
 	dict_profs = {}
@@ -733,19 +756,20 @@ def import_stsemp(stsemp_xml):
 
 	# Services d'enseignement dans les classes complètes
 	import_divisions(stsemp_et.getroot().find('DONNEES/STRUCTURE/DIVISIONS'),
-			dict_profs)
+			annee, dict_profs)
 
 	# Services d'enseignement dans des groupes
 	import_groupes(stsemp_et.getroot().find('DONNEES/STRUCTURE/GROUPES'),
-			dict_profs)
+			annee, dict_profs)
+
+	return annee
 
 ### Import des dotations horaires en colles
-def import_nomenclature_colles(nomcolles_xml):
+def import_nomenclature_colles(nomcolles_xml, annee):
 	nomcolles_et = ET.parse(nomcolles_xml)
 
 	# Table rase de ce qui pouvait déjà exister en base de données
-	CollesEnseignement.objects.filter(
-			classe__annee=Annee.objects.get_actuelle()).delete()
+	CollesEnseignement.objects.filter(classe__annee=annee).delete()
 
 	for colle_et in nomcolles_et.getroot().findall('colles/colle'):
 		mefs = [x.text for x in colle_et.findall('codes_mefs/code_mef')]

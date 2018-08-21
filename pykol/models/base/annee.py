@@ -47,7 +47,10 @@ class AnneeManager(models.Manager):
 		Renvoie l'année actuelle
 		"""
 		today = datetime.date.today()
-		return self.get(debut__lte=today, fin__gte=today)
+		try:
+			return self.get(debut__lte=today, fin__gte=today)
+		except Annee.DoesNotExist:
+			return None
 
 class Annee(Periode):
 	"""

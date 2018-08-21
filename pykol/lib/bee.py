@@ -38,7 +38,8 @@ import isodate
 from pykol.models.base import User, Etudiant, Professeur, \
 		Annee, Classe, Etablissement, Academie, \
 		Groupe, Matiere, Enseignement, Service, \
-		ModuleElementaireFormation, GroupeEffectif
+		ModuleElementaireFormation, GroupeEffectif, \
+		Discipline
 from pykol.models.colles import CollesEnseignement
 
 class CodeMEF:
@@ -732,6 +733,14 @@ def import_stsemp(stsemp_xml):
 		# qu'une clé primaire opaque, non documentée et probablement
 		# instable avec le temps.
 		if fonction == "ENS":
+			# Construction de la liste des disciplines du professeur
+			disciplines = []
+			for discipline_et in individu.findall('DISCIPLINES/DISCIPLINE'):
+				discipline, _ = Discipline.objects.get_or_create(
+						code=discipline_et.attrib['CODE'],
+						defaults={'nom': discipline_et.find('LIBELLE_COURT').text})
+				disciplines.append(discipline)
+
 			dict_profs[individu_id], _ = Professeur.objects.update_or_create(
 					last_name=nom,
 					first_name=prenom,
@@ -743,6 +752,8 @@ def import_stsemp(stsemp_xml):
 						'sexe': sexe,
 						'etablissement': etablissement,
 						})
+			dict_profs[individu_id].disciplines.set(disciplines)
+
 		elif fonction == "DIR":
 			user, _ = User.objects.update_or_create(
 					last_name=nom,

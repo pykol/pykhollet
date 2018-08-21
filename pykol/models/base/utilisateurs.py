@@ -176,6 +176,16 @@ class Etudiant(User):
 	def get_absolute_url(self):
 		return reverse('etudiant', args=(self.pk,))
 
+class Discipline(models.Model):
+	"""
+	Discipline d'enseignement des professeurs
+	"""
+	code = models.CharField(max_length=5, primary_key=True)
+	nom = models.CharField(max_length=100)
+
+	def __str__(self):
+		return "{} ({})".format(self.nom, self.code)
+
 class Professeur(User):
 	"""
 	Professeur intervenant dans l'établissement
@@ -199,6 +209,7 @@ class Professeur(User):
 	etablissement = models.ForeignKey(Etablissement, null=True,
 			blank=True, on_delete=models.SET_NULL,
 			verbose_name="établissement")
+	disciplines = models.ManyToManyField(Discipline)
 
 	class Meta:
 		verbose_name = "professeur"

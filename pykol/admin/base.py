@@ -145,16 +145,7 @@ class VacancesInline(admin.TabularInline):
 class AnneeAdmin(admin.ModelAdmin):
 	inlines = [VacancesInline,]
 
-from import_export import resources
-from import_export.admin import ImportExportModelAdmin
-
-class AcademieResource(resources.ModelResource):
-	class Meta:
-		model = Academie
-
-@register(Academie)
-class AcademieAdmin(ImportExportModelAdmin):
-	resource_class = AcademieResource
+admin_site.register(Academie)
 
 admin_site.register(Matiere)
 

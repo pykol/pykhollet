@@ -66,10 +66,6 @@ class Annee(Periode):
 	supprimées simplement en cascade suite à la suppression de l'année
 	scolaire de la base de données.
 	"""
-	nom = models.CharField(max_length=100)
-	debut = models.DateField(verbose_name="début")
-	fin = models.DateField()
-
 	objects = AnneeManager()
 
 	class Meta:

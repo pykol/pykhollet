@@ -3,7 +3,8 @@
         "model": "pykol.academie",
         "pk": "02",
         "fields": {
-            "nom": "Acad\u00e9mie d'Aix-Marseille",
+            "nom": "Aix-Marseille",
+            "nom_complet": "Acad\u00e9mie d'Aix-Marseille",
             "departements": "13,4,5,84",
             "slug": "aix-marseille"
         }
@@ -12,7 +13,8 @@
         "model": "pykol.academie",
         "pk": "20",
         "fields": {
-            "nom": "Acad\u00e9mie d'Amiens",
+            "nom": "Amiens",
+            "nom_complet": "Acad\u00e9mie d'Amiens",
             "departements": "2,60,80",
             "slug": "amiens"
         }
@@ -21,7 +23,8 @@
         "model": "pykol.academie",
         "pk": "03",
         "fields": {
-            "nom": "Acad\u00e9mie de Besan\u00e7on",
+            "nom": "Besan\u00e7on",
+            "nom_complet": "Acad\u00e9mie de Besan\u00e7on",
             "departements": "25,39,70,90",
             "slug": "besancon"
         }
@@ -30,7 +33,8 @@
         "model": "pykol.academie",
         "pk": "04",
         "fields": {
-            "nom": "Acad\u00e9mie de Bordeaux",
+            "nom": "Bordeaux",
+            "nom_complet": "Acad\u00e9mie de Bordeaux",
             "departements": "24,33,40,47,64",
             "slug": "bordeaux"
         }
@@ -39,7 +43,8 @@
         "model": "pykol.academie",
         "pk": "05",
         "fields": {
-            "nom": "Acad\u00e9mie de Caen",
+            "nom": "Caen",
+            "nom_complet": "Acad\u00e9mie de Caen",
             "departements": "14,50,61",
             "slug": "caen"
         }
@@ -48,7 +53,8 @@
         "model": "pykol.academie",
         "pk": "06",
         "fields": {
-            "nom": "Acad\u00e9mie de Clermont-Ferrand",
+            "nom": "Clermont-Ferrand",
+            "nom_complet": "Acad\u00e9mie de Clermont-Ferrand",
             "departements": "15,3,43,63",
             "slug": "clermont-ferrand"
         }
@@ -57,7 +63,8 @@
         "model": "pykol.academie",
         "pk": "27",
         "fields": {
-            "nom": "Acad\u00e9mie de Corse",
+            "nom": "Corse",
+            "nom_complet": "Acad\u00e9mie de Corse",
             "departements": "2A,2B",
             "slug": "corse"
         }
@@ -66,7 +73,8 @@
         "model": "pykol.academie",
         "pk": "24",
         "fields": {
-            "nom": "Acad\u00e9mie de Cr\u00e9teil",
+            "nom": "Cr\u00e9teil",
+            "nom_complet": "Acad\u00e9mie de Cr\u00e9teil",
             "departements": "77,93,94",
             "slug": "creteil"
         }
@@ -75,7 +83,8 @@
         "model": "pykol.academie",
         "pk": "07",
         "fields": {
-            "nom": "Acad\u00e9mie de Dijon",
+            "nom": "Dijon",
+            "nom_complet": "Acad\u00e9mie de Dijon",
             "departements": "21,58,71,89",
             "slug": "dijon"
         }
@@ -84,7 +93,8 @@
         "model": "pykol.academie",
         "pk": "08",
         "fields": {
-            "nom": "Acad\u00e9mie de Grenoble",
+            "nom": "Grenoble",
+            "nom_complet": "Acad\u00e9mie de Grenoble",
             "departements": "26,38,7,73,74",
             "slug": "grenoble"
         }
@@ -93,7 +103,8 @@
         "model": "pykol.academie",
         "pk": "33",
         "fields": {
-            "nom": "Acad\u00e9mie de Guyane",
+            "nom": "Guyane",
+            "nom_complet": "Acad\u00e9mie de Guyane",
             "departements": "973",
             "slug": "guyane"
         }
@@ -102,7 +113,8 @@
         "model": "pykol.academie",
         "pk": "32",
         "fields": {
-            "nom": "Acad\u00e9mie de la Guadeloupe",
+            "nom": "Guadeloupe",
+            "nom_complet": "Acad\u00e9mie de la Guadeloupe",
             "departements": "971",
             "slug": "guadeloupe"
         }
@@ -111,7 +123,8 @@
         "model": "pykol.academie",
         "pk": "31",
         "fields": {
-            "nom": "Acad\u00e9mie de la Martinique",
+            "nom": "Martinique",
+            "nom_complet": "Acad\u00e9mie de la Martinique",
             "departements": "972",
             "slug": "martinique"
         }
@@ -120,7 +133,8 @@
         "model": "pykol.academie",
         "pk": "28",
         "fields": {
-            "nom": "Acad\u00e9mie de la R\u00e9union",
+            "nom": "R\u00e9union",
+            "nom_complet": "Acad\u00e9mie de la R\u00e9union",
             "departements": "974",
             "slug": "reunion"
         }
@@ -129,7 +143,8 @@
         "model": "pykol.academie",
         "pk": "09",
         "fields": {
-            "nom": "Acad\u00e9mie de Lille",
+            "nom": "Lille",
+            "nom_complet": "Acad\u00e9mie de Lille",
             "departements": "59,62",
             "slug": "lille"
         }
@@ -138,7 +153,8 @@
         "model": "pykol.academie",
         "pk": "22",
         "fields": {
-            "nom": "Acad\u00e9mie de Limoges",
+            "nom": "Limoges",
+            "nom_complet": "Acad\u00e9mie de Limoges",
             "departements": "19,23,87",
             "slug": "limoges"
         }
@@ -147,7 +163,8 @@
         "model": "pykol.academie",
         "pk": "10",
         "fields": {
-            "nom": "Acad\u00e9mie de Lyon",
+            "nom": "Lyon",
+            "nom_complet": "Acad\u00e9mie de Lyon",
             "departements": "1,42,69D,69M",
             "slug": "lyon"
         }
@@ -156,7 +173,8 @@
         "model": "pykol.academie",
         "pk": "11",
         "fields": {
-            "nom": "Acad\u00e9mie de Montpellier",
+            "nom": "Montpellier",
+            "nom_complet": "Acad\u00e9mie de Montpellier",
             "departements": "11,30,34,48,66",
             "slug": "montpellier"
         }
@@ -165,7 +183,8 @@
         "model": "pykol.academie",
         "pk": "12",
         "fields": {
-            "nom": "Acad\u00e9mie de Nancy-Metz",
+            "nom": "Nancy-Metz",
+            "nom_complet": "Acad\u00e9mie de Nancy-Metz",
             "departements": "54,55,57,88",
             "slug": "nancy-metz"
         }
@@ -174,7 +193,8 @@
         "model": "pykol.academie",
         "pk": "17",
         "fields": {
-            "nom": "Acad\u00e9mie de Nantes",
+            "nom": "Nantes",
+            "nom_complet": "Acad\u00e9mie de Nantes",
             "departements": "44,49,53,72,85",
             "slug": "nantes"
         }
@@ -183,7 +203,8 @@
         "model": "pykol.academie",
         "pk": "23",
         "fields": {
-            "nom": "Acad\u00e9mie de Nice",
+            "nom": "Nice",
+            "nom_complet": "Acad\u00e9mie de Nice",
             "departements": "6,83",
             "slug": "nice"
         }
@@ -192,7 +213,8 @@
         "model": "pykol.academie",
         "pk": "01",
         "fields": {
-            "nom": "Acad\u00e9mie de Paris",
+            "nom": "Paris",
+            "nom_complet": "Acad\u00e9mie de Paris",
             "departements": "75",
             "slug": "paris"
         }
@@ -201,7 +223,8 @@
         "model": "pykol.academie",
         "pk": "13",
         "fields": {
-            "nom": "Acad\u00e9mie de Poitiers",
+            "nom": "Poitiers",
+            "nom_complet": "Acad\u00e9mie de Poitiers",
             "departements": "16,17,79,86",
             "slug": "poitiers"
         }
@@ -210,7 +233,8 @@
         "model": "pykol.academie",
         "pk": "19",
         "fields": {
-            "nom": "Acad\u00e9mie de Reims",
+            "nom": "Reims",
+            "nom_complet": "Acad\u00e9mie de Reims",
             "departements": "10,51,52,8",
             "slug": "reims"
         }
@@ -219,7 +243,8 @@
         "model": "pykol.academie",
         "pk": "14",
         "fields": {
-            "nom": "Acad\u00e9mie de Rennes",
+            "nom": "Rennes",
+            "nom_complet": "Acad\u00e9mie de Rennes",
             "departements": "22,29,35,56",
             "slug": "rennes"
         }
@@ -228,7 +253,8 @@
         "model": "pykol.academie",
         "pk": "21",
         "fields": {
-            "nom": "Acad\u00e9mie de Rouen",
+            "nom": "Rouen",
+            "nom_complet": "Acad\u00e9mie de Rouen",
             "departements": "27,76",
             "slug": "rouen"
         }
@@ -237,7 +263,8 @@
         "model": "pykol.academie",
         "pk": "15",
         "fields": {
-            "nom": "Acad\u00e9mie de Strasbourg",
+            "nom": "Strasbourg",
+            "nom_complet": "Acad\u00e9mie de Strasbourg",
             "departements": "67,68",
             "slug": "strasbourg"
         }
@@ -246,7 +273,8 @@
         "model": "pykol.academie",
         "pk": "16",
         "fields": {
-            "nom": "Acad\u00e9mie de Toulouse",
+            "nom": "Toulouse",
+            "nom_complet": "Acad\u00e9mie de Toulouse",
             "departements": "12,31,32,46,65,81,82,9",
             "slug": "toulouse"
         }
@@ -255,7 +283,8 @@
         "model": "pykol.academie",
         "pk": "25",
         "fields": {
-            "nom": "Acad\u00e9mie de Versailles",
+            "nom": "Versailles",
+            "nom_complet": "Acad\u00e9mie de Versailles",
             "departements": "78,91,92,95",
             "slug": "versailles"
         }
@@ -264,7 +293,8 @@
         "model": "pykol.academie",
         "pk": "18",
         "fields": {
-            "nom": "Acad\u00e9mie d'Orl\u00e9ans-Tours",
+            "nom": "Orl\u00e9ans-Tours",
+            "nom_complet": "Acad\u00e9mie d'Orl\u00e9ans-Tours",
             "departements": "18,28,36,37,41,45",
             "slug": "orleans-tours"
         }
@@ -274,6 +304,7 @@
         "pk": "29",
         "fields": {
             "nom": "D\u00e9tach\u00e9s (29\u00e8 base)",
+            "nom_complet": "D\u00e9tach\u00e9s (29\u00e8 base)",
             "departements": "",
             "slug": "detaches"
         }

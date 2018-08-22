@@ -28,6 +28,7 @@ class Academie(models.Model):
 	id = models.PositiveSmallIntegerField(primary_key=True,
 			verbose_name="numéro")
 	nom = models.CharField(max_length=100)
+	nom_complet = models.CharField(max_length=100)
 	slug = models.SlugField()
 	departements = models.CharField(max_length=100, verbose_name="départements",
 			validators=[validate_comma_separated_integer_list])
@@ -37,7 +38,7 @@ class Academie(models.Model):
 		verbose_name_plural = "académies"
 
 	def __str__(self):
-		return self.nom
+		return self.nom_complet
 
 class Etablissement(models.Model):
 	"""

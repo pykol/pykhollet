@@ -74,6 +74,10 @@ class Annee(Periode):
 		verbose_name_plural = 'années scolaires'
 
 	def est_travaille(self, date):
+		"""
+		Renvoie True si et seulement si le paramètre date correspond à
+		un jour travaillé de l'année scolaire.
+		"""
 		if self.weekday() == 6:
 			return False
 		for vacance in self.vacances.all():

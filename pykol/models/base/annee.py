@@ -21,6 +21,9 @@ import datetime
 from django.db import models
 from django.urls import reverse
 
+import requests
+import isodate
+
 class Periode(models.Model):
 	"""
 	Période de l'année scolaire
@@ -92,6 +95,50 @@ class Annee(Periode):
 	def get_absolute_url(self):
 		return reverse('annee_detail', args=(self.pk,))
 
+	def synchro_vacances(self, academie):
+		"""
+		Mise à jour de la liste des vacances depuis les données publiées
+		en open-data par le ministère.
+		"""
+		# Les dates de vacances sont données en prenant le dernier
+		# jour de cours (vacances après la classe) et le premier
+		# jour de reprise (reprise des cours le matin de la date de
+		# fin). Or, pyKol stocke les périodes en prenant en compte
+		# les jours inclus dans la période. Il faut donc décaler les
+		# dates d'un jour.
+		un_jour = datetime.timedelta(days=1)
+
+		# Lors de la requête au serveur, on demande toute période de
+		# vacances qui une intersection non vide avec l'année en cours.
+		api_url = 'https://data.education.gouv.fr/api/records/1.0/download/'
+		query = '(location={academie} AND start_date < {fin} AND end_date > {debut})'.format(
+			academie=academie.nom.title(),
+			debut="{0:%Y/%m/%d}".format(self.debut),
+			fin="{0:%Y/%m/%d}".format(self.fin),
+			)
+		calendrier = requests.get(api_url, params={
+			'dataset': 'fr-en-calendrier-scolaire',
+			'format': 'json',
+			'q': query,
+		}).json()
+
+		# Pas de fantôme vieille période vacances restant
+		self.vacances.filter(type_vacances=Vacances.TYPE_VACANCES).delete()
+
+		for vacances_json in calendrier:
+			debut = isodate.parse_date(vacances_json['fields']['start_date']) \
+					+ un_jour
+			fin   = isodate.parse_date(vacances_json['fields']['end_date']) \
+					- un_jour
+			vacances = Vacances(
+					annee=self,
+					type_vacances=Vacances.TYPE_VACANCES,
+					nom=vacances_json['fields']['description'],
+					debut=debut,
+					fin=fin,
+				)
+			vacances.save()
+
 class Vacances(Periode):
 	"""
 	Périodes de vacances scolaires, ou jours fériés
@@ -114,4 +161,3 @@ class Vacances(Periode):
 
 	def __str__(self):
 		return self.nom
-

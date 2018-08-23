@@ -132,7 +132,7 @@ def semaines(request, slug):
 		toutes_semaines = []
 		while lundi < annee.fin:
 			try:
-				semaine = Semaine.objects.get(debut=lundi)
+				semaine = Semaine.objects.get(classe=classe, debut=lundi)
 				toutes_semaines.append({
 					'debut': semaine.debut,
 					'fin': semaine.fin,

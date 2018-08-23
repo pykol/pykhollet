@@ -133,6 +133,9 @@ class CreneauForm(forms.ModelForm):
 		if classe:
 			self.fields['matiere'].queryset = Matiere.objects.filter(enseignement__classe=classe)
 
+		self.fields['colleur'].queryset = Professeur.objects.order_by(
+				'last_name', 'first_name')
+
 	class Meta:
 		model = Creneau
 		fields = ('classe', 'jour', 'debut', 'fin', 'salle', 'colleur',

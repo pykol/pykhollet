@@ -69,7 +69,7 @@ def trinomes(request, slug):
 			messages.success(request, "Les groupes de colles en "
 					" {classe} ont été mis à jour.".format(
 						classe=classe))
-			return redirect('colloscope_trinomes', slug=classe.slug)
+			return redirect('colloscope', slug=classe.slug)
 	else:
 		formset = TrinomeFormSet(initial=initial,
 				form_kwargs={'queryset': etudiants})

@@ -9,7 +9,7 @@
       <td>{{ collereleve.get_etat_html }}</td>
     </tr>
     <tr>
-      <th colspan="2">{{ collereleve.total_heures }} heures</th>
+      <th colspan="2">{{ collereleve.total_heures|floatformat:"-2" }} heures</th>
     </tr>
   </table>
 </section>
@@ -30,8 +30,8 @@
     <tr>
       <td>{{ ligne.colleur }}</td>
       <td>{{ ligne.get_taux_display }}</td>
-      <td>{{ ligne.heures }}</td>
-      <td>{{ ligne.heures_interrogation }}</td>
+      <td>{{ ligne.heures|floatformat:"-2" }}</td>
+      <td>{{ ligne.heures_interrogation|floatformat:"-2" }}</td>
       <td>{{ ligne.get_etat_display }}{% if ligne.etat == ligne.ETAT_PAYE %} − {{ ligne.date_paiement }}{% endif %}</td>
       <td>{% if ligne.etat != ligne.ETAT_PAYE %}<a class="btn-primary btn-sm" href="{% url 'releveligne_payer' ligne.pk %}">Payer</a>{% endif %}</td>
     </tr>

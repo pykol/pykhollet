@@ -68,7 +68,7 @@ class CollesEnseignement(models.Model):
 	@property
 	def duree(self):
 		"""
-		Durée d'une interrogation.
+		Durée d'interrogation par élève d'une colle.
 
 		Par défaut, on considère que les colles à fréquence
 		hebdomadaire d'après la réglementation sont effectuées à un

@@ -25,7 +25,7 @@ from django.utils.timezone import make_aware
 
 from pykol.models.base import Classe, Professeur, Matiere, Groupe, \
 		Enseignement
-from .colles import Colle
+from .colles import Colle, AbstractBaseColle
 
 # Liste des jours de la semaine, numérotation ISO
 LISTE_JOURS = enumerate(["lundi", "mardi", "mercredi", "jeudi",
@@ -58,7 +58,7 @@ class Semaine(models.Model):
 		horaire += datetime.timedelta(days=delta)
 		return horaire
 
-class Creneau(models.Model):
+class Creneau(AbstractBaseColle):
 	"""Créneau de colle programmé au colloscope
 
 	Un créneau de colle sert de modèle pour créer les Colle et les
@@ -71,24 +71,18 @@ class Creneau(models.Model):
 	salle = models.CharField(max_length=30, blank=True)
 	colleur = models.ForeignKey(Professeur, blank=True, null=True,
 			on_delete=models.SET_NULL)
-	matiere = models.ForeignKey(Matiere, blank=True, null=True,
-			on_delete=models.SET_NULL, verbose_name="matière")
-
-	MODE_INTERROGATION = Colle.MODE_INTERROGATION
-	MODE_TD = Colle.MODE_TD
-	MODE_CHOICES = Colle.MODE_CHOICES
-	mode = models.PositiveSmallIntegerField(
-			verbose_name="mode d'interrogation",
-			default=MODE_INTERROGATION,
-			choices=MODE_CHOICES)
 
 	class Meta:
-		ordering = ['jour', 'debut', 'matiere']
 		verbose_name = 'créneau'
 		verbose_name_plural = 'créneaux'
 	
 	def __str__(self):
-		return "{} ({}) {} {:%H:%M}-{:%H:%M}".format(self.matiere,
+		if not self.enseignement:
+			matiere = "(Matière non renseignée)"
+		else:
+			matiere = self.enseignement.matiere
+
+		return "{} ({}) {} {:%H:%M}-{:%H:%M}".format(matiere,
 				self.colleur, self.get_jour_display(),
 				self.debut, self.fin)
 
@@ -101,14 +95,13 @@ class Creneau(models.Model):
 		créneau. Si le trinôme change, on met simplement à jour la
 		colle.
 		"""
-		# TODO Durée d'interrogation ?
-		colle, _ = Colle.objects.update_or_create(creneau=self,
+		colle_data = self.basecolle_fields()
+		colle_data['groupe'] = trinome
+
+		colle, _ = Colle.objects.update_or_create(
+				creneau=self,
 				semaine=semaine,
-				defaults={'classe': self.classe,
-					'matiere': self.matiere,
-					'groupe': trinome,
-					'mode': self.mode,
-					})
+				defaults=colle_data)
 
 		colle.ajout_details(
 			horaire=semaine.horaire_creneau(self),
@@ -118,7 +111,11 @@ class Creneau(models.Model):
 
 		return colle
 
-class Trinome(Groupe):
+	@property
+	def matiere(self):
+		return self.enseignement.matiere
+
+class Trinome(AbstractBaseGroupe):
 	"""Groupe de colle dans une classe"""
 	dans_classe = models.ForeignKey(Classe, verbose_name="classe",
 			on_delete=models.CASCADE, related_name='trinomes')

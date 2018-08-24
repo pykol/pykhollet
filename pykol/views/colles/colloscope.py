@@ -49,19 +49,25 @@ def colle_creer(request, slug):
 	if request.method == 'POST':
 		form = ColleForm(request.POST, classe=classe)
 		if form.is_valid():
-			colleenseignement = form.cleaned_data['enseignement']
 			colle = Colle(
+				classe=classe,
+				enseignement=form.cleaned_data['enseignement_dote']['enseignement'],
+				colles_ens=form.cleaned_data['enseignement_dote']['collesenseignement'],
+				mode=form.cleaned_data['mode'],
 				creneau=form.cleaned_data['creneau'],
 				semaine=form.cleaned_data['semaine'],
-				classe=classe,
-				# XXX matière mal choisie
-				matiere=colleenseignement.enseignements.first().matiere,
-				groupe=form.cleaned_data['trinome'],
-				duree=colleenseignement.duree,
-				mode=form.cleaned_data['mode'])
+				groupe=form.cleaned_data['trinome']
+			)
+			# Le calcul de durée dépend du mode d'interrogation. Pour
+			# une colle notée, on laisse la durée par défaut. Pour une
+			# colle en mode TD, on prend la durée indiquée dans le
+			# formulaire si elle est indiquée.
+			if form.cleaned_data['mode'] == Colle.MODE_TD and \
+					form.cleaned_data.get('duree'):
+				colle.duree = form.cleaned_data['duree']
 
-			# La matière est connue, on vérifie que l'utilisateur peut
-			# effectivement créer la colle.
+			# La matière est connue, à ce niveau du code, on vérifie que
+			# l'utilisateur peut effectivement créer la colle.
 			if not request.user.has_perm('pykol.add_colle', colle):
 				raise PermissionDenied
 
@@ -125,8 +131,8 @@ def creneaux(request, slug):
 	if not request.user.has_perm('pykol.add_creneau', classe):
 		raise PermissionDenied
 
-	creneaux_qs = Creneau.objects.filter(classe=classe).order_by('matiere',
-			'colleur', 'jour', 'debut')
+	creneaux_qs = Creneau.objects.filter(classe=classe).order_by(
+			'enseignement', 'colleur', 'jour', 'debut')
 
 	if request.method == 'POST':
 		formset = CreneauSansClasseFormSet(request.POST, queryset=creneaux_qs,

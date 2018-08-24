@@ -21,7 +21,8 @@ from datetime import timedelta
 from django.db import models, transaction
 from django.urls import reverse
 
-from pykol.models.base import Classe, Professeur, Matiere, Etudiant, Groupe
+from pykol.models.base import Classe, Professeur, Matiere, Etudiant, \
+		Groupe, Enseignement
 from pykol.models.fields import NoteField
 
 # Liste des jours de la semaine, numérotation ISO
@@ -36,7 +37,47 @@ class ColleConfirmeeManager(models.Manager):
 	def get_queryset(self):
 		return super().get_queryset().exclude(etat=Colle.ETAT_BROUILLON)
 
-class Colle(models.Model):
+class AbstractBaseColle(models.Model):
+	"""
+	Classe abstraite qui contient les champs communs entre une colle et
+	un créneau de colle.
+	"""
+	classe = models.ForeignKey(Classe, on_delete=models.CASCADE)
+	enseignement = models.ForeignKey(Enseignement, blank=True,
+			null=True, on_delete=models.SET_NULL)
+	colles_ens = models.ForeignKey('CollesEnseignement', blank=True,
+			null=True, on_delete=models.SET_NULL)
+	duree = models.DurationField(verbose_name="durée",
+			default=timedelta(hours=1))
+
+	MODE_INTERROGATION = 0
+	MODE_TD = 1
+	MODE_CHOICES = (
+			(MODE_INTERROGATION, "interrogation"),
+			(MODE_TD, "travaux dirigés"),
+		)
+	mode = models.PositiveSmallIntegerField(
+			verbose_name="mode de déroulement",
+			choices=MODE_CHOICES,
+			default=MODE_INTERROGATION)
+
+	class Meta:
+		abstract = True
+
+	def basecolle_fields(self):
+		"""Dictionnaire qui contient les valeurs des champs de base
+		définis par la classe AbstractBaseColle. C'est un raccourci qui
+		permet de reprendre rapidement les informations d'un Creneau
+		pour créer une Colle."""
+		return {
+				'classe': self.classe,
+				'enseignement': self.enseignement,
+				'colles_ens': self.colles_ens,
+				'duree': self.duree,
+				'mode': self.mode,
+			}
+
+class Colle(AbstractBaseColle):
 	"""
 	Représentation d'une séance de colle
 	"""
@@ -44,7 +85,6 @@ class Colle(models.Model):
 			on_delete=models.SET_NULL, verbose_name="créneau")
 	semaine = models.ForeignKey('Semaine', blank=True, null=True,
 			on_delete=models.SET_NULL)
-	classe = models.ForeignKey(Classe, on_delete=models.CASCADE)
 
 	ETAT_PREVUE = 0
 	ETAT_NOTEE = 1
@@ -62,25 +102,10 @@ class Colle(models.Model):
 		)
 	etat = models.PositiveSmallIntegerField(verbose_name="état",
 			choices=ETAT_CHOICES, default=ETAT_PREVUE)
-	matiere = models.ForeignKey(Matiere, blank=True, null=True,
-			on_delete=models.SET_NULL, verbose_name="matière")
 	groupe = models.ForeignKey(Groupe, blank=True, null=True,
 			on_delete=models.SET_NULL, related_name='+')
 	releve = models.ForeignKey('ColleReleve', blank=True, null=True,
 			on_delete=models.SET_NULL)
-	duree = models.DurationField(verbose_name="durée",
-			default=timedelta(hours=1))
-
-	MODE_INTERROGATION = 0
-	MODE_TD = 1
-	MODE_CHOICES = (
-			(MODE_INTERROGATION, "interrogation"),
-			(MODE_TD, "travaux dirigés"),
-		)
-	mode = models.PositiveSmallIntegerField(
-			verbose_name="mode de déroulement",
-			choices=MODE_CHOICES,
-			default=MODE_INTERROGATION)
 
 	# On remplace le gestionnaire objects, mais en prenant soin de
 	# laisser le gestionnaire par défaut all_objects en première
@@ -172,6 +197,10 @@ class Colle(models.Model):
 
 	def get_absolute_url(self):
 		return reverse('colle_detail', kwargs={'pk': self.pk})
+
+	@property
+	def matiere(self):
+		return self.enseignement.matiere
 
 class ColleDetails(models.Model):
 	"""

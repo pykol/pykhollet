@@ -57,7 +57,7 @@ def colloscope_html(request, classe):
 	Affichage du colloscope complet d'une classe au format HTML
 	"""
 	semaines = classe.semaine_set.order_by('debut')
-	creneaux = classe.creneau_set.order_by('matiere', 'jour', 'debut')
+	creneaux = classe.creneau_set.order_by('enseignement', 'jour', 'debut')
 	colles = classe.colle_set.all()
 
 	colloscope = defaultdict(OrderedDict)

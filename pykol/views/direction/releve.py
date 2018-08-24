@@ -23,6 +23,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin, \
 from django.contrib.auth.decorators import login_required, permission_required
 from django.utils.timezone import localtime
 from django.db import transaction
+from django.views.decorators.http import require_POST
 
 from pykol.models.colles import ColleReleve, Colle, ColleReleveLigne
 from pykol.lib.auth import user_est_professeur
@@ -30,6 +31,7 @@ from pykol.lib.auth import user_est_professeur
 @login_required
 @permission_required('pykol.add_collereleve')
 @transaction.atomic
+@require_POST
 def releve_creer(request):
 	# Création d'un nouveau relevé
 	releve = ColleReleve(date=localtime())

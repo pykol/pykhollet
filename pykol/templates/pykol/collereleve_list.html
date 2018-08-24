@@ -4,8 +4,11 @@
 
 <section>
   {% if perms.pykol.add_collereleve %}
-  <p><a class="button-add" href="{% url 'releve_creer' %}">Créer un
-    nouveau relevé</a></p>
+  <form action="{% url 'releve_creer' %}" method="post">
+    {% csrf_token %}
+    <button type="submit" class="button-add">Créer un nouveau
+      relevé</button>
+  </form>
   {% endif %}
 
   {% if collereleve_list %}

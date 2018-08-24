@@ -36,7 +36,7 @@ class CreneauAdmin(admin.ModelAdmin):
 class TrinomeInline(admin.TabularInline):
 	model = Trinome
 	extra = 3
-	fk_name = 'dans_classe'
+	fk_name = 'classe'
 	fields = ('nom',)
 	show_change_link = True
 

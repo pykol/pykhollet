@@ -23,7 +23,7 @@ from pykol.models.base import Annee
 class ImportBEEForm(forms.Form):
 	annee = forms.ModelChoiceField(queryset=Annee.objects.order_by('debut'),
 			required=False, label="Année scolaire",
-			initial=Annee.objects.get_actuelle())
+			initial=Annee.objects.get_actuelle)
 	nomenclature = forms.FileField(required=False)
 	structure = forms.FileField(required=False)
 	eleves = forms.FileField(required=False)

@@ -61,7 +61,7 @@ def trinomes(request, slug):
 			# On met ensuite à jour la liste des trinômes
 			with transaction.atomic():
 				for groupe in trinomes_membres:
-					trinome, _ = trinomes.update_or_create(dans_classe=classe, nom=groupe,
+					trinome, _ = trinomes.update_or_create(classe=classe, nom=groupe,
 							defaults={})
 					trinome.etudiants.set(trinomes_membres[groupe])
 					trinome.save()

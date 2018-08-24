@@ -22,7 +22,7 @@ from django.db import models, transaction
 from django.urls import reverse
 
 from pykol.models.base import Classe, Professeur, Matiere, Etudiant, \
-		Groupe, Enseignement
+		Enseignement
 from pykol.models.fields import NoteField
 
 # Liste des jours de la semaine, numérotation ISO
@@ -102,8 +102,8 @@ class Colle(AbstractBaseColle):
 		)
 	etat = models.PositiveSmallIntegerField(verbose_name="état",
 			choices=ETAT_CHOICES, default=ETAT_PREVUE)
-	groupe = models.ForeignKey(Groupe, blank=True, null=True,
-			on_delete=models.SET_NULL, related_name='+')
+	groupe = models.ForeignKey('Trinome', blank=True, null=True,
+			on_delete=models.SET_NULL)
 	releve = models.ForeignKey('ColleReleve', blank=True, null=True,
 			on_delete=models.SET_NULL)
 

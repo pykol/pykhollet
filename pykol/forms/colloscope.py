@@ -122,7 +122,7 @@ class ColleForm(EnseignementDoteMixin, forms.Form):
 		self.fields['creneau'].queryset = Creneau.objects.filter(classe=classe).order_by(
 				'enseignement', 'colleur', 'jour')
 		self.fields['semaine'].queryset = Semaine.objects.filter(classe=classe).order_by('debut')
-		self.fields['trinome'].queryset = Trinome.objects.filter(dans_classe=classe).order_by('nom')
+		self.fields['trinome'].queryset = Trinome.objects.filter(classe=classe).order_by('nom')
 		self.fields['etudiants'].queryset = classe.etudiants.order_by('last_name', 'first_name')
 
 	def clean(self):

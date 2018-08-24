@@ -94,7 +94,8 @@ def colle_declarer(request, pk):
 		raise PermissionDenied
 
 	# Les colles sous la forme de TD n'ont pas de notes, il suffit de
-	# confirmer qu'elles ont été réalisées
+	# confirmer qu'elles ont été réalisées (et avec une requête POST,
+	# obligatoire pour modifier la base de données).
 	if colle.mode == Colle.MODE_TD:
 		if request.method == 'POST':
 			colle.etat = Colle.ETAT_EFFECTUEE
@@ -102,7 +103,7 @@ def colle_declarer(request, pk):
 		return redirect('colle_detail', colle.pk)
 
 	# On peuple le formulaire avec les élèves qui n'ont pas encore été
-	# notés
+	# notés.
 	eleves_sans_note = colle.details.eleves.difference(
 		Etudiant.objects.filter(collenote__colle=colle))
 	initial = []

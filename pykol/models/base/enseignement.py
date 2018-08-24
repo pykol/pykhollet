@@ -27,7 +27,7 @@ class Matiere(models.Model):
 	Matière enseignée dans l'établissement
 
 	Ce modèle représente une unité d'enseignement telle qu'elle apparait
-	dans l'emploi du temps des élèves. On peut regrouper dans une même
+	dans l'emploi du temps des étudiants. On peut regrouper dans une même
 	matière plusieurs contenus différents (par exemple, la matière
 	« mathématiques » pourra être utilisée pour les enseignements aussi
 	bien en MPSI qu'en ECE).
@@ -76,11 +76,38 @@ class GroupeEffectif(models.Model):
 			related_name='+')
 	effectif_sts = models.PositiveSmallIntegerField(blank=True, null=True)
 
-class Groupe(models.Model):
+class AbstractBaseGroupe(models.Model):
 	"""
-	Groupe d'élèves
+	Classe qui fournit les champs de base pour manipuler des listes
+	d'étudiants.
+	"""
+	nom = models.CharField(max_length=100)
+	annee = models.ForeignKey(Annee, on_delete=models.CASCADE,
+			verbose_name="année")
+	etudiants = models.ManyToManyField(Etudiant, blank=True,
+			verbose_name="étudiants")
+	slug = models.SlugField()
 
-	Un groupe représente un ensemble d'élèves. Les motifs de créations
+	class Meta:
+		abstract = True
+
+	def __str__(self):
+		return self.nom
+
+	@property
+	def emails(self):
+		"""
+		Liste des e-mails des étudiants du groupe
+		"""
+		return list(self.etudiants.filter(email__isnull=False
+				).values_list('email', flat=True))
+
+
+class Groupe(AbstractBaseGroupe):
+	"""
+	Groupe d'étudiants
+
+	Un groupe représente un ensemble d'étudiants. Les motifs de créations
 	de ces groupes peuvent être divers : un groupe de colles dans un
 	colloscope, une classe entière, une partie de classe ayant choisi
 	une option spécifique, un groupe partagé entre deux classes et
@@ -91,13 +118,6 @@ class Groupe(models.Model):
 	de modifier manuellement la liste des étudiants du groupe. Il faut
 	pour cela passer par le modèle qui a créé le groupe.
 	"""
-	nom = models.CharField(max_length=100)
-	annee = models.ForeignKey(Annee, on_delete=models.CASCADE,
-			verbose_name="année")
-	etudiants = models.ManyToManyField(Etudiant, blank=True,
-			verbose_name="étudiants")
-	slug = models.SlugField()
-
 	MODE_MANUEL = 0
 	MODE_AUTOMATIQUE = 1
 	mode = models.PositiveSmallIntegerField(choices=(
@@ -130,9 +150,6 @@ class Groupe(models.Model):
 		"""
 		pass
 
-	def __str__(self):
-		return self.nom
-
 	@property
 	def effectif(self):
 		"""
@@ -160,14 +177,6 @@ class Groupe(models.Model):
 		else:
 			return self.groupeeffectif_set.get(classe=classe).effectif_sts or 0
 
-	@property
-	def emails(self):
-		"""
-		Liste des e-mails des étudiants du groupe
-		"""
-		return list(self.etudiants.filter(email__isnull=False
-				).values_list('email', flat=True))
-
 class Service(models.Model):
 	"""
 	Service d'enseignement
@@ -194,14 +203,14 @@ class Service(models.Model):
 
 class Enseignement(models.Model):
 	"""
-	Enseignement dispensé devant un groupe d'élèves
+	Enseignement dispensé devant un groupe d'étudiants
 
 	Un enseignement correspond à l'ensemble des heures de cours
 	dispensées par un (ou plusieurs) professeurs devant un groupe
-	d'élèves fixé, dans une matière fixée.
+	d'étudiants fixé, dans une matière fixée.
 
 	Chaque enseignement est attribué à un groupe, et non à une classe
-	d'élèves, afin de permettre la création d'enseignements en barrette
+	d'étudiants, afin de permettre la création d'enseignements en barrette
 	sur plusieurs classes.
 
 	Les professeurs sont affectés aux enseignements grâce au modèle
@@ -266,7 +275,7 @@ class Classe(Groupe):
 	"""
 	Classe
 
-	Groupe de référence pour chaque élève, auquel il appartient durant
+	Groupe de référence pour chaque étudiant, auquel il appartient durant
 	toute l'année scolaire. La classe est l'unité qui permet d'organiser
 	l'emploi du temps avec la liste des matières dispensées (et les
 	enseignements correspondants), le colloscope, les conseils de classe.
@@ -280,8 +289,8 @@ class Classe(Groupe):
 
 	# On instancie le manager par défaut et un manager qui ne donne
 	# accès qu'aux classes de l'année en cours.
-	objects = ClasseAnneeActuelleManager()
 	all_objects = models.Manager()
+	objects = ClasseAnneeActuelleManager()
 
 	NIVEAU_PREMIERE_ANNEE = 1
 	NIVEAU_DEUXIEME_ANNEE = 2

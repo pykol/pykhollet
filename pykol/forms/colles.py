@@ -75,7 +75,7 @@ class ColleModifierForm(forms.Form):
 	def __init__(self, *args, colle, **kwargs):
 		super().__init__(*args, **kwargs)
 
-		self.fields['trinome'].queryset = Trinome.objects.filter(dans_classe=colle.classe).order_by('nom')
+		self.fields['trinome'].queryset = Trinome.objects.filter(classe=colle.classe).order_by('nom')
 		self.fields['etudiants'].queryset = colle.classe.etudiants.order_by('last_name', 'first_name')
 
 ResaPonctuellesFormSet = forms.modelformset_factory(ColleDetails,

@@ -23,8 +23,8 @@ from django.db.models import Q, F
 from django.core.exceptions import ValidationError
 from django.utils.timezone import make_aware
 
-from pykol.models.base import Classe, Professeur, Matiere, Groupe, \
-		Enseignement
+from pykol.models.base import Classe, Professeur, Matiere, \
+		Enseignement, AbstractBaseGroupe
 from .colles import Colle, AbstractBaseColle
 
 # Liste des jours de la semaine, numérotation ISO
@@ -117,13 +117,16 @@ class Creneau(AbstractBaseColle):
 
 class Trinome(AbstractBaseGroupe):
 	"""Groupe de colle dans une classe"""
-	dans_classe = models.ForeignKey(Classe, verbose_name="classe",
+	classe = models.ForeignKey(Classe, verbose_name="classe",
 			on_delete=models.CASCADE, related_name='trinomes')
 	commentaire = models.TextField(blank=True)
 
 	def save(self, *args, **kwargs):
-		self.annee = self.dans_classe.annee
+		self.annee = self.classe.annee
 		super().save(*args, **kwargs)
+
+	class Meta:
+		unique_together = ('annee', 'classe', 'nom')
 
 class Roulement(models.Model):
 	"""
@@ -174,7 +177,8 @@ class RoulementGraineLigne(models.Model):
 class CollesReglages(models.Model):
 	"""Sauvegarde des paramètres utilisés pour générer les semaines de
 	colles."""
-	classe = models.OneToOneField(Classe, on_delete=models.CASCADE)
+	classe = models.OneToOneField(Classe, on_delete=models.CASCADE,
+			unique=True)
 	numeros_auto = models.BooleanField(default=False,
 			verbose_name="numérotation automatique")
 	numeros_format = models.CharField(max_length=100, blank=True,
@@ -201,6 +205,3 @@ class CollesReglages(models.Model):
 
 		if len(errors) > 0:
 			raise ValidationError(errors)
-
-	class Meta:
-		unique_together = ('classe',)

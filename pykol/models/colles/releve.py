@@ -30,13 +30,19 @@ from pykol.models.base import Annee, Professeur, Classe
 from pykol.models.colles import Colle
 
 class ColleReleve(models.Model):
+	"""
+	Relevé périodique des colles effectuées afin de les mettre en
+	paiement.
+	"""
 	def default_annee():
 		return Annee.objects.get_actuelle()
 
 	annee = models.ForeignKey(Annee, default=default_annee,
 			on_delete=models.CASCADE)
-	date = models.DateTimeField()
-	date_paiement = models.DateTimeField(blank=True, null=True)
+	date = models.DateTimeField(help_text="Date de création du relevé")
+	date_paiement = models.DateTimeField(blank=True, null=True,
+			help_text="Date où toutes les colles de ce relevé ont été "
+			"mises en paiement.")
 
 	ETAT_NOUVEAU = 0
 	ETAT_PAYE = 1
@@ -53,6 +59,12 @@ class ColleReleve(models.Model):
 
 	@transaction.atomic
 	def payer(self, date=None):
+		"""
+		Marquer le relevé actuel comme intégralement payé.
+
+		Cette méthode ne vérifie pas si chaque ligne du relevé a été
+		effectivement payée.
+		"""
 		if date is None:
 			self.date_paiement = localtime()
 		else:
@@ -60,12 +72,20 @@ class ColleReleve(models.Model):
 		self.etat = ColleReleve.ETAT_PAYE
 		self.save()
 
-	def maj_etat(self):
+	def maj_etat(self, date=None):
+		"""
+		Marquer le relevé comme intégralement payé dans le cas où toutes
+		les lignes du relevé sont payées. Si une seule ligne n'est pas
+		payée, l'état du relevé n'est pas modifié.
+		"""
 		if not self.lignes.filter(etat=ColleReleve.ETAT_NOUVEAU).exists():
-			self.payer()
+			self.payer(date)
 
 	@property
 	def total_heures(self):
+		"""
+		Nombre total d'heures mises en paiement dans le relevé.
+		"""
 		total = self.lignes.aggregate(
 				total_heures=models.Sum('duree'))['total_heures'] \
 				or timedelta()
@@ -100,6 +120,11 @@ class ColleReleve(models.Model):
 		return template.render(context={'object': self})
 
 class ColleReleveLigne(models.Model):
+	"""
+	Une ligne d'un relevé de colles. Une ligne correspond au total des
+	heures effectuées par un professeur donné sur la période, et pour un
+	seul taux de paiement donné.
+	"""
 	releve = models.ForeignKey(ColleReleve, on_delete=models.CASCADE,
 			related_name='lignes')
 	colleur = models.ForeignKey(Professeur, on_delete=models.CASCADE)
@@ -194,4 +219,3 @@ class ColleReleveLigne(models.Model):
 	def get_etat_html(self):
 		template = get_template('pykol/widgets/collereleve_etat.html')
 		return template.render(context={'object': self})
-

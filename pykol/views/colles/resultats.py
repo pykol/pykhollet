@@ -109,7 +109,7 @@ def classe_resultats(request, slug):
 		# remarque : les deux requetes peuvent être mises avant la boucle sur les matieres si c'est plus rapide
 		colles = Colle.objects.filter(
 			classe = classe,
-			matiere = matiere,
+			enseignement__matiere = matiere,
 			etat = Colle.ETAT_PREVUE,
 			colledetails__actif=True,
 			colledetails__horaire__lte=timezone.localtime(),

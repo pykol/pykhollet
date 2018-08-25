@@ -210,6 +210,14 @@ class SemaineNumeroGenerateurForm(forms.ModelForm):
 		fields = ('numeros_auto', 'numeros_format',)
 
 class CreneauForm(EnseignementDoteMixin, forms.ModelForm):
+	# On change le format par défaut pour accepter des heures simples
+	debut = forms.TimeField(label="Début", input_formats=('%H', '%H:%M', '%H:%M:%S'))
+	fin   = forms.TimeField(label="Fin",   input_formats=('%H', '%H:%M', '%H:%M:%S'))
+
+	class Meta:
+		model = Creneau
+		fields = ('classe', 'jour', 'debut', 'fin', 'salle', 'colleur',)
+
 	def __init__(self, *args, classe=None, **kwargs):
 		super().__init__(*args, classe=classe, **kwargs)
 
@@ -230,11 +238,6 @@ class CreneauForm(EnseignementDoteMixin, forms.ModelForm):
 			creneau.save()
 
 		return creneau
-
-	class Meta:
-		model = Creneau
-		fields = ('classe', 'jour', 'debut', 'fin', 'salle', 'colleur',)
-
 
 CreneauFormSet = modelformset_factory(Creneau, form=CreneauForm,
 		can_delete=True, extra=0, fields=CreneauForm.Meta.fields)

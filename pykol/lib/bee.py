@@ -32,6 +32,7 @@ from collections import defaultdict
 from django.utils.text import slugify
 from django.contrib.auth.models import Permission
 from django.contrib.contenttypes.models import ContentType
+from django.db.models import Q
 
 import isodate
 
@@ -875,8 +876,11 @@ def import_nomenclature_colles(nomcolles_xml, annee):
 
 		for classe in Classe.objects.filter(mef__code_mef__in=mefs):
 			enseignements = Enseignement.objects.filter(
-				classe=classe,
-				matiere__code_matiere__in=matieres).distinct()
+				Q(classe=classe),
+				Q(
+					Q(matiere__code_matiere__in=matieres) |
+					Q(matiere__parent__code_matiere__in=matieres)
+				)).distinct()
 
 			# On n'ajoute la dotation que si l'on a les enseignements
 			# correspondants.

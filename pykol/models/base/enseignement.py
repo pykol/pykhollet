@@ -249,11 +249,6 @@ class Enseignement(models.Model):
 		"""
 		return self.groupe.etudiants.filter(classe=classe)
 
-class ProfClasseManager(models.Manager):
-	def get_queryset(self):
-		pass
-		Classe.objects.filter(enseignements__service__professeur=prof)
-
 class ModuleElementaireFormation(models.Model):
 	"""
 	MEF

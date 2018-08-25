@@ -13,50 +13,65 @@
   Créneaux de colles
 </h2>
 
-<form action="" method="post">
-  {% csrf_token %}
-  {{ formset.management_form }}
-  {{ formset.non_form_errors }}
-  <table class="formset form_direction_creneaux">
-    <thead>
-      <tr>
-        <th>Classe</th>
-        <th>Matière</th>
-        <th>Colleur</th>
-        <th>Jour</th>
-        <th>Horaire</th>
-        <th>Salle</th>
-        <th>Supprimer ?</th>
-      </tr>
-      {% if form.non_field_errors %}
-      <tr>
-        <td colspan="6">
-        {{ form.non_field_errors }}
-        </td>
-      </tr>
-      {% endif %}
-    </thead>
-    <tbody>
-      {% for form in formset %}
-      {% if form.errors %}
-      <tr>
-        <td colspan="6">
-          Le créneau suivant n'est pas valide.
-        </td>
-      </tr>
-      {% endif %}
-      <tr>
-        <td>{{ form.classe }}{% if form.classe.errors %}<br>{{ form.classe.errors }}{% endif %}</td>
-        <td>{{ form.id }}{{ form.matiere }}{% if form.matiere.errors %}<br>{{ form.matiere.errors }}{% endif %}</td>
-        <td>{{ form.colleur }}{% if form.colleur.errors %}<br>{{ form.colleur.errors }}{% endif %}</td>
-        <td>{{ form.jour }}{% if form.jour.errors %}<br>{{ form.jour.errors }}{% endif %}</td>
-        <td class="creneau_horaire">{{ form.debut }} − {{ form.fin }}{% if form.debut.errors %}<br>{{ form.debut.errors }}{% endif %}</td>{% if form.fin.errors %}<br>{{ form.fin.errors }}{% endif %}</td>
-        <td>{{ form.salle }}{% if form.salle.errors %}<br>{{ form.salle.errors }}{% endif %}</td>
-        <td>{{ form.DELETE }}</td>
-      </tr>
-      {% endfor %}
-    </tbody>
-  </table>
-  <input type="submit">
-</form>
+<section>
+  <p>Cette page affiche la liste des créneaux de colles demandés par les
+  professeurs des différentes classes. Les créneaux sont triés par jour
+  et par professeur : ceci vous permet de voir plus facilement les
+  créneaux consécutifs pour un même professeur afin de réserver si
+  possible la même salle.</p>
+  <p>Dès que vous avez renseigné des salles et enregistré les
+  modifications de ce tableau avec le bouton <em>Enregistrer les
+    modifications</em>, les salles seront directement visibles par les
+  professeurs des classes.</p>
+  <p>Si vous modifiez la salle d'un créneau donné en cours d'année, la
+  modification sera répercutée sur toutes les colles <em>futures</em>
+  attachées à ce créneau.</p>
+
+  <form action="" method="post">
+    {% csrf_token %}
+    {{ formset.management_form }}
+    {{ formset.non_form_errors }}
+    <table class="formset form_direction_creneaux">
+      <thead>
+        <tr>
+          <th>Classe</th>
+          <th>Matière</th>
+          <th>Colleur</th>
+          <th>Jour</th>
+          <th>Horaire</th>
+          <th>Salle</th>
+          <th>Supprimer ?</th>
+        </tr>
+        {% if form.non_field_errors %}
+        <tr>
+          <td colspan="6">
+          {{ form.non_field_errors }}
+          </td>
+        </tr>
+        {% endif %}
+      </thead>
+      <tbody>
+        {% for form in formset %}
+        {% if form.errors %}
+        <tr>
+          <td colspan="6">
+            Le créneau suivant n'est pas valide.
+          </td>
+        </tr>
+        {% endif %}
+        <tr>
+          <td>{{ form.classe }}{% if form.classe.errors %}<br>{{ form.classe.errors }}{% endif %}</td>
+          <td>{{ form.id }}{{ form.enseignement_dote }}{% if form.enseignement_dote.errors %}<br>{{ form.enseignement_dote.errors }}{% endif %}</td>
+          <td>{{ form.colleur }}{% if form.colleur.errors %}<br>{{ form.colleur.errors }}{% endif %}</td>
+          <td>{{ form.jour }}{% if form.jour.errors %}<br>{{ form.jour.errors }}{% endif %}</td>
+          <td class="creneau_horaire">{{ form.debut }} − {{ form.fin }}{% if form.debut.errors %}<br>{{ form.debut.errors }}{% endif %}</td>{% if form.fin.errors %}<br>{{ form.fin.errors }}{% endif %}</td>
+          <td>{{ form.salle }}{% if form.salle.errors %}<br>{{ form.salle.errors }}{% endif %}</td>
+          <td>{{ form.DELETE }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    <p><input type="submit" value="Enregistrer les modifications"></p>
+  </form>
+</section>
 {% endblock %}

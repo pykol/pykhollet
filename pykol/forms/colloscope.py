@@ -24,7 +24,7 @@ from django.forms import formset_factory, modelformset_factory, \
 		inlineformset_factory
 
 from pykol.models.base import Matiere, Etudiant, Professeur, \
-		Enseignement
+		Enseignement, Annee
 from pykol.models.colles import Semaine, CollesReglages, Creneau, \
 		Roulement, RoulementLigne, RoulementApplication, \
 		RoulementGraineLigne, Colle, Trinome, CollesEnseignement
@@ -67,46 +67,51 @@ class EnseignementDoteMixin(forms.Form):
 			# multipliés par les dotations correspondantes.
 			enseignements = Enseignement.objects.filter(
 					classe=classe,
-					collesenseignement__classe=classe).values(
-							'pk',
-							'collesenseignement__pk',
-							'matiere__nom',
-							'groupe__nom',
-							'matiere__parent__nom',
-							'collesenseignement__nom').order_by(
-									'collesenseignement',
-									'matiere__nom',
-									'groupe__nom',
-								)
-			choix = [('', '---------')]
+					collesenseignement__classe=classe)
+		else:
+			enseignements = Enseignement.objects.filter(classe__annee=Annee.objects.get_actuelle())
 
-			# Le dictionnaire compte_matieres sert à déterminer les
-			# matières qui apparaissent plus d'une fois dans la liste.
-			# Dans ce cas, on affiche le nom du groupe pour désambigüer.
-			compte_matieres = Counter([e['matiere__nom'] for e in
-				enseignements])
-			for enseignement in enseignements:
-				nom_format = '{matiere__nom}'
-
-				if enseignement['groupe__nom'] != classe.nom and \
-						compte_matieres[enseignement['matiere__nom']] > 1:
-					nom_format += ' {groupe__nom}'
-
-				if enseignement['collesenseignement__nom']:
-					nom_format += ' ({collesenseignement__nom})'
-				elif enseignement['matiere__parent__nom']:
-					nom_format += ' ({matiere__parent__nom})'
-
-				nom_dotation = nom_format.format(**enseignement)
-
-				choix.append(
-						(
-							'{pk}-{collesenseignement__pk}'.format(**enseignement),
-							nom_dotation,
-						)
+		enseignements = enseignements.values(
+				'pk',
+				'collesenseignement__pk',
+				'matiere__nom',
+				'groupe__nom',
+				'matiere__parent__nom',
+				'collesenseignement__nom').order_by(
+						'collesenseignement',
+						'matiere__nom',
+						'groupe__nom',
 					)
 
-			self.fields['enseignement_dote'].choices = choix
+		choix = [('', '---------')]
+
+		# Le dictionnaire compte_matieres sert à déterminer les
+		# matières qui apparaissent plus d'une fois dans la liste.
+		# Dans ce cas, on affiche le nom du groupe pour désambigüer.
+		compte_matieres = Counter([e['matiere__nom'] for e in
+			enseignements])
+		for enseignement in enseignements:
+			nom_format = '{matiere__nom}'
+
+			if not classe or (enseignement['groupe__nom'] != classe.nom and \
+					compte_matieres[enseignement['matiere__nom']] > 1):
+				nom_format += ' {groupe__nom}'
+
+			if enseignement['collesenseignement__nom']:
+				nom_format += ' ({collesenseignement__nom})'
+			elif enseignement['matiere__parent__nom']:
+				nom_format += ' ({matiere__parent__nom})'
+
+			nom_dotation = nom_format.format(**enseignement)
+
+			choix.append(
+					(
+						'{pk}-{collesenseignement__pk}'.format(**enseignement),
+						nom_dotation,
+					)
+				)
+
+		self.fields['enseignement_dote'].choices = choix
 
 class ColleForm(EnseignementDoteMixin, forms.Form):
 	"""

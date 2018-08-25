@@ -95,7 +95,7 @@ def classe_resultats(request, slug):
 			notesParEtudiant[etudiant] = defaultdict(list)
 
 		colleNoteEtudiant_s = ColleNote.objects.filter(
-			colle__matiere = matiere,
+			colle__enseignement__matiere = matiere,
 			eleve__in = etudiants
 		)
 

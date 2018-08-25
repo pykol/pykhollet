@@ -62,7 +62,8 @@ class EtudiantDetailView(LoginRequiredMixin, generic.DetailView):
 
 		semaines = Semaine.objects.filter(classe__etudiant=etudiant).order_by('debut')
 
-		collenotes = ColleNote.objects.filter(eleve=etudiant, colle__matiere__in=matieres)
+		collenotes = ColleNote.objects.filter(eleve=etudiant,
+				colle__enseignement__matiere__in=matieres)
 
 		NotesMatiere = namedtuple('NotesMatiere', ('moyenne', 'semaines'))
 		notes = defaultdict(lambda: NotesMatiere(moyenne=Moyenne(),

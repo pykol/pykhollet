@@ -455,7 +455,10 @@ class Classe(Groupe):
 		)
 
 	def __str__(self):
-		return self.nom
+		if self.annee == Annee.objects.get_actuelle():
+			return self.nom
+		else:
+			return "({}) {}".format(self.annee, self.nom)
 
 	def update_etudiants(self):
 		"""Mise à jour de la composition du groupe.

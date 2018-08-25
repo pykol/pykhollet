@@ -6,6 +6,29 @@
 </h2>
 
 <section>
+  <p>Sur cette page, vous pouvez définir les créneaux de colles qui
+  serviront à engendrer les colles régulières de l'année.</p>
+  <ul>
+    <li>La colonne <em>Matière</em> peut faire apparaitre la même
+      matière plusieurs fois, si cette matière reçoit plusieurs
+      dotations en colles (par exemple une au titre des mathématiques et
+      une au titre de l'informatique en voie économique et commerciale),
+      ou bien si l'enseignement de cette matière varie selon les
+      semestres.</li>
+    <li>L'horaire est à indiquer dans l'un des formats suivants :
+      <em>HH</em>, <em>HH:MM</em> ou <em>HH:MM:SS</em> ; où <em>HH</em>
+      représente l'heure, <em>MM</em> représente les minutes et
+      <em>SS</em> représente les secondes (la ponctualité étant de
+      rigueur).</li>
+    <li>La salle pourra être complétée plus tard par la direction de
+      l'établissement. Renseignez le plus vite possible les créneaux :
+      avec la liste de l'ensemble des créneaux de l'ensemble des
+      classes, la direction pourra effectuer les réservations de
+      salles.</li>
+    <li><strong>Pour supprimer un créneau</strong>, pensez bien à
+      enregistrer le tableau en cliquant sur le bouton <em>Enregistrer
+        les créneaux</em>.</li>
+  </ul>
 <form action="" method="post">
     {% csrf_token %}
     {{ formset.management_form }}
@@ -41,7 +64,7 @@
         {% endfor %}
       </tbody>
     </table>
-    <input type="submit">
+    <p><input type="submit" value="Enregistrer les créneaux"></p>
   </form>
 </section>
 {% endblock %}

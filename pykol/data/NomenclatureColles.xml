@@ -38,6 +38,7 @@
       </codes_matieres>
       <frequence>hebdomadaire</frequence>
       <duree>PT5M</duree>
+      <mode_defaut>travaux_diriges</mode_defaut>
     </colle>
     <colle>
       <!-- Culture générale -->
@@ -116,6 +117,7 @@
       </codes_matieres>
       <frequence>hebdomadaire</frequence>
       <duree>PT5M</duree>
+      <mode_defaut>travaux_diriges</mode_defaut>
     </colle>
     <colle>
       <!-- Culture générale -->

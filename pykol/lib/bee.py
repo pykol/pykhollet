@@ -874,6 +874,13 @@ def import_nomenclature_colles(nomcolles_xml, annee):
 		elif frequence_text == 'trimestrielle':
 			frequence = CollesEnseignement.FREQUENCE_TRIMESTRIELLE
 
+		mode_defaut = CollesEnseignement.MODE_INTERROGATION
+		try:
+			if colle_et.find('mode_defaut').text == 'travaux_diriges':
+				mode_defaut = CollesEnseignement.MODE_TD
+		except:
+			pass
+
 		for classe in Classe.objects.filter(mef__code_mef__in=mefs):
 			enseignements = Enseignement.objects.filter(
 				Q(classe=classe),
@@ -891,6 +898,7 @@ def import_nomenclature_colles(nomcolles_xml, annee):
 						frequence=frequence,
 						duree_frequentielle=duree,
 						periode=periode,
+						mode_defaut=mode_defaut,
 					)
 				colles_ens.save()
 				colles_ens.enseignements.set(enseignements)

@@ -46,6 +46,13 @@
     </xs:complexType>
   </xs:element>
 
+  <xs:simpleType name="mode_defaut">
+    <xs:restriction base="xs:normalizedString">
+      <xs:enumeration value="interrogation"/>
+      <xs:enumeration value="travaux_diriges"/>
+    </xs:restriction>
+  </xs:simpleType>
+
   <xs:element name="colle">
     <xs:complexType>
       <xs:all>
@@ -56,6 +63,7 @@
         <xs:element name="duree" type="xs:duration"/>
         <xs:element name="periode" type="periode" minOccurs="0" default="annuel"/>
         <xs:element name="si_option" type="code_matiere" minOccurs="0"/>
+        <xs:element name="mode_defaut" type="mode_defaut" minOccurs="0" default="interrogation"/>
       </xs:all>
     </xs:complexType>
   </xs:element>

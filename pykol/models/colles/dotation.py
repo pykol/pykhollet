@@ -22,6 +22,7 @@ from django.db import models
 from django.db.models import Q
 
 from pykol.models.base import Annee, Enseignement, Classe, Etudiant
+from .colles import Colle
 
 class Dotation(models.Model):
 	"""Délégation d'heures de colles par le rectorat"""
@@ -60,6 +61,14 @@ class CollesEnseignement(models.Model):
 	PERIODE_CHOICES = Enseignement.PERIODE_CHOICES
 	periode = models.SmallIntegerField(verbose_name="période",
 			choices=PERIODE_CHOICES, default=PERIODE_ANNEE)
+
+	MODE_INTERROGATION = Colle.MODE_INTERROGATION
+	MODE_TD = Colle.MODE_TD
+	MODE_CHOICES = Colle.MODE_CHOICES
+	mode_defaut = models.PositiveSmallIntegerField(
+			verbose_name="mode par défaut",
+			choices=MODE_CHOICES,
+			default=MODE_INTERROGATION)
 
 	@property
 	def duree(self):

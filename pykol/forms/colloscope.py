@@ -17,6 +17,7 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 from datetime import timedelta
+from collections import Counter
 
 from django import forms
 from django.forms import formset_factory, modelformset_factory, \
@@ -41,12 +42,12 @@ class EnseignementDoteMixin(forms.Form):
 		pks = [int(v) for v in value.split("-")]
 		ens = Enseignement.objects.get(pk=pks[0])
 		collesens = CollesEnseignement.objects.get(pk=pks[1])
-		print("gagné {} {}".format(ens, collesens))
 		return {'enseignement': ens, 'collesenseignement': collesens}
 
 	# Les choix possibles pour ce champ sont initialisés d'après la
 	# classe donnée dans __init__.
 	enseignement_dote = forms.TypedChoiceField(
+			label="Matière",
 			coerce=_coerce_enseignement_dote,
 			empty_value={'enseignement': None, 'collesenseignement': None},
 			initial='')
@@ -65,32 +66,47 @@ class EnseignementDoteMixin(forms.Form):
 			# On construit la liste des enseignements, éventuellement
 			# multipliés par les dotations correspondantes.
 			enseignements = Enseignement.objects.filter(
-					classe=classe, collesenseignement__classe=classe).values_list(
+					classe=classe,
+					collesenseignement__classe=classe).values(
 							'pk',
 							'collesenseignement__pk',
 							'matiere__nom',
+							'groupe__nom',
+							'matiere__parent__nom',
 							'collesenseignement__nom').order_by(
-									'matiere',
-									'collesenseignement')
+									'collesenseignement',
+									'matiere__nom',
+									'groupe__nom',
+								)
 			choix = [('', '---------')]
+
+			# Le dictionnaire compte_matieres sert à déterminer les
+			# matières qui apparaissent plus d'une fois dans la liste.
+			# Dans ce cas, on affiche le nom du groupe pour désambigüer.
+			compte_matieres = Counter([e['matiere__nom'] for e in
+				enseignements])
 			for enseignement in enseignements:
-				# TODO ce serait plus lisible si l'on n'affichait le nom du
-				# ColleEnseignement que dans le cas où plusieurs
-				# enseignements partagent la même dotation.
-				if enseignement[3]:
-					nom_dotation = '{2} ({3})'.format(*enseignement)
-				else:
-					nom_dotation = enseignement[2]
+				nom_format = '{matiere__nom}'
+
+				if enseignement['groupe__nom'] != classe.nom and \
+						compte_matieres[enseignement['matiere__nom']] > 1:
+					nom_format += ' {groupe__nom}'
+
+				if enseignement['collesenseignement__nom']:
+					nom_format += ' ({collesenseignement__nom})'
+				elif enseignement['matiere__parent__nom']:
+					nom_format += ' ({matiere__parent__nom})'
+
+				nom_dotation = nom_format.format(**enseignement)
 
 				choix.append(
 						(
-							'{0}-{1}'.format(*enseignement),
+							'{pk}-{collesenseignement__pk}'.format(**enseignement),
 							nom_dotation,
 						)
 					)
 
 			self.fields['enseignement_dote'].choices = choix
-			print("choix: {}".format(self.fields['enseignement_dote'].choices))
 
 class ColleForm(EnseignementDoteMixin, forms.Form):
 	"""
@@ -200,7 +216,12 @@ class CreneauForm(EnseignementDoteMixin, forms.ModelForm):
 		self.fields['colleur'].queryset = Professeur.objects.order_by(
 				'last_name', 'first_name')
 
-	def save(commit=True):
+		if kwargs.get('instance') is not None:
+			self.fields['enseignement_dote'].initial = "{}-{}".format(
+					self.instance.enseignement.pk,
+					self.instance.colles_ens.pk)
+
+	def save(self, commit=True):
 		creneau = super().save(commit=False)
 		creneau.enseignement = self.cleaned_data.get('enseignement_dote')['enseignement']
 		creneau.colles_ens   = self.cleaned_data.get('enseignement_dote')['collesenseignement']

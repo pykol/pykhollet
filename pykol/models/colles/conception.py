@@ -16,7 +16,7 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-import datetime
+from datetime import datetime, timedelta
 
 from django.db import models, transaction
 from django.db.models import Q, F
@@ -51,11 +51,11 @@ class Semaine(models.Model):
 		heure) de début d'une colle placée sur le créneau donné dans
 		la semaine.
 		"""
-		horaire = make_aware(datetime.datetime.combine(self.debut, creneau.debut))
+		horaire = make_aware(datetime.combine(self.debut, creneau.debut))
 		# On trouve ensuite le premier jour de la semaine qui est égal à
 		# creneau.jour
 		delta = (7 + creneau.jour - horaire.isoweekday()) % 7
-		horaire += datetime.timedelta(days=delta)
+		horaire += timedelta(days=delta)
 		return horaire
 
 class Creneau(AbstractBaseColle):
@@ -97,6 +97,12 @@ class Creneau(AbstractBaseColle):
 		"""
 		colle_data = self.basecolle_fields()
 		colle_data['groupe'] = trinome
+
+		# Pour un TD, on prend la durée donnée par les horairess
+		if self.mode == self.MODE_TD:
+			colle_data['duree'] = \
+					datetime.combine(datetime.min, self.fin) - \
+					datetime.combine(datetime.min, self.debut)
 
 		colle, _ = Colle.objects.update_or_create(
 				creneau=self,

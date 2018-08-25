@@ -121,6 +121,13 @@ class Trinome(AbstractBaseGroupe):
 			on_delete=models.CASCADE, related_name='trinomes')
 	commentaire = models.TextField(blank=True)
 
+	PERIODE_ANNEE = Enseignement.PERIODE_ANNEE
+	PERIODE_PREMIERE = Enseignement.PERIODE_PREMIERE
+	PERIODE_DEUXIEME = Enseignement.PERIODE_DEUXIEME
+	PERIODE_CHOICES = Enseignement.PERIODE_CHOICES
+	periode = models.SmallIntegerField(verbose_name="période",
+			choices=PERIODE_CHOICES, default=PERIODE_ANNEE)
+
 	def save(self, *args, **kwargs):
 		self.annee = self.classe.annee
 		super().save(*args, **kwargs)

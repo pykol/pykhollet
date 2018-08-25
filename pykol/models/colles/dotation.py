@@ -54,14 +54,10 @@ class CollesEnseignement(models.Model):
 	duree_frequentielle = models.DurationField(
 			verbose_name="durée fréquentielle")
 
-	PERIODE_ANNEE = 0
-	PERIODE_PREMIERE = 1
-	PERIODE_DEUXIEME = 2
-	PERIODE_CHOICES = (
-			(PERIODE_ANNEE, 'année complète'),
-			(PERIODE_PREMIERE, 'première période'),
-			(PERIODE_DEUXIEME, 'deuxième période'),
-		)
+	PERIODE_ANNEE = Enseignement.PERIODE_ANNEE
+	PERIODE_PREMIERE = Enseignement.PERIODE_PREMIERE
+	PERIODE_DEUXIEME = Enseignement.PERIODE_DEUXIEME
+	PERIODE_CHOICES = Enseignement.PERIODE_CHOICES
 	periode = models.SmallIntegerField(verbose_name="période",
 			choices=PERIODE_CHOICES, default=PERIODE_ANNEE)
 

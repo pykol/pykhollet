@@ -224,6 +224,18 @@ class Enseignement(models.Model):
 	specialite = models.BooleanField(verbose_name="spécialité")
 	professeurs = models.ManyToManyField(Professeur, through=Service)
 
+	PERIODE_ANNEE = 0
+	PERIODE_PREMIERE = 1
+	PERIODE_DEUXIEME = 2
+	PERIODE_CHOICES = (
+			(PERIODE_ANNEE, 'année complète'),
+			(PERIODE_PREMIERE, 'première période'),
+			(PERIODE_DEUXIEME, 'deuxième période'),
+		)
+	periode = models.PositiveSmallIntegerField(verbose_name="période",
+			choices=PERIODE_CHOICES,
+			default=PERIODE_ANNEE)
+
 	class Meta:
 		ordering = ['groupe', 'matiere']
 

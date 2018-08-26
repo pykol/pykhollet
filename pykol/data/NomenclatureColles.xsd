@@ -65,6 +65,7 @@
         <xs:element name="si_option" type="code_matiere" minOccurs="0"/>
         <xs:element name="mode_defaut" type="mode_defaut" minOccurs="0" default="interrogation"/>
       </xs:all>
+      <xs:attribute name="id" type="xs:ID" use="required"/>
     </xs:complexType>
   </xs:element>
 

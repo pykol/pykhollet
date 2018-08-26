@@ -13,12 +13,14 @@
   -->
   <colles>
 
-    <!-- Colles en ECS1 et ECS2 -->
-    <colle>
+    <!-- Colles en ECS1, ECS2, ECE1, ECE2 -->
+    <colle id="ec-1995-maths">
       <!-- Mathématiques -->
       <codes_mefs>
         <code_mef>30112012210</code_mef>
         <code_mef>30112012220</code_mef>
+        <code_mef>30112013210</code_mef>
+        <code_mef>30112013220</code_mef>
       </codes_mefs>
       <codes_matieres>
         <code_matiere>061600</code_matiere>
@@ -26,12 +28,14 @@
       <frequence>hebdomadaire</frequence>
       <duree>PT10M</duree>
     </colle>
-    <colle>
+    <colle id="ec-1995-info">
       <!-- Informatique -->
       <nom>Informatique</nom>
       <codes_mefs>
         <code_mef>30112012210</code_mef>
         <code_mef>30112012220</code_mef>
+        <code_mef>30112013210</code_mef>
+        <code_mef>30112013220</code_mef>
       </codes_mefs>
       <codes_matieres>
         <code_matiere>061600</code_matiere>
@@ -40,11 +44,13 @@
       <duree>PT5M</duree>
       <mode_defaut>travaux_diriges</mode_defaut>
     </colle>
-    <colle>
+    <colle id="ec-1995-cg">
       <!-- Culture générale -->
       <codes_mefs>
         <code_mef>30112012210</code_mef>
         <code_mef>30112012220</code_mef>
+        <code_mef>30112013210</code_mef>
+        <code_mef>30112013220</code_mef>
       </codes_mefs>
       <codes_matieres>
         <code_matiere>001700</code_matiere>
@@ -52,8 +58,8 @@
       <frequence>hebdomadaire</frequence>
       <duree>PT10M</duree>
     </colle>
-    <colle>
-      <!-- Histoire-géo -->
+    <colle id="ecs-1995-hg">
+      <!-- Histoire-géo spécifique à l'ECS -->
       <codes_mefs>
         <code_mef>30112012210</code_mef>
         <code_mef>30112012220</code_mef>
@@ -64,75 +70,8 @@
       <frequence>hebdomadaire</frequence>
       <duree>PT10M</duree>
     </colle>
-    <colle>
-      <!-- Langues -->
-      <nom>Langues vivantes</nom>
-      <codes_mefs>
-        <code_mef>30112012210</code_mef>
-        <code_mef>30112012220</code_mef>
-      </codes_mefs>
-      <codes_matieres>
-        <!-- Allemand -->
-        <code_matiere>030101</code_matiere>
-        <code_matiere>030102</code_matiere>
-        <!-- Anglais -->
-        <code_matiere>030201</code_matiere>
-        <code_matiere>030202</code_matiere>
-        <!-- Espagnol -->
-        <code_matiere>030601</code_matiere>
-        <code_matiere>030602</code_matiere>
-        <!-- Italien -->
-        <code_matiere>030901</code_matiere>
-        <code_matiere>030902</code_matiere>
-        <!-- Russe -->
-        <code_matiere>031401</code_matiere>
-        <code_matiere>031402</code_matiere>
-      </codes_matieres>
-      <frequence>hebdomadaire</frequence>
-      <duree>PT10M</duree>
-    </colle>
-
-    <!-- Colles en ECE1 et ECE2 -->
-    <colle>
-      <!-- Mathématiques -->
-      <codes_mefs>
-        <code_mef>30112013210</code_mef>
-        <code_mef>30112013220</code_mef>
-      </codes_mefs>
-      <codes_matieres>
-        <code_matiere>061600</code_matiere>
-      </codes_matieres>
-      <frequence>hebdomadaire</frequence>
-      <duree>PT10M</duree>
-    </colle>
-    <colle>
-      <!-- Informatique -->
-      <nom>Informatique</nom>
-      <codes_mefs>
-        <code_mef>30112013210</code_mef>
-        <code_mef>30112013220</code_mef>
-      </codes_mefs>
-      <codes_matieres>
-        <code_matiere>061600</code_matiere>
-      </codes_matieres>
-      <frequence>hebdomadaire</frequence>
-      <duree>PT5M</duree>
-      <mode_defaut>travaux_diriges</mode_defaut>
-    </colle>
-    <colle>
-      <!-- Culture générale -->
-      <codes_mefs>
-        <code_mef>30112013210</code_mef>
-        <code_mef>30112013220</code_mef>
-      </codes_mefs>
-      <codes_matieres>
-        <code_matiere>001700</code_matiere>
-      </codes_matieres>
-      <frequence>hebdomadaire</frequence>
-      <duree>PT10M</duree>
-    </colle>
-    <colle>
-      <!-- ASH -->
+    <colle id="ece-1995-ash">
+      <!-- ASH spécifique à l'ECE -->
       <codes_mefs>
         <code_mef>30112013210</code_mef>
         <code_mef>30112013220</code_mef>
@@ -143,10 +82,12 @@
       <frequence>hebdomadaire</frequence>
       <duree>PT10M</duree>
     </colle>
-    <colle>
+    <colle id="ec-1995-lv">
       <!-- Langues -->
       <nom>Langues vivantes</nom>
       <codes_mefs>
+        <code_mef>30112012210</code_mef>
+        <code_mef>30112012220</code_mef>
         <code_mef>30112013210</code_mef>
         <code_mef>30112013220</code_mef>
       </codes_mefs>
@@ -172,7 +113,7 @@
     </colle>
 
     <!-- Colles en MPSI, MP et MP* -->
-    <colle>
+    <colle id="mp-1995-maths">
       <codes_mefs>
         <code_mef>30111018210</code_mef>
         <code_mef>30111027220</code_mef>
@@ -184,7 +125,7 @@
       <frequence>hebdomadaire</frequence>
       <duree>PT20M</duree>
     </colle>
-    <colle>
+    <colle id="mp-1995-physique">
       <codes_mefs>
         <code_mef>30111018210</code_mef>
         <code_mef>30111027220</code_mef>
@@ -196,7 +137,7 @@
       <frequence>hebdomadaire</frequence>
       <duree>PT10M</duree>
     </colle>
-    <colle>
+    <colle id="mp-1995-lv">
       <nom>Langues vivantes</nom>
       <codes_mefs>
         <code_mef>30111018210</code_mef>
@@ -223,7 +164,7 @@
       <frequence>hebdomadaire</frequence>
       <duree>PT10M</duree>
     </colle>
-    <colle>
+    <colle id="mp-1995-francais">
       <codes_mefs>
         <code_mef>30111018210</code_mef>
         <code_mef>30111027220</code_mef>
@@ -237,7 +178,7 @@
     </colle>
 
     <!-- Colles en PCSI -->
-    <colle>
+    <colle id="pcsi-1995-maths">
       <!-- Mathématiques -->
       <codes_mefs>
         <code_mef>30111019210</code_mef>
@@ -248,7 +189,7 @@
       <frequence>hebdomadaire</frequence>
       <duree>PT10M</duree>
     </colle>
-    <colle>
+    <colle id="pcsi-1995-physique-s1">
       <!-- Physique - Première période -->
       <codes_mefs>
         <code_mef>30111019210</code_mef>
@@ -262,7 +203,7 @@
       <duree>PT15M</duree>
       <periode>premiere_periode</periode>
     </colle>
-    <colle>
+    <colle id="pcsi-1995-physique-s2chimie">
       <!-- Physique - Deuxième période, option chimie -->
       <codes_mefs>
         <code_mef>30111019210</code_mef>
@@ -275,7 +216,7 @@
       <periode>deuxieme_periode</periode>
       <si_option>067100</si_option>
     </colle>
-    <colle>
+    <colle id="pcsi-1995-physique-s2si">
       <!-- Physique - Deuxième période, option SI -->
       <codes_mefs>
         <code_mef>30111019210</code_mef>
@@ -288,7 +229,7 @@
       <periode>deuxieme_periode</periode>
       <si_option>063300</si_option>
     </colle>
-    <colle>
+    <colle id="pcsi-1995-chimie-s2">
       <!-- Chimie 4h PCSI en deuxième période -->
       <codes_mefs>
         <code_mef>30111019210</code_mef>
@@ -300,7 +241,7 @@
       <duree>PT10M</duree>
       <periode>deuxieme_periode</periode>
     </colle>
-    <colle>
+    <colle id="pcsi-1995-si-s1">
       <!-- Sciences industrielles - Première période -->
       <codes_mefs>
         <code_mef>30111019210</code_mef>
@@ -312,7 +253,7 @@
       <duree>PT5M</duree>
       <periode>premiere_periode</periode>
     </colle>
-    <colle>
+    <colle id="pcsi-1995-si-s2">
       <!-- Sciences industrielles - Deuxième période -->
       <codes_mefs>
         <code_mef>30111019210</code_mef>
@@ -324,7 +265,7 @@
       <duree>PT5M</duree>
       <periode>deuxieme_periode</periode>
     </colle>
-    <colle>
+    <colle id="pcsi-1995-lv">
       <nom>Langues vivantes</nom>
       <codes_mefs>
         <code_mef>30111019210</code_mef>
@@ -349,7 +290,7 @@
       <frequence>hebdomadaire</frequence>
       <duree>PT10M</duree>
     </colle>
-    <colle>
+    <colle id="pcsi-1995-francais">
       <codes_mefs>
         <code_mef>30111019210</code_mef>
       </codes_mefs>
@@ -361,7 +302,7 @@
     </colle>
 
     <!-- Colles en PC et PC* -->
-    <colle>
+    <colle id="pc-1995-maths">
       <!-- Mathématiques -->
       <codes_mefs>
         <code_mef>30111032220</code_mef>
@@ -373,7 +314,7 @@
       <frequence>hebdomadaire</frequence>
       <duree>PT10M</duree>
     </colle>
-    <colle>
+    <colle id="pc-1995-physique">
       <!-- Physique -->
       <codes_mefs>
         <code_mef>30111032220</code_mef>
@@ -385,7 +326,7 @@
       <frequence>hebdomadaire</frequence>
       <duree>PT10M</duree>
     </colle>
-    <colle>
+    <colle id="pc-1995-chimie">
       <!-- Chimie -->
       <codes_mefs>
         <code_mef>30111032220</code_mef>
@@ -397,7 +338,7 @@
       <frequence>hebdomadaire</frequence>
       <duree>PT10M</duree>
     </colle>
-    <colle>
+    <colle id="pc-1995-lv">
       <nom>Langues vivantes</nom>
       <codes_mefs>
         <code_mef>30111032220</code_mef>
@@ -423,7 +364,7 @@
       <frequence>hebdomadaire</frequence>
       <duree>PT10M</duree>
     </colle>
-    <colle>
+    <colle id="pc-1995-francais">
       <!-- Français - philosophie -->
       <codes_mefs>
         <code_mef>30111032220</code_mef>
@@ -437,7 +378,7 @@
     </colle>
 
     <!-- Colles en PSI* -->
-    <colle>
+    <colle id="psi-1995-maths">
       <codes_mefs>
         <code_mef>30111033220</code_mef>
       </codes_mefs>
@@ -447,7 +388,7 @@
       <frequence>hebdomadaire</frequence>
       <duree>PT10M</duree>
     </colle>
-    <colle>
+    <colle id="psi-1995-physique">
       <codes_mefs>
         <code_mef>30111033220</code_mef>
       </codes_mefs>
@@ -457,7 +398,7 @@
       <frequence>hebdomadaire</frequence>
       <duree>PT15M</duree>
     </colle>
-    <colle>
+    <colle id="psi-1995-si">
       <codes_mefs>
         <code_mef>30111033220</code_mef>
       </codes_mefs>
@@ -467,7 +408,7 @@
       <frequence>hebdomadaire</frequence>
       <duree>PT5M</duree>
     </colle>
-    <colle>
+    <colle id="psi-1995-lv">
       <nom>Langues vivantes</nom>
       <codes_mefs>
         <code_mef>30111033220</code_mef>
@@ -492,7 +433,7 @@
       <frequence>hebdomadaire</frequence>
       <duree>PT10M</duree>
     </colle>
-    <colle>
+    <colle id="psi-1995-francais">
       <codes_mefs>
         <code_mef>30111033220</code_mef>
       </codes_mefs>
@@ -504,7 +445,7 @@
     </colle>
 
     <!-- Colles en Khagne et Hypokhagne -->
-    <colle>
+    <colle id="lettres-1995-philo">
       <codes_mefs>
         <code_mef>30113004210</code_mef>
         <code_mef>30113006220</code_mef>
@@ -516,7 +457,7 @@
       <frequence>trimestrielle</frequence>
       <duree>PT30M</duree>
     </colle>
-    <colle>
+    <colle id="lettres-1995-francais">
       <codes_mefs>
         <code_mef>30113004210</code_mef>
         <code_mef>30113006220</code_mef>
@@ -528,7 +469,7 @@
       <frequence>trimestrielle</frequence>
       <duree>PT30M</duree>
     </colle>
-    <colle>
+    <colle id="hypokhagne-1995-latin">
       <codes_mefs>
         <code_mef>30113004210</code_mef>
         <!-- Pas de latin en Khagne Lyon -->
@@ -540,7 +481,7 @@
       <frequence>trimestrielle</frequence>
       <duree>PT30M</duree>
     </colle>
-    <colle>
+    <colle id="hypokhagne-1995-grec">
       <codes_mefs>
         <code_mef>30113004210</code_mef>
         <!-- Pas de grec en Khagne Lyon -->
@@ -552,7 +493,7 @@
       <frequence>trimestrielle</frequence>
       <duree>PT30M</duree>
     </colle>
-    <colle>
+    <colle id="lettres-1995-histoire">
       <codes_mefs>
         <code_mef>30113004210</code_mef>
         <code_mef>30113006220</code_mef>
@@ -564,7 +505,7 @@
       <frequence>trimestrielle</frequence>
       <duree>PT30M</duree>
     </colle>
-    <colle>
+    <colle id="lettres-1995-geographie">
       <codes_mefs>
         <code_mef>30113004210</code_mef>
         <code_mef>30113006220</code_mef>
@@ -576,7 +517,7 @@
       <frequence>trimestrielle</frequence>
       <duree>PT30M</duree>
     </colle>
-    <colle>
+    <colle id="lettres-1995-lva">
       <nom>Langues vivantes A</nom>
       <codes_mefs>
         <code_mef>30113004210</code_mef>
@@ -598,7 +539,7 @@
       <frequence>trimestrielle</frequence>
       <duree>PT30M</duree>
     </colle>
-    <colle>
+    <colle id="lettres-1995-lvb">
       <nom>Langues vivantes B</nom>
       <codes_mefs>
         <code_mef>30113004210</code_mef>

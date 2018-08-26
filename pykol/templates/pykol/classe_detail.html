@@ -36,8 +36,10 @@
   </ul>
 </section>
 
+{% if periodes %}
 <section>
-  <h3>Groupes de colles</h3>
+  {% for periode, trinomes in periodes.items %}
+  <h3>Groupes de colles − {{ periode }}</h3>
   <ul class="trinomes">
     {% for trinome in trinomes %}
     <li><strong>{{ trinome.nom }}</strong>
@@ -57,7 +59,9 @@
     </li>
     {% endfor %}
   </ul>
+  {% endfor %}
 </section>
+{% endif %}
 
 <section>
   <h3>Étudiants</h3>

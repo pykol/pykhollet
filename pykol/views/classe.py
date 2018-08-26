@@ -20,6 +20,7 @@ from django.views import generic
 from django.contrib.auth.mixins import LoginRequiredMixin
 
 from pykol.models.base import Classe
+from pykol.models.colles import Trinome
 
 class ClasseDetailView(LoginRequiredMixin, generic.DetailView):
 	model = Classe
@@ -32,7 +33,15 @@ class ClasseDetailView(LoginRequiredMixin, generic.DetailView):
 		context['perm_change_colloscope'] = self.request.user.has_perm(
 				'pykol.change_colloscope',
 				classe)
-		context['trinomes'] = classe.trinomes.order_by('nom')
+
+		periodes = {}
+		qs = classe.trinomes.order_by('nom')
+		for periode_id, periode_nom in Trinome.PERIODE_CHOICES:
+			trinomes = qs.filter(periode=periode_id)
+			if trinomes:
+				periodes[periode_nom] = trinomes
+		context['periodes'] = periodes
+
 		return context
 
 class ClasseListView(LoginRequiredMixin, generic.ListView):

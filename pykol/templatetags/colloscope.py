@@ -25,3 +25,19 @@ def heure_pour_colloscope(value):
 		return "{:%H}".format(value)
 	else:
 		return "{:%H:%M}".format(value)
+
+@register.filter
+def position_tableur(pos):
+	ligne = pos[0]
+	colonne = pos[1]
+	if colonne == 0:
+		colonne_alpha = 'A'
+	else:
+		colonne_alpha = ''
+		while colonne > 0:
+			colonne, reste = divmod(colonne, 26)
+			colonne_alpha = chr(ord('A') + reste) + colonne_alpha
+
+	return "{colonne}{ligne}".format(
+			ligne=ligne + 1,
+			colonne=colonne_alpha)

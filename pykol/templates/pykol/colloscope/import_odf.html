@@ -1,4 +1,5 @@
 {% extends 'pykol/base.html' %}
+{% load colloscope %}
 {% block content %}
 <h2>Import du colloscope
   <small>− {{ classe }}</small>
@@ -46,6 +47,19 @@ réimporter un fichier en demandant la suppression des colles
 existantes.</p>
 
 <section>
+  {% if import_erreurs %}
+  <p>L'import n'a pas pu être réalisé correctement, car les erreurs
+  suivantes ont été rencontrées :</p>
+  <ul>
+    {% for erreur in import_erreurs %}
+    <li>
+      {% if erreur.1 %}
+      <em>Case {{ erreur.1|position_tableur }}</em> :
+      {% endif %}
+      {{ erreur.2 }}</li>
+    {% endfor %}
+  </ul>
+  {% endif %}
   <form enctype="multipart/form-data" action="" method="post">
     {% csrf_token %}
     {{ form.as_table }}

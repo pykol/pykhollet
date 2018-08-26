@@ -1,4 +1,4 @@
-# -*- coding: utf-8
+# -*- coding:utf8 -*-
 
 # pyKol - Gestion de colles en CPGE
 # Copyright (c) 2018 Florian Hatat
@@ -16,6 +16,20 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-from . import constantes
-from . import base
-from . import colles
+"""
+Constantes utilisées un peu partout dans le code
+"""
+
+# Nombre de semaines constituant la première période de l'année
+# Fixé par l'arrêté du 10 février 1995 (RESK9500109A)
+SEMAINES_PREMIERE_PERIODE = 18
+
+# Valeurs pour les choix des périodes
+PERIODE_ANNEE = 0
+PERIODE_PREMIERE = 1
+PERIODE_DEUXIEME = 2
+PERIODE_CHOICES = (
+		(PERIODE_ANNEE, 'année complète'),
+		(PERIODE_PREMIERE, 'première période'),
+		(PERIODE_DEUXIEME, 'deuxième période'),
+	)

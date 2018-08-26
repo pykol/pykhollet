@@ -23,6 +23,7 @@ from django.db.models import Q, F
 from django.core.exceptions import ValidationError
 from django.utils.timezone import make_aware
 
+from pykol.models import constantes
 from pykol.models.base import Classe, Professeur, Matiere, \
 		Enseignement, AbstractBaseGroupe
 from .colles import Colle, AbstractBaseColle
@@ -127,10 +128,10 @@ class Trinome(AbstractBaseGroupe):
 			on_delete=models.CASCADE, related_name='trinomes')
 	commentaire = models.TextField(blank=True)
 
-	PERIODE_ANNEE = Enseignement.PERIODE_ANNEE
-	PERIODE_PREMIERE = Enseignement.PERIODE_PREMIERE
-	PERIODE_DEUXIEME = Enseignement.PERIODE_DEUXIEME
-	PERIODE_CHOICES = Enseignement.PERIODE_CHOICES
+	PERIODE_ANNEE = constantes.PERIODE_ANNEE
+	PERIODE_PREMIERE = constantes.PERIODE_PREMIERE
+	PERIODE_DEUXIEME = constantes.PERIODE_DEUXIEME
+	PERIODE_CHOICES = constantes.PERIODE_CHOICES
 	periode = models.SmallIntegerField(verbose_name="période",
 			choices=PERIODE_CHOICES, default=PERIODE_ANNEE)
 

@@ -22,6 +22,7 @@ from django.db import models
 from django.db.models import Q
 
 from pykol.models.base import Annee, Enseignement, Classe, Etudiant
+from pykol.models import constantes
 from .colles import Colle
 
 class Dotation(models.Model):
@@ -55,10 +56,10 @@ class CollesEnseignement(models.Model):
 	duree_frequentielle = models.DurationField(
 			verbose_name="durée fréquentielle")
 
-	PERIODE_ANNEE = Enseignement.PERIODE_ANNEE
-	PERIODE_PREMIERE = Enseignement.PERIODE_PREMIERE
-	PERIODE_DEUXIEME = Enseignement.PERIODE_DEUXIEME
-	PERIODE_CHOICES = Enseignement.PERIODE_CHOICES
+	PERIODE_ANNEE = constantes.PERIODE_ANNEE
+	PERIODE_PREMIERE = constantes.PERIODE_PREMIERE
+	PERIODE_DEUXIEME = constantes.PERIODE_DEUXIEME
+	PERIODE_CHOICES = constantes.PERIODE_CHOICES
 	periode = models.SmallIntegerField(verbose_name="période",
 			choices=PERIODE_CHOICES, default=PERIODE_ANNEE)
 
@@ -109,10 +110,10 @@ class CollesEnseignement(models.Model):
 			if self.periode == CollesEnseignement.PERIODE_ANNEE:
 				mult = self.classe.get_nb_semaines_colles()
 			elif self.periode == CollesEnseignement.PERIODE_PREMIERE:
-				# Fixé par l'arrêté du 10 février 1995 (RESK9500109A)
-				mult = 18
+				mult = constantes.SEMAINES_PREMIERE_PERIODE
 			else: # Deuxième période
-				mult = self.classe.get_nb_semaines_colles() - 18
+				mult = self.classe.get_nb_semaines_colles() - \
+						constantes.SEMAINES_PREMIERE_PERIODE
 		else:
 			mult = self.classe.get_nb_trimestres_colles()
 

@@ -19,6 +19,7 @@
 from django.db import models
 from django.urls import reverse
 
+from pykol.models import constantes
 from .annee import Annee
 from .utilisateurs import Professeur, Etudiant
 
@@ -224,14 +225,10 @@ class Enseignement(models.Model):
 	specialite = models.BooleanField(verbose_name="spécialité")
 	professeurs = models.ManyToManyField(Professeur, through=Service)
 
-	PERIODE_ANNEE = 0
-	PERIODE_PREMIERE = 1
-	PERIODE_DEUXIEME = 2
-	PERIODE_CHOICES = (
-			(PERIODE_ANNEE, 'année complète'),
-			(PERIODE_PREMIERE, 'première période'),
-			(PERIODE_DEUXIEME, 'deuxième période'),
-		)
+	PERIODE_ANNEE = constantes.PERIODE_ANNEE
+	PERIODE_PREMIERE = constantes.PERIODE_PREMIERE
+	PERIODE_DEUXIEME = constantes.PERIODE_DEUXIEME
+	PERIODE_CHOICES = constantes.PERIODE_CHOICES
 	periode = models.PositiveSmallIntegerField(verbose_name="période",
 			choices=PERIODE_CHOICES,
 			default=PERIODE_ANNEE)

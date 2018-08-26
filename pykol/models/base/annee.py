@@ -16,13 +16,15 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-import datetime
+from datetime import date, timedelta
 
 from django.db import models
 from django.urls import reverse
 
 import requests
 import isodate
+
+from pykol.models import constantes
 
 class Periode(models.Model):
 	"""
@@ -40,6 +42,10 @@ class Periode(models.Model):
 	def contains(self, date):
 		return self.debut <= date <= self.fin
 
+	@property
+	def duree(self):
+		return self.fin - self.debut
+
 class AnneeManager(models.Manager):
 	"""
 	Gestionnaire qui ajoute l'accès à l'année actuelle.
@@ -49,7 +55,7 @@ class AnneeManager(models.Manager):
 		"""
 		Renvoie l'année actuelle
 		"""
-		today = datetime.date.today()
+		today = date.today()
 		try:
 			return self.get(debut__lte=today, fin__gte=today)
 		except Annee.DoesNotExist:
@@ -73,21 +79,36 @@ class Annee(Periode):
 		verbose_name = 'année scolaire'
 		verbose_name_plural = 'années scolaires'
 
-	def est_travaille(self, date):
+	def est_vacances(self, date, seulement_vacances=True):
+		"""
+		Renvoie True si et seulement si la date correspond à un jour de
+		vacances scolaires.
+
+		Si le paramètre seulement_vacances vaut False, on regarde si
+		la date tombe sur n'importe quel jour non travaillé (vacances ou
+		jour férié).
+
+		Si le paramètre seulement_vacances vaut True, on regarde
+		uniquement si la date tombe sur une période de vacances.
+		"""
+		qs = self.vacances.filter(debut__lte=date, fin__gte=date)
+		if seulement_vacances:
+			qs = qs.filter(type_vacances=Vacances.TYPE_VACANCES)
+		return qs.exists()
+
+	def est_travaille(self, date, seulement_vacances=True):
 		"""
 		Renvoie True si et seulement si le paramètre date correspond à
 		un jour travaillé de l'année scolaire.
 		"""
-		if self.weekday() == 6:
+		if date.weekday() == 6:
 			return False
-		for vacance in self.vacances.all():
-			if vacance.contains(date):
-				return False
-		return True
+
+		return not self.est_vacances(date, seulement_vacances=seulement_vacances)
 
 	def dotation_totale(self):
 		nb_heures = self.dotation_set.aggregate(total=models.Sum('heures'))['total'] or 0
-		return datetime.timedelta(hours=nb_heures)
+		return timedelta(hours=nb_heures)
 
 	def __str__(self):
 		return self.nom
@@ -106,7 +127,7 @@ class Annee(Periode):
 		# fin). Or, pyKol stocke les périodes en prenant en compte
 		# les jours inclus dans la période. Il faut donc décaler les
 		# dates d'un jour.
-		un_jour = datetime.timedelta(days=1)
+		un_jour = timedelta(days=1)
 
 		# Lors de la requête au serveur, on demande toute période de
 		# vacances qui une intersection non vide avec l'année en cours.
@@ -138,6 +159,57 @@ class Annee(Periode):
 					fin=fin,
 				)
 			vacances.save()
+
+	def lundi_premiere_semaine(self):
+		"""
+		Renvoie le lundi de la première semaine de cours de l'année
+		scolaire.
+
+		On suit la même convention que la norme ISO8601 : la première
+		semaine est la première qui contient au moins quatre jours dans
+		l'année scolaire.
+		"""
+		jour4 = self.debut + timedelta(days=3)
+		lundi = jour4 - timedelta(days=jour4.weekday())
+		return lundi
+
+	def numero_semaine(self, date):
+		"""
+		Renvoie le numéro de la semaine d'enseignement qui contient la
+		date donnée. Si aucune semaine de correspond, la fonction
+		renvoie None.
+
+		Les semaines sont numérotées à partir de 1.
+		"""
+		if date < self.debut or date > self.fin or \
+				not self.est_travaille(date):
+			return None
+
+		depuis_debut = date - self.lundi_premiere_semaine()
+
+		# On retire les jours contenus dans les vacances
+		jours_vacances = sum([v.duree
+			for v in self.vacances.filter(fin__lte=date,
+				type_vacances=Vacances.TYPE_VACANCES
+				)], timedelta())
+
+		return (depuis_debut - jours_vacances).days // 7 + 1
+
+	def periode_enseignement(self, date):
+		"""
+		Renvoie le numéro du semestre qui contient la date donnée.
+
+		Le nombre de semaines du premier semestre est défini dans
+		pykol.models.constantes.SEMAINES_PREMIERE_PERIODE.
+		"""
+		numero_semaine = self.numero_semaine(date)
+		if numero_semaine is None:
+			return None
+
+		if numero_semaine <= constantes.SEMAINES_PREMIERE_PERIODE:
+			return constantes.PERIODE_PREMIERE
+		else:
+			return constantes.PERIODE_DEUXIEME
 
 class Vacances(Periode):
 	"""

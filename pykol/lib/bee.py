@@ -847,10 +847,8 @@ def import_stsemp(stsemp_xml):
 def import_nomenclature_colles(nomcolles_xml, annee):
 	nomcolles_et = ET.parse(nomcolles_xml)
 
-	# Table rase de ce qui pouvait déjà exister en base de données
-	CollesEnseignement.objects.filter(classe__annee=annee).delete()
-
 	for colle_et in nomcolles_et.getroot().findall('colles/colle'):
+		nomenclature_id = colle_et.attrib['id']
 		mefs = [x.text for x in colle_et.findall('codes_mefs/code_mef')]
 		matieres = [x.text for x in colle_et.findall('codes_matieres/code_matiere')]
 		duree = isodate.parse_duration(colle_et.find('duree').text)
@@ -892,13 +890,14 @@ def import_nomenclature_colles(nomcolles_xml, annee):
 			# On n'ajoute la dotation que si l'on a les enseignements
 			# correspondants.
 			if enseignements:
-				colles_ens = CollesEnseignement(
-						classe=classe,
-						nom=nom_enveloppe,
-						frequence=frequence,
-						duree_frequentielle=duree,
-						periode=periode,
-						mode_defaut=mode_defaut,
-					)
-				colles_ens.save()
+				colles_ens, _ = CollesEnseignement.objects.update_or_create(
+						nomenclature_id=nomenclature_id,
+						defaults={
+							'classe': classe,
+							'nom': nom_enveloppe,
+							'frequence': frequence,
+							'duree_frequentielle': duree,
+							'periode': periode,
+							'mode_defaut': mode_defaut,
+						})
 				colles_ens.enseignements.set(enseignements)

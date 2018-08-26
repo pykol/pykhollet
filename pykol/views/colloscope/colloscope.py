@@ -31,6 +31,7 @@ from odf.style import Style, TableColumnProperties, TableRowProperties, \
         TextProperties, ParagraphProperties
 from odf.text import P
 
+from pykol.models import constantes
 from pykol.models.base import Classe
 from pykol.models.colles import Colle
 from pykol.forms.colloscope import ColloscopeImportForm
@@ -96,7 +97,7 @@ def colloscope_odf(request, classe):
 	response['Content-Disposition'] = 'attachment; filename="colloscope_{}.ods"'.format(classe.slug)
 
 	semaines = classe.semaine_set.order_by('debut')
-	creneaux = classe.creneau_set.order_by('matiere', 'jour', 'debut')
+	creneaux = classe.creneau_set.order_by('enseignement', 'jour', 'debut')
 	colles = classe.colle_set.filter(semaine__in=semaines,
 			creneau__in=creneaux)
 
@@ -114,24 +115,57 @@ def colloscope_odf(request, classe):
 
 	table = Table(name=str(classe), parent=ods.spreadsheet)
 
-	# Ajout des colonnes
+	# Ajout des colonnes d'en-tête fixes
+	entetes_fixes = ("ID", "Matière", "Colleur", "Jour", "Horaire", "Salle")
 	table.addElement(TableColumn()) # ID
 	table.addElement(TableColumn()) # Matière
 	table.addElement(TableColumn()) # Colleur
 	table.addElement(TableColumn()) # Jour
 	table.addElement(TableColumn()) # Horaire
 	table.addElement(TableColumn()) # Salle
-	for _ in semaines:
-		table.addElement(TableColumn()) # Semaine
 
-	# Ligne d'en-tête avec les semaines
+	# Ajout des colonnes d'en-tête des semaines
+	style_col_semaine = Style(parent=ods.automaticstyles,
+			name='col_semaine', family='table-column')
+	TableColumnProperties(parent=style_col_semaine, columnwidth='1cm')
+	for _ in semaines:
+		table.addElement(TableColumn(stylename=style_col_semaine))
+
+	# Ligne d'en-tête avec les semestres au-dessus des semaines
 	tr = TableRow(parent=table)
-	P(parent=TableCell(parent=tr, valuetype='string', stylename=style_entete), text="ID")
-	P(parent=TableCell(parent=tr, valuetype='string', stylename=style_entete), text="Matière")
-	P(parent=TableCell(parent=tr, valuetype='string', stylename=style_entete), text="Colleur")
-	P(parent=TableCell(parent=tr, valuetype='string', stylename=style_entete), text="Jour")
-	P(parent=TableCell(parent=tr, valuetype='string', stylename=style_entete), text="Horaire")
-	P(parent=TableCell(parent=tr, valuetype='string', stylename=style_entete), text="Salle")
+	for entete in entetes_fixes:
+		P(parent=TableCell(parent=tr, valuetype='string',
+			numberrowsspanned=2, numbercolumnsspanned=1,
+			stylename=style_entete), text=entete)
+
+	# On doit savoir combien de semaines se trouvent sur chaque période
+	# pour afficher les en-têtes sur le bon nombre de colonnes
+	nb_semaines = dict([
+		(
+			periode[0],
+			0,
+		)
+		for periode in constantes.PERIODE_CHOICES
+	])
+	for semaine in semaines:
+		nb_semaines[semaine.periode] += 1
+
+	# Insertion des titres des périodes
+	for periode_id, periode_nom in constantes.PERIODE_CHOICES:
+		if nb_semaines[periode_id] > 0:
+			P(parent=TableCell(parent=tr, valuetype='string',
+				numbercolumnsspanned=nb_semaines[periode_id],
+				numberrowsspanned=1,
+				stylename=style_entete), text=periode_nom.capitalize())
+			TableCell(parent=tr,
+					numbercolumnsrepeated=nb_semaines[periode_id] - 1)
+
+	tr = TableRow(parent=table)
+	# Ligne d'en-tête avec seulement les semaines
+	# On doit placer des cellules vides pour les case d'en-tête situées
+	# avant les semaines
+	TableCell(parent=tr, numbercolumnsrepeated=len(entetes_fixes))
+	# Puis on ajoute les semaines
 	for semaine in semaines:
 		P(parent=TableCell(parent=tr, valuetype='string',
 			stylename=style_entete), text=semaine.numero)
@@ -191,7 +225,7 @@ def import_odf(request, slug):
 			colloscope_ods = load(request.FILES['colloscope_ods'])
 			table = colloscope_ods.spreadsheet.getElementsByType(Table)[0]
 			lignes = table.getElementsByType(TableRow)
-			for ligne in lignes[1:]:
+			for ligne in lignes[2:]:
 				cells = iter_columns(ligne)
 
 				id_creneau = int(tablecell_to_text(next(cells)))

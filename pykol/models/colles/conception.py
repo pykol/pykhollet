@@ -59,6 +59,16 @@ class Semaine(models.Model):
 		horaire += timedelta(days=delta)
 		return horaire
 
+	@property
+	def periode(self):
+		"""
+		Semestre auquel est associé la semaine de colle.
+
+		Le semestre est déterminé en prenant la date du premier jour de
+		la semaine de colle.
+		"""
+		return self.classe.annee.periode_enseignement(self.debut)
+
 class Creneau(AbstractBaseColle):
 	"""Créneau de colle programmé au colloscope
 

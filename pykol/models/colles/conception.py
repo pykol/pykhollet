@@ -139,7 +139,7 @@ class Trinome(AbstractBaseGroupe):
 		super().save(*args, **kwargs)
 
 	class Meta:
-		unique_together = ('annee', 'classe', 'nom')
+		unique_together = ('annee', 'classe', 'periode', 'nom')
 
 class Roulement(models.Model):
 	"""

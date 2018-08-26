@@ -26,6 +26,7 @@ from django.forms import formset_factory
 from django.contrib import messages
 
 from pykol.models.base import Classe
+from pykol.models.colles import Trinome
 from pykol.forms.colloscope import TrinomeForm
 
 @login_required
@@ -37,11 +38,16 @@ def trinomes(request, slug):
 	trinomes = classe.trinomes
 	etudiants = classe.etudiant_set.order_by('last_name', 'first_name')
 	initial = []
+	def join_groupes(queryset):
+		return ','.join(queryset.filter(etudiants=etudiant).values_list('nom',
+			flat=True))
 	for etudiant in etudiants:
+		qs = trinomes.filter(etudiants=etudiant)
 		initial.append({
 			'etudiant': etudiant,
-			'groupes': ','.join([g[0] for g in
-				trinomes.filter(etudiants=etudiant).values_list('nom')]),
+			'groupes': join_groupes(qs.filter(periode=Trinome.PERIODE_ANNEE)),
+			'groupes_periode_premiere': join_groupes(qs.filter(periode=Trinome.PERIODE_PREMIERE)),
+			'groupes_periode_deuxieme': join_groupes(qs.filter(periode=Trinome.PERIODE_DEUXIEME)),
 			})
 
 	TrinomeFormSet = formset_factory(TrinomeForm, can_delete=False, extra=0,
@@ -51,20 +57,30 @@ def trinomes(request, slug):
 		formset = TrinomeFormSet(request.POST, form_kwargs={'queryset':
 			etudiants}, initial=initial)
 		if formset.is_valid():
-			# On construit d'abord le dictionnaire qui à chaque trinôme
-			# associe la liste des étudiants membres
-			trinomes_membres = {}
+			# On construit d'abord le dictionnaire qui à chaque période
+			# et à chaque numéro de trinôme associe la liste des
+			# étudiants membres
+			trinomes_membres = {
+				Trinome.PERIODE_ANNEE: {},
+				Trinome.PERIODE_PREMIERE: {},
+				Trinome.PERIODE_DEUXIEME: {},
+			}
 			for form in formset:
 				etudiant = form.cleaned_data['etudiant']
 				for groupe in form.cleaned_data['groupes']:
-					trinomes_membres.setdefault(groupe, []).append(etudiant)
+					trinomes_membres[Trinome.PERIODE_ANNEE].setdefault(groupe, []).append(etudiant)
+				for groupe in form.cleaned_data['groupes_periode_premiere']:
+					trinomes_membres[Trinome.PERIODE_PREMIERE].setdefault(groupe, []).append(etudiant)
+				for groupe in form.cleaned_data['groupes_periode_deuxieme']:
+					trinomes_membres[Trinome.PERIODE_DEUXIEME].setdefault(groupe, []).append(etudiant)
 			# On met ensuite à jour la liste des trinômes
 			with transaction.atomic():
-				for groupe in trinomes_membres:
-					trinome, _ = trinomes.update_or_create(classe=classe, nom=groupe,
-							defaults={})
-					trinome.etudiants.set(trinomes_membres[groupe])
-					trinome.save()
+				for periode, membres in trinomes_membres.items():
+					for groupe, etudiants in membres.items():
+						trinome, _ = trinomes.update_or_create(classe=classe,
+								nom=groupe, periode=periode, defaults={})
+						trinome.etudiants.set(etudiants)
+						trinome.save()
 
 			messages.success(request, "Les groupes de colles en "
 					" {classe} ont été mis à jour.".format(

@@ -257,6 +257,8 @@ class TrinomeForm(forms.Form):
 			queryset=Etudiant.objects.none(),
 			widget=LabelledHiddenWidget())
 	groupes = CommaSeparatedCharField(required=False)
+	groupes_periode_premiere = CommaSeparatedCharField(required=False)
+	groupes_periode_deuxieme = CommaSeparatedCharField(required=False)
 
 	def __init__(self, *args, queryset=None, **kwargs):
 		super().__init__(*args, **kwargs)

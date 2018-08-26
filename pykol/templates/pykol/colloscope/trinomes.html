@@ -16,6 +16,11 @@
   vous pouvez utiliser (chiffres, lettres, etc.). Ils seront utilisés dans
   l'affichage du colloscope pour désigner les groupes.</p>
 
+  <p>Pour les classes organisées en semestres, vous pouvez créer des
+  groupes valables uniquement sur une période donnée : ceci permet
+  de choisir un mode de nommage des groupes sur une période sans se
+  préoccuper des noms donnés sur l'autre période.</p>
+
   <form method="POST" action="">
     {% csrf_token %}
     {{ formset.management_form }}
@@ -24,7 +29,9 @@
       <thead>
         <tr>
           <th>Étudiant</th>
-          <th>Groupes</th>
+          <th>Groupes à l'année</th>
+          <th>Groupes de première période</th>
+          <th>Groupes de deuxième période</th>
         </tr>
       </thead>
       <tbody>
@@ -42,6 +49,20 @@
             {% if form.groupes.errors %}
             <div class="invalid-feedback">
               {{ form.groupes.errors }}
+            </div>
+            {% endif %}
+          </td>
+          <td>{{ form.groupes_periode_premiere }}
+            {% if form.groupes_periode_premiere.errors %}
+            <div class="invalid-feedback">
+              {{ form.groupes_periode_premiere.errors }}
+            </div>
+            {% endif %}
+          </td>
+          <td>{{ form.groupes_periode_deuxieme }}
+            {% if form.groupes_periode_deuxieme.errors %}
+            <div class="invalid-feedback">
+              {{ form.groupes_periode_deuxieme.errors }}
             </div>
             {% endif %}
           </td>

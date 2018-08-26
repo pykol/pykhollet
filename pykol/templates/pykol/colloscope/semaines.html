@@ -34,7 +34,7 @@
       {% if form.errors %}
       <tr>
         <td colspan="4">
-        {{ form.errors.values | unordered_list }}
+          {{ form.non_field_errors }}
         </td>
       </tr>
       {% endif %}

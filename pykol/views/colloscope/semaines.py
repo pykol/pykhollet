@@ -72,7 +72,7 @@ def semaines(request, slug):
 			for id_semaine, form in enumerate(formset.forms):
 				for field in ('debut', 'fin', 'est_colle',):
 					formset_data['semaines-{}-{}'.format(id_semaine,
-						field)] = form.cleaned_data[field]
+						field)] = form.cleaned_data.get(field)
 
 				if form.cleaned_data['est_colle']:
 					formset_data['semaines-{}-numero'.format(id_semaine)] = \
@@ -89,9 +89,13 @@ def semaines(request, slug):
 				field_name = '{}-{}'.format(formset_prefix, field)
 				formset_data[field_name] = formset.data[field_name]
 
-			formset = SemaineFormSet(formset_data,
+			# On ne remplace le formset que si le générateur a réussi à
+			# compléter les semaines manquantes
+			new_formset = SemaineFormSet(formset_data,
 					prefix=formset_prefix,
 					form_kwargs={'classe': classe})
+			if new_formset.is_valid():
+				formset = new_formset
 
 		if formset.is_valid():
 			with transaction.atomic():

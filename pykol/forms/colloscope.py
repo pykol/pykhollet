@@ -192,20 +192,29 @@ class SemaineForm(forms.Form):
 	est_colle = forms.BooleanField(label="semaine de colle",
 			required=False)
 	numero = forms.CharField(label="numéro", required=False)
-	semaine = forms.ModelChoiceField(queryset=Semaine.objects,
-			widget=forms.HiddenInput, required=False)
+	semaine = forms.ModelChoiceField(queryset=None,
+			widget=forms.HiddenInput, required=False, disabled=True)
 
 	def __init__(self, *args, classe=None, **kwargs):
 		super().__init__(*args, **kwargs)
 		if classe:
 			self.fields['semaine'].queryset = Semaine.objects.filter(classe=classe)
+			self.classe = classe
 
 	def clean(self):
 		cleaned_data = super().clean()
+		debut = cleaned_data.get('debut')
+		if cleaned_data.get('est_colle') and \
+				not self.classe.annee.numero_semaine(debut):
+			raise forms.ValidationError(
+					"Cette semaine est située en période de vacances.",
+					code='semaine_vacances')
+
 		if cleaned_data.get('est_colle') and not cleaned_data.get('numero'):
 			raise forms.ValidationError(
 					"Il faut obligatoirement donner un numéro à chaque "
-					"semaine de colle.")
+					"semaine de colle.",
+					code='numero_manquant')
 
 SemaineFormSet = formset_factory(SemaineForm, extra=0)
 

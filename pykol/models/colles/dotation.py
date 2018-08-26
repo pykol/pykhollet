@@ -38,6 +38,8 @@ class CollesEnseignement(models.Model):
 	classe.
 	"""
 
+	nomenclature_id = models.CharField(max_length=100, blank=True)
+
 	nom = models.CharField(max_length=100, blank=True)
 
 	classe = models.ForeignKey(Classe, on_delete=models.CASCADE)

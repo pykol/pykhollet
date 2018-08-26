@@ -18,9 +18,36 @@
 
 from django.views import generic
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.db.models import IntegerField, Func
 
 from pykol.models.base import Classe
 from pykol.models.colles import Trinome
+
+class MaybeCast(Func):
+	"""
+	Convertit le début d'une chaine en entier. S'il n'y a pas de
+	chiffres au début, renvoie None.
+	"""
+	function = "CAST"
+	template = '%(function)s(%(expressions)s AS %(db_type)s)'
+
+	def __init__(self, expression):
+		super().__init__(expression, output_field=IntegerField(blank=True, null=True))
+
+	def as_sql(self, compiler, connection, **extra_context):
+		extra_context['db_type'] = self.output_field.cast_db_type(connection)
+		return super().as_sql(compiler, connection, **extra_context)
+
+	def as_sqlite(self, compiler, connection):
+		return self.as_sql(compiler, connection, template='NULL')
+
+	def as_postgresql(self, compiler, connection):
+		return self.as_sql(compiler, connection,
+				template="%(function)s(substring((%(expressions)s) FROM '^[0-9]+') AS %(db_type)s)")
+
+	def as_mysql(self, compiler, connection):
+		return self.as_sql(compiler, connection,
+				template="%(function)s(REGEXP_SUBSTR((%(expression)s), '^[0-9]+') AS %(db_type)s)")
 
 class ClasseDetailView(LoginRequiredMixin, generic.DetailView):
 	model = Classe
@@ -35,7 +62,9 @@ class ClasseDetailView(LoginRequiredMixin, generic.DetailView):
 				classe)
 
 		periodes = {}
-		qs = classe.trinomes.order_by('nom')
+		qs = classe.trinomes.annotate(
+				nom_as_int=MaybeCast('nom')
+				).order_by('nom_as_int', 'nom')
 		for periode_id, periode_nom in Trinome.PERIODE_CHOICES:
 			trinomes = qs.filter(periode=periode_id)
 			if trinomes:

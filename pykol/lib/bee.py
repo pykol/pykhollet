@@ -154,7 +154,7 @@ def import_etudiants(eleves_xml, annee):
 	# pour retrouver rapidement une classe à partir de son
 	# code_structure.
 	divisions = dict([(str(c.code_structure), c) for c in
-		Classe.objects.filter(annee=annee)])
+		Classe.all_objects.filter(annee=annee)])
 
 	# On construit ensuite le dictionnaire qui à chaque numéro d'élève
 	# associe la classe dans laquelle l'étudiant est inscrit.
@@ -327,15 +327,13 @@ def import_divisions(divisions_et, annee, dict_profs={}):
 			classe_niveau = Classe.NIVEAU_DEUXIEME_ANNEE
 
 		classe_data = {
-			'code_structure': code_structure,
 			'mef': mef,
 			'slug': slugify("{annee}-{code}".format(annee=annee, code=code_structure)),
 			'nom': division.find('LIBELLE_LONG').text,
 			'niveau': classe_niveau,
-			'annee': annee,
 			'mode': Groupe.MODE_AUTOMATIQUE,
 			}
-		classe, _ = Classe.objects.update_or_create(
+		classe, _ = Classe.all_objects.update_or_create(
 				code_structure=code_structure,
 				annee=annee,
 				defaults=classe_data)
@@ -367,7 +365,8 @@ def import_groupes(groupes_et, annee, dict_profs={}):
 					for x in groupe_et.findall('DIVISIONS_APPARTENANCE/DIVISION_APPARTENANCE')
 					if 'CODE' in x.attrib}
 
-		classes = Classe.objects.filter(
+		classes = Classe.all_objects.filter(
+				annee=annee,
 				code_structure__in=codes_divisions)
 		# TODO on teste si divisions est vide ?
 
@@ -403,7 +402,7 @@ def import_groupes(groupes_et, annee, dict_profs={}):
 				# Version SIECLE/Structure
 				code_div = division_et.find('CODE_STRUCTURE').text
 
-			classe = Classe.objects.get(code_structure=code_div)
+			classe = Classe.all_objects.get(annee=annee, code_structure=code_div)
 			try:
 				effectif_div = int(division_et.find('EFFECTIF_PREVU').text)
 			except:
@@ -879,7 +878,8 @@ def import_nomenclature_colles(nomcolles_xml, annee):
 		except:
 			pass
 
-		for classe in Classe.objects.filter(mef__code_mef__in=mefs):
+		for classe in Classe.all_objects.filter(mef__code_mef__in=mefs,
+				annee=annee):
 			enseignements = Enseignement.objects.filter(
 				Q(classe=classe),
 				Q(

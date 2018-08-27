@@ -130,7 +130,7 @@ class EtudiantAdmin(PykolUserAdmin):
 		(None, {'fields': ('password',)}),
 		(_('Personal info'), {'fields': ('first_name', 'last_name',
 			'sexe', 'email', 'ine',)}),
-		('Scolarité', {'fields': ('classe', 'origine', 'options')}),
+		('Scolarité', {'fields': ('classe', 'origine',)}),
 		(_('Permissions'), {'fields': ('is_active', 'is_staff', 'is_superuser',
 									   'groups', 'user_permissions')}),
 		(_('Important dates'), {'fields': ('last_login', 'date_joined',

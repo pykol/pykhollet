@@ -66,6 +66,23 @@ class Matiere(models.Model):
 		else:
 			return self.nom
 
+class OptionEtudiant(models.Model):
+	"""
+	Option choisie par un étudiant
+	"""
+	classe = models.ForeignKey('Classe', on_delete=models.CASCADE)
+	etudiant = models.ForeignKey('Etudiant', on_delete=models.CASCADE)
+	matiere = models.ForeignKey('Matiere', on_delete=models.CASCADE)
+	rang_option = models.PositiveSmallIntegerField()
+
+	MODALITE_OPTION_OBLIGATOIRE = 1
+	MODALITE_OPTION_FACULTATIVE = 2
+	MODALITE_OPTION_CHOICES = (
+		(MODALITE_OPTION_OBLIGATOIRE, "obligatoire"),
+		(MODALITE_OPTION_FACULTATIVE, "facultative"),
+	)
+	modalite_option = models.PositiveSmallIntegerField(choices=MODALITE_OPTION_CHOICES)
+
 class GroupeEffectif(models.Model):
 	"""
 	Appartenance d'un groupe à une classe, en donnant la part de
@@ -222,8 +239,16 @@ class Enseignement(models.Model):
 			blank=True, null=True, verbose_name="matière",
 			limit_choices_to={'virtuelle': False,})
 	groupe = models.ForeignKey('Groupe', on_delete=models.CASCADE)
+
 	option = models.BooleanField()
-	specialite = models.BooleanField(verbose_name="spécialité")
+	rang_option = models.PositiveSmallIntegerField(null=True,
+			blank=True)
+	MODALITE_OPTION_OBLIGATOIRE = OptionEtudiant.MODALITE_OPTION_OBLIGATOIRE
+	MODALITE_OPTION_FACULTATIVE = OptionEtudiant.MODALITE_OPTION_FACULTATIVE
+	MODALITE_OPTION_CHOICES = OptionEtudiant.MODALITE_OPTION_CHOICES
+	modalite_option = models.PositiveSmallIntegerField(null=True,
+			blank=True, choices=MODALITE_OPTION_CHOICES)
+
 	professeurs = models.ManyToManyField(Professeur, through=Service)
 
 	PERIODE_ANNEE = constantes.PERIODE_ANNEE

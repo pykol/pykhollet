@@ -161,7 +161,7 @@ class Etudiant(User):
 			verbose_name="entrée")
 	sortie = models.DateField(null=True, blank=True)
 	ine = models.CharField(max_length=11, verbose_name="INE (numéro d'étudiant)")
-	options = models.ManyToManyField('Matiere', blank=True)
+	options = models.ManyToManyField('Matiere', through='OptionEtudiant')
 
 	class Meta:
 		verbose_name = "étudiant"

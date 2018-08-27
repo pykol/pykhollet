@@ -128,11 +128,12 @@ class Groupe(AbstractBaseGroupe):
 
 	effectif_sts = models.PositiveSmallIntegerField(blank=True,
 			null=True)
+	code_structure = models.CharField(max_length=20)
 
 	classes_appartenance = models.ManyToManyField('Classe', through=GroupeEffectif)
 
 	class Meta:
-		unique_together = ('nom', 'annee')
+		unique_together = ('code_structure', 'annee')
 
 	def update_etudiants(self):
 		"""Méthode de mise à jour de la composition du groupe.
@@ -287,7 +288,6 @@ class Classe(Groupe):
 	enseignements = models.ManyToManyField(Enseignement, blank=True)
 	coordonnateur = models.ForeignKey(Professeur,
 			on_delete=models.SET_NULL, blank=True, null=True)
-	code_structure = models.CharField(max_length=20, unique=True)
 	mef = models.ForeignKey(ModuleElementaireFormation,
 			on_delete=models.CASCADE)
 

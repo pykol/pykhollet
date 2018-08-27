@@ -380,7 +380,7 @@ def import_groupes(groupes_et, annee, dict_profs={}):
 			effectif = None
 
 		groupe, _ = Groupe.objects.update_or_create(
-				nom=code_structure,
+				code_structure=code_structure,
 				annee=annee,
 				defaults={
 					'nom': code_structure,

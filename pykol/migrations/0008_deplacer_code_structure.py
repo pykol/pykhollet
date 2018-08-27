@@ -21,6 +21,6 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-			migrations.RunPython(recopier_codes_classes),
-			migrations.RunPython(definir_codes_groupes),
+			migrations.RunPython(recopier_codes_classes, elidable=True),
+			migrations.RunPython(definir_codes_groupes, elidable=True),
     ]

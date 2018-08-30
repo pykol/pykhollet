@@ -1133,7 +1133,13 @@ class BEEImporter:
 					Q(
 						Q(matiere__code_matiere__in=matieres) |
 						Q(matiere__parent__code_matiere__in=matieres)
-					)).distinct()
+					)
+				).distinct()
+
+				if periode == CollesEnseignement.PERIODE_PREMIERE:
+					enseignements = enseignements.exclude(periode=Enseignement.PERIODE_DEUXIEME)
+				elif periode == CollesEnseignement.PERIODE_DEUXIEME:
+					enseignements = enseignements.exclude(periode=Enseignement.PERIODE_PREMIERE)
 
 				# On n'ajoute la dotation que si l'on a les enseignements
 				# correspondants.

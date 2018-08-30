@@ -1123,14 +1123,12 @@ class BEEImporter:
 
 			for classe in Classe.all_objects.filter(mef__code_mef__in=mefs,
 					annee=self.annee):
-				print("classe {}".format(classe))
 				enseignements = Enseignement.objects.filter(
 					Q(classe=classe),
 					Q(
 						Q(matiere__code_matiere__in=matieres) |
 						Q(matiere__parent__code_matiere__in=matieres)
 					)).distinct()
-				print(enseignements)
 
 				# On n'ajoute la dotation que si l'on a les enseignements
 				# correspondants.

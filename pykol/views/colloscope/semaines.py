@@ -125,9 +125,7 @@ def semaines(request, slug):
 						semaine.numero = data['numero']
 						semaine.save()
 
-			formset = SemaineFormSet(formset_data,
-					prefix=formset_prefix,
-					form_kwargs={'classe': classe})
+			return redirect('colloscope_semaines', classe.slug)
 
 	else:
 		# Calcul des semaines de toute l'année

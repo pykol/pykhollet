@@ -24,6 +24,7 @@ données de pyKol avec les listes des étudiants, des classes et des
 options choisies par les étudiants.
 """
 
+from itertools import chain
 import xml.etree.ElementTree as ET
 import datetime
 import re
@@ -33,18 +34,21 @@ from django.utils.text import slugify
 from django.contrib.auth.models import Permission
 from django.contrib.contenttypes.models import ContentType
 from django.db.models import Q
+from django.db import transaction
 
 import isodate
 
 from pykol.models.base import User, Etudiant, Professeur, \
 		Annee, Classe, Etablissement, Academie, \
 		Groupe, Matiere, Enseignement, Service, \
-		ModuleElementaireFormation, GroupeEffectif, \
-		Discipline
+		ModuleElementaireFormation, MEFMatiere, \
+		GroupeEffectif, \
+		Discipline, OptionEtudiant
 from pykol.models.colles import CollesEnseignement
 
 class CodeMEF:
-	"""Gestion d'un code de Module Élémentaire de Formation
+	"""
+	Gestion d'un code de Module Élémentaire de Formation
 
 	Chaque Module Élémentaire de Formation (MEF) possède un code sur
 	11 caractères qui l'identifie au niveau national. Le code est
@@ -82,7 +86,7 @@ class CodeMEF:
 
 	def duree(self):
 		return int(self.code[8])
-	
+
 	def annee(self):
 		return int(self.code[9])
 
@@ -102,7 +106,8 @@ def parse_date_francaise(date):
 			day=int(mo['jour']))
 
 def appartenance_mef_cpge(mef_appartenance_et):
-	"""Fonction qui recherche si l'un des codes MEF est celui d'une CPGE
+	"""
+	Fonction qui recherche si l'un des codes MEF est celui d'une CPGE
 
 	Cette fonction prend en paramètre un fragment d'arbre etree qui
 	correspond à un fragment XML de la forme :
@@ -114,7 +119,7 @@ def appartenance_mef_cpge(mef_appartenance_et):
             <CODE_MEF>20112005112</CODE_MEF>
           </MEF_APPARTENANCE>
         </MEFS_APPARTENANCE>
-	
+
 	Elle accepte également la version STS-WEB :
 		<MEF_APPARTENANCE CODE="20112005110"/>
 
@@ -134,770 +139,1010 @@ def appartenance_mef_cpge(mef_appartenance_et):
 
 	return None
 
-def import_etudiants(eleves_xml, annee):
-	"""Import de la liste des étudiants à partir du fichier XML
-
-	Cette fonction peut être exécutée plusieurs fois sans créer de
-	doublons. Les étudiants déjà présents dans la base de données de
-	pyKol seront mis à jour si les informations présentes dans le
-	fichier XML diffèrent.
-
-	Les étudiants sont identifiés par leur INE (provenant du RNIE).
-
-	L'import des étudiants doit nécessairement être réalisé après
-	l'import des structures, car la création d'un étudiant nécessite de
-	le rattacher à une classe déjà existante dans la base de données.
+class BEEImporter:
 	"""
-	eleves_et = ET.parse(eleves_xml)
-
-	# Préparation d'un dictionnaire des classes de l'année actuelle,
-	# pour retrouver rapidement une classe à partir de son
-	# code_structure.
-	divisions = dict([(str(c.code_structure), c) for c in
-		Classe.all_objects.filter(annee=annee)])
-
-	# On construit ensuite le dictionnaire qui à chaque numéro d'élève
-	# associe la classe dans laquelle l'étudiant est inscrit.
-	classe_etudiant = {}
-	for struct_eleve in eleves_et.getroot().findall('DONNEES/STRUCTURES/STRUCTURES_ELEVE'):
-		code_structure = struct_eleve.find('STRUCTURE/CODE_STRUCTURE').text
-		num_eleve = struct_eleve.attrib['ELENOET']
-		if code_structure in divisions:
-			classe_etudiant[num_eleve] = divisions[code_structure]
-	
-	# On construit le dictionnaire qui à chaque élève associe la liste
-	# des matières qu'il suit en options. La clé est constituée du
-	# numéro élève interne à l'établissement.
-	options_eleves = defaultdict(list)
-	for option_et in eleves_et.getroot().findall('DONNEES/OPTIONS/OPTION'):
-		num_eleve = option_et.attrib['ELENOET']
-		for matiere_et in option_et.findall('OPTIONS_ELEVE/CODE_MATIERE'):
-			options_eleves[num_eleve].append(matiere_et.text)
-
-	# Enfin on peut créer ou mettre à jour les élèves dans la base de
-	# données. Le dictionnaire classe_etudiant permet de mettre la main
-	# sur la classe où affecter l'étudiant.
-	for eleve in eleves_et.getroot().findall('DONNEES/ELEVES/ELEVE'):
-		# On regarde si on connait la scolarité de l'an dernier
-		origine = None
-		#if eleve.find('SCOLARITE_AN_DERNIER'):
-		#	uai_origine = eleve.find('SCOLARITE_AN_DERNIER/CODE_RNE').text
-		#	# origine = Etablissement.objects.get(numero_uai=uai_origine)
-
-		num_eleve = eleve.attrib['ELENOET']
-		if not num_eleve in classe_etudiant:
-			continue
-
-		date_entree = parse_date_francaise(eleve.find('DATE_ENTREE').text)
-
-		date_sortie = None
-		date_sortie_et = eleve.find('DATE_SORTIE')
-		if date_sortie_et is not None and date_sortie_et.text:
-			date_sortie = parse_date_francaise(date_sortie_et.text)
-
-		email_et = eleve.find('MEL')
-		if email_et is not None and email_et.text:
-			email = email_et.text
-		else:
-			email = None
-
-		etudiant_data = {
-			'classe': classe_etudiant[num_eleve],
-			'entree': date_entree,
-			'sortie': date_sortie,
-			'origine': origine,
-			'sexe': int(eleve.find('CODE_SEXE').text),
-			'email': email,
-			'first_name': eleve.find('PRENOM').text.title(),
-			'last_name': eleve.find('NOM_DE_FAMILLE').text.title(),
-			}
-		etudiant_db, _ = Etudiant.objects.update_or_create(
-				ine=eleve.find('INE_RNIE').text,
-				defaults=etudiant_data)
-	
-		options = Matiere.objects.filter(code_matiere__in=options_eleves[num_eleve])
-		etudiant_db.options.set(options)
-
-	# Une fois que tous les étudiants ont été importés, on met à jour
-	# les compositions des classes
-	for division in divisions.values():
-		division.update_etudiants()
-
-def creer_enseignements(classes, groupe, groupe_et, dict_profs):
-	for service in groupe_et.findall('SERVICES/SERVICE'):
-		code_matiere = service.attrib['CODE_MATIERE']
-		# On préfère un .filter à un .get car :
-		# 1. il arrive que l'administration ne remplisse pas
-		#    correctement ses emplois du temps et ajoute des matières
-		#    qui ne sont pas dans le programme de la classe (c'est
-		#    souvent un cas d'homonymie sur des matières, qui existent
-		#    sous plusieurs codes selon les classes) ;
-		# 2. on obtient ainsi un itérable, ce qui convient bien au hack
-		#    pour la culture générale plus bas, qui manipule deux
-		#    matières.
-		
-		# Pour la culture générale en ECS/ECE, on fait un petit extra...
-		# TODO ne peut-on pas tester simplement si la matière est
-		# virtuelle ?
-		if code_matiere == '001700':
-			matieres = Matiere.objects.filter(parent__code_matiere=code_matiere)
-		else:
-			matieres = Matiere.objects.filter(code_matiere=code_matiere)
-
-		# Pour l'instant, on ne se préoccupe que des cours généraux, la
-		# bonne solution serait de se contenter des programmes dans la
-		# nomenclature.
-		if service.attrib['CODE_MOD_COURS'] != 'CG':
-			continue
-
-		codes_enseignants = [x.attrib['ID'] for x in
-				service.findall('ENSEIGNANTS/ENSEIGNANT')]
-		# TODO et si la clé code_prof n'existe pas ?
-		profs = [dict_profs[code_prof] for code_prof in codes_enseignants]
-
-		# Bien souvent, cette boucle ne fait qu'une seule itération.
-		# Elle n'en fait deux que pour la culture générale en ECS/ECE
-		# (voir plus haut à la définition de matieres).
-		for matiere in matieres:
-			enseignement, _ = Enseignement.objects.update_or_create(
-					matiere=matiere,
-					groupe=groupe,
-					defaults={
-						'matiere': matiere,
-						'groupe': groupe,
-						'option': False, # TODO
-						'specialite': False, # TODO
-						})
-	
-			for prof in profs:
-				# Dernier extra pour la culture générale : on relie le
-				# prof de philo à la sous-matière philo et le prof de
-				# lettres à la sous-matière lettres.
-				disciplines_prof = prof.disciplines.values_list('code',
-						flat=True)
-
-				if matiere.code_matiere == '001701' and \
-						'L0201' not in disciplines_prof and \
-						'L0202' not in disciplines_prof:
-					continue
-				if matiere.code_matiere == '001702' and \
-						'L0100' not in disciplines_prof:
-					continue
-
-				Service.objects.update_or_create(
-						enseignement=enseignement,
-						professeur=prof)
-	
-			# Ajouter l'enseignement aux classes
-			for classe in classes:
-				classe.enseignements.add(enseignement)
-
-def import_divisions(divisions_et, annee, dict_profs={}):
-	"""Import des divisions (classes) à partir du fichier Structures.xml
-
-	Cette fonction peut être exécutée plusieurs fois sans créer de
-	doublons. Les divisions déjà présentes dans la base de données de
-	pyKol seront mises à jour si les informations données dans le
-	fichier XML diffèrent.
-
-	Cette fonction écrit les modifications dans la base de données, en
-	mettant à jour la table Classe.
+	Classe qui gère l'import des données depuis les fichiers XML
+	provenant de SIECLE et STS
 	"""
-	# Création (ou mise à jour) des classes
-	for division in divisions_et.findall('DIVISION'):
-		# On ne garde que les classes de l'enseignement supérieur
-		code_mef = appartenance_mef_cpge(division.find('MEFS_APPARTENANCE'))
-		if not code_mef:
-			continue
 
-		mef = ModuleElementaireFormation.objects.get(code_mef=code_mef)
+	def __init__(self, *xmls):
+		"""
+		Prend en paramètre les fichiers XML à importer (déjà ouverts) et
+		auto-détecte le type de ces fichiers pour réaliser l'import.
 
-		# Le code_structure est l'identifiant unique de la classe dans
-		# la base élèves.
-		if 'CODE_STRUCTURE' in division.attrib: # Version SIECLE
-			code_structure = division.attrib['CODE_STRUCTURE']
-		elif 'CODE' in division.attrib: # Version STS-WEB
-			code_structure = division.attrib['CODE']
-		else:
-			continue # Curieux, pas de code pour la classe ?
-
-		if code_mef.annee() == 1:
-			classe_niveau = Classe.NIVEAU_PREMIERE_ANNEE
-		else:
-			classe_niveau = Classe.NIVEAU_DEUXIEME_ANNEE
-
-		classe_data = {
-			'mef': mef,
-			'slug': slugify("{annee}-{code}".format(annee=annee, code=code_structure)),
-			'nom': division.find('LIBELLE_LONG').text,
-			'niveau': classe_niveau,
-			'mode': Groupe.MODE_AUTOMATIQUE,
-			}
-		classe, _ = Classe.all_objects.update_or_create(
-				code_structure=code_structure,
-				annee=annee,
-				defaults=classe_data)
-
-		creer_enseignements([classe], classe, division, dict_profs)
-
-def import_groupes(groupes_et, annee, dict_profs={}):
-	for groupe_et in groupes_et.findall('GROUPE'):
-		# Récupération du code structure
-		if 'CODE_STRUCTURE' in groupe_et.attrib: # Version SIECLE Structures.xml
-			code_structure = groupe_et.attrib['CODE_STRUCTURE']
-		elif 'CODE' in groupe_et.attrib: # Version STS-EMP
-			code_structure = groupe_et.attrib['CODE']
-		else:
-			continue
-
-		code_mef = appartenance_mef_cpge(groupe_et.find('MEFS_APPARTENANCE'))
-		if not code_mef:
-			continue
-
-		# La première, c'est la version SIECLE, la deuxième c'est la
-		# version STS-EMP. Ainsi, notre fonction se moque du fichier que
-		# l'on a récupéré et marche dans tous les cas.
-		codes_divisions = \
-				{x.text for x in
-					groupe_et.findall('DIVISIONS_APPARTENANCE/DIVISION_APPARTENANCE/CODE_STRUCTURE')} \
-					| \
-				{x.attrib['CODE']
-					for x in groupe_et.findall('DIVISIONS_APPARTENANCE/DIVISION_APPARTENANCE')
-					if 'CODE' in x.attrib}
-
-		classes = Classe.all_objects.filter(
-				annee=annee,
-				code_structure__in=codes_divisions)
-		# TODO on teste si divisions est vide ?
-
-		# L'effectif est présent dans la version STS. On l'importe dans
-		# ce cas. Le détail de l'effectif par classe est importé plus
-		# bas, une fois que le groupe est créé.
-		try:
-			effectif = int(groupe_et.find('EFFECTIF_PREVU').text)
-		except:
-			effectif = None
-
-		groupe, _ = Groupe.objects.update_or_create(
-				code_structure=code_structure,
-				annee=annee,
-				defaults={
-					'nom': code_structure,
-					'annee': annee,
-					'slug': slugify('{}-{}'.format(annee,
-						code_structure)),
-					'mode': Groupe.MODE_AUTOMATIQUE,
-					'effectif_sts': effectif,
-					})
-
-		creer_enseignements(classes, groupe, groupe_et, dict_profs)
-
-		# On détaille les effectifs du groupe par classe
-		divisions_et = groupe_et.findall('DIVISIONS_APPARTENANCE/DIVISION_APPARTENANCE')
-		for division_et in divisions_et:
+		Cette fonction lève une exception ValueError si l'un des
+		fichiers donné en argument ne correspond pas au format attendu
+		(XML invalide ou bien balise racine ne faisant pas partie de la
+		liste des balises gérées).
+		"""
+		fichiers_invalides = []
+		self.structures_et = self.nomenclatures_et = \
+				self.eleves_et = self.sts_et = \
+				self.nomenclatures_colles_et = None
+		for xml in xmls:
 			try:
-				# Version STS
-				code_div = division_et.attrib['CODE']
-			except KeyError:
-				# Version SIECLE/Structure
-				code_div = division_et.find('CODE_STRUCTURE').text
-
-			classe = Classe.all_objects.get(annee=annee, code_structure=code_div)
-			try:
-				effectif_div = int(division_et.find('EFFECTIF_PREVU').text)
-			except:
-				effectif_div = None
-
-			GroupeEffectif.objects.update_or_create(
-					groupe=groupe, classe=classe,
-					defaults={'effectif_sts': effectif_div})
-
-
-def import_structures(structures_xml, annee):
-	"""Import du fichier Structures.xml"""
-	structures_et = ET.parse(structures_xml)
-	import_divisions(structures_et.getroot().find('DONNEES/DIVISIONS'),
-			annee)
-	import_groupes(structures_et.getroot().find('DONNEES/GROUPES'),
-			annee)
-
-def dict_matieres(matieres_et):
-	"""
-	Création du dictionnaire des matières à partir d'un fragment XML
-
-	Cette fonction prend en paramètre un sous-arbre etree qui correspond
-	à du XML de la forme :
-
-    <MATIERES>
-      <MATIERE CODE_MATIERE="001700">
-        <CODE_GESTION>CULGE</CODE_GESTION>
-        <LIBELLE_COURT>CULTURE GENERALE</LIBELLE_COURT>
-        <LIBELLE_LONG>CULTURE GENERALE</LIBELLE_LONG>
-        <LIBELLE_EDITION>Culture generale</LIBELLE_EDITION>
-        <MATIERE_ETP>1</MATIERE_ETP>
-      </MATIERE>
-      <MATIERE CODE_MATIERE="002300">
-        <CODE_GESTION>TPE</CODE_GESTION>
-        <LIBELLE_COURT>TRAVX PERSO.ENCADRES</LIBELLE_COURT>
-        <LIBELLE_LONG>TRAVAUX PERSONNELS ENCADRES</LIBELLE_LONG>
-        <LIBELLE_EDITION>Travaux personnels encadrés</LIBELLE_EDITION>
-        <MATIERE_ETP>0</MATIERE_ETP>
-      </MATIERE>
-	  ...
-	</MATIERES>
-
-	et renvoie le dictionnaire qui à chaque CODE_MATIERE associe un
-	dictionnaire dont les clés sont 'code_matiere', 'nom' et
-	'virtuelle' (toujours False pour l'instant).
-
-	Un tel fragment XML se retrouve presque à l'identique dans les
-	fichiers de nomenclatures SIECLE ou d'emploi du temps STS.
-	"""
-	matieres = {}
-	for matiere in matieres_et.findall('MATIERE'):
-		if 'CODE_MATIERE' in matiere.attrib:
-			code_matiere = matiere.attrib['CODE_MATIERE']
-		elif 'CODE' in matiere.attrib:
-			code_matiere = matiere.attrib['CODE']
-		else:
-			continue
-
-		nom_matiere = matiere.find('LIBELLE_EDITION').text
-
-		# On regroupe les langues dans une même matière parent. On
-		# identifie les groupes de matières avec les deux derniers
-		# chiffres du code matière. Ils sont en général nuls, sauf pour
-		# les langues où toutes les LV1 se retrouvent par exemple sous
-		# un code de la forme 03xx01.
-		# Le nom de la matière générique est choisi en prenant la plus
-		# longue sous-chaine commune (algorithme non optimal de
-		# programmation dynamique ici, les chaines sont peu nombreuses
-		# et de petite taille).
-		# Le code de la matière générique est de la forme xx00xx, où on
-		# remplace la partie entre les différentes sous-matières par 00.
-		def longest_common_substring(s1, s2):
-			m = [[0] * (1 + len(s2)) for i in range(1 + len(s1))]
-			longest, x_longest = 0, 0
-			for x in range(1, 1 + len(s1)):
-				for y in range(1, 1 + len(s2)):
-					if s1[x - 1] == s2[y - 1]:
-						m[x][y] = m[x - 1][y - 1] + 1
-						if m[x][y] > longest:
-							longest = m[x][y]
-							x_longest = x
-					else:
-						m[x][y] = 0
-			return s1[x_longest - longest: x_longest]
-
-		if code_matiere[-2:] != "00":
-			code_parent = code_matiere[0:2] + "00" + code_matiere[4:6]
-			try:
-				nom_parent = longest_common_substring(nom_matiere.upper(),
-						matieres[code_parent]['nom'])
-			except:
-				nom_parent = nom_matiere.upper()
-
-			matieres[code_parent] = {
-					'code_matiere': code_parent,
-					'nom': nom_parent,
-					'virtuelle': True,
-			}
-		else:
-			code_parent = None
-
-
-		# Exception pour la culture générale en ECS/ECE, qui possède le
-		# code 001700 et que l'on découpe artificiellement en deux
-		# sous-matières 001701 (culture générale - lettres) et 001702
-		# (culture générale - philosophie).
-		if code_matiere == '001700':
-			code_lettres = code_matiere[:4] + '01'
-			code_philo   = code_matiere[:4] + '02'
-			matieres[code_lettres] = {
-					'code_matiere': code_lettres,
-					'nom': "Lettres",
-					'virtuelle': False,
-					'code_parent': code_matiere
-				}
-			matieres[code_philo] = {
-					'code_matiere': code_philo,
-					'nom': "Philosophie",
-					'virtuelle': False,
-					'code_parent': code_matiere
-				}
-			matiere_virtuelle = True
-		else:
-			matiere_virtuelle = False
-
-		matieres[code_matiere] = {
-				'code_matiere': code_matiere,
-				'nom': matiere.find('LIBELLE_EDITION').text,
-				'virtuelle': matiere_virtuelle,
-				'code_parent': code_parent,
-				}
-	return matieres
-
-def import_mefs(mefs_et):
-	"""
-	Import des Modules Élémentaires de Formation
-
-	Cette fonction prend en paramètre un sous-arbre etree qui correspond
-	à un fragment XML de la forme :
-	<MEFS>
-	  <MEF CODE="30112013210">
-	    <FORMATION>1HEC-E</FORMATION>
-	    <LIBELLE_LONG>CPGE1  ECO.ET COMMERC.OPT ECONOMIQUE</LIBELLE_LONG>
-	    <LIBELLE_EDITION>Cpge1  eco.et commerc.opt economique</LIBELLE_EDITION>
-	  </MEF>
-	  <MEF CODE="30112012210">
-	    <FORMATION>1HEC-S</FORMATION>
-	    <LIBELLE_LONG>CPGE1  ECO.ET COMMERC.OPT SCIENTIFIQUE</LIBELLE_LONG>
-	    <LIBELLE_EDITION>Cpge1  eco.et commerc.opt scientifique</LIBELLE_EDITION>
-	  </MEF>
-	  ...
-	</MEFS>
-
-	Elle crée ou met à jour les instances correspondantes dans la base
-	de données.
-
-	Elle renvoie le dictionnaire qui à chaque code MEF associe son
-	instance ModuleElementaireFormation.
-	"""
-	mefs = {}
-
-	for mef_et in mefs_et.findall('MEF'):
-		if 'CODE_MEF' in mef_et.attrib:
-			code_mef = CodeMEF(mef_et.attrib['CODE_MEF'])
-		elif 'CODE' in mef_et.attrib:
-			code_mef = CodeMEF(mef_et.attrib['CODE'])
-		else:
-			continue
-
-		if not code_mef.est_superieur():
-			continue
-
-		mef_data = {'code_mef': str(code_mef),}
-
-		# La version SIECLE ne possède pas toujours le tag LIBELLE_EDITION
-		if mef_et.find('LIBELLE_EDITION') is not None:
-			mef_data['libelle'] = mef_et.find('LIBELLE_EDITION').text
-
-		mef, _ = ModuleElementaireFormation.objects.update_or_create(
-				code_mef=str(code_mef), defaults=mef_data)
-
-		# En revanche, l'import SIECLE comporte plus souvent un
-		# LIBELLE_LONG, que l'on utilise si le MEF n'a toujours pas de
-		# libelle.
-		if not mef.libelle and mef_et.find('LIBELLE_LONG') is not None:
-			mef.libelle = mef_et.find('LIBELLE_LONG').text
-			mef.save()
-
-		mefs[str(code_mef)] = mef
-	
-	return mefs
-
-def import_programmes(programmes_et, matieres):
-	for programme in programmes_et.findall('PROGRAMME'):
-		code_mef = programme.find('CODE_MEF').text
-		if not ModuleElementaireFormation.objects.filter(code_mef=code_mef).exists():
-			continue
-
-		# On crée ou on met à jour la matière en base de données
-		code_matiere = programme.find('CODE_MATIERE').text
-
-		# Si nécessaire, on construit la matière parent
-		code_parent = matieres[code_matiere].get('code_parent', None)
-		if code_parent is not None:
-			matiere_parent, _ = Matiere.objects.update_or_create(
-					code_matiere=code_parent,
-					defaults=matieres[code_parent])
-			matieres[code_matiere]['parent'] = matiere_parent
-		matieres[code_matiere].pop('code_parent', None)
-
-		matiere, _ = Matiere.objects.update_or_create(
-				code_matiere=code_matiere,
-				defaults=matieres[code_matiere])
-
-		# Si la matière est virtuelle, on construit les matières filles
-		if matiere.virtuelle:
-			filles = [m for m in matieres.values() if 'code_parent' in m
-					and m['code_parent'] == code_matiere]
-			for fille in filles:
-				fille.pop('code_parent', None)
-				fille['parent'] = matiere
-				Matiere.objects.update_or_create(
-					code_matiere=fille['code_matiere'],
-					defaults=fille)
-
-		#est_option = (programme.find('CODE_MODALITE_ELECT').text in ('O', 'F'))
-		#est_specialite = (programme.find('CODE_MODALITE_ELECT').text == 'O')
-
-		# TODO Ajout à l'objet MEF
-
-		#for classe in classe_par_mef[code_mef]:
-		#	enseignement, _ = Enseignement.objects.update_or_create(matiere=matiere,
-		#			groupe=classe, defaults={
-		#				'option': est_option,
-		#				'specialite': est_specialite,
-		#				})
-		#	# Django ne crée pas de doublon en cas d'un nouvel ajout
-		#	classe.enseignements.add(enseignement)
-
-def import_nomenclature_base(nomenclature_et):
-	"""
-	Cette fonction importe les Modules Élementaires de Formation, les
-	matières et les programmes depuis un fichier XML.
-
-	Elle attend en paramètre un fragment d'arbre etree qui correspond à
-	une balise XML (peu importe son nom) qui doit contenir trois
-	enfants :
-	  <MEFS/>
-	  <MATIERES/>
-	  <PROGRAMMES/>
-
-	Ceci se trouve par exemple dans la balise <NOMENCLATURES/> de
-	l'export STS emploi du temps, ou encore dans la balise <DONNEES/> de
-	l'export nomenclature de SIECLE.
-
-	L'export nomenclature de SIECLE est plus précis car il indique de
-	quelle manière rattacher les options aux classes (obligatoires ou
-	non, rang de l'option).
-
-	Cette fonction peut être exécutée plusieurs fois sans créer de
-	doublons : elle met à jour les données si elles existent déjà dans
-	la base.
-	"""
-	matieres = dict_matieres(nomenclature_et.find('MATIERES'))
-	import_mefs(nomenclature_et.find('MEFS'))
-	import_programmes(nomenclature_et.find('PROGRAMMES'), matieres)
-
-def import_nomenclatures(nomenclatures_xml):
-	"""Import des nomenclatures des classes à partir du fichier
-	Nomenclatures.xml
-
-	Cette fonction peut être exécutée plusieurs fois sans créer de
-	doublons. Elle renseigne dans la base de données les modules
-	élémentaires de formation et les matières associées.
-	"""
-	nomenclatures_et = ET.parse(nomenclatures_xml)
-
-	import_nomenclature_base(nomenclatures_et.getroot().find('DONNEES'))
-
-	## On construit le dictionnaire qui à chaque code MEF associe la
-	## liste des classes relevant de ce code.
-	#annee_actuelle = Annee.objects.get_actuelle()
-	#classe_par_mef = {}
-	#for classe in Classe.objects.filter(annee=annee_actuelle):
-	#	if not classe.code_mef in classe_par_mef:
-	#		classe_par_mef[classe.code_mef] = []
-
-	#	classe_par_mef[classe.code_mef].append(classe)
-
-	# TODO créer objets MEF
-
-	# On parcourt ensuite la liste des programmes et on attache chaque
-	# matière aux classe possédant le code MEF indiqué pour la matière.
-
-	# TODO mutualiser avec l'import sts_emp qui est moins complet mais
-	# qui existe tout de même.
-
-def import_sts_etablissement(uaj_xml):
-	"""
-	Import des données de l'établissement à partir de la balise <UAJ> de
-	l'export STS-EMP.
-	"""
-	academie = Academie.objects.get(pk=int(uaj_xml.find('ACADEMIE/CODE').text))
-
-	denomination = "{} {}".format(
-			uaj_xml.find('DENOM_PRINC'),
-			uaj_xml.find('DENOM_COMPL'),
-		)
-
-	data = {
-		'numero_uai': uaj_xml.attrib['CODE'],
-		'denomination': denomination,
-		'academie': academie,
-	}
-	etab, _ = Etablissement.objects.update_or_create(numero_uai=data['numero_uai'],
-			defaults=data)
-
-	return etab
-
-def import_sts_annee(annee_et):
-	"""
-	Recherche de l'objet Annee correspondant aux données dans l'export
-	STS.
-
-	Si aucune année n'est trouvée, elle est créée et sauvegardée dans la
-	base de données.
-	"""
-	nom = annee_et.attrib['ANNEE']
-	debut = isodate.parse_date(annee_et.find('DATE_DEBUT').text)
-	fin = isodate.parse_date(annee_et.find('DATE_FIN').text)
-
-	try:
-		return Annee.objects.get(debut=debut, fin=fin)
-	except Annee.DoesNotExist:
-		annee = Annee(nom=nom, debut=debut, fin=fin)
-		annee.save()
-		return annee
-
-def import_stsemp(stsemp_xml):
-	"""
-	Import des services et des professeurs depuis STSWEB
-
-	Cette fonction renvoie l'année scolaire qui a été utilisée pour
-	importer les données.
-	"""
-	stsemp_et = ET.parse(stsemp_xml)
-
-	# Mise à jour de l'établissement
-	etablissement = import_sts_etablissement(stsemp_et.getroot().find('PARAMETRES/UAJ'))
-
-	# Détermination de l'année scolaire
-	annee = import_sts_annee(stsemp_et.find('PARAMETRES/ANNEE_SCOLAIRE'))
-
-	# Construire le dictionnaire des enseignants
-	dict_profs = {}
-	for individu in stsemp_et.getroot().findall('DONNEES/INDIVIDUS/INDIVIDU'):
-		individu_id = individu.attrib['ID']
-		nom = individu.find('NOM_USAGE').text.title()
-		prenom = individu.find('PRENOM').text.title()
-
-		sexe_xml = individu.find('SEXE').text
-		if sexe_xml == '1':
-			sexe = User.SEXE_HOMME
-		else:
-			sexe = User.SEXE_FEMME
-
-		fonction = individu.find('FONCTION').text
-
-		if individu.find('GRADE') is not None:
-			grade_xml = individu.find('GRADE').text
-		else:
-			grade_xml = None
-
-		# TODO quel est le grade pour la classe exceptionnelle des
-		# certifiés ?
-		if grade_xml == "CERT. H CL" or grade_xml == "CERT. CL N":
-			grade = Professeur.CORPS_CERTIFIE
-		elif grade_xml == "AGREGE CE" or grade_xml == "AGREGE HCL" or \
-				grade_xml == "AGREGE CLN":
-			grade = Professeur.CORPS_AGREGE
-		elif grade_xml == "CHAIRE SUP":
-			grade = Professeur.CORPS_CHAIRESUP
-		else:
-			grade = Professeur.CORPS_AUTRE
-
-		# XXX La recherche n'est absolument pas robuste aux homonymes,
-		# mais les fichiers XML de STS ne donnent pour identifiant
-		# qu'une clé primaire opaque, non documentée et probablement
-		# instable avec le temps.
-		if fonction == "ENS":
-			# Construction de la liste des disciplines du professeur
-			disciplines = []
-			for discipline_et in individu.findall('DISCIPLINES/DISCIPLINE'):
-				discipline, _ = Discipline.objects.get_or_create(
-						code=discipline_et.attrib['CODE'],
-						defaults={'nom': discipline_et.find('LIBELLE_COURT').text})
-				disciplines.append(discipline)
-
-			dict_profs[individu_id], _ = Professeur.objects.update_or_create(
-					last_name=nom,
-					first_name=prenom,
-					sexe=sexe,
-					defaults={
-						'last_name': nom,
-						'first_name': prenom,
-						'corps': grade,
-						'sexe': sexe,
-						'etablissement': etablissement,
-						})
-			dict_profs[individu_id].disciplines.set(disciplines)
-
-		elif fonction == "DIR":
-			user, _ = User.objects.update_or_create(
-					last_name=nom,
-					first_name=prenom,
-					defaults={
-						'last_name': nom,
-						'first_name': prenom,
-						'sexe': sexe,
-						})
-			perm_direction = Permission.objects.get(codename='direction',
-					content_type=ContentType.objects.get_for_model(User))
-			user.user_permissions.add(perm_direction)
-
-
-	# Mise à jour des programmes, matières et MEF
-	import_nomenclature_base(stsemp_et.getroot().find('NOMENCLATURES'))
-
-	# Services d'enseignement dans les classes complètes
-	import_divisions(stsemp_et.getroot().find('DONNEES/STRUCTURE/DIVISIONS'),
-			annee, dict_profs)
-
-	# Services d'enseignement dans des groupes
-	import_groupes(stsemp_et.getroot().find('DONNEES/STRUCTURE/GROUPES'),
-			annee, dict_profs)
-
-	return annee
-
-### Import des dotations horaires en colles
-def import_nomenclature_colles(nomcolles_xml, annee):
-	nomcolles_et = ET.parse(nomcolles_xml)
-
-	for colle_et in nomcolles_et.getroot().findall('colles/colle'):
-		nomenclature_id = colle_et.attrib['id']
-		mefs = [x.text for x in colle_et.findall('codes_mefs/code_mef')]
-		matieres = [x.text for x in colle_et.findall('codes_matieres/code_matiere')]
-		duree = isodate.parse_duration(colle_et.find('duree').text)
-
-		periode_et = colle_et.find('periode')
-		if periode_et is None:
-			periode = CollesEnseignement.PERIODE_ANNEE
-		elif periode_et.text == 'premiere_periode':
-			periode = CollesEnseignement.PERIODE_PREMIERE
-		elif periode_et.text == 'deuxieme_periode':
-			periode = CollesEnseignement.PERIODE_DEUXIEME
-
+				xml_et = ET.parse(xml)
+			except ET.ParseError:
+				fichiers_invalides.append(ValueError('xml-invalide', xml))
+				continue
+
+			# Auto-détection du type de fichier
+			# TODO: pour tous les fichiers sauf STS-EDT, la balise
+			# racine possède une indication de version dans l'attribut
+			# VERSION, que l'on devrait vérifier.
+			# TODO vérifier que l'on ne donne pas plusieurs fois le même
+			# type de fichier
+			xml_root = xml_et.getroot()
+			if xml_root.tag == 'BEE_STRUCTURES':
+				# Testé en version 2.0
+				self.structures_et = xml_et
+			elif xml_root.tag == 'BEE_NOMENCLATURES':
+				# Testé en version 3.1
+				self.nomenclatures_et = xml_et
+			elif xml_root.tag == 'BEE_ELEVES':
+				# Testé en version 3.0
+				self.eleves_et = xml_et
+			elif xml_root.tag == 'STS_EDT':
+				self.sts_et = xml_et
+			elif xml_root.tag == 'pykol_nomenclatures':
+				self.nomenclature_colles_et = xml_et
+			else:
+				fichiers_invalides.append(ValueError('type-inconnu', xml))
+
+		if fichiers_invalides:
+			if len(fichiers_invalides) == 1:
+				raise fichiers_invalides[0]
+			else:
+				raise ValueError(fichiers_invalides)
+
+		### On initialise les champs qui seront peuplés lors de
+		### l'import.
+		self.annee = self.etablissement = None
+
+		# Dictionnaire qui à chaque code étudiant associe son objet
+		# Etudiant. Il est peuplé par l'appel à import_etudiants().
+		self.etudiants = {}
+
+		# Dictionnaire qui à chaque code MEF associe son objet
+		# ModuleElementaireFormation. Il est peuplé par l'appel à
+		# import_mefs().
+		self.mefs = {}
+
+		# Dictionnaire qui à chaque code structure de classe associe son
+		# objet Classe. Il est peuplé par l'appel à import_divisions().
+		self.classes = {}
+		# Le même avec les groupes
+		self.groupes = {}
+
+		# Dictionnaire qui à chaque code matière associe son objet
+		# Matière. Il est peuplé par l'appel à import_programmes().
+		self.matieres = {}
+
+		self.professeurs = {}
+
+	def full_import(self):
+		"""
+		Réalise toutes les étapes d'importation des données.
+		"""
+		self.import_etablissement()
+		self.import_annee()
+		self.import_mefs()
+		self.import_programmes()
+		self.import_professeurs()
+		self.import_divisions()
+		self.import_groupes()
+		self.import_etudiants()
+		self.import_options_etudiants()
+		self.import_colles()
+
+	def import_annee(self):
+		"""
+		Détermine l'année scolaire à partir des fichiers fournis, et la
+		crée si nécessaire (ceci n'est possible qu'avec le fichier STS).
+
+		Cette fonction lève une exception ValueError si l'année ne peut
+		pas être déterminée car elle est incohérente entre les fichiers
+		fournis, ou bien si elle n'existe pas en base de données et
+		qu'elle ne peut pas être créée car le fichier STS est manquant.
+		"""
+		if self.sts_et:
+			annee_et = self.sts_et.getroot().find('PARAMETRES/ANNEE_SCOLAIRE')
+			annee_fichier = annee_et.attrib['ANNEE']
+			debut = isodate.parse_date(annee_et.find('DATE_DEBUT').text)
+			fin = isodate.parse_date(annee_et.find('DATE_FIN').text)
+			self.annee, _ = Annee.objects.update_or_create(
+					nom=annee_fichier,
+					defaults={'debut': debut, 'fin': fin})
+
+		annee_erreurs = []
+		for xml_siecle in (self.structures_et, self.nomenclatures_et,
+				self.eleves_et):
+			if xml_siecle is None:
+				continue
+			annee_fichier = xml_siecle.getroot().find('PARAMETRES/ANNEE_SCOLAIRE').text
+			if self.annee:
+				if annee_fichier != self.annee.nom:
+					annee_erreurs.append(ValueError('annee-mismatch',
+						xml_siecle))
+			else:
+				try:
+					self.annee = Annee.objects.get(nom=annee_fichier)
+				except Annee.DoesNotExist:
+					annee_erreurs.append(ValueError('annee-inexistante',
+						xml_siece))
+
+		if annee_erreurs:
+			raise ValueError(annee_erreurs)
+
+		# On tente de synchroniser les vacances si on connait l'académie
+		# via l'établissement.
 		try:
-			nom_enveloppe = colle_et.find('nom').text
-		except:
-			nom_enveloppe = ''
-
-		frequence_text = colle_et.find('frequence').text
-		if frequence_text == 'hebdomadaire':
-			frequence = CollesEnseignement.FREQUENCE_HEBDOMADAIRE
-		elif frequence_text == 'trimestrielle':
-			frequence = CollesEnseignement.FREQUENCE_TRIMESTRIELLE
-
-		mode_defaut = CollesEnseignement.MODE_INTERROGATION
-		try:
-			if colle_et.find('mode_defaut').text == 'travaux_diriges':
-				mode_defaut = CollesEnseignement.MODE_TD
+			self.annee.synchro_vacances(self.etablissement.academie)
 		except:
 			pass
 
-		for classe in Classe.all_objects.filter(mef__code_mef__in=mefs,
-				annee=annee):
-			enseignements = Enseignement.objects.filter(
-				Q(classe=classe),
-				Q(
-					Q(matiere__code_matiere__in=matieres) |
-					Q(matiere__parent__code_matiere__in=matieres)
-				)).distinct()
+	def import_etablissement(self):
+		"""
+		Import des données de l'établissement à partir de la balise <UAJ> de
+		l'export STS-EMP.
+		"""
+		# Le fichier STS permet de créer l'établissement s'il n'existe
+		# pas
+		if self.sts_et:
+			uaj_xml = self.sts_et.getroot().find('PARAMETRES/UAJ')
+			academie = Academie.objects.get(pk=int(uaj_xml.find('ACADEMIE/CODE').text))
+			denomination = "{} {}".format(
+				uaj_xml.find('DENOM_PRINC'),
+				uaj_xml.find('DENOM_COMPL'),
+			)
 
-			# On n'ajoute la dotation que si l'on a les enseignements
-			# correspondants.
-			if enseignements:
-				colles_ens, _ = CollesEnseignement.objects.update_or_create(
-						nomenclature_id=nomenclature_id,
+			etab_data = {
+				'numero_uai': uaj_xml.attrib['CODE'],
+				'denomination': denomination,
+				'academie': academie,
+			}
+			self.etablissement, _ = Etablissement.objects.update_or_create(
+				numero_uai=etab_data['numero_uai'],
+				defaults=etab_data)
+
+		etab_erreurs = []
+		for xml_siecle in (self.structures_et, self.nomenclatures_et,
+				self.eleves_et):
+			if xml_siecle is None:
+				continue
+
+			etab_fichier = xml_siecle.getroot().find('PARAMETRES/UAJ').text
+			if self.etablissement:
+				if etab_fichier != self.etablissement.numero_uai:
+					etab_erreurs.append(ValueError('etab-mismatch',
+						xml_siecle))
+			else:
+				try:
+					self.etablissement = Etablissement.objects.get(numero_uai=etab_fichier)
+				except Etablissement.DoesNotExist:
+					etab_erreurs.append(ValueError('etab-inexistant',
+						xml_siecle))
+
+		if etab_erreurs:
+			raise ValueError(etab_erreurs)
+
+		if not self.etablissement:
+			raise ValueError('etab-inconnu')
+
+	def import_mefs(self):
+		"""
+		Import des Modules Élémentaires de Formation
+
+		Cette fonction prend en paramètre un sous-arbre etree qui correspond
+		à un fragment XML de la forme (version STS) :
+		<MEFS>
+		  <MEF CODE="30112013210">
+		    <FORMATION>1HEC-E</FORMATION>
+		    <LIBELLE_LONG>CPGE1  ECO.ET COMMERC.OPT ECONOMIQUE</LIBELLE_LONG>
+		    <LIBELLE_EDITION>Cpge1  eco.et commerc.opt economique</LIBELLE_EDITION>
+		  </MEF>
+		  <MEF CODE="30112012210">
+		    <FORMATION>1HEC-S</FORMATION>
+		    <LIBELLE_LONG>CPGE1  ECO.ET COMMERC.OPT SCIENTIFIQUE</LIBELLE_LONG>
+		    <LIBELLE_EDITION>Cpge1  eco.et commerc.opt scientifique</LIBELLE_EDITION>
+		  </MEF>
+		  ...
+		</MEFS>
+
+		Elle accepte également la version SIECLE Nomenclatures où
+		l'attribut CODE est remplacé par CODE_MEF.
+
+		Elle crée ou met à jour les instances correspondantes dans la base
+		de données.
+
+		Elle met à jour le dictionnaire self.mefs qui à chaque code MEF
+		associe son instance ModuleElementaireFormation.
+		"""
+		# Les données se trouvent dans STS ou dans Nomenclatures.
+		if self.nomenclatures_et:
+			mefs_nomenclatures_et = \
+				self.nomenclatures_et.getroot().findall('DONNEES/MEFS/MEF')
+		else:
+			mefs_nomenclatures_et = []
+
+		if self.sts_et:
+			mefs_sts_et = self.sts_et.findall('NOMENCLATURES/MEFS/MEF')
+		else:
+			mefs_sts_et = []
+
+		# On construit le dictionnaire qui à chaque code MEF contient
+		# les informations qui serviront à mettre à jour la base de
+		# données
+		mefs_dict = {}
+		for mef_et in chain(mefs_nomenclatures_et, mefs_sts_et):
+			if 'CODE_MEF' in mef_et.attrib:
+				code_mef = CodeMEF(mef_et.attrib['CODE_MEF'])
+			elif 'CODE' in mef_et.attrib:
+				code_mef = CodeMEF(mef_et.attrib['CODE'])
+			else:
+				continue
+
+			if not code_mef.est_superieur():
+				continue
+
+			mef_data = mefs_dict.setdefault(str(code_mef), {})
+
+			# La version SIECLE ne possède pas toujours le tag LIBELLE_EDITION
+			if mef_et.find('LIBELLE_EDITION') is not None:
+				mef_data.setdefault('libelle',
+						mef_et.find('LIBELLE_EDITION').text)
+			# En revanche, l'import SIECLE comporte plus souvent un
+			# LIBELLE_LONG, que l'on utilise si le MEF n'a toujours pas de
+			# libelle.
+			elif mef_et.find('LIBELLE_LONG') is not None:
+				mef_data.setdefault('libelle',
+						mef_et.find('LIBELLE_LONG').text)
+
+		# On crée à présent tous les MEFs dans la base de données
+		self.mefs = {}
+		with transaction.atomic():
+			for code_mef, mef_data in mefs_dict.items():
+				mef, _ = ModuleElementaireFormation.objects.update_or_create(
+					code_mef=code_mef, defaults=mef_data)
+				self.mefs[code_mef] = mef
+
+		# Si personne n'a été importé, on charge simplement la liste des
+		# MEFs depuis la base de données.
+		if not self.mefs:
+			self.mefs = dict([(mef.code_mef, mef) for mef in
+				ModuleElementaireFormation.objects.all()])
+
+	def _stocker_services(self, groupe_et, code_div, code_groupe):
+		"""
+		Ajoute dans la liste self.services les services d'enseignement
+		qui se trouvent dans le groupe ou la division donnée par le
+		fragment groupe_et.
+		"""
+		for service_et in groupe_et.findall('SERVICES/SERVICE'):
+			code_matiere = service_et.attrib['CODE_MATIERE']
+
+			# On préfère un .filter à un .get car :
+			# 1. il arrive que l'administration ne remplisse pas
+			#    correctement ses emplois du temps et ajoute des matières
+			#    qui ne sont pas dans le programme de la classe (c'est
+			#    souvent un cas d'homonymie sur des matières, qui existent
+			#    sous plusieurs codes selon les classes) ;
+			# 2. on obtient ainsi un itérable, ce qui convient bien au hack
+			#    pour la culture générale plus bas, qui manipule deux
+			#    matières.
+
+			# Pour la culture générale en ECS/ECE, on fait un petit extra...
+			matieres = Matiere.objects.filter(
+				Q(virtuelle=False, code_matiere=code_matiere) |
+				Q(virtuelle=True, parent__code_matiere=code_matiere)
+			)
+
+			# Pour l'instant, on ne se préoccupe que des cours généraux, la
+			# bonne solution serait de se contenter des programmes dans la
+			# nomenclature.
+			if service_et.attrib['CODE_MOD_COURS'] != 'CG':
+				continue
+
+			codes_enseignants = [x.attrib['ID'] for x in
+					service_et.findall('ENSEIGNANTS/ENSEIGNANT')]
+			# TODO et si la clé code_prof n'existe pas ?
+			profs = [self.professeurs[code_prof] for code_prof in codes_enseignants]
+
+			# Bien souvent, cette boucle ne fait qu'une seule itération.
+			# Elle n'en fait deux que pour la culture générale en ECS/ECE
+			# (voir plus haut à la définition de matieres).
+			for matiere in matieres:
+				groupe = self.groupes.get(code_groupe,
+						self.classes.get(code_groupe))
+
+				enseignement = Enseignement.objects.filter(
+						matiere=matiere,
+						classe=self.classes[code_div],
+						groupe=groupe).first()
+				if enseignement is None:
+					enseignement = Enseignement.objects.filter(
+							matiere=matiere,
+							classe=self.classes[code_div],
+							groupe__isnull=True).first()
+					if enseignement is None:
+						enseignement = Enseignement(
+								matiere=matiere,
+								classe=self.classes[code_div],
+								groupe=groupe)
+					else:
+						enseignement.groupe = groupe
+					enseignement.save()
+
+				for prof in profs:
+					# Dernier extra pour la culture générale : on relie le
+					# prof de philo à la sous-matière philo et le prof de
+					# lettres à la sous-matière lettres.
+					disciplines_prof = prof.disciplines.values_list('code',
+							flat=True)
+
+					if matiere.code_matiere == '001701' and \
+							'L0201' not in disciplines_prof and \
+							'L0202' not in disciplines_prof:
+						continue
+					if matiere.code_matiere == '001702' and \
+							'L0100' not in disciplines_prof:
+						continue
+
+					Service.objects.update_or_create(
+							enseignement=enseignement,
+							professeur=prof)
+
+	def import_divisions(self):
+		"""Import des divisions (classes) à partir du fichier
+		Structures.xml ou à partir de STS.
+
+		Cette fonction peut être exécutée plusieurs fois sans créer de
+		doublons. Les divisions déjà présentes dans la base de données de
+		pyKol seront mises à jour si les informations données dans le
+		fichier XML diffèrent.
+
+		Cette fonction écrit les modifications dans la base de données, en
+		mettant à jour la table Classe.
+
+		Elle nécessite que les MEFs aient été d'abord importés avec un
+		appel à la méthode import_mefs().
+		"""
+		# Les données se trouvent dans STS ou dans Structures.
+		if self.structures_et:
+			div_structures_et = self.structures_et.getroot().findall('DONNEES/DIVISIONS/DIVISION')
+		else:
+			div_structures_et = []
+
+		if self.sts_et:
+			div_sts_et = self.sts_et.getroot().findall('DONNEES/STRUCTURE/DIVISIONS/DIVISION')
+		else:
+			div_sts_et = []
+
+		# Création d'un dictionnaire qui à chaque classe associe les
+		# données trouvées dans les fichiers
+		div_dict = {}
+		for division in chain(div_structures_et, div_sts_et):
+			# On ne garde que les classes de l'enseignement supérieur
+			code_mef = appartenance_mef_cpge(division.find('MEFS_APPARTENANCE'))
+			if not code_mef:
+				continue
+
+			mef = self.mefs[str(code_mef)]
+
+			# Le code_structure est l'identifiant unique de la classe dans
+			# la base élèves.
+			if 'CODE_STRUCTURE' in division.attrib: # Version SIECLE
+				code_structure = division.attrib['CODE_STRUCTURE']
+			elif 'CODE' in division.attrib: # Version STS
+				code_structure = division.attrib['CODE']
+			else:
+				continue # Curieux, pas de code pour la classe ?
+
+			if code_mef.annee() == 1:
+				classe_niveau = Classe.NIVEAU_PREMIERE_ANNEE
+			else:
+				classe_niveau = Classe.NIVEAU_DEUXIEME_ANNEE
+
+			classe_data = div_dict.setdefault(code_structure, {})
+
+			classe_data.update({
+				'mef': mef,
+				'slug': slugify("{annee}-{code}".format(annee=self.annee, code=code_structure)),
+				'nom': division.find('LIBELLE_LONG').text,
+				'niveau': classe_niveau,
+				'mode': Groupe.MODE_AUTOMATIQUE,
+				'xml': division,
+				})
+
+		# On crée à présent les classes dans la base de données
+		with transaction.atomic():
+			for code_structure, classe_data in div_dict.items():
+				classe_xml = classe_data.pop('xml')
+				classe, _ = Classe.all_objects.update_or_create(
+						code_structure=code_structure,
+						annee=self.annee,
+						defaults=classe_data)
+
+				self.classes[code_structure] = classe
+
+				# L'appel à _stocker_services crée les enseignements qui
+				# correspondent à chaque service de professeur. On
+				# peuple avant cet appel la base de données avec les
+				# enseignements minimaux pour représenter les matières
+				# prévues au programme de cette classe.
+				for mefmatiere in classe.mef.mefmatiere_set.all():
+					if not Enseignement.objects.all().filter(
+							classe=classe,
+							matiere=mefmatiere.matiere,
+							rang_option=mefmatiere.rang_option,
+							modalite_option=mefmatiere.modalite_option,
+							).exists():
+						Enseignement(classe=classe,
+							matiere=mefmatiere.matiere,
+							rang_option=mefmatiere.rang_option,
+							modalite_option=mefmatiere.modalite_option,
+							).save()
+
+				# Dans le fichier STS, on peut trouver des services
+				# d'enseignement parmi les informations de la division.
+				self._stocker_services(classe_xml, code_structure,
+						code_structure)
+
+		# Si aucune donnée n'a été importée, on charge les classes
+		# depuis la base de données.
+		if not self.classes:
+			self.classes = dict([(c.code_structure, c)
+				for c in Classe.all_objects.filter(annee=self.annee)])
+
+	def import_groupes(self):
+		"""
+		Création des groupes d'enseignement à partir de l'export STS ou
+		du fichier Structures.
+		"""
+		# Les données se trouvent dans STS ou dans Structures.
+		if self.structures_et:
+			groupe_structures_et = \
+				self.structures_et.getroot().findall('DONNEES/GROUPES/GROUPE')
+		else:
+			groupe_structures_et = []
+
+		if self.sts_et:
+			groupe_sts_et = self.sts_et.getroot().findall('DONNEES/STRUCTURE/GROUPES/GROUPE')
+		else:
+			groupe_sts_et = []
+
+		# Création d'un dictionnaire qui à chaque groupe associe les
+		# données trouvées dans les fichiers
+		groupe_dict = {}
+		for groupe_et in chain(groupe_structures_et, groupe_sts_et):
+			# Récupération du code structure
+			if 'CODE_STRUCTURE' in groupe_et.attrib: # Version SIECLE Structures.xml
+				code_structure = groupe_et.attrib['CODE_STRUCTURE']
+			elif 'CODE' in groupe_et.attrib: # Version STS-EMP
+				code_structure = groupe_et.attrib['CODE']
+			else:
+				continue
+
+			if not appartenance_mef_cpge(groupe_et.find('MEFS_APPARTENANCE')):
+				continue
+
+			groupe_data = groupe_dict.setdefault(code_structure, {})
+
+			# L'effectif est présent dans la version STS. On l'importe dans
+			# ce cas. Le détail de l'effectif par classe est importé plus
+			# bas, une fois que le groupe est créé.
+			try:
+				groupe_data['effectif_sts'] = int(groupe_et.find('EFFECTIF_PREVU').text)
+			except:
+				pass
+
+			groupe_data['nom'] = code_structure
+			groupe_data['slug'] = slugify('{}-{}'.format(self.annee, code_structure))
+			groupe_data['mode'] = Groupe.MODE_AUTOMATIQUE
+
+			groupe, _ = Groupe.objects.update_or_create(
+					code_structure=code_structure,
+					annee=self.annee,
+					defaults=groupe_data)
+
+			self.groupes[code_structure] = groupe
+
+			# On détaille les effectifs du groupe par classe et on
+			# stocke les Enseignement qu'il faudra créer.
+			divisions_et = groupe_et.findall('DIVISIONS_APPARTENANCE/DIVISION_APPARTENANCE')
+			for division_et in divisions_et:
+				try:
+					# Version STS
+					code_div = division_et.attrib['CODE']
+				except KeyError:
+					# Version SIECLE/Structure
+					code_div = division_et.find('CODE_STRUCTURE').text
+
+				classe = self.classes[code_div]
+				try:
+					effectif_div = int(division_et.find('EFFECTIF_PREVU').text)
+				except:
+					effectif_div = None
+
+				GroupeEffectif.objects.update_or_create(
+						groupe=groupe, classe=classe,
+						defaults={'effectif_sts': effectif_div})
+
+				# On stocke les services d'enseignement correspondant à ce
+				# groupe et à cette classe.
+				self._stocker_services(groupe_et, code_div,
+						code_groupe=code_structure)
+
+		# TODO faut-il peupler self.groupes avec la base de données s'il
+		# est vide à ce stade de la méthode ?
+
+	def import_etudiants(self):
+		"""
+		Import de la liste des étudiants à partir de l'export SIECLE
+
+		Cette fonction peut être exécutée plusieurs fois sans créer de
+		doublons. Les étudiants déjà présents dans la base de données de
+		pyKol seront mis à jour si les informations présentes dans le
+		fichier XML diffèrent.
+
+		Les étudiants sont identifiés par leur INE (provenant du RNIE).
+
+		L'import des étudiants doit nécessairement être réalisé après
+		l'import des structures, car la création d'un étudiant nécessite de
+		le rattacher à une classe déjà existante dans la base de données.
+		"""
+		if not self.eleves_et:
+			return
+
+		# On construit le dictionnaire qui à chaque numéro d'élève
+		# associe la classe dans laquelle l'étudiant est inscrit.
+		# Ceci permettra de filtrer rapidement plus tard les élèves à
+		# importer.
+		classe_etudiant = {}
+		for struct_eleve in self.eleves_et.getroot().findall('DONNEES/STRUCTURES/STRUCTURES_ELEVE'):
+			code_structure = struct_eleve.find('STRUCTURE/CODE_STRUCTURE').text
+			num_eleve = struct_eleve.attrib['ELENOET']
+			try:
+				classe_etudiant[num_eleve] = self.classes[code_structure]
+			except:
+				# L'étudiant n'est pas dans une classe qui fait partie
+				# de l'import
+				continue
+
+		# On peut à présent créer ou mettre à jour les élèves dans la base de
+		# données. Le dictionnaire classe_etudiant permet de mettre la main
+		# sur la classe où affecter l'étudiant.
+		for eleve in self.eleves_et.getroot().findall('DONNEES/ELEVES/ELEVE'):
+			# TODO On regarde si on connait la scolarité de l'an dernier
+			#origine = None
+			#if eleve.find('SCOLARITE_AN_DERNIER'):
+			#	uai_origine = eleve.find('SCOLARITE_AN_DERNIER/CODE_RNE').text
+			#	# origine = Etablissement.objects.get(numero_uai=uai_origine)
+
+			num_eleve = eleve.attrib['ELENOET']
+
+			etudiant_data = {}
+
+			try:
+				etudiant_data['classe'] = classe_etudiant[num_eleve]
+			except:
+				continue
+
+			etudiant_data['entree'] = parse_date_francaise(eleve.find('DATE_ENTREE').text)
+
+			try:
+				date_sortie_et = eleve.find('DATE_SORTIE')
+				if date_sortie_et is not None and date_sortie_et.text:
+					etudiant_data['sortie'] = parse_date_francaise(date_sortie_et.text)
+			except:
+				pass
+
+			email_et = eleve.find('MEL')
+			if email_et is not None and email_et.text:
+				etudiant_data['email'] = email_et.text
+
+			etudiant_data['sexe'] = int(eleve.find('CODE_SEXE').text)
+			etudiant_data['first_name'] = eleve.find('PRENOM').text.title()
+			etudiant_data['last_name'] = eleve.find('NOM_DE_FAMILLE').text.title()
+
+			self.etudiants[num_eleve], _ = Etudiant.objects.update_or_create(
+					ine=eleve.find('INE_RNIE').text,
+					defaults=etudiant_data)
+
+		# Une fois que tous les étudiants ont été importés, on met à jour
+		# les compositions des classes
+		for classe in self.classes.values():
+			classe.update_etudiants()
+
+	@transaction.atomic
+	def import_options_etudiants(self):
+		"""
+		Import des options suivies par chaque étudiant à partir de
+		l'export SIECLE de la liste des élèves.
+		"""
+		if not self.eleves_et:
+			return
+
+		for eleve_et in self.eleves_et.getroot().findall('DONNEES/OPTIONS/OPTION'):
+			try:
+				etudiant = self.etudiants[eleve_et.attrib['ELENOET']]
+			except:
+				continue
+
+			for option_et in eleve_et.findall('OPTIONS_ELEVE'):
+				rang_option = int(option_et.find('NUM_OPTION').text)
+				modalite = OptionEtudiant.parse_modalite_election(
+						option_et.find('CODE_MODALITE_ELECT').text)
+				matiere = self.matieres[option_et.find('CODE_MATIERE').text]
+
+				OptionEtudiant.objects.get_or_create(
+						etudiant=etudiant,
+						classe=etudiant.classe,
+						matiere=matiere,
+						rang_option=rang_option,
+						modalite_option=modalite)
+
+
+	def _dict_matieres(self):
+		"""
+		Création du dictionnaire des matières à partir d'un fragment XML
+
+		Cette fonction prend en paramètre un sous-arbre etree qui correspond
+		à du XML de la forme :
+
+	    <MATIERES>
+	      <MATIERE CODE_MATIERE="001700">
+	        <CODE_GESTION>CULGE</CODE_GESTION>
+	        <LIBELLE_COURT>CULTURE GENERALE</LIBELLE_COURT>
+	        <LIBELLE_LONG>CULTURE GENERALE</LIBELLE_LONG>
+	        <LIBELLE_EDITION>Culture generale</LIBELLE_EDITION>
+	        <MATIERE_ETP>1</MATIERE_ETP>
+	      </MATIERE>
+	      <MATIERE CODE_MATIERE="002300">
+	        <CODE_GESTION>TPE</CODE_GESTION>
+	        <LIBELLE_COURT>TRAVX PERSO.ENCADRES</LIBELLE_COURT>
+	        <LIBELLE_LONG>TRAVAUX PERSONNELS ENCADRES</LIBELLE_LONG>
+	        <LIBELLE_EDITION>Travaux personnels encadrés</LIBELLE_EDITION>
+	        <MATIERE_ETP>0</MATIERE_ETP>
+	      </MATIERE>
+		  ...
+		</MATIERES>
+
+		et renvoie le dictionnaire qui à chaque CODE_MATIERE associe un
+		dictionnaire dont les clés sont 'code_matiere', 'nom' et
+		'virtuelle' (toujours False pour l'instant).
+
+		Un tel fragment XML se retrouve presque à l'identique dans les
+		fichiers de nomenclatures SIECLE ou d'emploi du temps STS.
+		"""
+		# Les données se trouvent dans STS ou dans Structures.
+		if self.nomenclatures_et:
+			div_nomenclatures_et = \
+				self.nomenclatures_et.getroot().findall('DONNEES/MATIERES/MATIERE')
+		else:
+			div_nomenclatures_et = []
+
+		if self.sts_et:
+			div_sts_et = self.sts_et.getroot().findall('NOMENCLATURES/MATIERES/MATIERE')
+		else:
+			div_sts_et = []
+
+		matieres = {}
+		for matiere in chain(div_nomenclatures_et, div_sts_et):
+			if 'CODE_MATIERE' in matiere.attrib:
+				code_matiere = matiere.attrib['CODE_MATIERE']
+			elif 'CODE' in matiere.attrib:
+				code_matiere = matiere.attrib['CODE']
+			else:
+				continue
+
+			nom_matiere = matiere.find('LIBELLE_EDITION').text
+
+			# On regroupe les langues dans une même matière parent. On
+			# identifie les groupes de matières avec les deux derniers
+			# chiffres du code matière. Ils sont en général nuls, sauf pour
+			# les langues où toutes les LV1 se retrouvent par exemple sous
+			# un code de la forme 03xx01.
+			# Le nom de la matière générique est choisi en prenant la plus
+			# longue sous-chaine commune (algorithme non optimal de
+			# programmation dynamique ici, les chaines sont peu nombreuses
+			# et de petite taille).
+			# Le code de la matière générique est de la forme xx00xx, où on
+			# remplace la partie entre les différentes sous-matières par 00.
+			def longest_common_substring(s1, s2):
+				m = [[0] * (1 + len(s2)) for i in range(1 + len(s1))]
+				longest, x_longest = 0, 0
+				for x in range(1, 1 + len(s1)):
+					for y in range(1, 1 + len(s2)):
+						if s1[x - 1] == s2[y - 1]:
+							m[x][y] = m[x - 1][y - 1] + 1
+							if m[x][y] > longest:
+								longest = m[x][y]
+								x_longest = x
+						else:
+							m[x][y] = 0
+				return s1[x_longest - longest: x_longest]
+
+			if code_matiere[-2:] != "00":
+				code_parent = code_matiere[0:2] + "00" + code_matiere[4:6]
+				try:
+					nom_parent = longest_common_substring(nom_matiere.upper(),
+							matieres[code_parent]['nom'])
+				except:
+					nom_parent = nom_matiere.upper()
+
+				matieres[code_parent] = {
+						'code_matiere': code_parent,
+						'nom': nom_parent,
+						'virtuelle': True,
+				}
+			else:
+				code_parent = None
+
+			# Exception pour la culture générale en ECS/ECE, qui possède le
+			# code 001700 et que l'on découpe artificiellement en deux
+			# sous-matières 001701 (culture générale - lettres) et 001702
+			# (culture générale - philosophie).
+			if code_matiere == '001700':
+				code_lettres = code_matiere[:4] + '01'
+				code_philo   = code_matiere[:4] + '02'
+				matieres[code_lettres] = {
+						'code_matiere': code_lettres,
+						'nom': "Lettres",
+						'virtuelle': False,
+						'code_parent': code_matiere
+					}
+				matieres[code_philo] = {
+						'code_matiere': code_philo,
+						'nom': "Philosophie",
+						'virtuelle': False,
+						'code_parent': code_matiere
+					}
+				matiere_virtuelle = True
+			else:
+				matiere_virtuelle = False
+
+			matieres[code_matiere] = {
+					'code_matiere': code_matiere,
+					'nom': matiere.find('LIBELLE_EDITION').text,
+					'virtuelle': matiere_virtuelle,
+					'code_parent': code_parent,
+					}
+
+		return matieres
+
+	def _creer_matiere(self, dict_matieres, code_matiere):
+		try:
+			matiere = self.matieres[code_matiere]
+			return matiere
+		except:
+			matiere_data = dict_matieres[code_matiere]
+
+			# Si nécessaire on construit la matière parent.
+			if matiere_data.get('code_parent', None):
+				matiere_parent = self._creer_matiere(dict_matieres,
+						matiere_data['code_parent'])
+			else:
+				matiere_parent = None
+
+			dict_matieres[code_matiere].pop('code_parent', None)
+			dict_matieres[code_matiere]['parent'] = matiere_parent
+
+			matiere, _ = Matiere.objects.update_or_create(
+				code_matiere=code_matiere,
+				defaults=dict_matieres[code_matiere])
+			self.matieres[code_matiere] = matiere
+
+			# Si la matière est virtuelle, on construit les matières filles
+			if matiere.virtuelle:
+				filles = [m['code_matiere'] for m in dict_matieres.values()
+						if 'code_parent' in m and m['code_parent'] == code_matiere]
+				for fille in filles:
+					self._creer_matiere(dict_matieres, fille)
+
+			return self.matieres[code_matiere]
+
+	def import_programmes(self):
+		"""
+		Import du contenu de la balise <PROGRAMMES/> présente dans
+		Nomenclatures, qui à chaque code MEF indique les matières
+		prévues dans la formation.
+
+		L'information est partiellement présente dans le fichier STS,
+		mais incomplète (code modalité élection manquant), donc on ne
+		l'importe pas depuis ce fichier.
+
+		Cette fonction crée dans la base de données les matières qui
+		correspondent à des formations présentes dans self.mefs (qui
+		doit donc avoir été peuplé au préalable par import_mefs())
+		et elle met à jour les objets de self.mefs avec la liste de
+		leurs matières.
+		"""
+		# Les données sont dans Nomenclature.
+		if not self.nomenclatures_et:
+			return
+
+		# On récupère la liste des matières déclarées dans le fichier,
+		# pour les créer si nécessaire.
+		dict_matieres = self._dict_matieres()
+
+		# On stocke les rangs des options obligatoires.
+		rang_option = defaultdict(dict)
+		for option_et in \
+				self.nomenclatures_et.getroot().findall('DONNEES/OPTIONS_OBLIGATOIRES/OPTION_OBLIGATOIRE'):
+			code_mef = option_et.find('CODE_MEF').text
+			code_matiere = option_et.find('CODE_MATIERE').text
+			rang_option[code_mef][code_matiere] = int(option_et.find('RANG_OPTION').text)
+
+		# On peut ensuite créer les options.
+		for programme_et in self.nomenclatures_et.getroot().findall('DONNEES/PROGRAMMES/PROGRAMME'):
+			try:
+				mef = self.mefs[programme_et.find('CODE_MEF').text]
+			except:
+				continue
+
+			matiere = self._creer_matiere(dict_matieres,
+				programme_et.find('CODE_MATIERE').text)
+
+			modalite_option = MEFMatiere.parse_modalite_election(
+					programme_et.find('CODE_MODALITE_ELECT').text)
+
+			defaults = {}
+			if modalite_option == MEFMatiere.MODALITE_OBLIGATOIRE:
+				defaults['rang_option'] = rang_option[mef.code_mef][matiere.code_matiere]
+
+			if matiere.virtuelle:
+				matiere_list = matiere.filles.all()
+			else:
+				matiere_list = [matiere]
+			for matiere in matiere_list:
+				MEFMatiere.objects.update_or_create(
+					mef=mef, matiere=matiere,
+					modalite_option=modalite_option,
+					defaults=defaults)
+
+
+	def import_professeurs(self):
+		"""
+		Import de la liste des professeurs depuis STS.
+
+		Cette fonction peuple le dictionnaire self.professeurs qui à
+		chaque code professeur associe l'objet Professeur correspondant.
+		"""
+		if not self.sts_et:
+			# TODO charger les profs si pas de STS
+			return
+
+		for individu in self.sts_et.getroot().findall('DONNEES/INDIVIDUS/INDIVIDU'):
+			individu_id = individu.attrib['ID']
+			nom = individu.find('NOM_USAGE').text.title()
+			prenom = individu.find('PRENOM').text.title()
+
+			sexe_xml = individu.find('SEXE').text
+			if sexe_xml == '1':
+				sexe = User.SEXE_HOMME
+			else:
+				sexe = User.SEXE_FEMME
+
+			fonction = individu.find('FONCTION').text
+
+			if individu.find('GRADE') is not None:
+				grade_xml = individu.find('GRADE').text
+			else:
+				grade_xml = None
+
+			# TODO quel est le grade pour la classe exceptionnelle des
+			# certifiés ?
+			if grade_xml == "CERT. H CL" or grade_xml == "CERT. CL N":
+				grade = Professeur.CORPS_CERTIFIE
+			elif grade_xml == "AGREGE CE" or grade_xml == "AGREGE HCL" or \
+					grade_xml == "AGREGE CLN":
+				grade = Professeur.CORPS_AGREGE
+			elif grade_xml == "CHAIRE SUP":
+				grade = Professeur.CORPS_CHAIRESUP
+			else:
+				grade = Professeur.CORPS_AUTRE
+
+			# XXX La recherche n'est absolument pas robuste aux homonymes,
+			# mais les fichiers XML de STS ne donnent pour identifiant
+			# qu'une clé primaire opaque, non documentée et probablement
+			# instable avec le temps.
+			if fonction == "ENS":
+				# Construction de la liste des disciplines du professeur
+				disciplines = []
+				for discipline_et in individu.findall('DISCIPLINES/DISCIPLINE'):
+					discipline, _ = Discipline.objects.get_or_create(
+							code=discipline_et.attrib['CODE'],
+							defaults={'nom': discipline_et.find('LIBELLE_COURT').text})
+					disciplines.append(discipline)
+
+				self.professeurs[individu_id], _ = Professeur.objects.update_or_create(
+						last_name=nom,
+						first_name=prenom,
+						sexe=sexe,
 						defaults={
-							'classe': classe,
-							'nom': nom_enveloppe,
-							'frequence': frequence,
-							'duree_frequentielle': duree,
-							'periode': periode,
-							'mode_defaut': mode_defaut,
-						})
-				colles_ens.enseignements.set(enseignements)
+							'last_name': nom,
+							'first_name': prenom,
+							'corps': grade,
+							'sexe': sexe,
+							'etablissement': self.etablissement,
+							})
+				self.professeurs[individu_id].disciplines.set(disciplines)
+
+			elif fonction == "DIR":
+				user, _ = User.objects.update_or_create(
+						last_name=nom,
+						first_name=prenom,
+						defaults={
+							'last_name': nom,
+							'first_name': prenom,
+							'sexe': sexe,
+							})
+				perm_direction = Permission.objects.get(codename='direction',
+						content_type=ContentType.objects.get_for_model(User))
+				user.user_permissions.add(perm_direction)
+
+		# TODO charger les profs si pas de sts
+
+
+	def import_colles(self):
+		if not self.nomenclature_colles_et:
+			return
+
+		for colle_et in self.nomenclature_colles_et.getroot().findall('colles/colle'):
+			nomenclature_id = colle_et.attrib['id']
+			mefs = [x.text for x in colle_et.findall('codes_mefs/code_mef')]
+			matieres = [x.text for x in colle_et.findall('codes_matieres/code_matiere')]
+			duree = isodate.parse_duration(colle_et.find('duree').text)
+
+			periode_et = colle_et.find('periode')
+			if periode_et is None:
+				periode = CollesEnseignement.PERIODE_ANNEE
+			elif periode_et.text == 'premiere_periode':
+				periode = CollesEnseignement.PERIODE_PREMIERE
+			elif periode_et.text == 'deuxieme_periode':
+				periode = CollesEnseignement.PERIODE_DEUXIEME
+
+			try:
+				nom_enveloppe = colle_et.find('nom').text
+			except:
+				nom_enveloppe = ''
+
+			frequence_text = colle_et.find('frequence').text
+			if frequence_text == 'hebdomadaire':
+				frequence = CollesEnseignement.FREQUENCE_HEBDOMADAIRE
+			elif frequence_text == 'trimestrielle':
+				frequence = CollesEnseignement.FREQUENCE_TRIMESTRIELLE
+
+			mode_defaut = CollesEnseignement.MODE_INTERROGATION
+			try:
+				if colle_et.find('mode_defaut').text == 'travaux_diriges':
+					mode_defaut = CollesEnseignement.MODE_TD
+			except:
+				pass
+
+			for classe in Classe.all_objects.filter(mef__code_mef__in=mefs,
+					annee=self.annee):
+				print("classe {}".format(classe))
+				enseignements = Enseignement.objects.filter(
+					Q(classe=classe),
+					Q(
+						Q(matiere__code_matiere__in=matieres) |
+						Q(matiere__parent__code_matiere__in=matieres)
+					)).distinct()
+				print(enseignements)
+
+				# On n'ajoute la dotation que si l'on a les enseignements
+				# correspondants.
+				if enseignements:
+					colles_ens, _ = CollesEnseignement.objects.update_or_create(
+							nomenclature_id=nomenclature_id,
+							classe=classe,
+							defaults={
+								'nom': nom_enveloppe,
+								'frequence': frequence,
+								'duree_frequentielle': duree,
+								'periode': periode,
+								'mode_defaut': mode_defaut,
+							})
+					colles_ens.enseignements.set(enseignements)

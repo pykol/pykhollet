@@ -66,22 +66,60 @@ class Matiere(models.Model):
 		else:
 			return self.nom
 
-class OptionEtudiant(models.Model):
+class AbstractLienMatiere(models.Model):
+	"""
+	Champs de base pour représenter une clé étrangère vers un objet
+	Matière, avec prise en compte du rang d'option.
+	"""
+	matiere = models.ForeignKey(Matiere, on_delete=models.SET_NULL,
+			blank=True, null=True, verbose_name="matière",
+			limit_choices_to={'virtuelle': False,})
+
+	rang_option = models.PositiveSmallIntegerField(null=True,
+			blank=True)
+
+	MODALITE_COMMUN = 1
+	MODALITE_OBLIGATOIRE = 2
+	MODALITE_FACULTATIVE = 3
+	MODALITE_CHOICES = (
+		(MODALITE_COMMUN, "tronc commun"),
+		(MODALITE_OBLIGATOIRE, "obligatoire"),
+		(MODALITE_FACULTATIVE, "facultative"),
+	)
+	modalite_option = models.PositiveSmallIntegerField(null=True,
+			blank=True, choices=MODALITE_CHOICES)
+
+	class Meta:
+		abstract = True
+
+	@classmethod
+	def parse_modalite_election(cls, code_elect):
+		"""
+		Renvoie le dictionnaire des champs à modifier afin de prendre en
+		compte le code_elect donné par SIECLE.
+		"""
+		if code_elect == 'O':
+			return cls.MODALITE_OBLIGATOIRE
+		elif code_elect == 'F':
+			return cls.MODALITE_FACULTATIVE
+		elif code_elect == 'S':
+			return cls.MODALITE_COMMUN
+		return res
+
+class OptionEtudiant(AbstractLienMatiere):
 	"""
 	Option choisie par un étudiant
 	"""
 	classe = models.ForeignKey('Classe', on_delete=models.CASCADE)
 	etudiant = models.ForeignKey('Etudiant', on_delete=models.CASCADE)
-	matiere = models.ForeignKey('Matiere', on_delete=models.CASCADE)
-	rang_option = models.PositiveSmallIntegerField()
 
-	MODALITE_OPTION_OBLIGATOIRE = 1
-	MODALITE_OPTION_FACULTATIVE = 2
-	MODALITE_OPTION_CHOICES = (
-		(MODALITE_OPTION_OBLIGATOIRE, "obligatoire"),
-		(MODALITE_OPTION_FACULTATIVE, "facultative"),
-	)
-	modalite_option = models.PositiveSmallIntegerField(choices=MODALITE_OPTION_CHOICES)
+	# On écrase les champs hérités pour changer un peu les valeurs
+	# autorisés (pas de null ici, CASCADE à la suppression).
+	matiere = models.ForeignKey('Matiere', on_delete=models.CASCADE,
+			verbose_name="matière")
+	rang_option = models.PositiveSmallIntegerField()
+	modalite_option = models.PositiveSmallIntegerField(
+			choices=AbstractLienMatiere.MODALITE_CHOICES)
 
 class GroupeEffectif(models.Model):
 	"""
@@ -220,7 +258,7 @@ class Service(models.Model):
 	fin = models.DateField(null=True, blank=True,
 			verbose_name="Date de fin")
 
-class Enseignement(models.Model):
+class Enseignement(AbstractLienMatiere):
 	"""
 	Enseignement dispensé devant un groupe d'étudiants
 
@@ -228,26 +266,25 @@ class Enseignement(models.Model):
 	dispensées par un (ou plusieurs) professeurs devant un groupe
 	d'étudiants fixé, dans une matière fixée.
 
-	Chaque enseignement est attribué à un groupe, et non à une classe
-	d'étudiants, afin de permettre la création d'enseignements en barrette
-	sur plusieurs classes.
+	Le champ groupe indique la liste des étudiants qui suivent
+	effectivement ce cours. Le champ classe indique la classe qui voit
+	cet enseignement à son emploi du temps.
+
+	Ces deux champs ne sont pas nécessairement égaux :
+	* lorsque le cours est donné devant seulement une partie de la
+	  classe ;
+	* lorsque le cours est donné en barrette sur plusieurs classes. Dans
+	  ce cas, le groupe est l'ensemble des étudiants sur toutes les
+	  classes concernées. Il y a alors autant d'objets Enseignement que
+	  de classes qui fournissent des étudiants au groupe.
 
 	Les professeurs sont affectés aux enseignements grâce au modèle
 	:model:`pykol.Service`.
 	"""
-	matiere = models.ForeignKey(Matiere, on_delete=models.SET_NULL,
-			blank=True, null=True, verbose_name="matière",
-			limit_choices_to={'virtuelle': False,})
-	groupe = models.ForeignKey('Groupe', on_delete=models.CASCADE)
-
-	option = models.BooleanField()
-	rang_option = models.PositiveSmallIntegerField(null=True,
-			blank=True)
-	MODALITE_OPTION_OBLIGATOIRE = OptionEtudiant.MODALITE_OPTION_OBLIGATOIRE
-	MODALITE_OPTION_FACULTATIVE = OptionEtudiant.MODALITE_OPTION_FACULTATIVE
-	MODALITE_OPTION_CHOICES = OptionEtudiant.MODALITE_OPTION_CHOICES
-	modalite_option = models.PositiveSmallIntegerField(null=True,
-			blank=True, choices=MODALITE_OPTION_CHOICES)
+	groupe = models.ForeignKey('Groupe', on_delete=models.CASCADE,
+			blank=True, null=True)
+	classe = models.ForeignKey('Classe', on_delete=models.CASCADE,
+			related_name='enseignements')
 
 	professeurs = models.ManyToManyField(Professeur, through=Service)
 
@@ -263,7 +300,10 @@ class Enseignement(models.Model):
 		ordering = ['groupe', 'matiere']
 
 	def __str__(self):
-		return "{} - {}".format(self.groupe, self.matiere)
+		if self.groupe:
+			return "{} - {} - {}".format(self.classe, self.groupe, self.matiere)
+		else:
+			return "{} - {}".format(self.classe, self.matiere)
 
 	def etudiants_classe(self, classe):
 		"""
@@ -283,15 +323,12 @@ class ModuleElementaireFormation(models.Model):
 	def __str__(self):
 		return self.code_mef
 
-class MEFMatiere(models.Model):
+class MEFMatiere(AbstractLienMatiere):
 	"""
 	Appartenance d'une matière à un MEF
 	"""
-	matiere = models.ForeignKey(Matiere, on_delete=models.CASCADE)
 	mef = models.ForeignKey(ModuleElementaireFormation,
 			on_delete=models.CASCADE)
-	mode_election = models.CharField(max_length=10)
-	rang = models.SmallIntegerField()
 
 class ClasseAnneeActuelleManager(models.Manager):
 	"""
@@ -310,7 +347,6 @@ class Classe(Groupe):
 	l'emploi du temps avec la liste des matières dispensées (et les
 	enseignements correspondants), le colloscope, les conseils de classe.
 	"""
-	enseignements = models.ManyToManyField(Enseignement, blank=True)
 	coordonnateur = models.ForeignKey(Professeur,
 			on_delete=models.SET_NULL, blank=True, null=True)
 	mef = models.ForeignKey(ModuleElementaireFormation,

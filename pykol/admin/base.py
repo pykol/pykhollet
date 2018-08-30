@@ -157,9 +157,10 @@ class EnseignementAdmin(admin.ModelAdmin):
 	inlines = [ServiceInline,]
 
 class EnseignementInline(admin.TabularInline):
-	model = Classe.enseignements.through
+	model = Enseignement
 	extra = 3
 	show_change_link = True
+	fk_name = 'classe'
 
 class EtudiantInline(admin.TabularInline):
 	model = Etudiant

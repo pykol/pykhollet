@@ -126,8 +126,8 @@ def import_colleurs_odf(request):
 					colleur_data['sexe'] = Professeur.SEXE_FEMME
 
 				try:
-					colleur_data['last_name'] = tablecell_to_text(cells[1]).strip()
-					colleur_data['first_name'] = tablecell_to_text(cells[2]).strip()
+					colleur_data['last_name'] = tablecell_to_text(cells[1]).strip().title()
+					colleur_data['first_name'] = tablecell_to_text(cells[2]).strip().title()
 				except:
 					continue
 

@@ -155,6 +155,8 @@ class ServiceInline(admin.TabularInline):
 @register(Enseignement)
 class EnseignementAdmin(admin.ModelAdmin):
 	inlines = [ServiceInline,]
+	list_display = ('__str__', 'classe',)
+	list_filter = ('classe__annee', 'classe',)
 
 class EnseignementInline(admin.TabularInline):
 	model = Enseignement

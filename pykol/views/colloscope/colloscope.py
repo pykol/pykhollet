@@ -68,9 +68,9 @@ def colloscope_html(request, classe):
 
 	autres_colles = []
 	for colle in colles:
-		if colle.creneau is not None and colle.semaine is not None:
+		try:
 			colloscope[colle.matiere][colle.creneau][colle.semaine].append(colle)
-		else:
+		except:
 			autres_colles.append(colle)
 
 	perm_creation = request.user.has_perm('pykol.add_colle', classe)

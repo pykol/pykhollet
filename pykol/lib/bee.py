@@ -581,11 +581,13 @@ class BEEImporter:
 							matiere=mefmatiere.matiere,
 							rang_option=mefmatiere.rang_option,
 							modalite_option=mefmatiere.modalite_option,
+							periode=mefmatiere.periode,
 							).exists():
 						Enseignement(classe=classe,
 							matiere=mefmatiere.matiere,
 							rang_option=mefmatiere.rang_option,
 							modalite_option=mefmatiere.modalite_option,
+							periode=mefmatiere.periode,
 							).save()
 
 				# Dans le fichier STS, on peut trouver des services
@@ -1001,6 +1003,27 @@ class BEEImporter:
 			else:
 				matiere_list = [matiere]
 			for matiere in matiere_list:
+				# Hack pour la PCSI car les périodes ne sont pas
+				# indiquées dans le fichier XML et sont indispensables
+				# pour coller aux dotations de colles
+				if mef.code_mef == '30111019210':
+					# Choix entre option SI et option chimie uniquement
+					# en deuxième période. (L'option de rang 1
+					# correspond aux langues vivantes.)
+					if defaults.get('rang_option', None) == 2:
+						defaults['periode'] = MEFMatiere.PERIODE_DEUXIEME
+
+					# Chimie pour l'option SI
+					if matiere.code_matiere == '067200':
+						defaults['periode'] = MEFMatiere.PERIODE_DEUXIEME
+
+					# SI ou chimie au premier semestre
+					if modalite_option == MEFMatiere.MODALITE_FACULTATIVE \
+							and matiere.code_matiere in ('067000', '067100'):
+						modalite_option = MEFMatiere.MODALITE_COMMUN
+						defaults['periode'] = MEFMatiere.PERIODE_PREMIERE
+
+				# Retour au cas général
 				MEFMatiere.objects.update_or_create(
 					mef=mef, matiere=matiere,
 					modalite_option=modalite_option,

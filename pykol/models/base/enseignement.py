@@ -258,7 +258,18 @@ class Service(models.Model):
 	fin = models.DateField(null=True, blank=True,
 			verbose_name="Date de fin")
 
-class Enseignement(AbstractLienMatiere):
+class AbstractEnseignement(AbstractLienMatiere):
+	PERIODE_ANNEE = constantes.PERIODE_ANNEE
+	PERIODE_PREMIERE = constantes.PERIODE_PREMIERE
+	PERIODE_DEUXIEME = constantes.PERIODE_DEUXIEME
+	PERIODE_CHOICES = constantes.PERIODE_CHOICES
+	periode = models.PositiveSmallIntegerField(verbose_name="période",
+			choices=PERIODE_CHOICES,
+			default=PERIODE_ANNEE)
+	class Meta:
+		abstract = True
+
+class Enseignement(AbstractEnseignement):
 	"""
 	Enseignement dispensé devant un groupe d'étudiants
 
@@ -288,14 +299,6 @@ class Enseignement(AbstractLienMatiere):
 
 	professeurs = models.ManyToManyField(Professeur, through=Service)
 
-	PERIODE_ANNEE = constantes.PERIODE_ANNEE
-	PERIODE_PREMIERE = constantes.PERIODE_PREMIERE
-	PERIODE_DEUXIEME = constantes.PERIODE_DEUXIEME
-	PERIODE_CHOICES = constantes.PERIODE_CHOICES
-	periode = models.PositiveSmallIntegerField(verbose_name="période",
-			choices=PERIODE_CHOICES,
-			default=PERIODE_ANNEE)
-
 	class Meta:
 		ordering = ['groupe', 'matiere']
 
@@ -323,7 +326,7 @@ class ModuleElementaireFormation(models.Model):
 	def __str__(self):
 		return self.code_mef
 
-class MEFMatiere(AbstractLienMatiere):
+class MEFMatiere(AbstractEnseignement):
 	"""
 	Appartenance d'une matière à un MEF
 	"""

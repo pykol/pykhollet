@@ -130,11 +130,19 @@ def semaines(request, slug):
 					form_kwargs={'classe': classe})
 
 	else:
-		annee = classe.annee
 		# Calcul des semaines de toute l'année
-		lundi = annee.debut - timedelta(days=annee.debut.weekday())
 		toutes_semaines = []
-		while lundi < annee.fin:
+
+		# Générateur pour itérer tous les lundis de l'année
+		def lundirange():
+			annee = classe.annee
+			lundi = annee.debut - timedelta(days=annee.debut.weekday())
+			while lundi < annee.fin:
+				if not annee.est_vacances(lundi):
+					yield lundi
+				lundi += timedelta(days=7)
+
+		for lundi in lundirange():
 			try:
 				semaine = Semaine.objects.get(classe=classe, debut=lundi)
 				toutes_semaines.append({
@@ -151,7 +159,7 @@ def semaines(request, slug):
 					'est_colle': False,
 					'numero': None,
 					})
-			lundi += timedelta(days=7)
+
 		formset = SemaineFormSet(initial=toutes_semaines,
 				prefix=formset_prefix,
 				form_kwargs={'classe': classe})

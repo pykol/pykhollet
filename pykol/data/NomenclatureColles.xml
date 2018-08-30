@@ -191,6 +191,7 @@
     </colle>
     <colle id="pcsi-1995-physique-s1">
       <!-- Physique - Première période -->
+      <nom>Physique-chimie - Première période</nom>
       <codes_mefs>
         <code_mef>30111019210</code_mef>
       </codes_mefs>
@@ -205,19 +206,7 @@
     </colle>
     <colle id="pcsi-1995-physique-s2chimie">
       <!-- Physique - Deuxième période, option chimie -->
-      <codes_mefs>
-        <code_mef>30111019210</code_mef>
-      </codes_mefs>
-      <codes_matieres>
-        <code_matiere>065700</code_matiere>
-      </codes_matieres>
-      <frequence>hebdomadaire</frequence>
-      <duree>PT15M</duree>
-      <periode>deuxieme_periode</periode>
-      <si_option>067100</si_option>
-    </colle>
-    <colle id="pcsi-1995-physique-s2si">
-      <!-- Physique - Deuxième période, option SI -->
+      <nom>Physique - Option Chimie</nom>
       <codes_mefs>
         <code_mef>30111019210</code_mef>
       </codes_mefs>
@@ -227,10 +216,26 @@
       <frequence>hebdomadaire</frequence>
       <duree>PT10M</duree>
       <periode>deuxieme_periode</periode>
+      <si_option>067100</si_option>
+    </colle>
+    <colle id="pcsi-1995-physique-s2si">
+      <!-- Physique - Deuxième période, option SI -->
+      <nom>Physique-chimie - Option SI</nom>
+      <codes_mefs>
+        <code_mef>30111019210</code_mef>
+      </codes_mefs>
+      <codes_matieres>
+        <code_matiere>065700</code_matiere>
+        <code_matiere>067200</code_matiere>
+      </codes_matieres>
+      <frequence>hebdomadaire</frequence>
+      <duree>PT15M</duree>
+      <periode>deuxieme_periode</periode>
       <si_option>063300</si_option>
     </colle>
     <colle id="pcsi-1995-chimie-s2">
       <!-- Chimie 4h PCSI en deuxième période -->
+      <nom>Chimie - Deuxième période</nom>
       <codes_mefs>
         <code_mef>30111019210</code_mef>
       </codes_mefs>
@@ -243,6 +248,7 @@
     </colle>
     <colle id="pcsi-1995-si-s1">
       <!-- Sciences industrielles - Première période -->
+      <nom>SI - Première période</nom>
       <codes_mefs>
         <code_mef>30111019210</code_mef>
       </codes_mefs>
@@ -255,6 +261,7 @@
     </colle>
     <colle id="pcsi-1995-si-s2">
       <!-- Sciences industrielles - Deuxième période -->
+      <nom>SI - Deuxième période</nom>
       <codes_mefs>
         <code_mef>30111019210</code_mef>
       </codes_mefs>

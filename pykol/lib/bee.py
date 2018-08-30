@@ -414,9 +414,13 @@ class BEEImporter:
 
 	def _stocker_services(self, groupe_et, code_div, code_groupe):
 		"""
-		Ajoute dans la liste self.services les services d'enseignement
-		qui se trouvent dans le groupe ou la division donnée par le
-		fragment groupe_et.
+		Crée dans la base de données les objets Service qui se trouvent
+		dans le groupe ou la division donnée par le fragment groupe_et.
+
+		Cette méthode crée les objets Enseignement associés aux classes
+		s'il n'en existe aucun déjà existant dans la base de données.
+		Sinon, elle tente de réutiliser les objets déjà présents (dont
+		le groupe n'est pas encore défini).
 		"""
 		for service_et in groupe_et.findall('SERVICES/SERVICE'):
 			code_matiere = service_et.attrib['CODE_MATIERE']
@@ -433,8 +437,9 @@ class BEEImporter:
 
 			# Pour la culture générale en ECS/ECE, on fait un petit extra...
 			matieres = Matiere.objects.filter(
-				Q(virtuelle=False, code_matiere=code_matiere) |
-				Q(virtuelle=True, parent__code_matiere=code_matiere)
+					Q(code_matiere=code_matiere) |
+					Q(parent__virtuelle=True, parent__code_matiere=code_matiere),
+				virtuelle=False
 			)
 
 			# Pour l'instant, on ne se préoccupe que des cours généraux, la

@@ -193,7 +193,7 @@ class SemaineForm(forms.Form):
 			required=False)
 	numero = forms.CharField(label="numéro", required=False)
 	semaine = forms.ModelChoiceField(queryset=None,
-			widget=forms.HiddenInput, required=False, disabled=True)
+			widget=forms.HiddenInput, required=False)
 
 	def __init__(self, *args, classe=None, **kwargs):
 		super().__init__(*args, **kwargs)

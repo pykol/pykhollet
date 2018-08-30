@@ -21,7 +21,7 @@
 from datetime import timedelta
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
-from django.db import transaction
+from django.db import transaction, models
 from django.core.exceptions import PermissionDenied
 
 from pykol.models.base import Classe
@@ -60,22 +60,33 @@ def semaines(request, slug):
 		genform = SemaineNumeroGenerateurForm(request.POST,
 				instance=colles_reglages, prefix="gen")
 
-		formset_data = formset.data.copy()
 
 		genform.save()
 
 		if genform.is_valid() and genform.cleaned_data['numeros_auto']:
 			formset.full_clean()
+			new_formset_data = {}
 
 			id_colle = 0
 
 			for id_semaine, form in enumerate(formset.forms):
-				for field in ('debut', 'fin', 'est_colle',):
-					formset_data['semaines-{}-{}'.format(id_semaine,
-						field)] = form.cleaned_data.get(field)
+				for field in ('debut', 'fin', 'est_colle'):
+					new_formset_data['{prefix}-{id_semaine}-{field}'.format(
+						prefix=formset_prefix,
+						id_semaine=id_semaine,
+						field=field)] = form.cleaned_data.get(field)
+
+				if form.cleaned_data.get('semaine'):
+					new_formset_data['{prefix}-{id_semaine}-{field}'.format(
+						prefix=formset_prefix,
+						id_semaine=id_semaine,
+						field='semaine')] = form.cleaned_data.get('semaine').pk
 
 				if form.cleaned_data['est_colle']:
-					formset_data['semaines-{}-numero'.format(id_semaine)] = \
+					new_formset_data['{prefix}-{id_semaine}-{field}'.format(
+						prefix=formset_prefix,
+						id_semaine=id_semaine,
+						field='numero')] = \
 							genform.cleaned_data['numeros_format'].format(
 							numero=id_colle + 1,
 							quinzaine=id_colle // 2 + 1,
@@ -86,44 +97,34 @@ def semaines(request, slug):
 
 			for field in ('TOTAL_FORMS', 'INITIAL_FORMS',
 					'MAX_NUM_FORMS',):
-				field_name = '{}-{}'.format(formset_prefix, field)
-				formset_data[field_name] = formset.data[field_name]
+				field_name = '{prefix}-{field}'.format(prefix=formset_prefix,
+						field=field)
+				new_formset_data[field_name] = formset.data[field_name]
 
 			# On ne remplace le formset que si le générateur a réussi à
 			# compléter les semaines manquantes
-			new_formset = SemaineFormSet(formset_data,
+			formset = SemaineFormSet(new_formset_data,
 					prefix=formset_prefix,
 					form_kwargs={'classe': classe})
-			if new_formset.is_valid():
-				formset = new_formset
 
 		if formset.is_valid():
 			with transaction.atomic():
 				for id_semaine, data in enumerate(formset.cleaned_data):
-					if not data['est_colle']:
-						formset_data['{}-{}-numero'.format(formset_prefix,
-							id_semaine)] = None
+					if data['semaine']:
+						if data['est_colle']:
+							semaine = data['semaine']
+							semaine.debut = data['debut']
+							semaine.fin = data['fin']
+							semaine.numero = data['numero']
+							semaine.save()
+						else:
+							data['semaine'].delete()
 
-					if data['semaine'] and not data['est_colle']:
-						formset_data['{}-{}-semaine'.format(formset_prefix,
-							id_semaine)] = None
-						data['semaine'].delete()
-
-					if not data['semaine'] and data['est_colle']:
-						semaine = Semaine(debut=data['debut'],
+					elif data['est_colle']:
+						Semaine(debut=data['debut'],
 								fin=data['fin'],
 								numero=data['numero'],
-								classe=classe)
-						semaine.save()
-						formset_data['{}-{}-semaine'.format(formset_prefix,
-							id_semaine)] = semaine.pk
-
-					if data['semaine'] and data['est_colle']:
-						semaine = data['semaine']
-						semaine.debut = data['debut']
-						semaine.fin = data['fin']
-						semaine.numero = data['numero']
-						semaine.save()
+								classe=classe).save()
 
 			return redirect('colloscope_semaines', classe.slug)
 
@@ -140,23 +141,27 @@ def semaines(request, slug):
 					yield lundi
 				lundi += timedelta(days=7)
 
+		# On récupère déjà la liste des semaines existantes
+		toutes_semaines = list(Semaine.objects.filter(classe=classe).annotate(
+			semaine=models.F('pk'), est_colle=models.Value(True,
+				output_field=models.BooleanField()),
+			).values('debut', 'fin', 'est_colle', 'numero', 'semaine'))
+
+		# On prévoit des semaines vides si l'utilisateur souhaite les
+		# cocher, pour les lundis qui manquent.
+		lundis_existants = set([s['debut'] for s in toutes_semaines])
+
 		for lundi in lundirange():
-			try:
-				semaine = Semaine.objects.get(classe=classe, debut=lundi)
-				toutes_semaines.append({
-					'debut': semaine.debut,
-					'fin': semaine.fin,
-					'est_colle': True,
-					'numero': semaine.numero,
-					'semaine': semaine,
-					})
-			except Semaine.DoesNotExist:
-				toutes_semaines.append({
-					'debut': lundi,
-					'fin': lundi + timedelta(days=6),
-					'est_colle': False,
-					'numero': None,
-					})
+			if lundi in lundis_existants:
+				continue
+			toutes_semaines.append({
+				'debut': lundi,
+				'fin': lundi + timedelta(days=6),
+				'est_colle': False,
+				'numero': None,
+			})
+
+		toutes_semaines.sort(key=lambda s: s['debut'])
 
 		formset = SemaineFormSet(initial=toutes_semaines,
 				prefix=formset_prefix,

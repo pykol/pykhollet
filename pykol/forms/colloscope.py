@@ -297,5 +297,6 @@ class ColleSupprimerForm(forms.ModelForm):
 
 
 class ColloscopeImportForm(forms.Form):
-	colloscope_ods = forms.FileField()
+	colloscope_ods = forms.FileField(widget=forms.ClearableFileInput(
+		attrs={'accept': 'application/vnd.oasis.opendocument.spreadsheet'}))
 	supprimer = forms.BooleanField(required=False)

@@ -241,6 +241,7 @@ class ColleursImportForm(forms.Form):
 	Formulaire d'import d'un fichier OpenDocument listant les colleurs
 	extérieurs.
 	"""
-	colleurs = forms.FileField()
+	colleurs = forms.FileField(widget=forms.ClearableFileInput(
+		attrs={'accept': 'application/vnd.oasis.opendocument.spreadsheet'}))
 	mise_a_jour = forms.BooleanField(label="Mise à jour sans ajout",
 			required=False, initial=False)

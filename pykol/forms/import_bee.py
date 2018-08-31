@@ -20,8 +20,13 @@ from django import forms
 
 from pykol.models.base import Annee
 
+class ZipXmlFileInput(forms.ClearableFileInput):
+	def __init__(self, *args, **kwargs):
+		kwargs['attrs'] = {'accept': 'application/zip,application/xml'}
+		super().__init__(*args, **kwargs)
+
 class ImportBEEForm(forms.Form):
-	nomenclature = forms.FileField(required=False)
-	structure = forms.FileField(required=False)
-	eleves = forms.FileField(required=False)
-	stsemp = forms.FileField(required=False)
+	nomenclature = forms.FileField(required=False, widget=ZipXmlFileInput())
+	structure = forms.FileField(required=False, widget=ZipXmlFileInput())
+	eleves = forms.FileField(required=False, widget=ZipXmlFileInput())
+	stsemp = forms.FileField(required=False, widget=ZipXmlFileInput())

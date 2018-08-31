@@ -140,8 +140,7 @@ class PykolBackend(ModelBackend):
 
 		return set()
 
-user_est_professeur = user_passes_test(
-	lambda user: user.professeur is not None)
+user_est_professeur = user_passes_test(lambda user: hasattr(user, 'professeur'))
 
 def professeur_dans(user, classe):
 	"""

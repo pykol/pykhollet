@@ -752,8 +752,23 @@ class BEEImporter:
 			etudiant_data['first_name'] = eleve.find('PRENOM').text.title()
 			etudiant_data['last_name'] = eleve.find('NOM_DE_FAMILLE').text.title()
 
-			self.etudiants[num_eleve], _ = Etudiant.objects.update_or_create(
-					ine=eleve.find('INE_RNIE').text,
+			# On tente de retrouver l'étudiant avec son INE, et au pire
+			# le numéro SIECLE.
+			etudiant_data['numero_siecle'] = num_eleve
+
+			if eleve.find('ID_NATIONAL') is None:
+				if eleve.find('INE_RNIE') is not None:
+					etudiant_data['ine'] = eleve.find('INE_RNIE').text
+			else:
+				etudiant_data['ine'] = eleve.find('ID_NATIONAL').text
+
+			if etudiant_data.get('ine'):
+				self.etudiants[num_eleve], _ = Etudiant.objects.update_or_create(
+					ine=etudiant_data['ine'],
+					defaults=etudiant_data)
+			else:
+				self.etudiants[num_eleve], _ = Etudiant.objects.update_or_create(
+					numero_siecle=num_eleve,
 					defaults=etudiant_data)
 
 		# Une fois que tous les étudiants ont été importés, on met à jour

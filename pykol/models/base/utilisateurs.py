@@ -160,13 +160,15 @@ class Etudiant(User):
 	entree = models.DateField(null=True, blank=True,
 			verbose_name="entrée")
 	sortie = models.DateField(null=True, blank=True)
-	ine = models.CharField(max_length=11, verbose_name="INE (numéro d'étudiant)")
+	ine = models.CharField(max_length=11, verbose_name="INE (numéro d'étudiant)",
+			unique=True, blank=True, null=True)
+	numero_siecle = models.CharField(max_length=30,
+			verbose_name="Numéro interne SIECLE")
 	options = models.ManyToManyField('Matiere', through='OptionEtudiant')
 
 	class Meta:
 		verbose_name = "étudiant"
 		verbose_name_plural = "étudiants"
-		unique_together = ['ine']
 
 	def clean(self):
 		super().clean()

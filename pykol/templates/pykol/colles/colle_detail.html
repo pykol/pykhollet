@@ -23,6 +23,10 @@
       <td>{{ colle.get_mode_display }}</td>
     </tr>
     <tr>
+      <th>Durée</th>
+      <td colspan="3">{{ colle.duree }}</td>
+    </tr>
+    <tr>
       <td colspan="4">
         {% if perm_colle.noter %}
         {% include 'pykol/colles/noter_button.html' %}

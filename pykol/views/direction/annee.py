@@ -53,11 +53,10 @@ def annee_detail(request, pk):
 	total_heures = timedelta()
 	for ligne in colles_ens:
 		classe = ligne.classe
-		if classe not in dotations:
-			dotations[classe] = {
-					'total_heures': timedelta(),
-					'matieres': []
-				}
+		dotation = dotations.setdefault(classe, {
+			'total_heures': timedelta(),
+			'matieres': []
+		})
 
 		heures = ligne.dotation()
 		dotations[classe]['matieres'].append({

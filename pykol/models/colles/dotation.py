@@ -104,9 +104,14 @@ class CollesEnseignement(models.Model):
 		else:
 			enseignements = self.enseignements.all()
 
-		nb_etudiants = 0
+		# On réalise l'union des listes d'étudiants avant de compter,
+		# pour ne pas compter plusieurs fois le même étudiant sur une
+		# dotation partagée entre plusieurs matières.
+		etudiants_qs = Etudiant.objects.none()
 		for enseignement in enseignements:
-			nb_etudiants += enseignement.groupe.effectif_classe(self.classe)
+			etudiants_qs = etudiants_qs.union(enseignement.etudiants)
+
+		nb_etudiants = etudiants_qs.sur_ventilation_service(self.classe.annee).distinct().count()
 
 		if self.frequence == CollesEnseignement.FREQUENCE_HEBDOMADAIRE:
 			if self.periode == CollesEnseignement.PERIODE_ANNEE:

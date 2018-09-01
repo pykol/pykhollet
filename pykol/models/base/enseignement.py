@@ -308,12 +308,30 @@ class Enseignement(AbstractEnseignement):
 		else:
 			return "{} - {}".format(self.classe, self.matiere)
 
-	def etudiants_classe(self, classe):
+	def etudiants_classe(self):
 		"""
 		Renvoie la liste des étudiants qui suivent cet enseignement et
-		qui sont présents également dans la classe donnée.
+		qui sont présents également dans la classe.
 		"""
-		return self.groupe.etudiants.filter(classe=classe)
+		return self.groupe.etudiants.filter(classe=self.classe)
+
+	@property
+	def etudiants(self):
+		# Si le groupe est défini, on l'utilise pour déterminer
+		# l'effectif
+		if self.groupe is not None:
+			return self.etudiants_classe()
+		elif self.modalite_option == self.MODALITE_COMMUN:
+			return self.classe.etudiants.all()
+		else:
+			return self.classe.etudiants.filter(
+				optionetudiant__matiere=self.matiere,
+				optionetudiant__rang_option=self.rang_option,
+				optionetudiant__modalite_option=self.modalite_option).distinct()
+
+	@property
+	def effectif_ventilation_service(self):
+		return self.etudiants.sur_ventilation_service(self.classe.annee).count()
 
 class ModuleElementaireFormation(models.Model):
 	"""

@@ -93,7 +93,8 @@ class EnseignementDoteMixin(forms.Form):
 		for enseignement in enseignements:
 			nom_format = '{matiere__nom}'
 
-			if not classe or (enseignement['groupe__nom'] != classe.nom and \
+			if enseignement['groupe__nom'] and \
+					not classe or (enseignement['groupe__nom'] != classe.nom and \
 					compte_matieres[enseignement['matiere__nom']] > 1):
 				nom_format += ' {groupe__nom}'
 

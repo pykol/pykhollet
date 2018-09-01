@@ -124,6 +124,14 @@ class Colle(AbstractBaseColle):
 		"""Renvoie le colleur qui assure cette colle"""
 		return self.details.colleur
 
+	def _update_duree(self):
+		if self.colles_ens.frequence == self.colles_ens.FREQUENCE_HEBDOMADAIRE:
+			self.duree = timedelta(hours=1)
+		else:
+			self.duree = self.details.eleves.count() * \
+					self.colles_ens.duree_frequentielle
+		self.save()
+
 	@transaction.atomic
 	def ajout_details(self, horaire=None, salle='', colleur=None,
 			etudiants=[]):
@@ -193,6 +201,7 @@ class Colle(AbstractBaseColle):
 			detail.save()
 			detail.eleves.set(etudiants)
 
+		self._update_duree()
 		return self.details
 
 	def get_absolute_url(self):

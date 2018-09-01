@@ -300,7 +300,7 @@ def import_odf(request, slug):
 									"inconnu."))
 								continue
 
-							creneau.update_or_create_colle(semaine, groupe)
+							Colle.objects.update_or_create_from_creneau(creneau, semaine, groupe)
 
 				if not import_erreurs:
 					return redirect('colloscope', slug=classe.slug)

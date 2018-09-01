@@ -97,40 +97,14 @@ class Creneau(AbstractBaseColle):
 				self.colleur, self.get_jour_display(),
 				self.debut, self.fin)
 
-	@transaction.atomic
-	def update_or_create_colle(self, semaine, trinome):
-		"""Créer une colle sur le modèle du créneau, sur la semaine
-		donnée et pour le groupe donné.
-		
-		On considère que la colle est identifiée par sa semaine et son
-		créneau. Si le trinôme change, on met simplement à jour la
-		colle.
-		"""
-		colle_data = self.basecolle_fields()
-		colle_data['groupe'] = trinome
-
-		# Pour un TD, on prend la durée donnée par les horaires
-		if self.mode == self.MODE_TD:
-			colle_data['duree'] = \
-					datetime.combine(datetime.min, self.fin) - \
-					datetime.combine(datetime.min, self.debut)
-
-		colle, _ = Colle.objects.update_or_create(
-				creneau=self,
-				semaine=semaine,
-				defaults=colle_data)
-
-		colle.ajout_details(
-			horaire=semaine.horaire_creneau(self),
-			salle=self.salle,
-			colleur=self.colleur,
-			etudiants=trinome.etudiants.all())
-
-		return colle
-
 	@property
 	def matiere(self):
 		return self.enseignement.matiere
+
+	def save(self, *args, **kwargs):
+		super().save(*args, **kwargs)
+		Colle.objects.filter(creneau=self, etat__in=(
+			Colle.ETAT_PREVUE, Colle.ETAT_BROUILLON)).synchro_creneau()
 
 class Trinome(AbstractBaseGroupe):
 	"""Groupe de colle dans une classe"""

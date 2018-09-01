@@ -134,7 +134,8 @@ def roulement_generer_colles(request, pk):
 				creneau = ligne.creneau
 				for id_semaine in range(ordre_debut + ordre_ligne,
 						total_semaines, total_lignes):
-					creneau.update_or_create_colle(semaines[id_semaine],
+					Colle.objects.update_or_create_from_creneau(creneau,
+							semaines[id_semaine],
 							trinome)
 					nb_colles += 1
 

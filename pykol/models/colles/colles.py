@@ -29,14 +29,6 @@ from pykol.models.fields import NoteField
 LISTE_JOURS = enumerate(["lundi", "mardi", "mercredi", "jeudi",
 	"vendredi", "samedi", "dimanche"], 1)
 
-class ColleConfirmeeManager(models.Manager):
-	"""
-	Gestionnaire personnalisé sur les colles qui permet de n'afficher
-	que les colles confirmées.
-	"""
-	def get_queryset(self):
-		return super().get_queryset().exclude(etat=Colle.ETAT_BROUILLON)
-
 class AbstractBaseColle(models.Model):
 	"""
 	Classe abstraite qui contient les champs communs entre une colle et
@@ -77,6 +69,73 @@ class AbstractBaseColle(models.Model):
 				'mode': self.mode,
 			}
 
+
+class ColleQuerySet(models.QuerySet):
+	@transaction.atomic
+	def update_or_create_from_creneau(self, creneau, semaine,
+			trinome=None):
+		"""
+		Créer une colle sur le modèle du créneau, sur la semaine
+		donnée et pour le groupe donné.
+		
+		On considère que la colle est identifiée par sa semaine et son
+		créneau. Si le trinôme change, on met simplement à jour la
+		colle.
+		"""
+		colle_data = creneau.basecolle_fields()
+		if trinome is not None:
+			colle_data['groupe'] = trinome
+
+		# Pour un TD, on prend la durée donnée par les horaires
+		if creneau.mode == creneau.MODE_TD:
+			colle_data['duree'] = \
+					datetime.combine(datetime.min, creneau.fin) - \
+					datetime.combine(datetime.min, creneau.debut)
+
+		(colle, created) = self.update_or_create(
+				creneau=creneau,
+				semaine=semaine,
+				defaults=colle_data)
+
+		colle.ajout_details(
+			horaire=semaine.horaire_creneau(creneau),
+			salle=creneau.salle,
+			colleur=creneau.colleur,
+			etudiants=trinome.etudiants.all())
+
+		return (colle, created)
+
+	def synchro_creneau(self):
+		"""
+		Mise à jour des colles de ce QuerySet pour répercuter les
+		modifications de leur créneau.
+		"""
+		for colle in self.filter(creneau__isnull=False,
+				semaine__isnull=False):
+			colle.ajout_details(
+					horaire=colle.semaine.horaire_creneau(colle.creneau),
+					salle=colle.creneau.salle,
+					colleur=colle.creneau.colleur)
+
+class ColleManager(models.Manager):
+	def get_queryset(self):
+		return ColleQuerySet(self.model, using=self._db)
+
+	def update_or_create_from_creneau(self, *args, **kwargs):
+		return self.get_queryset().update_or_create_from_creneau(*args,
+				**kwargs)
+
+	def synchro_creneau(self):
+		return self.get_queryset().synchro_creneau(self)
+
+class ColleConfirmeeManager(ColleManager):
+	"""
+	Gestionnaire personnalisé sur les colles qui permet de n'afficher
+	que les colles confirmées.
+	"""
+	def get_queryset(self):
+		return super().get_queryset().exclude(etat=Colle.ETAT_BROUILLON)
+
 class Colle(AbstractBaseColle):
 	"""
 	Représentation d'une séance de colle
@@ -86,12 +145,12 @@ class Colle(AbstractBaseColle):
 	semaine = models.ForeignKey('Semaine', blank=True, null=True,
 			on_delete=models.SET_NULL)
 
+	ETAT_BROUILLON = 5
 	ETAT_PREVUE = 0
 	ETAT_NOTEE = 1
 	ETAT_EFFECTUEE = 4
 	ETAT_RELEVEE = 2
 	ETAT_ANNULEE = 3
-	ETAT_BROUILLON = 5
 	ETAT_CHOICES = (
 			(ETAT_BROUILLON, "brouillon"),
 			(ETAT_PREVUE, "prévue"),
@@ -111,7 +170,7 @@ class Colle(AbstractBaseColle):
 	# laisser le gestionnaire par défaut all_objects en première
 	# position (c'est lui qui est utilisé par Django comme gestionnaire
 	# de base).
-	all_objects = models.Manager()
+	all_objects = ColleManager()
 	objects = ColleConfirmeeManager()
 
 	@property

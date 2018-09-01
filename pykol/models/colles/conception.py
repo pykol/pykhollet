@@ -109,7 +109,7 @@ class Creneau(AbstractBaseColle):
 		colle_data = self.basecolle_fields()
 		colle_data['groupe'] = trinome
 
-		# Pour un TD, on prend la durée donnée par les horairess
+		# Pour un TD, on prend la durée donnée par les horaires
 		if self.mode == self.MODE_TD:
 			colle_data['duree'] = \
 					datetime.combine(datetime.min, self.fin) - \

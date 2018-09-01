@@ -218,7 +218,7 @@ class Groupe(AbstractBaseGroupe):
 		stocké dans le champ effectif_sts, on renvoie sa valeur.
 		"""
 		if self.etudiants.all():
-			return self.etudiants.count()
+			return self.etudiants.sur_ventilation_service(self.annee).count()
 		else:
 			return self.effectif_sts or 0
 

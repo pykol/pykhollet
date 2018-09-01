@@ -148,6 +148,24 @@ class User(AbstractUser):
 		except ObjectDoesNotExist:
 			return Classe.objects.none()
 
+class EtudiantQuerySet(models.QuerySet):
+	def sur_ventilation_service(self, annee):
+		"""
+		Filtre les étudiants présents sur les ventilations de service.
+		On considère qu'il s'agit des étudiants présents au 15 octobre
+		de l'année.
+		"""
+		quinze_octobre = annee.debut.replace(month=10, day=15)
+		return self.filter(models.Q(sortie__isnull=True) |
+				models.Q(sortie__gt=quinze_octobre))
+
+class EtudiantManager(UserManager):
+	def get_queryset(self):
+		return EtudiantQuerySet(self.model, using=self._db)
+
+	def sur_ventilation_service(self, *args, **kwargs):
+		return self.get_queryset().sur_ventilation_service(*args, **kwargs)
+
 class Etudiant(User):
 	"""
 	Étudiant inscrit dans l'établissement
@@ -165,6 +183,8 @@ class Etudiant(User):
 	numero_siecle = models.CharField(max_length=30,
 			verbose_name="Numéro interne SIECLE")
 	options = models.ManyToManyField('Matiere', through='OptionEtudiant')
+
+	objects = EtudiantManager()
 
 	class Meta:
 		verbose_name = "étudiant"

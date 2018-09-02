@@ -168,7 +168,7 @@ def creneaux(request, slug):
 @permission_required('pykol.direction')
 def creneau_list_direction(request):
 	"""Gestion de tous les créneaux de colle par la direction"""
-	creneaux_qs = Creneau.objects.order_by('jour', 'colleur', 'debut')
+	creneaux_qs = Creneau.objects.order_by('colleur', 'jour', 'debut')
 
 	if request.method == 'POST':
 		formset = CreneauFormSet(request.POST, queryset=creneaux_qs)

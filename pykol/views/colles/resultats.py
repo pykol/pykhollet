@@ -20,7 +20,8 @@
 Vues d'affichage des résultats de colles des étudiants.
 """
 
-from collections import defaultdict, OrderedDict
+from collections import defaultdict, OrderedDict, namedtuple
+from datetime import timedelta
 
 from django.core.exceptions import PermissionDenied
 from django.shortcuts import render, get_object_or_404
@@ -32,6 +33,7 @@ from pykol.models.base import Classe, Matiere, Etudiant
 from pykol.models.colles import Semaine, ColleNote, Colle
 from pykol.models.fields import Moyenne
 from pykol.lib.auth import professeur_dans
+from pykol.lib.sortedcollection import SortedCollection
 
 @login_required
 def classe_resultats(request, slug):
@@ -44,16 +46,51 @@ def classe_resultats(request, slug):
 	professeur), l'accès aux résultats est interdit.
 	"""
 
-	def getSemaine(colleNoteEtudiant):
-		""" renvoie la semaine d'un colleNote
-		TODO les langues """
+	SemaineTuple = namedtuple('SemaineTuple', ('debut', 'fin',
+		'numero'))
+
+	def semaine_to_tuple(semaine):
+		return SemaineTuple(debut=semaine.debut,
+				fin=semaine.fin,
+				numero=semaine.numero)
+
+	def getSemaine(colleNoteEtudiant, semaines):
+		"""
+		Renvoie l'élément de la liste semaines (SortedCollection
+		d'objets Semaine) dont les dates de début et de fin encadrent la
+		date de la ColleNote.
+
+		Si l'objet ColleNote fait référence à une colle qui a un
+		attribut semaine, on utilise cette semaine : on affiche ainsi le
+		résultat de la colle à la date où elle était initialement
+		prévue, peu importe si elle a été déplacée par la suite.
+
+		Sinon, on tente de trouver une semaine correspondante parmi les
+		semaines du colloscope. Si une telle semaine n'existe pas, on en
+		crée une fictive (non sauvée dans la base de données) et on
+		l'insère dans la liste triée semaines.
+		"""
 		if colleNoteEtudiant.colle.semaine:
-			semaineColle = colleNoteEtudiant.colle.semaine
-		else:
-			horaire = colleNoteEtudiant.horaire
-			for semaine in semaines:
-				if semaine.debut <= horaire.date() <= semaine.fin:
-					semaineColle = semaine
+			return semaine_to_tuple(colleNoteEtudiant.colle.semaine)
+
+		date_colle = colleNoteEtudiant.horaire.date()
+
+		try:
+			semaineColle = semaines.find_le(date_colle)
+			if semaineColle.fin <= date_colle:
+				return semaineColle
+		except:
+			pass
+
+		# Quand aucune semaine de colle n'a été trouvée, on en crée
+		# une fictive qui ne sera pas stockée dans la base de
+		# données.
+		debut_semaine = date_colle - timedelta(days=date_colle.weekday())
+		fin_semaine = debut_semaine + timedelta(days=6)
+		semaineColle = SemaineTuple(debut=debut_semaine, fin=fin_semaine,
+			numero="({0}-{1})".format(*debut_semaine.isocalendar()))
+		semaines.insert(semaineColle)
+
 		return semaineColle
 
 	def calculerRangs(etudiants, moyennesParEtudiant):
@@ -81,13 +118,16 @@ def classe_resultats(request, slug):
 		enseignement__classe = classe,
 		enseignement__service__professeur = request.user
 	)
-	semaines = Semaine.objects.filter(classe=classe,
-			debut__lte=timezone.localtime())
+	semaines = SortedCollection([
+		semaine_to_tuple(s) for s in Semaine.objects.filter(classe=classe,
+			debut__lte=timezone.localtime())],
+			key=lambda semaine: semaine.debut)
 
 	notesParEtudiantParMatiere = {}
 
 	for matiere in matieres:
-		etudiants = Etudiant.objects.filter(classe = classe, groupe__enseignement__matiere = matiere).order_by('last_name','first_name')
+		# etudiants = Etudiant.objects.filter(classe = classe, groupe__enseignement__matiere = matiere).order_by('last_name','first_name')
+		etudiants = Etudiant.objects.filter(classe = classe).order_by('last_name','first_name')
 
 		notesParEtudiant = OrderedDict()
 		moyennesParEtudiant = defaultdict(Moyenne)
@@ -100,7 +140,7 @@ def classe_resultats(request, slug):
 		)
 
 		for colleNoteEtudiant in colleNoteEtudiant_s:
-			semaineColle = getSemaine(colleNoteEtudiant)
+			semaineColle = getSemaine(colleNoteEtudiant, semaines)
 			notesParEtudiant[colleNoteEtudiant.eleve][semaineColle].append(colleNoteEtudiant.note)
 			moyennesParEtudiant[colleNoteEtudiant.eleve] += colleNoteEtudiant.note
 
@@ -122,6 +162,7 @@ def classe_resultats(request, slug):
 
 		# On remplace les dictionnaires des semaines par des listes pour faciliter
 		# l'affichage
+		semaines = list(semaines)
 		for etudiant in etudiants:
 			notesParEtudiant[etudiant] = [[moyennesParEtudiant[etudiant]],
 					[rangsParEtudiant[etudiant]]] + \

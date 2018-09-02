@@ -25,6 +25,11 @@
       <th>Heures théoriques</th>
       <td>{{ total_heures|heures }}</td>
     </tr>
+
+    <tr>
+      <th>Heures prévues aux colloscopes</td>
+      <td>{{ total_heures_colloscopes|heures }}</td>
+    </tr>
     {% endif %}
   </table>
 </section>
@@ -47,7 +52,7 @@
         {% for form in dotation_formset %}
         {% if form.errors %}
         <tr>
-          <td colspan="6">
+          <td colspan="3">
             La dotation suivante n'est pas valide.
           </td>
         </tr>
@@ -71,8 +76,14 @@
   <table>
     <thead>
       <tr>
-        <th>Classe</th>
-        <th>Matière</th>
+        <th rowspan="2">Classe</th>
+        <th rowspan="2">Matière</th>
+        <th colspan="2">Théorique</th>
+        <th colspan="2">Colloscopes</th>
+      </tr>
+      <tr>
+        <th>Heures</th>
+        <th>Total</th>
         <th>Heures</th>
         <th>Total</th>
       </tr>
@@ -89,6 +100,10 @@
         {% ifchanged classe %}
         <td rowspan="{{ dotation.matieres|length }}">{{ dotation.total_heures|heures }}</td>
         {% endifchanged %}
+        <td>{{ matiere.heures_colloscope|heures }}</td>
+        {% ifchanged classe %}
+        <td rowspan="{{ dotation.matieres|length }}">{{ dotation.total_heures_colloscope|heures }}</td>
+        {% endifchanged %}
       </tr>
       {% endfor %}
       {% endfor %}
@@ -97,6 +112,8 @@
       <tr>
         <th colspan="3">Total</th>
         <td>{{ total_heures|heures }}</td>
+        <td></td>
+        <td>{{ total_heures_colloscopes|heures }}</td>
       </tr>
     </tfoot>
   </table>

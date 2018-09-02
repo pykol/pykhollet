@@ -46,30 +46,42 @@ def annee_detail(request, pk):
 	else:
 		dotation_formset = DotationFormSet(instance=annee)
 
-	# Calcul des dotations théoriques pour les classes
+	# Calcul des dotations théoriques pour les classes et des heures
+	# prévues aux colloscopes
 	colles_ens = CollesEnseignement.objects.filter(
 			classe__annee=annee).order_by('classe__nom')
 	dotations = {}
 	total_heures = timedelta()
+	total_heures_colloscopes = timedelta()
+
 	for ligne in colles_ens:
 		classe = ligne.classe
 		dotation = dotations.setdefault(classe, {
 			'total_heures': timedelta(),
+			'total_heures_colloscope': timedelta(),
 			'matieres': []
 		})
 
 		heures = ligne.dotation()
+		heures_colloscope = ligne.colle_set.aggregate(Sum('duree'))['duree__sum'] \
+				or timedelta()
 		dotations[classe]['matieres'].append({
 			'matiere': ligne,
-			'heures': heures})
+			'heures': heures,
+			'heures_colloscope': heures_colloscope})
 		dotations[classe]['total_heures'] += heures
 		total_heures += heures
+		dotations[classe]['total_heures_colloscope'] += heures_colloscope
+		total_heures_colloscopes += heures_colloscope
+
+
 
 	return render(request, 'pykol/annee_detail.html', context={
 		'annee': annee,
 		'dotation_formset': dotation_formset,
 		'dotations': dotations,
 		'total_heures': total_heures,
+		'total_heures_colloscopes': total_heures_colloscopes,
 		})
 
 @login_required

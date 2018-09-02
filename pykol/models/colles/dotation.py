@@ -21,7 +21,8 @@ from datetime import timedelta
 from django.db import models
 from django.db.models import Q
 
-from pykol.models.base import Annee, Enseignement, Classe, Etudiant
+from pykol.models.base import Annee, Enseignement, Classe, Etudiant, \
+		Matiere
 from pykol.models import constantes
 from .colles import Colle
 
@@ -130,6 +131,10 @@ class CollesEnseignement(models.Model):
 		if self.nom:
 			return "{} - {}".format(self.classe, self.nom)
 		else:
+			matiere = Matiere.objects.filter(virtuelle=True,
+					filles__enseignement__in=self.enseignements.all()).first()
+			if matiere is not None:
+				return "{} - {}".format(self.classe, matiere)
 			return str(self.enseignements.first())
 
 class DotationClasse(models.Model):

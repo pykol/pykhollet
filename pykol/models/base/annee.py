@@ -233,3 +233,7 @@ class Vacances(Periode):
 
 	def __str__(self):
 		return self.nom
+
+	@property
+	def duree(self):
+		return self.fin - (max(self.debut, self.annee.debut))

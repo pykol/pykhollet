@@ -253,7 +253,12 @@ def import_odf(request, slug):
 					cells = iter_columns(ligne)
 
 					try:
-						id_creneau = int(tablecell_to_text(next(cells)))
+						# On ignore les lignes qui commencent par un
+						# numéro vide.
+						creneau_text = tablecell_to_text(next(cells)).strip()
+						if not creneau_text:
+							continue
+						id_creneau = int(creneau_text)
 						creneau = creneaux[id_creneau]
 					except:
 						import_erreurs.append(('creneau_invalide',
@@ -274,6 +279,10 @@ def import_odf(request, slug):
 
 					# Et on arrive aux semaines
 					for sem_num, sem_cell in enumerate(cells):
+						# Si la cellule est vide, on passe à la suivante
+						sem_text = tablecell_to_text(sem_cell).strip()
+						if not sem_text:
+							continue
 
 						try:
 							semaine = semaines[sem_num]
@@ -285,7 +294,7 @@ def import_odf(request, slug):
 							break
 
 						groupes_colles = [g.strip()
-								for g in tablecell_to_text(sem_cell).split(",")
+								for g in sem_text.split(",")
 								if g.strip()]
 
 						for num_groupe in groupes_colles:

@@ -763,13 +763,14 @@ class BEEImporter:
 				etudiant_data['ine'] = eleve.find('ID_NATIONAL').text
 
 			if etudiant_data.get('ine'):
-				self.etudiants[num_eleve], _ = Etudiant.objects.update_or_create(
-					ine=etudiant_data['ine'],
-					defaults=etudiant_data)
+				self.etudiants[num_eleve], _ = Etudiant.objects.filter(
+						Q(ine=etudiant_data['ine']) |
+						Q(numero_siecle=etudiant_data['numero_siecle'])
+					).update_or_create(defaults=etudiant_data)
 			else:
-				self.etudiants[num_eleve], _ = Etudiant.objects.update_or_create(
-					numero_siecle=num_eleve,
-					defaults=etudiant_data)
+				self.etudiants[num_eleve], _ = Etudiant.objects.filter(
+						numero_siecle=etudiant_data['numero_siecle']
+					).update_or_create(defaults=etudiant_data)
 
 		# Une fois que tous les étudiants ont été importés, on met à jour
 		# les compositions des classes
@@ -797,12 +798,23 @@ class BEEImporter:
 						option_et.find('CODE_MODALITE_ELECT').text)
 				matiere = self.matieres[option_et.find('CODE_MATIERE').text]
 
-				OptionEtudiant.objects.get_or_create(
-						etudiant=etudiant,
-						classe=etudiant.classe,
-						matiere=matiere,
-						rang_option=rang_option,
-						modalite_option=modalite)
+				# Les options obligatoires sont identifiées par leur
+				# rang.
+				if modalite == OptionEtudiant.MODALITE_OBLIGATOIRE:
+					OptionEtudiant.objects.update_or_create(
+							etudiant=etudiant,
+							classe=etudiant.classe,
+							rang_option=rang_option,
+							modalite_option=modalite,
+							defaults={'matiere': matiere})
+				else:
+					# On ajoute toutes les options facultatives
+					OptionEtudiant.objects.get_or_create(
+							etudiant=etudiant,
+							classe=etudiant.classe,
+							matiere=matiere,
+							rang_option=rang_option,
+							modalite_option=modalite)
 
 
 	def _dict_matieres(self):

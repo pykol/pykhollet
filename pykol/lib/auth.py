@@ -77,6 +77,10 @@ class PykolBackend(ModelBackend):
 							'droit__codename').order_by()
 			perms = {"%s.%s" % (ct, name) for ct, name in perms_qs}
 
+			# La direction possède le droit de voir le colloscope
+			if user_obj.has_perm('pykol.direction'):
+				perms.add('pykol.view_colloscope')
+
 			# Les professeurs et colleurs de la classe peuvent voir le
 			# colloscope sans permission explicite.
 			if professeur_dans(user_obj, obj):
@@ -130,8 +134,10 @@ class PykolBackend(ModelBackend):
 			# créneau de colle, avec éventuellement une restriction si
 			# la permission pykol.change_colloscope est limitée à sa
 			# propre matière.
+			# La direction peut toucher au colloscope.
 			if perm_colloscope(professeur=user_obj, matiere=obj.matiere,
-					classe=obj.classe):
+					classe=obj.classe) or \
+						user_obj.has_perm('pykol.direction'):
 				perms.update(('pykol.add_creneau',
 					'pykol.delete_creneau',
 					'pykol.change_creneau'))

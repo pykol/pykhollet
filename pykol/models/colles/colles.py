@@ -184,6 +184,10 @@ class Colle(AbstractBaseColle):
 		return self.details.colleur
 
 	def _update_duree(self):
+		# On laisse la durée par défaut pour le mode TD
+		if self.mode = Colle.MODE_TD:
+			return
+
 		if self.colles_ens.frequence == self.colles_ens.FREQUENCE_HEBDOMADAIRE:
 			self.duree = timedelta(hours=1)
 		else:

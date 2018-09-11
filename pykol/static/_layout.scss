@@ -1,10 +1,17 @@
 body {
-  min-height: 100vh;
-  /* La suite correspond au make-row de Bootstrap 4 mais sans les marges
-   * négatives, pour s'éviter un <div class="container"> inutile dans le
-   * code HTML. */
-  display: flex;
-  flex-wrap: nowrap;
+  @media screen {
+    min-height: 100vh;
+    /* La suite correspond au make-row de Bootstrap 4 mais sans les marges
+     * négatives, pour s'éviter un <div class="container"> inutile dans le
+     * code HTML. */
+    display: flex;
+    flex-wrap: nowrap;
+  }
+}
+
+@page {
+  size: A4 portrait;
+  margin: 1cm 1cm 1.5cm 1cm;
 }
 
 /* Barre de menu à gauche */
@@ -34,6 +41,10 @@ header {
       width: 100%;
       display: block;
     }
+  }
+
+  @media print {
+    display: none;
   }
 }
 
@@ -134,6 +145,12 @@ nav {
   background: $content-background;
   padding: 10px 20px 0;
   flex: 1;
+
+  @media print {
+    background-color: transparent;
+    color: black;
+    padding: 0;
+  }
 }
 
 footer {
@@ -141,6 +158,10 @@ footer {
   min-height: 24px;
   background: $footer-background;
   color: $footer-color;
+
+  @media print {
+    display: none;
+  }
 }
 
 @mixin x-panel {
@@ -150,6 +171,11 @@ footer {
   color: $x-panel-color;
   border: 1px solid $x-panel-border;
   margin-bottom: 10px;
+
+  @media print {
+    border-style: none;
+    padding: 0;
+  }
 }
 
 section {

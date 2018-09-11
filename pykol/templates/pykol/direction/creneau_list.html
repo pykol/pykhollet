@@ -31,45 +31,49 @@
     {% csrf_token %}
     {{ formset.management_form }}
     {{ formset.non_form_errors }}
-    <table class="formset form_direction_creneaux">
+    <table class="form_direction_creneaux">
+      {% with colspan=4 %}
       <thead>
         <tr>
-          <th>Classe</th>
           <th>Matière</th>
-          <th>Colleur</th>
           <th>Jour</th>
           <th>Horaire</th>
           <th>Salle</th>
-          <th>Supprimer ?</th>
         </tr>
         {% if form.non_field_errors %}
         <tr>
-          <td colspan="6">
+          <td colspan="{{ colspan }}">
           {{ form.non_field_errors }}
           </td>
         </tr>
         {% endif %}
       </thead>
       <tbody>
-        {% for form in formset %}
+        {% regroup formset by instance.colleur as colleur_list %}
+        {% for colleur, forms in colleur_list %}
+        {% ifchanged colleur %}
+        <tr>
+          <th colspan="{{ colspan }}"><h3>{{ colleur }}</h3></th>
+        </tr>
+        {% endifchanged %}
+        {% for form in forms %}
         {% if form.errors %}
         <tr>
-          <td colspan="6">
+          <td colspan="{{ colspan }}">
             Le créneau suivant n'est pas valide.
           </td>
         </tr>
         {% endif %}
         <tr>
-          <td>{{ form.classe }}{% if form.classe.errors %}<br>{{ form.classe.errors }}{% endif %}</td>
-          <td>{{ form.id }}{{ form.enseignement_dote }}{% if form.enseignement_dote.errors %}<br>{{ form.enseignement_dote.errors }}{% endif %}</td>
-          <td>{{ form.colleur }}{% if form.colleur.errors %}<br>{{ form.colleur.errors }}{% endif %}</td>
-          <td>{{ form.jour }}{% if form.jour.errors %}<br>{{ form.jour.errors }}{% endif %}</td>
-          <td class="creneau_horaire">{{ form.debut }} − {{ form.fin }}{% if form.debut.errors %}<br>{{ form.debut.errors }}{% endif %}</td>{% if form.fin.errors %}<br>{{ form.fin.errors }}{% endif %}</td>
-          <td>{{ form.salle }}{% if form.salle.errors %}<br>{{ form.salle.errors }}{% endif %}</td>
-          <td>{{ form.DELETE }}</td>
+          <td>{{ form.instance.enseignement }}</td>
+          <td>{{ form.instance.get_jour_display }}</td>
+          <td class="creneau_horaire">{{ form.instance.debut }} − {{ form.instance.fin }}</td>
+          <td>{{ form.id }}{{ form.salle }}{% if form.salle.errors %}<br>{{ form.salle.errors }}{% endif %}</td>
         </tr>
         {% endfor %}
+        {% endfor %}
       </tbody>
+    {% endwith %}
     </table>
     <p><input type="submit" value="Enregistrer les modifications"></p>
   </form>

@@ -262,6 +262,9 @@ CreneauSansClasseFormSet = modelformset_factory(Creneau,
 		fields = ('jour', 'debut', 'fin', 'salle', 'colleur',
 			))
 
+CreneauSalleFormSet = modelformset_factory(Creneau, can_delete=False,
+		extra=0, fields=('salle',))
+
 class TrinomeForm(forms.Form):
 	etudiant = forms.ModelChoiceField(required=True,
 			queryset=Etudiant.objects.none(),

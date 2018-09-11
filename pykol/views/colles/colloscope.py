@@ -27,7 +27,7 @@ from django.contrib import messages
 
 from pykol.models.base import Classe
 from pykol.models.colles import Creneau, Colle
-from pykol.forms.colloscope import CreneauFormSet, \
+from pykol.forms.colloscope import CreneauSalleFormSet, \
 		CreneauSansClasseFormSet, \
 		ColleForm, ColleSupprimerForm
 
@@ -168,16 +168,19 @@ def creneaux(request, slug):
 @permission_required('pykol.direction')
 def creneau_list_direction(request):
 	"""Gestion de tous les créneaux de colle par la direction"""
-	creneaux_qs = Creneau.objects.order_by('colleur', 'jour', 'debut')
+	# On trie par nom de colleur, puis par colleur pour départager les
+	# homonymes.
+	creneaux_qs = Creneau.objects.order_by('colleur__first_name',
+			'colleur', 'jour', 'debut')
 
 	if request.method == 'POST':
-		formset = CreneauFormSet(request.POST, queryset=creneaux_qs)
+		formset = CreneauSalleFormSet(request.POST, queryset=creneaux_qs)
 
 		if formset.is_valid():
 			formset.save()
 
 	else:
-		formset = CreneauFormSet(queryset=creneaux_qs)
+		formset = CreneauSalleFormSet(queryset=creneaux_qs)
 
 	return render(request, 'pykol/direction/creneau_list.html',
 			context={'formset': formset})

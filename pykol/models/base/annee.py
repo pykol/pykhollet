@@ -44,7 +44,7 @@ class Periode(models.Model):
 
 	@property
 	def duree(self):
-		return self.fin - self.debut
+		return self.fin - self.debut + timedelta(days=1)
 
 class AnneeManager(models.Manager):
 	"""
@@ -236,4 +236,4 @@ class Vacances(Periode):
 
 	@property
 	def duree(self):
-		return self.fin - (max(self.debut, self.annee.debut))
+		return self.fin - max(self.debut + timedelta(days=1), self.annee.debut)

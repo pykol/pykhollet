@@ -170,8 +170,8 @@ def creneau_list_direction(request):
 	"""Gestion de tous les créneaux de colle par la direction"""
 	# On trie par nom de colleur, puis par colleur pour départager les
 	# homonymes.
-	creneaux_qs = Creneau.objects.order_by('colleur__first_name',
-			'colleur', 'jour', 'debut')
+	creneaux_qs = Creneau.objects.order_by('colleur__last_name',
+			'colleur__first_name', 'colleur', 'jour', 'debut')
 
 	if request.method == 'POST':
 		formset = CreneauSalleFormSet(request.POST, queryset=creneaux_qs)

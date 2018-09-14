@@ -211,7 +211,7 @@ class ColleANoterListView(ColleListView):
 	"""
 	def get_queryset(self):
 		return super().get_queryset().filter(etat=Colle.ETAT_PREVUE,
-				colledetails__horaire__lte=timezone.localtime()
+				colledetails__horaire__lte=timezone.localtime(),
 				colledetails__actif=True)
 
 colle_a_noter_list = ColleANoterListView.as_view()

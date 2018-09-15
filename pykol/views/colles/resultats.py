@@ -117,7 +117,11 @@ def classe_resultats(request, slug):
 	matieres = Matiere.objects.filter(
 		enseignement__classe = classe,
 		enseignement__service__professeur = request.user
-	)
+	).union(Matiere.objects.filter(
+		enseignement__classe=classe,
+		enseignement__creneau__colleur=request.user
+	)).order_by('nom')
+
 	semaines = SortedCollection([
 		semaine_to_tuple(s) for s in Semaine.objects.filter(classe=classe,
 			debut__lte=timezone.localtime())],

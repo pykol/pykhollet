@@ -22,6 +22,7 @@ from collections import Counter
 from django import forms
 from django.forms import formset_factory, modelformset_factory, \
 		inlineformset_factory
+from django.db.models import Q
 
 from pykol.models.base import Matiere, Etudiant, Professeur, \
 		Enseignement, Annee
@@ -304,3 +305,19 @@ class ColloscopeImportForm(forms.Form):
 	colloscope_ods = forms.FileField(widget=forms.ClearableFileInput(
 		attrs={'accept': 'application/vnd.oasis.opendocument.spreadsheet'}))
 	supprimer = forms.BooleanField(required=False)
+
+
+class TrinomeDetailForm(forms.ModelForm):
+	def __init__(self, *args, **kwargs):
+		trinome = kwargs['instance']
+		etudiants = kwargs.pop('etudiants', None) or \
+				Etudiant.objects.filter(Q(classe=trinome.classe) |
+						Q(trinome=trinome))
+		super().__init__(*args, **kwargs)
+		self.fields['etudiants'].queryset = etudiants.order_by('classe',
+				'last_name', 'first_name')
+
+	class Meta:
+		model = Trinome
+		fields = ('nom', 'periode', 'etudiants',)
+		widgets = {'etudiants': forms.CheckboxSelectMultiple}

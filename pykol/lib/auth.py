@@ -20,41 +20,40 @@
 
 from collections import namedtuple
 
-from django.db.models import F
+from django.db.models import F, Q
 from django.contrib.auth.backends import ModelBackend
 from django.contrib.auth.decorators import user_passes_test
 
 from pykol.models.base import Classe
 from pykol.models.colles import ColloscopePermission, Colle, \
-		ColleNote, Creneau
+		ColleNote, Creneau, Trinome
 
-def perm_colloscope(professeur, classe, matiere):
+def perm_colloscope_qs(professeur, classe, matiere=None):
+	"""
+	Requête de base pour chercher toutes les permissions sur le
+	colloscope de la classe pour ce professeur.
+	"""
+	return ColloscopePermission.objects.filter(
+			user=professeur,
+			classe=classe,
+			droit__content_type__app_label='pykol',
+			).filter(
+			Q(matiere_seulement=False) |
+			Q(
+				matiere_seulement=True,
+				classe__enseignements__professeurs=F('user'),
+				classe__enseignements__matiere=matiere
+			)
+		)
+
+def perm_colloscope(professeur, classe, matiere=None):
 	"""
 	Fonction qui renvoie True si et seulement si le professeur possède
 	la permission pykol.change_colloscope dans la classe donnée, pour la
 	matière donnée.
 	"""
-	# Requête de base pour chercher la permission
-	# pykol.change_colloscope sur la classe pour ce professeur
-	colloscope_base_qs = ColloscopePermission.objects.filter(
-			user=professeur,
-			classe=classe,
-			droit__content_type__app_label='pykol',
-			droit__codename='change_colloscope')
-
-	# Requête pour tester si le droit pykol.change_colloscope
-	# est applicable quelle que soit la matière
-	colloscope_global_qs = colloscope_base_qs.filter(
-			matiere_seulement=False)
-
-	# Requête pour tester si le droit pykol.change_colloscope
-	# est applicable à une matière enseignée par le professeur
-	colloscope_matiere_qs = colloscope_base_qs.filter(
-			matiere_seulement=True,
-			classe__enseignements__professeurs=F('user'),
-			classe__enseignements__matiere=matiere)
-
-	return colloscope_global_qs.exists() or colloscope_matiere_qs.exists()
+	return perm_colloscope_qs(professeur, classe, matiere).filter(
+			droit__codename='change_colloscope').exists()
 
 class PykolBackend(ModelBackend):
 	def get_user_permissions(self, user_obj, obj=None):
@@ -72,9 +71,9 @@ class PykolBackend(ModelBackend):
 
 		# Permissions relatives au colloscope sur une classe complète
 		if isinstance(obj, Classe):
-			perms_qs = ColloscopePermission.objects.filter(user=user_obj,
+			perms_qs = perm_colloscope_qs(professeur=user_obj,
 					classe=obj).values_list('droit__content_type__app_label',
-							'droit__codename').order_by()
+							'droit__codename')
 			perms = {"%s.%s" % (ct, name) for ct, name in perms_qs}
 
 			# La direction possède le droit de voir le colloscope
@@ -84,13 +83,17 @@ class PykolBackend(ModelBackend):
 			# Les professeurs et colleurs de la classe peuvent voir le
 			# colloscope sans permission explicite.
 			if professeur_dans(user_obj, obj):
-				perms.add('pykol.view_colloscope')
+				perms.update(('pykol.view_colloscope',
+					'pykol.view_resultats'))
 
 			# La gestion du colloscope donne le droit de le voir et
-			# éventuellement d'ajouter des créneaux
-			if 'pykol.change_colloscope' in perms:
+			# éventuellement d'ajouter des créneaux.
+			if perms_qs.filter(matiere_seulement=False,
+					droit__codename='change_colloscope'):
 				perms.update(('pykol.view_colloscope',
-					'pykol.add_creneau', 'pykol.add_colle'))
+					'pykol.add_creneau', 'pykol.add_colle',
+					'pykol.change_trinome', 'pykol.change_semaine',
+					'pykol.change_creneau'))
 
 			return perms
 
@@ -142,6 +145,15 @@ class PykolBackend(ModelBackend):
 					'pykol.delete_creneau',
 					'pykol.change_creneau'))
 
+			return perms
+
+		# Permissions sur les groupes de colles
+		if isinstance(obj, Trinome):
+			perms = set()
+			if perm_colloscope(professeur=user_obj, matiere=None,
+					classe=obj.classe):
+				perms.update(('pykol.change_trinome',
+					'pykol.delete_trinome', 'pykol.add_trinome'))
 			return perms
 
 		return set()

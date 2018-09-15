@@ -85,6 +85,11 @@ releves_urlpatterns = [
 	path('<int:pk>/payer/', views.direction.releveligne_payer, name='releveligne_payer'),
 ]
 
+trinomes_urlpatterns = [
+	path('<int:pk>/', views.colloscope.trinome_detail, name='trinome_detail'),
+	path('<int:pk>/supprimer', views.colloscope.trinome_supprimer, name='trinome_supprimer'),
+]
+
 urlpatterns = [
 	path('', views.home, name='home'),
 	path('about/', views.mentions_legales, name='mentions_legales'),
@@ -96,4 +101,5 @@ urlpatterns = [
 	path('classes/', include(classes_urlpatterns)),
 	path('etudiant/', include(etudiants_urlpatterns)),
 	path('releves/', include(releves_urlpatterns)),
+	path('trinomes/', include(trinomes_urlpatterns)),
 ]

@@ -16,6 +16,8 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+from collections import namedtuple
+
 from django.views import generic
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import IntegerField, Func
@@ -49,6 +51,11 @@ class MaybeCast(Func):
 		return self.as_sql(compiler, connection,
 				template="%(function)s(REGEXP_SUBSTR((%(expression)s), '^[0-9]+') AS %(db_type)s)")
 
+ClassePerm = namedtuple('ClassePerm',
+		('view_resultats', 'change_colloscope', 'add_colle',
+		'change_trinome', 'change_semaine', 'change_creneau',
+		'change_roulement'))
+
 class ClasseDetailView(LoginRequiredMixin, generic.DetailView):
 	model = Classe
 
@@ -57,9 +64,12 @@ class ClasseDetailView(LoginRequiredMixin, generic.DetailView):
 		classe = self.get_object()
 		context['etudiant_list'] = classe.etudiant_set.order_by(
 				'last_name', 'first_name')
-		context['perm_change_colloscope'] = self.request.user.has_perm(
-				'pykol.change_colloscope',
-				classe)
+
+		classe_perm = ClassePerm._make([
+			self.request.user.has_perm('pykol.{}'.format(f), classe)
+			for f in ClassePerm._fields])
+		context['classe_perm'] = classe_perm
+		context['gestion_colloscope'] = any(classe_perm)
 
 		periodes = {}
 		qs = classe.trinomes.annotate(

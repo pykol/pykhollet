@@ -3,38 +3,47 @@
 <h2>Détail de la classe {{ classe.nom }}</h2>
 
 <section>
-  {% if perm_change_colloscope %}
+  {% if gestion_colloscope %}
   <h3>Gestion du colloscope</h3>
+  {% else %}
+  <h3>Colloscope</h3>
+  {% endif %}
   <ul>
+    {% if classe_perm.change_semaine %}
     <li><a href="{% url 'colloscope_semaines' classe.slug %}">Gestion des
         semaines de colles</a></li>
+    {% endif %}
+    {% if classe_perm.change_trinome %}
     <li><a href="{% url 'colloscope_trinomes' classe.slug %}">Gestion des
         groupes de colles</a></li>
+    {% endif %}
+    {% if classe_perm.change_creneau %}
     <li><a href="{% url 'colloscope_creneaux' classe.slug %}">Gestion des
         créneaux de colles</a></li>
+    {% endif %}
+    {% if classe_perm.change_roulement %}
     <li><a href="{% url 'roulement_creer' classe.slug %}">Enchainement des
         colles</a>
       {% for roulement in classe.roulement_set.all %}
       (<a href="{% url 'roulement_editer' roulement.pk %}">{{ roulement.pk }}</a>)
       {% endfor %}
     </li>
+    {% endif %}
     <li><a href="{% url 'colloscope' classe.slug %}">Colloscope</a></li>
+    {% if classe_perm.add_colle %}
     <li><a href="{% url 'colle_creer' classe.slug %}">Créer une colle</a></li>
+    {% endif %}
   </ul>
-  {% else %}
-  <h3>Colloscope</h3>
-  <ul>
-    <li><a href="{% url 'colloscope' classe.slug %}">Colloscope</a></li>
-  </ul>
-  {% endif %}
 </section>
 
+{% if classe_perm.view_resultats %}
 <section>
   <h3>Notes de colles</h3>
   <ul>
     <li><a href="{% url 'classe_colle_resultats' classe.slug %}">Notes de la classe</a></li>
   </ul>
 </section>
+{% endif %}
 
 {% if periodes %}
 <section>
@@ -50,10 +59,17 @@
            title="Envoyer un e-mail au groupe {{ trinome.nom }}"><i class="far fa-envelope"></i></a>
       </span>
       {% endif %}
+      {% if classe_perm.change_trinome %}
+      <span class="trinome-detail">
+        <a href="{% url 'trinome_detail' trinome.pk %}"
+           title="Modifier le groupe"><i class="far fa-edit"></i></a>
+      </span>
+      {% endif %}
       {% endwith %}
       <ul>
         {% for etudiant in trinome.etudiants.all %}
-        <li><a href="{{ etudiant.get_absolute_url }}">{{ etudiant }}</a></li>
+        <li><a href="{{ etudiant.get_absolute_url }}">{{ etudiant }}{% if etudiant.classe != classe %}
+            ({{ etudiant.classe }}){% endif %}</a></li>
         {% endfor %}
       </ul>
     </li>

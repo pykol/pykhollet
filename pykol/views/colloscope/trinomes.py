@@ -24,10 +24,11 @@ from django.db import transaction
 from django.core.exceptions import PermissionDenied
 from django.forms import formset_factory
 from django.contrib import messages
+from django.views.decorators.http import require_POST
 
-from pykol.models.base import Classe
+from pykol.models.base import Classe, Etudiant, Annee
 from pykol.models.colles import Trinome
-from pykol.forms.colloscope import TrinomeForm
+from pykol.forms.colloscope import TrinomeForm, TrinomeDetailForm
 
 @login_required
 def trinomes(request, slug):
@@ -95,12 +96,42 @@ def trinomes(request, slug):
 				'classe': classe,})
 
 @login_required
-def create_trinome(request, slug):
-	classe = get_object_or_404(Classe, slug=slug)
-	if not request.user.has_perm('pykol.change_colloscope', classe):
+def trinome_detail(request, pk):
+	trinome = get_object_or_404(Trinome, pk=pk)
+	if not request.user.has_perm('pykol.change_trinome', trinome):
 		raise PermissionDenied
 
-	# TODO vue à implémenter
+	context = {'trinome': trinome}
 
-	return render(request, 'pykol/base.html')
+	context['tous_etudiants'] = 'tous_etudiants' in request.GET
+	if context['tous_etudiants']:
+		etudiants_qs = Etudiant.objects.filter(classe__annee=Annee.objects.get_actuelle())
+	else:
+		etudiants_qs = None
 
+	if request.method == 'POST':
+		trinome_form = TrinomeDetailForm(request.POST, instance=trinome,
+				prefix='trinome', etudiants=etudiants_qs)
+		if trinome_form.is_valid():
+			trinome_form.save()
+			return redirect(trinome.classe)
+	else:
+		trinome_form = TrinomeDetailForm(instance=trinome,
+				prefix='trinome', etudiants=etudiants_qs)
+
+	context['trinome_form'] = trinome_form
+
+	return render(request, 'pykol/colloscope/trinome_detail.html',
+			context=context)
+
+@login_required
+@require_POST
+def trinome_supprimer(request, pk):
+	trinome = get_object_or_404(Trinome, pk=pk)
+	classe = trinome.classe
+	if not request.user.has_perm('pykol.delete_trinome', trinome):
+		raise PermissionDenied
+
+	trinome.delete()
+
+	return redirect(classe)

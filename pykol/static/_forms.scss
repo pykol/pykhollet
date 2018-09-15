@@ -146,7 +146,9 @@ fieldset {
   }
 }
 
-.form_choix_etudiants ul#id_etudiants, .form_radio_ligne ul {
+.form_choix_etudiants ul#id_etudiants,
+.form_change_trinome ul#id_trinome-etudiants,
+.form_radio_ligne ul {
   display: flex;
   flex-wrap: wrap;
 

@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 
+import re
+
 from django import forms
 from django.core import validators
 from django.core.exceptions import ValidationError
@@ -14,7 +16,9 @@ class MaxLengthValidator(validators.MaxLengthValidator):
 
 class CommaSeparatedCharField(forms.Field):
 	def __init__(self, dedup=True, max_length=None, min_length=None, *args, **kwargs):
-		self.dedup, self.max_length, self.min_length = dedup, max_length, min_length
+		self.dedup = dedup
+		self.max_length = max_length
+		self.min_length = min_length
 		super(CommaSeparatedCharField, self).__init__(*args, **kwargs)
 		if min_length is not None:
 			self.validators.append(MinLengthValidator(min_length))
@@ -25,7 +29,7 @@ class CommaSeparatedCharField(forms.Field):
 		if value in validators.EMPTY_VALUES:
 			return []
 
-		value = [item.strip() for item in value.split(',') if item.strip()]
+		value = [item.strip() for item in re.split(r'[,;]+', value) if item.strip()]
 		if self.dedup:
 			value = list(set(value))
 

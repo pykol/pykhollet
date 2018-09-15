@@ -312,7 +312,7 @@ class TrinomeDetailForm(forms.ModelForm):
 		trinome = kwargs['instance']
 		etudiants = kwargs.pop('etudiants', None) or \
 				Etudiant.objects.filter(Q(classe=trinome.classe) |
-						Q(trinome=trinome))
+						Q(trinome=trinome)).distinct()
 		super().__init__(*args, **kwargs)
 		self.fields['etudiants'].queryset = etudiants.order_by('classe',
 				'last_name', 'first_name')

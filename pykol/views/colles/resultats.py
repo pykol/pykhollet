@@ -77,7 +77,7 @@ def classe_resultats(request, slug):
 
 		try:
 			semaineColle = semaines.find_le(date_colle)
-			if semaineColle.fin <= date_colle:
+			if semaineColle.fin >= date_colle:
 				return semaineColle
 		except:
 			pass

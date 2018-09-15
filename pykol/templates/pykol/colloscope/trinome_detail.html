@@ -1,0 +1,39 @@
+{% extends 'pykol/base.html' %}
+{% block content %}
+<h2>Modification du groupe de colle {{ trinome }}
+  <small>− {{ trinome.classe }}</small></h2>
+
+<form method="post" action="{% url 'trinome_supprimer' trinome.pk %}"
+      id="supprimer_trinome">{% csrf_token %}</form>
+<form method="post" action="" class="form_change_trinome">
+<section>
+  {% csrf_token %}
+  <table>
+    <tr>
+      <th>{{ trinome_form.nom.label_tag }}</th>
+      <td>{{ trinome_form.nom }}</td>
+    </tr>
+    <tr>
+      <th>{{ trinome_form.periode.label_tag }}</th>
+      <td>{{ trinome_form.periode }}</td>
+    </tr>
+  </table>
+  <p><input type="submit" value="Enregistrer les modifications">
+  <p><input type="submit" class="btn btn-danger" form="supprimer_trinome" value="Supprimer le groupe"></p>
+</section>
+
+<section>
+  <h3>Étudiants</h3>
+  {% if tous_etudiants %}
+  <p><a href=".">Masquer les étudiants des autres classes</a></p>
+  {% else %}
+  <p><a href="?tous_etudiants">Afficher les étudiants de toutes les
+    classes</a></p>
+  {% endif %}
+
+  {{ trinome_form.etudiants }}
+
+  <p><input type="submit" value="Enregistrer les modifications">
+</section>
+</form>
+{% endblock %}

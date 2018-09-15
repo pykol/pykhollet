@@ -54,6 +54,34 @@ def classe_resultats(request, slug):
 				fin=semaine.fin,
 				numero=semaine.numero)
 
+	def meilleure_semaine(date, semaines):
+		"""
+		Renvoie l'élément de la liste semaines (SortedCollection
+		d'objets Semaine) dont les dates de début et de fin encadrent la
+		date donnée en paramètre.
+
+		Si une telle semaine n'existe pas, on en crée une fictive (non
+		sauvée dans la base de données) et on l'insère dans la liste
+		triée semaines.
+		"""
+		try:
+			semaineColle = semaines.find_le(date)
+			if semaineColle.fin >= date:
+				return semaineColle
+		except:
+			pass
+
+		# Quand aucune semaine de colle n'a été trouvée, on en crée
+		# une fictive qui ne sera pas stockée dans la base de
+		# données.
+		debut_semaine = date - timedelta(days=date.weekday())
+		fin_semaine = debut_semaine + timedelta(days=6)
+		semaineColle = SemaineTuple(debut=debut_semaine, fin=fin_semaine,
+			numero="({0}-{1})".format(*debut_semaine.isocalendar()))
+		semaines.insert(semaineColle)
+
+		return semaineColle
+
 	def getSemaine(colleNoteEtudiant, semaines):
 		"""
 		Renvoie l'élément de la liste semaines (SortedCollection
@@ -72,26 +100,9 @@ def classe_resultats(request, slug):
 		"""
 		if colleNoteEtudiant.colle.semaine:
 			return semaine_to_tuple(colleNoteEtudiant.colle.semaine)
-
-		date_colle = colleNoteEtudiant.horaire.date()
-
-		try:
-			semaineColle = semaines.find_le(date_colle)
-			if semaineColle.fin >= date_colle:
-				return semaineColle
-		except:
-			pass
-
-		# Quand aucune semaine de colle n'a été trouvée, on en crée
-		# une fictive qui ne sera pas stockée dans la base de
-		# données.
-		debut_semaine = date_colle - timedelta(days=date_colle.weekday())
-		fin_semaine = debut_semaine + timedelta(days=6)
-		semaineColle = SemaineTuple(debut=debut_semaine, fin=fin_semaine,
-			numero="({0}-{1})".format(*debut_semaine.isocalendar()))
-		semaines.insert(semaineColle)
-
-		return semaineColle
+		else:
+			return meilleure_semaine(colleNoteEtudiant.horaire.date(),
+				semaines)
 
 	def calculerRangs(etudiants, moyennesParEtudiant):
 		rangParEtudiant = defaultdict(lambda: '')
@@ -161,7 +172,11 @@ def classe_resultats(request, slug):
 
 		for colle in colles:
 			for eleve in colle.details.eleves.all():
-				notesParEtudiant[eleve][colle.semaine].append(
+				if colle.semaine:
+					semaine = semaine_to_tuple(colle.semaine)
+				else:
+					semaine = meilleure_semaine(colle.details.horaire.date(), semaines)
+				notesParEtudiant[eleve][semaine].append(
 					mark_safe('<i class="far fa-hourglass"></i>'))
 
 		# On remplace les dictionnaires des semaines par des listes pour faciliter

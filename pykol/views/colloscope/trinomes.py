@@ -114,6 +114,7 @@ def trinome_detail(request, pk):
 				prefix='trinome', etudiants=etudiants_qs)
 		if trinome_form.is_valid():
 			trinome_form.save()
+			trinome.update_colles()
 			return redirect(trinome.classe)
 	else:
 		trinome_form = TrinomeDetailForm(instance=trinome,

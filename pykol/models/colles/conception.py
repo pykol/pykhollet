@@ -122,6 +122,11 @@ class Trinome(AbstractBaseGroupe):
 	def save(self, *args, **kwargs):
 		self.annee = self.classe.annee
 		super().save(*args, **kwargs)
+		self.update_colles()
+
+	def update_colles(self):
+		Colle.objects.filter(groupe=self, etat__in=(
+			Colle.ETAT_PREVUE, Colle.ETAT_BROUILLON)).synchro_trinome()
 
 	class Meta:
 		unique_together = ('annee', 'classe', 'periode', 'nom')

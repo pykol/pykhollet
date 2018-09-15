@@ -117,6 +117,14 @@ class ColleQuerySet(models.QuerySet):
 					salle=colle.creneau.salle,
 					colleur=colle.creneau.colleur)
 
+	def synchro_trinome(self):
+		"""
+		Mise à jour des colles de ce QuerySet pour répercuter les
+		modifications sur le trinome de colle
+		"""
+		for colle in self.filter(groupe__isnull=False):
+			colle.ajout_details(etudiants=colle.groupe.etudiants.all())
+
 class ColleManager(models.Manager):
 	def get_queryset(self):
 		return ColleQuerySet(self.model, using=self._db)
@@ -126,7 +134,10 @@ class ColleManager(models.Manager):
 				**kwargs)
 
 	def synchro_creneau(self):
-		return self.get_queryset().synchro_creneau(self)
+		return self.get_queryset().synchro_creneau()
+
+	def synchro_trinome(self):
+		return self.get_queryset().synchro_trinome()
 
 class ColleConfirmeeManager(ColleManager):
 	"""

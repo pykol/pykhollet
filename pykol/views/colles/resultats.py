@@ -28,6 +28,14 @@ from django.shortcuts import render, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.utils import timezone
 from django.utils.safestring import mark_safe
+from django.http import HttpResponse
+
+from odf.opendocument import OpenDocumentSpreadsheet, load
+from odf.table import Table, TableColumn, TableRow, TableCell, \
+		CoveredTableCell, TableHeaderRows
+from odf.style import Style, TableColumnProperties, TableRowProperties, \
+        TextProperties, ParagraphProperties
+from odf.text import P
 
 from pykol.models.base import Classe, Matiere, Etudiant
 from pykol.models.colles import Semaine, ColleNote, Colle
@@ -35,19 +43,15 @@ from pykol.models.fields import Moyenne
 from pykol.lib.auth import professeur_dans
 from pykol.lib.sortedcollection import SortedCollection
 
-@login_required
-def classe_resultats(request, slug):
-	"""
-	Affichage du tableau des résultats de colle pour la classe donnée
-	Cette vue affiche les résultats de la classe uniquement pour les
-	colles dans une matière enseignée dans la classe par le professeur
-	actuellement connecté. Dans tous les autres cas (si le professeur
-	n'enseigne pas dans la classe, si l'utilisateur n'est pas un
-	professeur), l'accès aux résultats est interdit.
-	"""
+SemaineTuple = namedtuple('SemaineTuple', ('debut', 'fin',
+	'numero'))
 
-	SemaineTuple = namedtuple('SemaineTuple', ('debut', 'fin',
-		'numero'))
+def tableau_resultats(classe, matieres):
+	"""
+	Création du tableau des résultats de colles pour la classe donnée
+	Cette vue affiche les résultats de la classe uniquement pour les
+	colles dans les matières données en paramètres.
+	"""
 
 	def semaine_to_tuple(semaine):
 		return SemaineTuple(debut=semaine.debut,
@@ -120,19 +124,6 @@ def classe_resultats(request, slug):
 				rangParEtudiant[etudiant] = rangCourant
 		return rangParEtudiant
 
-	classe = get_object_or_404(Classe, slug=slug)
-	# L'accès n'est autorisé qu'aux professeurs de la classe
-	if not professeur_dans(request.user, classe):
-		raise PermissionDenied
-
-	matieres = Matiere.objects.filter(
-		enseignement__classe = classe,
-		enseignement__service__professeur = request.user
-	).union(Matiere.objects.filter(
-		enseignement__classe=classe,
-		enseignement__creneau__colleur=request.user
-	)).order_by('nom')
-
 	semaines = SortedCollection([
 		semaine_to_tuple(s) for s in Semaine.objects.filter(classe=classe,
 			debut__lte=timezone.localtime())],
@@ -190,9 +181,73 @@ def classe_resultats(request, slug):
 
 		notesParEtudiantParMatiere[matiere] = notesParEtudiant
 
-	context = {
-		'matieres':notesParEtudiantParMatiere,
-		'semaines':semaines,
-	}
+	return {'matieres': notesParEtudiantParMatiere,
+			'semaines': semaines}
 
-	return render(request, 'pykol/colles/classe_resultats.html', context=context)
+def classe_resultats_html(request, resultats):
+	return render(request, 'pykol/colles/classe_resultats.html',
+			context=resultats)
+
+def classe_resultats_odf(request, resultats):
+	response = HttpResponse(content_type='application/vnd.oasis.opendocument.spreadsheet')
+	response['Content-Disposition'] = 'attachment; filename="resultats_{}.ods"'.format(resultats['classe'])
+
+	ods = OpenDocumentSpreadsheet()
+
+	for matiere, etudiants in resultats['matieres'].items():
+		table = Table(name="{} - {}".format(resultats['classe'], matiere),
+				parent=ods.spreadsheet)
+
+		# Création des colonnes
+		table.addElement(TableColumn()) # Étudiant
+		table.addElement(TableColumn()) # Moyenne
+		table.addElement(TableColumn()) # Rang
+		for _ in range(len(resultats['semaines'])):
+			table.addElement(TableColumn())
+
+		# Ligne d'en-tête
+		th = TableHeaderRows(parent=table)
+		tr = TableRow(parent=th)
+		P(parent=TableCell(parent=tr, valuetype='string'), text='Étudiant')
+		P(parent=TableCell(parent=tr, valuetype='string'), text='Moyenne')
+		P(parent=TableCell(parent=tr, valuetype='string'), text='Rang')
+		for semaine in resultats['semaines']:
+			P(parent=TableCell(parent=tr, valuetype='string'),
+				text=semaine.numero)
+
+		# Ligne pour chaque étudiant
+		for etudiant, notes in etudiants.items():
+			tr = TableRow(parent=table)
+			P(parent=TableCell(parent=tr, valuetype='string'), text=str(etudiant))
+			for note in notes:
+				if note:
+					P(parent=TableCell(parent=tr, valuetype='float',
+						value=note[0]), text=str(note[0]))
+				else:
+					TableCell(parent=tr)
+
+	ods.write(response)
+	return response
+
+@login_required
+def classe_resultats(request, slug):
+	classe = get_object_or_404(Classe, slug=slug)
+	# L'accès n'est autorisé qu'aux professeurs de la classe
+	if not request.user.has_perm('pykol.view_resultats', classe):
+		raise PermissionDenied
+
+	matieres = Matiere.objects.filter(
+		enseignement__classe = classe,
+		enseignement__service__professeur=request.user
+	).union(Matiere.objects.filter(
+		enseignement__classe=classe,
+		enseignement__creneau__colleur=request.user
+	)).order_by('nom')
+
+	resultats = tableau_resultats(classe, matieres)
+	resultats['classe'] = classe
+
+	if request.GET.get('format', 'html') == 'odf':
+		return classe_resultats_odf(request, resultats)
+	else:
+		return classe_resultats_html(request, resultats)

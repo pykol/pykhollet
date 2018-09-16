@@ -1,7 +1,9 @@
 ﻿{% extends "pykol/base.html" %}
 {% block content %}
 {% for matiere, etudiants in matieres.items %}
-<h2>Notes des étudiants en {{matiere}}</h2>
+<h2>Notes des étudiants en {{matiere}}
+  <small><a href="?format=odf"><i class="fa fa-download"></i></a><small>
+</h2>
 <table>
   <tr>
     <th> étudiant </th>

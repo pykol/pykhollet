@@ -27,7 +27,7 @@ from django.http import HttpResponse
 
 from odf.opendocument import OpenDocumentSpreadsheet, load
 from odf.table import Table, TableColumn, TableRow, TableCell, \
-		CoveredTableCell
+		CoveredTableCell, TableHeaderRows
 from odf.style import Style, TableColumnProperties, TableRowProperties, \
         TextProperties, ParagraphProperties
 from odf.text import P
@@ -132,8 +132,10 @@ def colloscope_odf(request, classe):
 	for _ in semaines:
 		table.addElement(TableColumn(stylename=style_col_semaine))
 
+	# Container pour les lignes d'en-tête
+	th = TableHeaderRows(parent=table)
 	# Ligne d'en-tête avec les semestres au-dessus des semaines
-	tr = TableRow(parent=table)
+	tr = TableRow(parent=th)
 	for entete in entetes_fixes:
 		P(parent=TableCell(parent=tr, valuetype='string',
 			numberrowsspanned=2, numbercolumnsspanned=1,
@@ -161,7 +163,7 @@ def colloscope_odf(request, classe):
 			CoveredTableCell(parent=tr,
 					numbercolumnsrepeated=nb_semaines[periode_id] - 1)
 
-	tr = TableRow(parent=table)
+	tr = TableRow(parent=th)
 	# Ligne d'en-tête avec seulement les semaines
 	# On doit placer des cellules vides pour les case d'en-tête situées
 	# avant les semaines

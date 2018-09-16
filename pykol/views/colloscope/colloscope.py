@@ -26,7 +26,8 @@ from django.core.exceptions import PermissionDenied
 from django.http import HttpResponse
 
 from odf.opendocument import OpenDocumentSpreadsheet, load
-from odf.table import Table, TableColumn, TableRow, TableCell
+from odf.table import Table, TableColumn, TableRow, TableCell, \
+		CoveredTableCell
 from odf.style import Style, TableColumnProperties, TableRowProperties, \
         TextProperties, ParagraphProperties
 from odf.text import P
@@ -157,14 +158,14 @@ def colloscope_odf(request, classe):
 				numbercolumnsspanned=nb_semaines[periode_id],
 				numberrowsspanned=1,
 				stylename=style_entete), text=periode_nom.capitalize())
-			TableCell(parent=tr,
+			CoveredTableCell(parent=tr,
 					numbercolumnsrepeated=nb_semaines[periode_id] - 1)
 
 	tr = TableRow(parent=table)
 	# Ligne d'en-tête avec seulement les semaines
 	# On doit placer des cellules vides pour les case d'en-tête situées
 	# avant les semaines
-	TableCell(parent=tr, numbercolumnsrepeated=len(entetes_fixes))
+	CoveredTableCell(parent=tr, numbercolumnsrepeated=len(entetes_fixes))
 	# Puis on ajoute les semaines
 	for semaine in semaines:
 		P(parent=TableCell(parent=tr, valuetype='string',

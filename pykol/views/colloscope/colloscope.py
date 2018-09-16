@@ -113,22 +113,31 @@ def colloscope_odf(request, classe):
 	style_entete = Style(parent=ods.automaticstyles,
 			name='cell_entete', family='table-cell')
 	TextProperties(parent=style_entete, fontweight='bold')
+	style_col_semaine = Style(parent=ods.automaticstyles,
+			name='col_semaine', family='table-column')
+	TableColumnProperties(parent=style_col_semaine, columnwidth='1cm')
+	style_col_matiere = Style(parent=ods.automaticstyles,
+			name='col_matiere', family='table-column')
+	TableColumnProperties(parent=style_col_matiere, columnwidth='5cm')
+	style_col_colleur = Style(parent=ods.automaticstyles,
+			name='col_colleur', family='table-column')
+	TableColumnProperties(parent=style_col_colleur, columnwidth='5cm')
+	style_col_salle = Style(parent=ods.automaticstyles,
+			name='col_salle', family='table-column')
+	TableColumnProperties(parent=style_col_salle, columnwidth='2cm')
 
 	table = Table(name=str(classe), parent=ods.spreadsheet)
 
 	# Ajout des colonnes d'en-tête fixes
 	entetes_fixes = ("ID", "Matière", "Colleur", "Jour", "Horaire", "Salle")
-	table.addElement(TableColumn()) # ID
-	table.addElement(TableColumn()) # Matière
-	table.addElement(TableColumn()) # Colleur
+	table.addElement(TableColumn(stylename=style_col_semaine)) # ID
+	table.addElement(TableColumn(stylename=style_col_matiere)) # Matière
+	table.addElement(TableColumn(stylename=style_col_colleur)) # Colleur
 	table.addElement(TableColumn()) # Jour
 	table.addElement(TableColumn()) # Horaire
-	table.addElement(TableColumn()) # Salle
+	table.addElement(TableColumn(stylename=style_col_salle)) # Salle
 
 	# Ajout des colonnes d'en-tête des semaines
-	style_col_semaine = Style(parent=ods.automaticstyles,
-			name='col_semaine', family='table-column')
-	TableColumnProperties(parent=style_col_semaine, columnwidth='1cm')
 	for _ in semaines:
 		table.addElement(TableColumn(stylename=style_col_semaine))
 
@@ -176,22 +185,26 @@ def colloscope_odf(request, classe):
 	# Colles par créneau
 	for creneau in creneaux:
 		tr = TableRow(parent=table)
-		P(parent=TableCell(parent=tr, valuetype='string'),
-				text=creneau.pk)
+		P(parent=TableCell(parent=tr, valuetype='float', value=creneau.pk),
+			text=creneau.pk)
 		P(parent=TableCell(parent=tr, valuetype='string'),
 				text=creneau.matiere)
 		P(parent=TableCell(parent=tr, valuetype='string'),
 				text=creneau.colleur)
 		P(parent=TableCell(parent=tr, valuetype='string'),
 				text=creneau.get_jour_display())
-		P(parent=TableCell(parent=tr, valuetype='string'),
-				text=creneau.debut)
+		P(parent=TableCell(parent=tr, valuetype='time',
+				timevalue=creneau.debut.strftime("PT%HH%MM%SS")),
+				text=creneau.debut.strftime("%H:%M"))
 		P(parent=TableCell(parent=tr, valuetype='string'),
 				text=creneau.salle)
 		for semaine in semaines:
-			P(parent=TableCell(parent=tr, valuetype='string'),
-				text=','.join([str(c.groupe) for c in
-					colloscope[creneau][semaine] if c.groupe]))
+			groupes_texte = ','.join([str(c.groupe) for c in
+					colloscope[creneau][semaine] if c.groupe])
+			cell = TableCell(parent=tr)
+			if groupes_texte:
+				cell.valuetype="string"
+				P(parent=cell, text=groupes_texte)
 
 	ods.write(response)
 	return response

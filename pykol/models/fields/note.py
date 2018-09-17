@@ -95,6 +95,12 @@ class Note:
 		else:
 			return self.kind >= note.kind
 
+	def __format__(self, format_spec):
+		if self.est_note():
+			return self.value.__format__(format_spec)
+		else:
+			return repr(self)
+
 class Moyenne(Note):
 	def __init__(self):
 		self.points = None

@@ -35,11 +35,12 @@ from odf.table import Table, TableColumn, TableRow, TableCell, \
 		CoveredTableCell, TableHeaderRows
 from odf.style import Style, TableColumnProperties, TableRowProperties, \
         TextProperties, ParagraphProperties
+from odf.number import Number, NumberStyle
 from odf.text import P
 
 from pykol.models.base import Classe, Matiere, Etudiant
 from pykol.models.colles import Semaine, ColleNote, Colle
-from pykol.models.fields import Moyenne
+from pykol.models.fields import Moyenne, Note
 from pykol.lib.auth import professeur_dans
 from pykol.lib.sortedcollection import SortedCollection
 
@@ -194,6 +195,13 @@ def classe_resultats_odf(request, resultats):
 
 	ods = OpenDocumentSpreadsheet()
 
+	# Style numérique pour les notes
+	style_number_note = NumberStyle(name="Note")
+	ods.styles.addElement(style_number_note)
+	Number(parent=style_number_note, minintegerdigits=1, decimalplaces=2)
+	style_note = Style(datastylename=style_number_note,
+			parent=ods.styles, name="Note", family='table-cell')
+
 	for matiere, etudiants in resultats['matieres'].items():
 		table = Table(name="{} - {}".format(resultats['classe'], matiere),
 				parent=ods.spreadsheet)
@@ -208,9 +216,9 @@ def classe_resultats_odf(request, resultats):
 		# Ligne d'en-tête
 		th = TableHeaderRows(parent=table)
 		tr = TableRow(parent=th)
-		P(parent=TableCell(parent=tr, valuetype='string'), text='Étudiant')
-		P(parent=TableCell(parent=tr, valuetype='string'), text='Moyenne')
-		P(parent=TableCell(parent=tr, valuetype='string'), text='Rang')
+		P(parent=TableCell(parent=tr, valuetype='string'), text="Étudiant")
+		P(parent=TableCell(parent=tr, valuetype='string'), text="Moyenne")
+		P(parent=TableCell(parent=tr, valuetype='string'), text="Rang")
 		for semaine in resultats['semaines']:
 			P(parent=TableCell(parent=tr, valuetype='string'),
 				text=semaine.numero)
@@ -220,11 +228,27 @@ def classe_resultats_odf(request, resultats):
 			tr = TableRow(parent=table)
 			P(parent=TableCell(parent=tr, valuetype='string'), text=str(etudiant))
 			for note in notes:
-				if note:
-					P(parent=TableCell(parent=tr, valuetype='float',
-						value=note[0]), text=str(note[0]))
-				else:
-					TableCell(parent=tr)
+				tc = TableCell(parent=tr)
+
+				if isinstance(note, list) and len(note) == 1:
+					note = note[0]
+
+				if isinstance(note, int):
+					tc.valuetype = 'float'
+					tc.value = note
+					tc.stylename = style_note
+					P(text="{}".format(note), parent=tc)
+
+				elif isinstance(note, Note):
+					if note.est_note():
+						tc.valuetype = 'float'
+						tc.value = note.value
+						tc.stylename = style_note
+					P(text="{:.2f}".format(note), parent=tc)
+
+				elif isinstance(note, list):
+					P(text=', '.join(["{:.2f}".format(n) for n in note
+						if isinstance(n, Note)]), parent=tc)
 
 	ods.write(response)
 	return response

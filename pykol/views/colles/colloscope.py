@@ -97,9 +97,10 @@ def colle_creer(request, slug):
 def colle_supprimer(request, pk):
 	"""Supprimer une colle"""
 	colle = get_object_or_404(Colle, pk=pk)
-	if not request.user.has_perm('pykol.delete_colle', colle.classe):
+	if not request.user.has_perm('pykol.delete_colle', colle):
 		raise PermissionDenied
 
+	classe = colle.classe
 	if request.method == 'POST':
 		form = ColleSupprimerForm(request.POST, instance=colle)
 		if form.is_valid():

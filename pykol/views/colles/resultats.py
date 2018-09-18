@@ -202,6 +202,12 @@ def classe_resultats_odf(request, resultats):
 	style_note = Style(datastylename=style_number_note,
 			parent=ods.styles, name="Note", family='table-cell')
 
+	# Style pour le rang
+	style_number_rang = NumberStyle(name="Rang", parent=ods.styles)
+	Number(parent=style_number_rang, minintegerdigits=1, decimalplaces=0)
+	style_rang = Style(datastylename=style_number_rang,
+			parent=ods.styles, name="Rang", family='table-column')
+
 	for matiere, etudiants in resultats['matieres'].items():
 		table = Table(name="{} - {}".format(resultats['classe'], matiere),
 				parent=ods.spreadsheet)
@@ -209,7 +215,7 @@ def classe_resultats_odf(request, resultats):
 		# Création des colonnes
 		table.addElement(TableColumn()) # Étudiant
 		table.addElement(TableColumn()) # Moyenne
-		table.addElement(TableColumn()) # Rang
+		table.addElement(TableColumn(stylename=style_rang)) # Rang
 		for _ in range(len(resultats['semaines'])):
 			table.addElement(TableColumn())
 
@@ -236,7 +242,6 @@ def classe_resultats_odf(request, resultats):
 				if isinstance(note, int):
 					tc.setAttribute('valuetype', 'float')
 					tc.setAttribute('value', note)
-					tc.setAttribute('stylename', style_note)
 					P(text="{}".format(note), parent=tc)
 
 				elif isinstance(note, Note):

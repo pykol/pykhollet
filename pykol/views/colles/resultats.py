@@ -234,16 +234,16 @@ def classe_resultats_odf(request, resultats):
 					note = note[0]
 
 				if isinstance(note, int):
-					tc.valuetype = 'float'
-					tc.value = note
-					tc.stylename = style_note
+					tc.setAttribute('valuetype', 'float')
+					tc.setAttribute('value', note)
+					tc.setAttribute('stylename', style_note)
 					P(text="{}".format(note), parent=tc)
 
 				elif isinstance(note, Note):
 					if note.est_note():
-						tc.valuetype = 'float'
-						tc.value = note.value
-						tc.stylename = style_note
+						tc.setAttribute('valuetype', 'float')
+						tc.setAttribute('value', note.value)
+						tc.setAttribute('stylename', style_note)
 					P(text="{:.2f}".format(note), parent=tc)
 
 				elif isinstance(note, list):

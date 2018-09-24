@@ -961,7 +961,8 @@ class BEEImporter:
 			# le fichier XML, on tente d'obtenir la matière depuis la
 			# base de données. Si cela échoue, on laisse l'exception
 			# filer.
-			return Matiere.objects.get(code_matiere=code_matiere)
+			self.matieres[code_matiere] = Matiere.objects.get(code_matiere=code_matiere)
+			return self.matieres[code_matiere]
 
 		# Cas de base où le dictionnaire des matières est rempli, et où
 		# on doit mettre à jour la base de données.
@@ -1008,6 +1009,10 @@ class BEEImporter:
 		"""
 		# Les données sont dans Nomenclature.
 		if not self.nomenclatures_et:
+			# On remplit le dictionnaire des matières à partir de la
+			# base de données, faute d'avoir le fichier XML.
+			for matiere in Matiere.objects.all():
+				self.matieres[matiere.code_matiere] = matiere
 			return
 
 		# On récupère la liste des matières déclarées dans le fichier,

@@ -706,24 +706,14 @@ class BEEImporter:
 		# Ceci permettra de filtrer rapidement plus tard les élèves à
 		# importer.
 		classe_etudiant = {}
-		demissions = set()
 		for struct_eleve in self.eleves_et.getroot().findall('DONNEES/STRUCTURES/STRUCTURES_ELEVE'):
 			code_structure = struct_eleve.find('STRUCTURE/CODE_STRUCTURE').text
 			num_eleve = struct_eleve.attrib['ELENOET']
 			try:
 				classe_etudiant[num_eleve] = self.classes[code_structure]
-				break
 			except:
-				# L'étudiant n'est pas dans une classe qui fait partie
-				# de l'import
+				# L'étudiant n'est pas dans une classe gérée par pyKol.
 				continue
-		else:
-			# Si on sort de manière normale de la boucle, ceci signifie
-			# que l'étudiant n'est référencé dans aucune classe. Il
-			# s'agit soit d'un étudiant appartenant à une classe non
-			# gérée par pyKol, soit d'un étudiant démissionnaire.
-			if Etudiants.objects.filter(numero_siecle=num_eleve).exists():
-				demissions.add(num_eleve)
 
 		# On peut à présent créer ou mettre à jour les élèves dans la base de
 		# données. Le dictionnaire classe_etudiant permet de mettre la main
@@ -742,7 +732,11 @@ class BEEImporter:
 			try:
 				etudiant_data['classe'] = classe_etudiant[num_eleve]
 			except:
-				if num_eleve not in demissions:
+				# Si l'étudiant n'a pas de classe connue, il se peut
+				# qu'il s'agisse d'une démission. Pour le savoir, on
+				# regarde s'il était déjà présent dans la base de
+				# données.
+				if not Etudiant.objects.filter(numero_siecle=num_eleve).exists():
 					continue
 
 			etudiant_data['entree'] = parse_date_francaise(eleve.find('DATE_ENTREE').text)

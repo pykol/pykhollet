@@ -949,32 +949,44 @@ class BEEImporter:
 		try:
 			matiere = self.matieres[code_matiere]
 			return matiere
-		except:
+		except KeyError:
+			pass
+
+		try:
 			matiere_data = dict_matieres[code_matiere]
+		except KeyError:
+			# Si le dictionnaire des matières n'est pas renseigné depuis
+			# le fichier XML, on tente d'obtenir la matière depuis la
+			# base de données. Si cela échoue, on laisse l'exception
+			# filer.
+			return Matiere.objects.get(code_matiere=code_matiere)
 
-			# Si nécessaire on construit la matière parent.
-			if matiere_data.get('code_parent', None):
-				matiere_parent = self._creer_matiere(dict_matieres,
-						matiere_data['code_parent'])
-			else:
-				matiere_parent = None
+		# Cas de base où le dictionnaire des matières est rempli, et où
+		# on doit mettre à jour la base de données.
 
-			dict_matieres[code_matiere].pop('code_parent', None)
-			dict_matieres[code_matiere]['parent'] = matiere_parent
+		# Si nécessaire on construit la matière parent.
+		if matiere_data.get('code_parent', None):
+			matiere_parent = self._creer_matiere(dict_matieres,
+					matiere_data['code_parent'])
+		else:
+			matiere_parent = None
 
-			matiere, _ = Matiere.objects.update_or_create(
-				code_matiere=code_matiere,
-				defaults=dict_matieres[code_matiere])
-			self.matieres[code_matiere] = matiere
+		dict_matieres[code_matiere].pop('code_parent', None)
+		dict_matieres[code_matiere]['parent'] = matiere_parent
 
-			# Si la matière est virtuelle, on construit les matières filles
-			if matiere.virtuelle:
-				filles = [m['code_matiere'] for m in dict_matieres.values()
-						if 'code_parent' in m and m['code_parent'] == code_matiere]
-				for fille in filles:
-					self._creer_matiere(dict_matieres, fille)
+		matiere, _ = Matiere.objects.update_or_create(
+			code_matiere=code_matiere,
+			defaults=dict_matieres[code_matiere])
+		self.matieres[code_matiere] = matiere
 
-			return self.matieres[code_matiere]
+		# Si la matière est virtuelle, on construit les matières filles
+		if matiere.virtuelle:
+			filles = [m['code_matiere'] for m in dict_matieres.values()
+					if 'code_parent' in m and m['code_parent'] == code_matiere]
+			for fille in filles:
+				self._creer_matiere(dict_matieres, fille)
+
+		return self.matieres[code_matiere]
 
 	def import_programmes(self):
 		"""

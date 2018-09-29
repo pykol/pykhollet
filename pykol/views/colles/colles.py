@@ -27,7 +27,7 @@ from django.db.models import Func, F
 from django.views.decorators.http import require_POST
 from django.contrib import messages
 
-from pykol.models.base import Etudiant
+from pykol.models.base import Etudiant, Annee
 from pykol.models.colles import Colle
 from pykol.forms.colles import ColleNoteFormSet, ColleModifierForm
 from pykol.lib.auth import colle_user_permissions
@@ -75,7 +75,13 @@ class ColleDetailView(LoginRequiredMixin, ColleVisibleMixin, \
 				colle_user_permissions(self.request.user, colle)
 
 		if self.request.user.has_perm('pykol.change_colle', colle):
-			context['deplacer_form'] = ColleModifierForm(colle=colle)
+			context['tous_etudiants'] = 'tous_etudiants' in self.request.GET
+			if context['tous_etudiants']:
+				etudiants_qs = Etudiant.objects.filter(classe__annee=Annee.objects.get_actuelle())
+			else:
+				etudiants_qs = None
+			context['deplacer_form'] = ColleModifierForm(colle=colle,
+					etudiants=etudiants_qs)
 
 		return context
 
@@ -144,7 +150,8 @@ def colle_deplacer(request, pk):
 		raise PermissionDenied
 
 	if request.method == 'POST':
-		form = ColleModifierForm(request.POST, colle=colle)
+		form = ColleModifierForm(request.POST, colle=colle, etudiants=
+				Etudiant.objects.filter(classe__annee=Annee.objects.get_actuelle()))
 		if form.is_valid():
 			etudiants = form.cleaned_data.get('etudiants').all()
 			if not etudiants:

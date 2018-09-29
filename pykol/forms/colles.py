@@ -73,10 +73,12 @@ class ColleModifierForm(forms.Form):
 			widget=forms.RadioSelect(), required=False)
 
 	def __init__(self, *args, colle, **kwargs):
+		etudiants_qs = kwargs.pop('etudiants', None) or \
+			colle.classe.etudiants.order_by('last_name', 'first_name')
 		super().__init__(*args, **kwargs)
 
 		self.fields['trinome'].queryset = Trinome.objects.filter(classe=colle.classe).order_by('nom')
-		self.fields['etudiants'].queryset = colle.classe.etudiants.order_by('last_name', 'first_name')
+		self.fields['etudiants'].queryset = etudiants_qs.order_by('last_name', 'first_name')
 
 ResaPonctuellesFormSet = forms.modelformset_factory(ColleDetails,
 		fields=('salle',), can_delete=False)

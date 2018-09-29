@@ -48,6 +48,14 @@
         <td>{{ form.trinome }}{{ form.trinome.errors }}</td>
       </tr>
       <tr>
+        <td colspan="2">
+          {% if tous_etudiants %}
+          <a href=".">Masquer les étudiants des autres classes</a>
+          {% else %}
+          <a href="?tous_etudiants">Afficher les étudiants de toutes les classes</a>
+          {% endif %}
+        </td>
+      <tr>
         <th>{{ form.etudiants.label_tag }}</th>
         <td>{{ form.etudiants }}{{ form.etudiants.errors }}</td>
       </tr>

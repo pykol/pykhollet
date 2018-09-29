@@ -20,7 +20,8 @@ from django.contrib import admin
 
 from pykol.admin.base import register, admin_site
 from pykol.models.colles import Semaine, Creneau, Trinome, Roulement, \
-		RoulementLigne, Colle, ColleDetails, CollesEnseignement
+		RoulementLigne, Colle, ColleDetails, CollesEnseignement, \
+		ColleNote
 
 @register(Semaine)
 class SemaineAdmin(admin.ModelAdmin):
@@ -55,9 +56,13 @@ class ColleDetailsInline(admin.TabularInline):
 	model = ColleDetails
 	extra = 0
 
+class ColleNoteInline(admin.TabularInline):
+	model = ColleNote
+	extra = 0
+
 @register(Colle)
 class ColleAdmin(admin.ModelAdmin):
-	inlines = [ColleDetailsInline,]
+	inlines = [ColleDetailsInline, ColleNoteInline]
 
 @register(CollesEnseignement)
 class CollesEnseignementAdmin(admin.ModelAdmin):

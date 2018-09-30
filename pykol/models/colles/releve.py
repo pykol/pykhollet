@@ -113,7 +113,8 @@ class ColleReleve(models.Model):
 		ligne.ajout_colle(colle)
 
 	def lignes_par_prof(self):
-		return self.lignes.order_by('colleur', 'taux')
+		return self.lignes.order_by('colleur__last_name',
+				'colleur__first_name', 'taux')
 
 	def get_etat_html(self):
 		template = get_template('pykol/widgets/collereleve_etat.html')

@@ -158,6 +158,7 @@ def tableau_resultats(classe, matieres):
 			classe = classe,
 			enseignement__matiere = matiere,
 			etat = Colle.ETAT_PREVUE,
+			mode = Colle.MODE_INTERROGATION,
 			colledetails__actif=True,
 			colledetails__horaire__lte=timezone.localtime(),
 		).exclude(collenote__isnull = False)

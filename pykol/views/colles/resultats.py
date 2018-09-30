@@ -278,10 +278,12 @@ def classe_resultats(request, slug):
 
 	matieres = Matiere.objects.filter(
 		enseignement__classe = classe,
-		enseignement__service__professeur=request.user
+		enseignement__service__professeur=request.user,
+		enseignement__collesenseignement__isnull=False,
 	).union(Matiere.objects.filter(
 		enseignement__classe=classe,
-		enseignement__creneau__colleur=request.user
+		enseignement__creneau__colleur=request.user,
+		enseignement__collesenseignement__isnull=False,
 	)).order_by('nom')
 
 	resultats = tableau_resultats(classe, matieres)

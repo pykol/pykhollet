@@ -56,3 +56,8 @@ i.#{$fa-css-prefix} {
     @extend h4;
   }
 }
+
+.resultats sup {
+  vertical-align: super;
+  font-size: 75%;
+}

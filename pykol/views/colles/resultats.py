@@ -175,10 +175,12 @@ def tableau_resultats(classe, matieres):
 		# l'affichage
 		semaines = list(semaines)
 		for etudiant in etudiants:
-			notesParEtudiant[etudiant] = [[moyennesParEtudiant[etudiant]],
-					[rangsParEtudiant[etudiant]]] + \
-					[notesParEtudiant[etudiant][semaine] for semaine in
+			notesParEtudiant[etudiant] = {
+					'moyenne': moyennesParEtudiant[etudiant],
+					'rang': rangsParEtudiant[etudiant],
+					'notes': [notesParEtudiant[etudiant][semaine] for semaine in
 							semaines]
+				}
 
 		notesParEtudiantParMatiere[matiere] = notesParEtudiant
 
@@ -230,21 +232,30 @@ def classe_resultats_odf(request, resultats):
 				text=semaine.numero)
 
 		# Ligne pour chaque étudiant
-		for etudiant, notes in etudiants.items():
+		for etudiant, resultats in etudiants.items():
 			tr = TableRow(parent=table)
+
+			# Nom de l'étudiant
 			P(parent=TableCell(parent=tr, valuetype='string'), text=str(etudiant))
-			for note in notes:
+
+			# Moyenne de l'étudiant
+			P(parent=TableCell(parent=tr, valuetype='float',
+					value=resultats['moyenne'], stylename=style_note),
+				text="{:.2f}".format(resultats['moyenne']))
+
+			# Rang de l'étudiant
+			P(parent=TableCell(parent=tr, valuetype='float',
+					value=resultats['rang']),
+				text="{}".format(resultats['rang']))
+
+			# Notes
+			for note in resultats['notes']:
 				tc = TableCell(parent=tr)
 
 				if isinstance(note, list) and len(note) == 1:
 					note = note[0]
 
-				if isinstance(note, int):
-					tc.setAttribute('valuetype', 'float')
-					tc.setAttribute('value', note)
-					P(text="{}".format(note), parent=tc)
-
-				elif isinstance(note, Note):
+				if isinstance(note, Note):
 					if note.est_note():
 						tc.setAttribute('valuetype', 'float')
 						tc.setAttribute('value', note.value)

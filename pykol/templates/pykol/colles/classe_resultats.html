@@ -1,22 +1,25 @@
 ﻿{% extends "pykol/base.html" %}
+{% load resultats %}
 {% block content %}
 {% for matiere, etudiants in matieres.items %}
 <h2>Notes des étudiants en {{matiere}}
-  <small><a href="?format=odf"><i class="fa fa-download"></i></a><small>
+  <small><a title="Télécharger au format OpenDocument" href="?format=odf"><i class="fa fa-download"></i></a><small>
 </h2>
 <table>
   <tr>
-    <th> étudiant </th>
-    <th> moyenne </th>
-    <th> rang </th>
+    <th>Étudiant</th>
+    <th>Moyenne</th>
+    <th>Rang</th>
     {% for semaine in semaines %}
     <th>{{ semaine.numero }}</th>
     {% endfor %}
     </tr>
-    {% for etudiant, semaines_notes in etudiants.items %}
+    {% for etudiant, resultats in etudiants.items %}
     <tr>
-      <td> {{ etudiant }} </td>
-      {% for notes in semaines_notes %}
+      <td>{{ etudiant }}</td>
+      <td>{{ resultats.moyenne }}</td>
+      <td>{{ resultats.rang|rang }}</td>
+      {% for notes in resultats.notes %}
       <td>{{ notes|join:', ' }}</td>
       {% endfor %}
     </tr>

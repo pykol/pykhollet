@@ -1,3 +1,18 @@
+$break-small: 320px;
+$break-large: 1024px;
+
+@mixin respond-to($media) {
+  @if $media == handhelds {
+    @media only screen and (max-width: $break-small) { @content; }
+  }
+  @else if $media == medium-screens {
+    @media only screen and (min-width: $break-small + 1) and (max-width: $break-large - 1) { @content; }
+  }
+  @else if $media == wide-screens {
+    @media only screen and (min-width: $break-large) { @content; }
+  }
+}
+
 body {
   @media screen {
     min-height: 100vh;
@@ -6,6 +21,9 @@ body {
      * code HTML. */
     display: flex;
     flex-wrap: nowrap;
+
+    @include respond-to(handhelds) { flex-direction: column; }
+    @include respond-to(medium-screens) { flex-direction: column; }
   }
 }
 
@@ -14,14 +32,23 @@ body {
   margin: 1cm 1cm 1.5cm 1cm;
 }
 
+@viewport {
+  width: device-width;
+  zoom: 100%;
+}
+
 /* Barre de menu à gauche */
 header {
-  @include make-col(2);
+  @include respond-to(wide-screens) { @include make-col(2); }
+  @include respond-to(medium-screens) { width: 100%; }
+  @include respond-to(handhelds) { width: 100%; }
+
   border-bottom: 1px solid #38383D;
   color: $header-color;
   background: $header-background;
   display: flex;
   flex-direction: column;
+
 
   h1 {
     width: 100%;

@@ -14,5 +14,6 @@
   & > li {
     @include make-col(3);
     @include x-panel;
+    min-width: 200px;
   }
 }

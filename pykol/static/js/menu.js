@@ -15,4 +15,8 @@ $(document).ready(function () {
   sheet.insertRule("nav > ul > li.menu_current > ul { max-height: 1000px; transition: max-height 1s ease; }", 0);
 
   $("nav > ul > li > *:first-child").click(menu_toggle);
+
+  // Ouverture du menu sur les petits écrans
+  var menu = $("header > nav");
+  $("#menu-button").click(function () { menu.toggle(); });
 });

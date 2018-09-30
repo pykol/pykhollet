@@ -52,8 +52,9 @@ header {
 
   h1 {
     width: 100%;
+    display: flex;
 
-    i.fa {
+    a i.fa {
       border: 1px solid #eaeaea;
       padding: 5px 6px;
       border-radius: 50%;
@@ -62,12 +63,25 @@ header {
 
     a {
       padding-left: 10px;
+      flex: 1;
     }
 
     a:link, a:hover, a:visited {
-      width: 100%;
-      display: block;
+      width: calc(100% - 30px);
+      display: inline;
     }
+  }
+
+  #menu-button {
+    @include respond-to(wide-screens) {
+      display: none;
+    }
+    background-color: transparent;
+    width: 50px;
+    color: inherit;
+    border: none;
+    box-shadow: none;
+    font-size: 1em;
   }
 
   @media print {
@@ -84,6 +98,9 @@ header {
 }
 
 nav {
+  @include respond-to(medium-screens) { display: none; }
+  @include respond-to(handhelds) { display: none; }
+
   background: $nav-background;
   color: $nav-color;
 

@@ -16,6 +16,8 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+from datetime import timedelta
+
 from django.shortcuts import render, redirect, get_object_or_404
 from django.views import generic, View
 from django.contrib.auth.mixins import LoginRequiredMixin, \
@@ -71,8 +73,28 @@ def releve_prof_detail(request):
 	lignes = ColleReleveLigne.objects.filter(colleur=request.user.professeur).order_by(
 		'releve__date', 'releve', 'taux')
 
+	futures_lignes = {}
+	futures_colles = Colle.objects.filter(etat__in=(Colle.ETAT_NOTEE,
+		Colle.ETAT_EFFECTUEE), releve__isnull=True,
+		colledetails__colleur=request.user, colledetails__actif=True)
+	for colle in futures_colles:
+		taux = ColleReleveLigne.taux_colle(colle.classe)
+		ligne = futures_lignes.setdefault(taux, {
+			'get_taux_display': dict(ColleReleveLigne.TAUX_CHOICES).get(taux),
+			'heures': timedelta(),
+			'heures_interrogation': timedelta(),
+			})
+		ligne['heures'] += colle.duree
+
+		if colle.mode == Colle.MODE_INTERROGATION:
+			for collenote in colle.collenote_set.all():
+				ligne['heures_interrogation'] += collenote.duree
+		else:
+			ligne['heures_interrogation'] += colle.duree
+
 	return render(request, 'pykol/colles/releve_prof.html', context={
-		'lignes': lignes,})
+		'lignes': lignes,
+		'futures_lignes': futures_lignes.values(),})
 
 def releve_dispatch(request):
 	if request.user.has_perm('pkyol.view_collereleve'):

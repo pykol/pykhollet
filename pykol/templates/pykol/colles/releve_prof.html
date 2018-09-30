@@ -3,6 +3,7 @@
 <h2>Relevés des heures de colles</h2>
 
 <section>
+  <h2>Colles mises en paiement</h2>
   {% if lignes %}
   <table>
     <thead>
@@ -23,17 +24,50 @@
       <tr>
         <td rowspan="{{ releve.list|length }}">{{ releve.grouper.date }}</td>
         <td rowspan="{{ releve.list|length }}">{{ releve.grouper.get_etat_html }}</td>
-        {% for ligne in releve.list %}
+      {% for ligne in releve.list %}
+      {% if not forloop.first %}
+      <tr>
+      {% endif %}
         <td>{{ ligne.get_taux_display }}</td>
         <td>{{ ligne.heures }}</td>
         <td>{{ ligne.heures_interrogation }}</td>
-        {% endfor %}
       </tr>
+      {% endfor %}
       {% endfor %}
     </tbody>
   </table>
   {% else %}
   <p>Aucun relevé d'heures n'a été effectué pour le moment.</p>
+  {% endif %}
+</section>
+
+<section>
+  <h2>Colles effectuées</h2>
+  {% if futures_lignes %}
+  <p>Le tableau suivant indique les heures que vous avez effectuées
+  depuis le dernier relevé. Le décompte de ces heures sera mis en
+  paiement lorsque l'administration effectuera le prochain relevé.</p>
+  <table>
+    <thead>
+      <tr>
+        <th>Taux</th>
+        <th>Heures</th>
+        <th>Durée d'interrogation</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for ligne in futures_lignes %}
+      <tr>
+        <td>{{ ligne.get_taux_display }}</td>
+        <td>{{ ligne.heures }}</td>
+        <td>{{ ligne.heures_interrogation }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% else %}
+  <p>Vous n'avez déclaré aucune heure d'interrogation depuis le dernier
+  relevé.</p>
   {% endif %}
 </section>
 {% endblock %}

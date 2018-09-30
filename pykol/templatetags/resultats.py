@@ -17,15 +17,15 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 from django import template
-from django.utils.safestring import mark_safe
+from django.utils.html import format_html
 register = template.Library()
 
 @register.filter
 def rang(value):
 	if isinstance(value, int):
 		if value == 1:
-			return mark_safe("{}<sup>er</sup>".format(value))
+			return format_html("{}<sup>er</sup>", value)
 		else:
-			return mark_safe("{}<sup>è</sup>".format(value))
+			return format_html("{}<sup>è</sup>", value)
 	else:
 		return str(value)

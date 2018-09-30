@@ -104,6 +104,7 @@ def releve_dispatch(request):
 
 @login_required
 @permission_required('pykol.change_collereleve')
+@require_POST
 def releveligne_payer(request, pk):
 	ligne = get_object_or_404(ColleReleveLigne, pk=pk)
 	ligne.payer()

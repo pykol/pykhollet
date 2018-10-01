@@ -1,4 +1,5 @@
 {% extends 'pykol/base.html' %}
+{% load lien_email %}
 {% block content %}
 <h2>Colle du {{ colle.details.horaire }}{% if colle.semaine %} − {{ colle.semaine }}{% endif %}</h2>
 
@@ -8,7 +9,7 @@
       <th>Trinôme</th>
       <td>{{ colle.groupe }}</td>
       <th>Étudiants</th>
-      <td>{{ colle.details.eleves.all|join:", " }}</td>
+      <td>{% lien_email colle.details.eleves.all %} {{ colle.details.eleves.all|join:", " }}</td>
     </tr>
     <tr>
       <th>Horaire</th>

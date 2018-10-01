@@ -1,0 +1,6 @@
+{% if emails %}
+<span class="groupe-email">
+  <a href="mailto:{{ emails|join:','}}"
+     title="{% if title %}{{ title }}{% else %}Envoyer un e-mail au groupe{% endif %}"><i class="far fa-envelope"></i></a>
+</span>
+{% endif %}

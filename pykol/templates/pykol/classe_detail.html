@@ -1,4 +1,5 @@
 {% extends "pykol/base.html" %}
+{% load lien_email %}
 {% block content %}
 <h2>Détail de la classe {{ classe.nom }}</h2>
 
@@ -52,20 +53,15 @@
   <ul class="trinomes">
     {% for trinome in trinomes %}
     <li><strong>{{ trinome.nom }}</strong>
-      {% with emails=trinome.emails %}
-      {% if emails %}
-      <span class="trinome-email">
-        <a href="mailto:{{ emails|join:","}}"
-           title="Envoyer un e-mail au groupe {{ trinome.nom }}"><i class="far fa-envelope"></i></a>
-      </span>
-      {% endif %}
+      {% with "Envoyer un e-mail au groupe "|add:trinome.nom as titre_lien %}
+      {% lien_email trinome.etudiants.all title=titre_lien %}
+      {% endwith %}
       {% if classe_perm.change_trinome %}
       <span class="trinome-detail">
         <a href="{% url 'trinome_detail' trinome.pk %}"
            title="Modifier le groupe"><i class="far fa-edit"></i></a>
       </span>
       {% endif %}
-      {% endwith %}
       <ul>
         {% for etudiant in trinome.etudiants.all %}
         <li><a href="{{ etudiant.get_absolute_url }}">{{ etudiant }}{% if etudiant.classe != classe %}

@@ -3,6 +3,7 @@
 <h2>Planning des colles</h2>
 
 <section>
+  {% if colle_list %}
   <table>
     <thead>
       <tr>
@@ -29,6 +30,9 @@
       {% endfor %}
     </tbody>
   </table>
+  {% else %}
+  <p>Aucune colle à afficher.</p>
+  {% endif %}
 </section>
 
 {% endblock content %}

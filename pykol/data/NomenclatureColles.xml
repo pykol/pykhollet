@@ -483,7 +483,7 @@
       </codes_mefs>
       <codes_matieres>
         <!-- Latin -->
-        <code_matiere>022500</code_matiere> <!-- Latin spé -->
+        <code_matiere>020300</code_matiere> <!-- LCA Latin -->
       </codes_matieres>
       <frequence>trimestrielle</frequence>
       <duree>PT30M</duree>
@@ -495,7 +495,7 @@
       </codes_mefs>
       <codes_matieres>
         <!-- Grec -->
-        <code_matiere>022400</code_matiere> <!-- Grec spé -->
+        <code_matiere>020400</code_matiere> <!-- LCA Grec -->
       </codes_matieres>
       <frequence>trimestrielle</frequence>
       <duree>PT30M</duree>

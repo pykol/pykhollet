@@ -16,8 +16,6 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-from datetime import timedelta
-
 from django import forms
 from django.utils import timezone
 
@@ -38,11 +36,11 @@ class ColleNoteForm(forms.ModelForm):
 		self.fields['eleve'].disabled = True
 
 	def save(self, commit=True):
-		note = super().save(commit)
+		note = super().save(commit=False)
 		if not note.horaire:
 			note.horaire = timezone.now()
 		if not note.duree:
-			note.duree = timedelta(minutes=20)
+			note.duree = note.colle.colles_ens.duree
 
 		if commit:
 			note.save()

@@ -28,16 +28,19 @@ from pykol.models.base import Classe
 from pykol.models.colles import ColloscopePermission, Colle, \
 		ColleNote, Creneau, Trinome
 
-def perm_colloscope_qs(professeur, classe, matiere=None):
+def perm_colloscope_qs(professeur, classe, matiere=None,
+		matiere_seulement=True):
 	"""
 	Requête de base pour chercher toutes les permissions sur le
 	colloscope de la classe pour ce professeur.
 	"""
-	return ColloscopePermission.objects.filter(
+	qs = ColloscopePermission.objects.filter(
 			user=professeur,
 			classe=classe,
 			droit__content_type__app_label='pykol',
-			).filter(
+			)
+	if matiere_seulement:
+		qs = qs.filter(
 			Q(matiere_seulement=False) |
 			Q(
 				matiere_seulement=True,
@@ -45,6 +48,8 @@ def perm_colloscope_qs(professeur, classe, matiere=None):
 				classe__enseignements__matiere=matiere
 			)
 		)
+
+	return qs
 
 def perm_colloscope(professeur, classe, matiere=None):
 	"""
@@ -72,6 +77,7 @@ class PykolBackend(ModelBackend):
 		# Permissions relatives au colloscope sur une classe complète
 		if isinstance(obj, Classe):
 			perms_qs = perm_colloscope_qs(professeur=user_obj,
+					matiere_seulement=False,
 					classe=obj).values_list('droit__content_type__app_label',
 							'droit__codename')
 			perms = {"%s.%s" % (ct, name) for ct, name in perms_qs}
@@ -88,12 +94,14 @@ class PykolBackend(ModelBackend):
 
 			# La gestion du colloscope donne le droit de le voir et
 			# éventuellement d'ajouter des créneaux.
-			if perms_qs.filter(matiere_seulement=False,
-					droit__codename='change_colloscope'):
+			perms_qs = perms_qs.filter(droit__codename='change_colloscope')
+			if perms_qs:
 				perms.update(('pykol.view_colloscope',
-					'pykol.add_creneau', 'pykol.add_colle',
-					'pykol.change_trinome', 'pykol.change_semaine',
-					'pykol.change_creneau'))
+					'pykol.add_colle'))
+				if perms_qs.filter(matiere_seulement=False):
+					perms.update(('pykol.add_creneau',
+						'pykol.change_trinome', 'pykol.change_semaine',
+						'pykol.change_creneau'))
 
 			return perms
 

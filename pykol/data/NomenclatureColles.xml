@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<pykol_nomenclatures version="1.0">
+<pykol_nomenclatures xmlns:xi="http://www.w3.org/2003/XInclude" version="1.0">
   <!--
     Ce document décrit les horaires de colles en CPGE, tels qu'ils sont
     décrits par la réglementation. Il sert de base pour peupler une
@@ -12,9 +12,7 @@
     * CPGE littéraires : arrêté du 27 juin 1995 (NOR: MENU9501179A).
   -->
   <colles>
-
-    <!-- Colles en ECS1, ECS2, ECE1, ECE2 -->
-    <colle id="ec-1995-maths">
+    <colle id="ec-1995-maths" xml:base="nomenclaturescolles/1995-ec.xml">
       <!-- Mathématiques -->
       <codes_mefs>
         <code_mef>30112012210</code_mef>
@@ -27,8 +25,7 @@
       </codes_matieres>
       <frequence>hebdomadaire</frequence>
       <duree>PT10M</duree>
-    </colle>
-    <colle id="ec-1995-info">
+    </colle><colle id="ec-1995-info" xml:base="nomenclaturescolles/1995-ec.xml">
       <!-- Informatique -->
       <nom>Informatique</nom>
       <codes_mefs>
@@ -43,8 +40,7 @@
       <frequence>hebdomadaire</frequence>
       <duree>PT5M</duree>
       <mode_defaut>travaux_diriges</mode_defaut>
-    </colle>
-    <colle id="ec-1995-cg">
+    </colle><colle id="ec-1995-cg" xml:base="nomenclaturescolles/1995-ec.xml">
       <!-- Culture générale -->
       <codes_mefs>
         <code_mef>30112012210</code_mef>
@@ -57,8 +53,7 @@
       </codes_matieres>
       <frequence>hebdomadaire</frequence>
       <duree>PT10M</duree>
-    </colle>
-    <colle id="ecs-1995-hg">
+    </colle><colle id="ecs-1995-hg" xml:base="nomenclaturescolles/1995-ec.xml">
       <!-- Histoire-géo spécifique à l'ECS -->
       <codes_mefs>
         <code_mef>30112012210</code_mef>
@@ -69,8 +64,7 @@
       </codes_matieres>
       <frequence>hebdomadaire</frequence>
       <duree>PT10M</duree>
-    </colle>
-    <colle id="ece-1995-ash">
+    </colle><colle id="ece-1995-ash" xml:base="nomenclaturescolles/1995-ec.xml">
       <!-- ASH spécifique à l'ECE -->
       <codes_mefs>
         <code_mef>30112013210</code_mef>
@@ -81,8 +75,7 @@
       </codes_matieres>
       <frequence>hebdomadaire</frequence>
       <duree>PT10M</duree>
-    </colle>
-    <colle id="ec-1995-lv">
+    </colle><colle id="ec-1995-lv" xml:base="nomenclaturescolles/1995-ec.xml">
       <!-- Langues -->
       <nom>Langues vivantes</nom>
       <codes_mefs>
@@ -111,9 +104,7 @@
       <frequence>hebdomadaire</frequence>
       <duree>PT10M</duree>
     </colle>
-
-    <!-- Colles en MPSI, MP et MP* -->
-    <colle id="mp-1995-maths">
+    <colle id="mp-1995-maths" xml:base="nomenclaturescolles/1995-mp.xml">
       <codes_mefs>
         <code_mef>30111018210</code_mef>
         <code_mef>30111027220</code_mef>
@@ -124,8 +115,7 @@
       </codes_matieres>
       <frequence>hebdomadaire</frequence>
       <duree>PT20M</duree>
-    </colle>
-    <colle id="mp-1995-physique">
+    </colle><colle id="mp-1995-physique" xml:base="nomenclaturescolles/1995-mp.xml">
       <codes_mefs>
         <code_mef>30111018210</code_mef>
         <code_mef>30111027220</code_mef>
@@ -136,8 +126,7 @@
       </codes_matieres>
       <frequence>hebdomadaire</frequence>
       <duree>PT10M</duree>
-    </colle>
-    <colle id="mp-1995-lv">
+    </colle><colle id="mp-1995-lv" xml:base="nomenclaturescolles/1995-mp.xml">
       <nom>Langues vivantes</nom>
       <codes_mefs>
         <code_mef>30111018210</code_mef>
@@ -163,8 +152,7 @@
       </codes_matieres>
       <frequence>hebdomadaire</frequence>
       <duree>PT10M</duree>
-    </colle>
-    <colle id="mp-1995-francais">
+    </colle><colle id="mp-1995-francais" xml:base="nomenclaturescolles/1995-mp.xml">
       <codes_mefs>
         <code_mef>30111018210</code_mef>
         <code_mef>30111027220</code_mef>
@@ -176,9 +164,7 @@
       <frequence>trimestrielle</frequence>
       <duree>PT30M</duree>
     </colle>
-
-    <!-- Colles en PCSI -->
-    <colle id="pcsi-1995-maths">
+    <colle id="pcsi-1995-maths" xml:base="nomenclaturescolles/1995-pcsi.xml">
       <!-- Mathématiques -->
       <codes_mefs>
         <code_mef>30111019210</code_mef>
@@ -188,8 +174,7 @@
       </codes_matieres>
       <frequence>hebdomadaire</frequence>
       <duree>PT10M</duree>
-    </colle>
-    <colle id="pcsi-1995-physique-s1">
+    </colle><colle id="pcsi-1995-physique-s1" xml:base="nomenclaturescolles/1995-pcsi.xml">
       <!-- Physique - Première période -->
       <nom>Physique-chimie - Première période</nom>
       <codes_mefs>
@@ -203,8 +188,7 @@
       <frequence>hebdomadaire</frequence>
       <duree>PT15M</duree>
       <periode>premiere_periode</periode>
-    </colle>
-    <colle id="pcsi-1995-physique-s2chimie">
+    </colle><colle id="pcsi-1995-physique-s2chimie" xml:base="nomenclaturescolles/1995-pcsi.xml">
       <!-- Physique - Deuxième période, option chimie -->
       <nom>Physique - Option Chimie</nom>
       <codes_mefs>
@@ -217,8 +201,7 @@
       <duree>PT10M</duree>
       <periode>deuxieme_periode</periode>
       <si_option>067100</si_option>
-    </colle>
-    <colle id="pcsi-1995-physique-s2si">
+    </colle><colle id="pcsi-1995-physique-s2si" xml:base="nomenclaturescolles/1995-pcsi.xml">
       <!-- Physique - Deuxième période, option SI -->
       <nom>Physique-chimie - Option SI</nom>
       <codes_mefs>
@@ -232,8 +215,7 @@
       <duree>PT15M</duree>
       <periode>deuxieme_periode</periode>
       <si_option>063300</si_option>
-    </colle>
-    <colle id="pcsi-1995-chimie-s2">
+    </colle><colle id="pcsi-1995-chimie-s2" xml:base="nomenclaturescolles/1995-pcsi.xml">
       <!-- Chimie 4h PCSI en deuxième période -->
       <nom>Chimie - Deuxième période</nom>
       <codes_mefs>
@@ -245,8 +227,7 @@
       <frequence>hebdomadaire</frequence>
       <duree>PT10M</duree>
       <periode>deuxieme_periode</periode>
-    </colle>
-    <colle id="pcsi-1995-si-s1">
+    </colle><colle id="pcsi-1995-si-s1" xml:base="nomenclaturescolles/1995-pcsi.xml">
       <!-- Sciences industrielles - Première période -->
       <nom>SI - Première période</nom>
       <codes_mefs>
@@ -258,8 +239,7 @@
       <frequence>hebdomadaire</frequence>
       <duree>PT5M</duree>
       <periode>premiere_periode</periode>
-    </colle>
-    <colle id="pcsi-1995-si-s2">
+    </colle><colle id="pcsi-1995-si-s2" xml:base="nomenclaturescolles/1995-pcsi.xml">
       <!-- Sciences industrielles - Deuxième période -->
       <nom>SI - Deuxième période</nom>
       <codes_mefs>
@@ -271,8 +251,7 @@
       <frequence>hebdomadaire</frequence>
       <duree>PT5M</duree>
       <periode>deuxieme_periode</periode>
-    </colle>
-    <colle id="pcsi-1995-lv">
+    </colle><colle id="pcsi-1995-lv" xml:base="nomenclaturescolles/1995-pcsi.xml">
       <nom>Langues vivantes</nom>
       <codes_mefs>
         <code_mef>30111019210</code_mef>
@@ -296,8 +275,7 @@
       </codes_matieres>
       <frequence>hebdomadaire</frequence>
       <duree>PT10M</duree>
-    </colle>
-    <colle id="pcsi-1995-francais">
+    </colle><colle id="pcsi-1995-francais" xml:base="nomenclaturescolles/1995-pcsi.xml">
       <codes_mefs>
         <code_mef>30111019210</code_mef>
       </codes_mefs>
@@ -307,9 +285,7 @@
       <frequence>trimestrielle</frequence>
       <duree>PT30M</duree>
     </colle>
-
-    <!-- Colles en PC et PC* -->
-    <colle id="pc-1995-maths">
+    <colle id="pc-1995-maths" xml:base="nomenclaturescolles/1995-pc.xml">
       <!-- Mathématiques -->
       <codes_mefs>
         <code_mef>30111032220</code_mef>
@@ -320,8 +296,7 @@
       </codes_matieres>
       <frequence>hebdomadaire</frequence>
       <duree>PT10M</duree>
-    </colle>
-    <colle id="pc-1995-physique">
+    </colle><colle id="pc-1995-physique" xml:base="nomenclaturescolles/1995-pc.xml">
       <!-- Physique -->
       <codes_mefs>
         <code_mef>30111032220</code_mef>
@@ -332,8 +307,7 @@
       </codes_matieres>
       <frequence>hebdomadaire</frequence>
       <duree>PT10M</duree>
-    </colle>
-    <colle id="pc-1995-chimie">
+    </colle><colle id="pc-1995-chimie" xml:base="nomenclaturescolles/1995-pc.xml">
       <!-- Chimie -->
       <codes_mefs>
         <code_mef>30111032220</code_mef>
@@ -344,8 +318,7 @@
       </codes_matieres>
       <frequence>hebdomadaire</frequence>
       <duree>PT10M</duree>
-    </colle>
-    <colle id="pc-1995-lv">
+    </colle><colle id="pc-1995-lv" xml:base="nomenclaturescolles/1995-pc.xml">
       <nom>Langues vivantes</nom>
       <codes_mefs>
         <code_mef>30111032220</code_mef>
@@ -370,8 +343,7 @@
       </codes_matieres>
       <frequence>hebdomadaire</frequence>
       <duree>PT10M</duree>
-    </colle>
-    <colle id="pc-1995-francais">
+    </colle><colle id="pc-1995-francais" xml:base="nomenclaturescolles/1995-pc.xml">
       <!-- Français - philosophie -->
       <codes_mefs>
         <code_mef>30111032220</code_mef>
@@ -383,9 +355,7 @@
       <frequence>trimestrielle</frequence>
       <duree>PT30M</duree>
     </colle>
-
-    <!-- Colles en PSI* -->
-    <colle id="psi-1995-maths">
+    <colle id="psi-1995-maths" xml:base="nomenclaturescolles/1995-psi.xml">
       <codes_mefs>
         <code_mef>30111033220</code_mef>
       </codes_mefs>
@@ -394,8 +364,7 @@
       </codes_matieres>
       <frequence>hebdomadaire</frequence>
       <duree>PT10M</duree>
-    </colle>
-    <colle id="psi-1995-physique">
+    </colle><colle id="psi-1995-physique" xml:base="nomenclaturescolles/1995-psi.xml">
       <codes_mefs>
         <code_mef>30111033220</code_mef>
       </codes_mefs>
@@ -404,8 +373,7 @@
       </codes_matieres>
       <frequence>hebdomadaire</frequence>
       <duree>PT15M</duree>
-    </colle>
-    <colle id="psi-1995-si">
+    </colle><colle id="psi-1995-si" xml:base="nomenclaturescolles/1995-psi.xml">
       <codes_mefs>
         <code_mef>30111033220</code_mef>
       </codes_mefs>
@@ -414,8 +382,7 @@
       </codes_matieres>
       <frequence>hebdomadaire</frequence>
       <duree>PT5M</duree>
-    </colle>
-    <colle id="psi-1995-lv">
+    </colle><colle id="psi-1995-lv" xml:base="nomenclaturescolles/1995-psi.xml">
       <nom>Langues vivantes</nom>
       <codes_mefs>
         <code_mef>30111033220</code_mef>
@@ -439,8 +406,7 @@
       </codes_matieres>
       <frequence>hebdomadaire</frequence>
       <duree>PT10M</duree>
-    </colle>
-    <colle id="psi-1995-francais">
+    </colle><colle id="psi-1995-francais" xml:base="nomenclaturescolles/1995-psi.xml">
       <codes_mefs>
         <code_mef>30111033220</code_mef>
       </codes_mefs>
@@ -450,9 +416,7 @@
       <frequence>trimestrielle</frequence>
       <duree>PT30M</duree>
     </colle>
-
-    <!-- Colles en Khagne et Hypokhagne -->
-    <colle id="lettres-1995-philo">
+    <colle id="lettres-1995-philo" xml:base="nomenclaturescolles/1995-lettres.xml">
       <codes_mefs>
         <code_mef>30113004210</code_mef>
         <code_mef>30113006220</code_mef>
@@ -463,8 +427,7 @@
       </codes_matieres>
       <frequence>trimestrielle</frequence>
       <duree>PT30M</duree>
-    </colle>
-    <colle id="lettres-1995-francais">
+    </colle><colle id="lettres-1995-francais" xml:base="nomenclaturescolles/1995-lettres.xml">
       <codes_mefs>
         <code_mef>30113004210</code_mef>
         <code_mef>30113006220</code_mef>
@@ -475,8 +438,7 @@
       </codes_matieres>
       <frequence>trimestrielle</frequence>
       <duree>PT30M</duree>
-    </colle>
-    <colle id="hypokhagne-1995-latin">
+    </colle><colle id="hypokhagne-1995-latin" xml:base="nomenclaturescolles/1995-lettres.xml">
       <codes_mefs>
         <code_mef>30113004210</code_mef>
         <!-- Pas de latin en Khagne Lyon -->
@@ -487,8 +449,7 @@
       </codes_matieres>
       <frequence>trimestrielle</frequence>
       <duree>PT30M</duree>
-    </colle>
-    <colle id="hypokhagne-1995-grec">
+    </colle><colle id="hypokhagne-1995-grec" xml:base="nomenclaturescolles/1995-lettres.xml">
       <codes_mefs>
         <code_mef>30113004210</code_mef>
         <!-- Pas de grec en Khagne Lyon -->
@@ -499,8 +460,7 @@
       </codes_matieres>
       <frequence>trimestrielle</frequence>
       <duree>PT30M</duree>
-    </colle>
-    <colle id="lettres-1995-histoire">
+    </colle><colle id="lettres-1995-histoire" xml:base="nomenclaturescolles/1995-lettres.xml">
       <codes_mefs>
         <code_mef>30113004210</code_mef>
         <code_mef>30113006220</code_mef>
@@ -511,8 +471,7 @@
       </codes_matieres>
       <frequence>trimestrielle</frequence>
       <duree>PT30M</duree>
-    </colle>
-    <colle id="lettres-1995-geographie">
+    </colle><colle id="lettres-1995-geographie" xml:base="nomenclaturescolles/1995-lettres.xml">
       <codes_mefs>
         <code_mef>30113004210</code_mef>
         <code_mef>30113006220</code_mef>
@@ -523,8 +482,7 @@
       </codes_matieres>
       <frequence>trimestrielle</frequence>
       <duree>PT30M</duree>
-    </colle>
-    <colle id="lettres-1995-lva">
+    </colle><colle id="lettres-1995-lva" xml:base="nomenclaturescolles/1995-lettres.xml">
       <nom>Langues vivantes A</nom>
       <codes_mefs>
         <code_mef>30113004210</code_mef>
@@ -545,8 +503,7 @@
       </codes_matieres>
       <frequence>trimestrielle</frequence>
       <duree>PT30M</duree>
-    </colle>
-    <colle id="lettres-1995-lvb">
+    </colle><colle id="lettres-1995-lvb" xml:base="nomenclaturescolles/1995-lettres.xml">
       <nom>Langues vivantes B</nom>
       <codes_mefs>
         <code_mef>30113004210</code_mef>
@@ -568,9 +525,7 @@
       <frequence>trimestrielle</frequence>
       <duree>PT30M</duree>
     </colle>
-
-    <!-- Colles en BCPST -->
-    <colle id="bcpst-1995-maths">
+    <colle id="bcpst-1995-maths" xml:base="nomenclaturescolles/1995-bcpst.xml">
       <codes_mefs>
         <code_mef>30111021210</code_mef>
         <code_mef>30111021220</code_mef>
@@ -580,8 +535,7 @@
       </codes_matieres>
       <frequence>hebdomadaire</frequence>
       <duree>PT10M</duree>
-    </colle>
-    <colle id="bcpst-1995-physique">
+    </colle><colle id="bcpst-1995-physique" xml:base="nomenclaturescolles/1995-bcpst.xml">
       <codes_mefs>
         <code_mef>30111021210</code_mef>
         <code_mef>30111021220</code_mef>
@@ -591,8 +545,7 @@
       </codes_matieres>
       <frequence>hebdomadaire</frequence>
       <duree>PT10M</duree>
-    </colle>
-    <colle id="bcpst-1995-biologie">
+    </colle><colle id="bcpst-1995-biologie" xml:base="nomenclaturescolles/1995-bcpst.xml">
       <codes_mefs>
         <code_mef>30111021210</code_mef>
         <code_mef>30111021220</code_mef>
@@ -602,8 +555,7 @@
       </codes_matieres>
       <frequence>hebdomadaire</frequence>
       <duree>PT10M</duree>
-    </colle>
-    <colle id="bcpst-1995-lv">
+    </colle><colle id="bcpst-1995-lv" xml:base="nomenclaturescolles/1995-bcpst.xml">
       <nom>Langues vivantes</nom>
       <codes_mefs>
         <code_mef>30111021210</code_mef>
@@ -631,8 +583,7 @@
       </codes_matieres>
       <frequence>hebdomadaire</frequence>
       <duree>PT5M</duree>
-    </colle>
-    <colle id="bcpst-1995-informatique">
+    </colle><colle id="bcpst-1995-informatique" xml:base="nomenclaturescolles/1995-bcpst.xml">
       <nom>Informatique</nom>
       <codes_mefs>
         <code_mef>30111021210</code_mef>
@@ -643,10 +594,9 @@
       </codes_matieres>
       <frequence>hebdomadaire</frequence>
       <duree>PT5M</duree>
+      <mode_defaut>travaux_diriges</mode_defaut>
     </colle>
-
-    <!-- Colles en TSI -->
-    <colle id="tsi-1995-maths">
+    <colle id="tsi-1995-maths" xml:base="nomenclaturescolles/1995-tsi.xml">
       <codes_mefs>
         <code_mef>30111022210</code_mef>
         <code_mef>30111022220</code_mef>
@@ -656,8 +606,7 @@
       </codes_matieres>
       <frequence>hebdomadaire</frequence>
       <duree>PT20M</duree>
-    </colle>
-    <colle id="tsi-1995-physique">
+    </colle><colle id="tsi-1995-physique" xml:base="nomenclaturescolles/1995-tsi.xml">
       <codes_mefs>
         <code_mef>30111022210</code_mef>
         <code_mef>30111022220</code_mef>
@@ -667,8 +616,7 @@
       </codes_matieres>
       <frequence>hebdomadaire</frequence>
       <duree>PT10M</duree>
-    </colle>
-    <colle id="tsi-1995-techno">
+    </colle><colle id="tsi-1995-techno" xml:base="nomenclaturescolles/1995-tsi.xml">
       <codes_mefs>
         <code_mef>30111022210</code_mef>
         <code_mef>30111022220</code_mef>
@@ -678,8 +626,7 @@
       </codes_matieres>
       <frequence>hebdomadaire</frequence>
       <duree>PT10M</duree>
-    </colle>
-    <colle id="tsi-1995-lv">
+    </colle><colle id="tsi-1995-lv" xml:base="nomenclaturescolles/1995-tsi.xml">
       <nom>Langues vivantes</nom>
       <codes_mefs>
         <code_mef>30111022210</code_mef>
@@ -705,8 +652,7 @@
       </codes_matieres>
       <frequence>hebdomadaire</frequence>
       <duree>PT10M</duree>
-    </colle>
-    <colle id="tsi-1995-francais">
+    </colle><colle id="tsi-1995-francais" xml:base="nomenclaturescolles/1995-tsi.xml">
       <codes_mefs>
         <code_mef>30111022210</code_mef>
         <code_mef>30111022220</code_mef>
@@ -721,107 +667,64 @@
   </colles>
 
   <colles_mefs>
-    <!-- ECS1 -->
-    <colles_mef code_mef="30112012210">
+    <colles_mef code_mef="30112012210" xml:base="nomenclaturescolles/1995-ec.xml">
+      <nombre_semaines>30</nombre_semaines>
+      <nombre_trimestres>3</nombre_trimestres>
+    </colles_mef><colles_mef code_mef="30112013210" xml:base="nomenclaturescolles/1995-ec.xml">
+      <nombre_semaines>30</nombre_semaines>
+      <nombre_trimestres>3</nombre_trimestres>
+    </colles_mef><colles_mef code_mef="30112012220" xml:base="nomenclaturescolles/1995-ec.xml">
+      <nombre_semaines>25</nombre_semaines>
+      <nombre_trimestres>2</nombre_trimestres>
+    </colles_mef><colles_mef code_mef="30112013220" xml:base="nomenclaturescolles/1995-ec.xml">
+      <nombre_semaines>25</nombre_semaines>
+      <nombre_trimestres>2</nombre_trimestres>
+    </colles_mef>
+    <colles_mef code_mef="30111018210" xml:base="nomenclaturescolles/1995-mp.xml">
+      <nombre_semaines>30</nombre_semaines>
+      <nombre_trimestres>3</nombre_trimestres>
+    </colles_mef><colles_mef code_mef="30111031220" xml:base="nomenclaturescolles/1995-mp.xml">
+      <nombre_semaines>25</nombre_semaines>
+      <nombre_trimestres>2</nombre_trimestres>
+    </colles_mef><colles_mef code_mef="30111027220" xml:base="nomenclaturescolles/1995-mp.xml">
+      <nombre_semaines>25</nombre_semaines>
+      <nombre_trimestres>2</nombre_trimestres>
+    </colles_mef>
+    <colles_mef code_mef="30111019210" xml:base="nomenclaturescolles/1995-pcsi.xml">
       <nombre_semaines>30</nombre_semaines>
       <nombre_trimestres>3</nombre_trimestres>
     </colles_mef>
-
-    <!-- ECE1 -->
-    <colles_mef code_mef="30112013210">
+    <colles_mef code_mef="30111032220" xml:base="nomenclaturescolles/1995-pc.xml">
+      <nombre_semaines>25</nombre_semaines>
+      <nombre_trimestres>2</nombre_trimestres>
+    </colles_mef><colles_mef code_mef="30111028220" xml:base="nomenclaturescolles/1995-pc.xml">
+      <nombre_semaines>25</nombre_semaines>
+      <nombre_trimestres>2</nombre_trimestres>
+    </colles_mef>
+    <colles_mef code_mef="30111033220" xml:base="nomenclaturescolles/1995-psi.xml">
+      <nombre_semaines>25</nombre_semaines>
+      <nombre_trimestres>2</nombre_trimestres>
+    </colles_mef>
+    <colles_mef code_mef="30113004210" xml:base="nomenclaturescolles/1995-lettres.xml">
       <nombre_semaines>30</nombre_semaines>
       <nombre_trimestres>3</nombre_trimestres>
-    </colles_mef>
-
-    <!-- ECS2 -->
-    <colles_mef code_mef="30112012220">
+    </colles_mef><colles_mef code_mef="30113006220" xml:base="nomenclaturescolles/1995-lettres.xml">
       <nombre_semaines>25</nombre_semaines>
       <nombre_trimestres>2</nombre_trimestres>
     </colles_mef>
-
-    <!-- ECE2 -->
-    <colles_mef code_mef="30112013220">
-      <nombre_semaines>25</nombre_semaines>
-      <nombre_trimestres>2</nombre_trimestres>
-    </colles_mef>
-
-    <!-- MPSI -->
-    <colles_mef code_mef="30111018210">
+    <colles_mef code_mef="30111021210" xml:base="nomenclaturescolles/1995-bcpst.xml">
       <nombre_semaines>30</nombre_semaines>
       <nombre_trimestres>3</nombre_trimestres>
-    </colles_mef>
-
-    <!-- MP* -->
-    <colles_mef code_mef="30111031220">
+    </colles_mef><colles_mef code_mef="30111021220" xml:base="nomenclaturescolles/1995-bcpst.xml">
       <nombre_semaines>25</nombre_semaines>
       <nombre_trimestres>2</nombre_trimestres>
     </colles_mef>
-
-    <!-- MP -->
-    <colles_mef code_mef="30111027220">
-      <nombre_semaines>25</nombre_semaines>
-      <nombre_trimestres>2</nombre_trimestres>
-    </colles_mef>
-
-    <!-- PCSI -->
-    <colles_mef code_mef="30111019210">
+    <colles_mef code_mef="30111022210" xml:base="nomenclaturescolles/1995-tsi.xml">
       <nombre_semaines>30</nombre_semaines>
       <nombre_trimestres>3</nombre_trimestres>
-    </colles_mef>
-
-    <!-- PC* -->
-    <colles_mef code_mef="30111032220">
+    </colles_mef><colles_mef code_mef="30111022220" xml:base="nomenclaturescolles/1995-tsi.xml">
       <nombre_semaines>25</nombre_semaines>
       <nombre_trimestres>2</nombre_trimestres>
     </colles_mef>
-
-    <!-- PC -->
-    <colles_mef code_mef="30111028220">
-      <nombre_semaines>25</nombre_semaines>
-      <nombre_trimestres>2</nombre_trimestres>
-    </colles_mef>
-
-    <!-- PSI* -->
-    <colles_mef code_mef="30111033220">
-      <nombre_semaines>25</nombre_semaines>
-      <nombre_trimestres>2</nombre_trimestres>
-    </colles_mef>
-
-    <!-- Hypokhagne -->
-    <colles_mef code_mef="30113004210">
-      <nombre_semaines>30</nombre_semaines>
-      <nombre_trimestres>3</nombre_trimestres>
-    </colles_mef>
-
-    <!-- Khagne -->
-    <colles_mef code_mef="30113006220">
-      <nombre_semaines>25</nombre_semaines>
-      <nombre_trimestres>2</nombre_trimestres>
-    </colles_mef>
-
-    <!-- BCPST1 -->
-    <colles_mef code_mef="30111021210">
-      <nombre_semaines>30</nombre_semaines>
-      <nombre_trimestres>3</nombre_trimestres>
-    </colles_mef>
-
-    <!-- BCPST2 -->
-    <colles_mef code_mef="30111021220">
-      <nombre_semaines>25</nombre_semaines>
-      <nombre_trimestres>2</nombre_trimestres>
-    </colles_mef>
-
-    <!-- TSI1 -->
-    <colles_mef code_mef="30111022210">
-      <nombre_semaines>30</nombre_semaines>
-      <nombre_trimestres>3</nombre_trimestres>
-    </colles_mef>
-
-    <!-- TSI2 -->
-    <colles_mef code_mef="30111022220">
-      <nombre_semaines>25</nombre_semaines>
-      <nombre_trimestres>2</nombre_trimestres>
-    </colles_mef>
-
   </colles_mefs>
 </pykol_nomenclatures>

@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<pykol_nomenclatures version="1.0"
+  xmlns:xi="http://www.w3.org/2003/XInclude"
+>
+  <!--
+    Ce document décrit les horaires de colles en CPGE, tels qu'ils sont
+    décrits par la réglementation. Il sert de base pour peupler une
+    base de données pyKol en attribuant les horaires de colles aux
+    différents enseignements.
+
+    Sources :
+    * ECS et ECE : arrêté du 23 mars 1995 (NOR: RESK9500107A) ;
+    * CPGE scientifiques : arrêté du 10 février 1995 (NOR: RESK9500109A) ;
+    * CPGE littéraires : arrêté du 27 juin 1995 (NOR: MENU9501179A).
+  -->
+  <colles>
+    <xi:include href="nomenclaturescolles/1995-ec.xml"    xpointer="xpointer(/pykol_nomenclatures/colles/*)"/>
+    <xi:include href="nomenclaturescolles/1995-mp.xml"    xpointer="xpointer(/pykol_nomenclatures/colles/*)"/>
+    <xi:include href="nomenclaturescolles/1995-pcsi.xml"  xpointer="xpointer(/pykol_nomenclatures/colles/*)"/>
+    <xi:include href="nomenclaturescolles/1995-pc.xml"    xpointer="xpointer(/pykol_nomenclatures/colles/*)"/>
+    <xi:include href="nomenclaturescolles/1995-psi.xml"   xpointer="xpointer(/pykol_nomenclatures/colles/*)"/>
+    <xi:include href="nomenclaturescolles/1995-lettres.xml" xpointer="xpointer(/pykol_nomenclatures/colles/*)"/>
+    <xi:include href="nomenclaturescolles/1995-bcpst.xml" xpointer="xpointer(/pykol_nomenclatures/colles/*)"/>
+    <xi:include href="nomenclaturescolles/1995-tsi.xml"   xpointer="xpointer(/pykol_nomenclatures/colles/*)"/>
+
+  </colles>
+
+  <colles_mefs>
+    <xi:include href="nomenclaturescolles/1995-ec.xml"    xpointer="xpointer(/pykol_nomenclatures/colles_mefs/*)"/>
+    <xi:include href="nomenclaturescolles/1995-mp.xml"    xpointer="xpointer(/pykol_nomenclatures/colles_mefs/*)"/>
+    <xi:include href="nomenclaturescolles/1995-pcsi.xml"  xpointer="xpointer(/pykol_nomenclatures/colles_mefs/*)"/>
+    <xi:include href="nomenclaturescolles/1995-pc.xml"    xpointer="xpointer(/pykol_nomenclatures/colles_mefs/*)"/>
+    <xi:include href="nomenclaturescolles/1995-psi.xml"   xpointer="xpointer(/pykol_nomenclatures/colles_mefs/*)"/>
+    <xi:include href="nomenclaturescolles/1995-lettres.xml" xpointer="xpointer(/pykol_nomenclatures/colles_mefs/*)"/>
+    <xi:include href="nomenclaturescolles/1995-bcpst.xml" xpointer="xpointer(/pykol_nomenclatures/colles_mefs/*)"/>
+    <xi:include href="nomenclaturescolles/1995-tsi.xml"   xpointer="xpointer(/pykol_nomenclatures/colles_mefs/*)"/>
+  </colles_mefs>
+</pykol_nomenclatures>

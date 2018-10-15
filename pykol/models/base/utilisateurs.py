@@ -232,6 +232,8 @@ class Professeur(User):
 			blank=True, on_delete=models.SET_NULL,
 			verbose_name="établissement")
 	disciplines = models.ManyToManyField(Discipline)
+	id_acad = models.CharField(max_length=20,
+			verbose_name="identifiant académique", blank=True)
 
 	class Meta:
 		verbose_name = "professeur"

@@ -25,7 +25,9 @@ from django.contrib.auth.mixins import LoginRequiredMixin, \
 from django.contrib.auth.decorators import login_required, permission_required
 from django.utils.timezone import localtime
 from django.db import transaction
+from django.db.models import F
 from django.views.decorators.http import require_POST
+from django.http import JsonResponse
 
 from pykol.models.colles import ColleReleve, Colle, ColleReleveLigne
 from pykol.lib.auth import user_est_professeur
@@ -55,6 +57,28 @@ class ReleveDetailView(LoginRequiredMixin, PermissionRequiredMixin,
 	permission_required = ('pykol.view_collereleve',)
 	model = ColleReleve
 
+@login_required
+@permission_required('pykol.view_collereleve')
+def releve_detail_json(request, pk):
+	lignes = list(ColleReleveLigne.objects.filter(releve__pk=pk).annotate(
+		nom=F('colleur__last_name'),
+		prenom=F('colleur__first_name')).values(
+			'pk', 'releve',
+			'colleur', 'nom', 'prenom',
+			'taux', 'duree', 'duree_interrogation'))
+	data = {
+		'taux': dict(ColleReleveLigne.TAUX_CHOICES),
+		'lignes': lignes,
+	}
+	return JsonResponse(data)
+
+@login_required
+def releve_detail_dispatch(request, pk):
+	if request.GET.get('format', 'html') == 'json':
+		return releve_detail_json(request, pk)
+	else:
+		return ReleveDetailView.as_view()(request, pk=pk)
+
 class ReleveListView(LoginRequiredMixin, PermissionRequiredMixin,
 		generic.ListView):
 	permission_required = ('pykol.view_collereleve',)
@@ -66,6 +90,17 @@ class ReleveListView(LoginRequiredMixin, PermissionRequiredMixin,
 		context['nouvelles_colles'] = Colle.objects.filter(etat__in=(Colle.ETAT_NOTEE,
 			Colle.ETAT_EFFECTUEE), releve__isnull=True).count()
 		return context
+
+@login_required
+@permission_required('pykol.change_collereleve')
+def releve_list_json(request):
+	releves = list(ColleReleve.objects.values('id', 'date', 'date_paiement',
+			'etat'))
+	data = {
+		'etat_releve': dict(ColleReleve.ETAT_CHOICES),
+		'releves': releves,
+	}
+	return JsonResponse(data)
 
 @login_required
 @user_est_professeur
@@ -96,9 +131,13 @@ def releve_prof_detail(request):
 		'lignes': lignes,
 		'futures_lignes': futures_lignes.values(),})
 
+@login_required
 def releve_dispatch(request):
 	if request.user.has_perm('pkyol.view_collereleve'):
-		return ReleveListView.as_view()(request)
+		if request.GET.get('format', 'html') == 'json':
+			return releve_list_json(request)
+		else:
+			return ReleveListView.as_view()(request)
 	else:
 		return releve_prof_detail(request)
 

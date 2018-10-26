@@ -26,11 +26,14 @@ from django.utils import timezone
 from django.db.models import Func, F
 from django.views.decorators.http import require_POST
 from django.contrib import messages
+from django.urls import reverse
+from django.utils.http import is_safe_url
 
 from pykol.models.base import Etudiant, Annee
 from pykol.models.colles import Colle
 from pykol.forms.colles import ColleNoteFormSet, ColleModifierForm
 from pykol.lib.auth import colle_user_permissions
+from pykol.lib.shortcuts import redirect_next
 
 """
 Vues de gestion des colles destinées aux colleurs.
@@ -106,7 +109,7 @@ def colle_declarer(request, pk):
 		if request.method == 'POST':
 			colle.etat = Colle.ETAT_EFFECTUEE
 			colle.save()
-		return redirect('colle_detail', colle.pk)
+		return redirect_next('colle_detail', colle.pk, request=request)
 
 	# On peuple le formulaire avec les élèves qui n'ont pas encore été
 	# notés.
@@ -131,12 +134,20 @@ def colle_declarer(request, pk):
 				colle.etat = Colle.ETAT_NOTEE
 				colle.save()
 
-			return redirect('colle_detail', colle.pk)
+			return redirect_next('colle_detail', colle.pk,
+					request=request)
 	else:
 		form = ColleNoteFormSet(instance=colle, initial=initial)
 		form.extra = len(initial)
 
-	return render(request, 'pykol/colles/noter.html', {'colle': colle, 'form': form})
+	context = {'colle': colle, 'form': form}
+
+	next_url = request.POST.get('next', request.GET.get('next'))
+	if next_url:
+		if is_safe_url(next_url, allowed_hosts=None):
+			context['next_url'] = next_url
+
+	return render(request, 'pykol/colles/noter.html', context)
 
 @login_required
 def colle_deplacer(request, pk):
@@ -210,6 +221,11 @@ class ColleListView(LoginRequiredMixin, generic.ListView):
 					function='')
 				)
 
+	def get_context_data(self, **kwargs):
+		context = super().get_context_data(**kwargs)
+		context['next_url'] = reverse('colle_list')
+		return context
+
 colle_list = ColleListView.as_view()
 
 class ColleANoterListView(ColleListView):
@@ -220,5 +236,10 @@ class ColleANoterListView(ColleListView):
 		return super().get_queryset().filter(etat=Colle.ETAT_PREVUE,
 				colledetails__horaire__lte=timezone.localtime(),
 				colledetails__actif=True)
+
+	def get_context_data(self, **kwargs):
+		context = super().get_context_data(**kwargs)
+		context['next_url'] = reverse('colles_a_noter')
+		return context
 
 colle_a_noter_list = ColleANoterListView.as_view()

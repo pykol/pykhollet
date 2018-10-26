@@ -23,19 +23,30 @@ from django.utils.http import is_safe_url
 
 def redirect_next(to, *args, request=None, **kwargs):
 	"""
-	Redirection vers la valeur de request.POST['next'] si cette valeur
-	est définie, ou bien vers 'to' par défaut sinon.
+	Renvoie une redirection HTTP vers l'URL donnée (par ordre de
+	préférence, les valeurs non définies sont ignorées) par :
+	1. la valeur de request.POST['next'] ;
+	2. la valeur de request.GET['next'] ;
+	3. ou par défaut la valeur du paramètre 'to'.
 
 	La valeur de 'to' peut être n'importe quelle valeur acceptée par la
-	fonction django.shortcuts.to.
+	fonction django.shortcuts.to. Aucune vérification n'est effectuée
+	sur cette valeur.
 
-	La valeur de request.POST['next'] est testée avant de réaliser la
-	redirection afin de savoir s'il s'agit d'une URL sécurisée pour une
-	redirection.
+	Les valeurs de request.POST['next'] ou de request.GET['next'] sont
+	testées avant de réaliser la redirection, afin de savoir s'il s'agit
+	d'une URL sécurisée pour une redirection.
 	"""
-	if request is not None and \
-			'next' in request.POST and \
-			is_safe_url(request.POST['next']):
-		return redirect(request.POST['next'], *args, **kwargs)
-	else:
-		return redirect(to, *args, **kwargs)
+	try:
+		if is_safe_url(request.POST['next'], allowed_hosts=None):
+			return redirect(request.POST['next'], *args, **kwargs)
+	except:
+		pass
+
+	try:
+		if is_safe_url(request.GET['next'], allowed_hosts=None):
+			return redirect(request.GET['next'], *args, **kwargs)
+	except:
+		pass
+
+	return redirect(to, *args, **kwargs)

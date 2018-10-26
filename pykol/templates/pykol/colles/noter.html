@@ -27,6 +27,9 @@
 
   <form method="post" action="">
     {% csrf_token %}
+    {% if next_url %}
+    <input type="hidden" name="next" value="{{ next_url }}">
+    {% endif %}
     <table>
       {{ form.as_table }}
     </table>

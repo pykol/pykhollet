@@ -1,8 +1,9 @@
 {% if colle.mode == colle.MODE_INTERROGATION %}
-<a class="btn btn-sm btn-primary" href="{% url 'colle_declarer' colle.pk %}">Noter</a>
+<a class="btn btn-sm btn-primary" href="{% url 'colle_declarer' colle.pk %}{% if next_url %}?next={{ next_url }}{% endif %}">Noter</a>
 {% elif colle.a_noter and colle.etat == colle.ETAT_PREVUE %}
 <form method="post" action="{% url 'colle_declarer' colle.pk %}">
   {% csrf_token %}
+  {% if next_url %}<input type="hidden" name="next" value="{{ next_url }}">{% endif %}
   <button class="btn btn-primary btn-sm" type="submit">Déclarer</button>
 </form>
 {% endif %}

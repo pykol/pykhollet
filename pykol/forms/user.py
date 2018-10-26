@@ -85,7 +85,7 @@ class ProfesseurForm(forms.ModelForm):
 
 	class Meta:
 		model = Professeur
-		fields = ('corps', 'etablissement',)
+		fields = ('corps', 'etablissement', 'id_acad')
 
 class EtudiantForm(forms.ModelForm):
 	"""

@@ -1091,6 +1091,7 @@ class BEEImporter:
 			individu_id = individu.attrib['ID']
 			nom = individu.find('NOM_USAGE').text.title()
 			prenom = individu.find('PRENOM').text.title()
+			numero_sts = individu.attrib.get('ID')
 
 			sexe_xml = individu.find('SEXE').text
 			if sexe_xml == '1':
@@ -1140,6 +1141,7 @@ class BEEImporter:
 							'corps': grade,
 							'sexe': sexe,
 							'etablissement': self.etablissement,
+							'id_acad': numero_sts,
 							})
 				self.professeurs[individu_id].disciplines.set(disciplines)
 

@@ -62,9 +62,11 @@ class ReleveDetailView(LoginRequiredMixin, PermissionRequiredMixin,
 def releve_detail_json(request, pk):
 	lignes = list(ColleReleveLigne.objects.filter(releve__pk=pk).annotate(
 		nom=F('colleur__last_name'),
-		prenom=F('colleur__first_name')).values(
+		prenom=F('colleur__first_name'),
+		id_acad=F('colleur__id_acad')
+		).values(
 			'pk', 'releve',
-			'colleur', 'nom', 'prenom',
+			'colleur', 'nom', 'prenom', 'id_acad',
 			'taux', 'duree', 'duree_interrogation'))
 	data = {
 		'taux': dict(ColleReleveLigne.TAUX_CHOICES),

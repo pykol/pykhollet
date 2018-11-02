@@ -22,7 +22,7 @@
       {% for etudiant, resultats in etudiants.items %}
       <tr>
         <td>{{ etudiant }}</td>
-        <td>{{ resultats.moyenne }}</td>
+        <td>{{ resultats.moyenne|floatformat }}</td>
         <td>{{ resultats.rang|rang }}</td>
         {% for notes in resultats.notes %}
         <td>{{ notes|join:', ' }}</td>

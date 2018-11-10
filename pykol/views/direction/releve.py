@@ -135,7 +135,7 @@ def releve_prof_detail(request):
 
 @login_required
 def releve_dispatch(request):
-	if request.user.has_perm('pkyol.view_collereleve'):
+	if request.user.has_perm('pykol.view_collereleve'):
 		if request.GET.get('format', 'html') == 'json':
 			return releve_list_json(request)
 		else:

@@ -82,7 +82,8 @@ releves_urlpatterns = [
 	path('', views.direction.releve_dispatch, name='releve_list'),
 	path('creer/', views.direction.releve_creer, name='releve_creer'),
 	path('<int:pk>/', views.direction.releve_detail_dispatch, name='releve_detail'),
-	path('<int:pk>/payer/', views.direction.releveligne_payer, name='releveligne_payer'),
+	path('ligne/<int:pk>/payer', views.direction.releveligne_payer, name='releveligne_payer'),
+	path('ligne/<int:pk>/saisie_asie', views.direction.releveligne_saisie_asie, name='releveligne_saisie_asie'),
 ]
 
 trinomes_urlpatterns = [

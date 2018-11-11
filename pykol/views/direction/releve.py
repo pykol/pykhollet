@@ -150,3 +150,12 @@ def releveligne_payer(request, pk):
 	ligne = get_object_or_404(ColleReleveLigne, pk=pk)
 	ligne.payer()
 	return redirect('releve_detail', pk=ligne.releve.pk)
+
+@login_required
+@permission_required('pykol.change_collereleve')
+@require_POST
+def releveligne_saisie_asie(request, pk):
+	ligne = get_object_or_404(ColleReleveLigne, pk=pk)
+	ligne.etat = ColleReleveLigne.ETAT_SAISIE_ASIE
+	ligne.save()
+	return redirect('releve_detail', pk=ligne.releve.pk)

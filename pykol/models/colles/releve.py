@@ -78,7 +78,7 @@ class ColleReleve(models.Model):
 		les lignes du relevé sont payées. Si une seule ligne n'est pas
 		payée, l'état du relevé n'est pas modifié.
 		"""
-		if not self.lignes.filter(etat=ColleReleve.ETAT_NOUVEAU).exists():
+		if not self.lignes.exclude(etat=ColleReleve.ETAT_PAYE).exists():
 			self.payer(date)
 
 	@property
@@ -154,9 +154,11 @@ class ColleReleveLigne(models.Model):
 
 	ETAT_NOUVEAU = 0
 	ETAT_PAYE = 1
+	ETAT_SAISIE_ASIE = 2
 	ETAT_CHOICES = (
 			(ETAT_NOUVEAU, "Nouveau"),
 			(ETAT_PAYE, "Payé"),
+			(ETAT_SAISIE_ASIE, "Saisie dans ASIE"),
 		)
 	etat = models.PositiveSmallIntegerField(verbose_name="état",
 			choices=ETAT_CHOICES,

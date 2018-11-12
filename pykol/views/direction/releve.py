@@ -65,11 +65,12 @@ def releve_detail_json(request, pk):
 		prenom=F('colleur__first_name'),
 		id_acad=F('colleur__id_acad')
 		).values(
-			'pk', 'releve',
+			'pk', 'releve', 'etat',
 			'colleur', 'nom', 'prenom', 'id_acad',
 			'taux', 'duree', 'duree_interrogation'))
 	data = {
 		'taux': dict(ColleReleveLigne.TAUX_CHOICES),
+		'etats': dict(ColleReleveLigne.ETAT_CHOICES),
 		'lignes': lignes,
 	}
 	return JsonResponse(data)

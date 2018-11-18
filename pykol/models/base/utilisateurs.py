@@ -232,8 +232,22 @@ class Professeur(User):
 			blank=True, on_delete=models.SET_NULL,
 			verbose_name="établissement")
 	disciplines = models.ManyToManyField(Discipline)
+
+	# Éléments d'identification du professeur sur ASIE
 	id_acad = models.CharField(max_length=20,
 			verbose_name="identifiant académique", blank=True)
+	nom_asie = models.CharField(max_length=100,
+			verbose_name="Nom du professeur dans ASIE", blank=True,
+			help_text="Champ à remplir lorsque le nom affiché pour "
+			  "ce professeur ne correspond pas au nom sous lequel il "
+			  "est connu dans ASIE. Ce champ peut être laissé vide si "
+			  "le nom connu dans ASIE n'est pas différent.")
+	prenom_asie = models.CharField(max_length=100,
+			verbose_name="Prénom du professeur dans ASIE", blank=True,
+			help_text="Champ à remplir lorsque le prénom affiché pour "
+			  "ce professeur ne correspond pas au prénom sous lequel il "
+			  "est connu dans ASIE. Ce champ peut être laissé vide si "
+			  "le prénom connu dans ASIE n'est pas différent.")
 
 	class Meta:
 		verbose_name = "professeur"

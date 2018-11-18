@@ -130,7 +130,7 @@ def colle_declarer(request, pk):
 			# est notée.
 			eleves_sans_note = colle.details.eleves.difference(
 				Etudiant.objects.filter(collenote__colle=colle))
-			if not eleves_sans_note:
+			if not eleves_sans_note and colle.etat != Colle.ETAT_RELEVEE:
 				colle.etat = Colle.ETAT_NOTEE
 				colle.save()
 

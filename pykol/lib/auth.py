@@ -116,14 +116,25 @@ class PykolBackend(ModelBackend):
 			if perm_colloscope(professeur=user_obj,
 					matiere=matiere_colle, classe=classe):
 				perms.update(('pykol.add_colle', 'pykol.change_colle',
-					'pykol.delete_colle', 'pykol.add_colledetails'))
+					'pykol.delete_colle', 'pykol.add_colledetails',
+					'pykol.view_colle'))
 
 			# Le colleur peut apporter des modifications à ses colles et
 			# les noter.
 			try:
 				if user_obj == obj.colleur.user_ptr:
 					perms.update(('pykol.change_colle',
-						'pykol.add_collenote', 'pykol.add_colledetails'))
+						'pykol.view_colle', 'pykol.add_collenote',
+						'pykol.add_colledetails'))
+			except:
+				pass
+
+			# Le professeur de la classe peut voir et modifier les
+			# colles de ses propres matières.
+			try:
+				if user_obj.professeur in obj.classe.profs_de(obj.matiere):
+					perms.update(('pykol.change_colle',
+						'pykol.view_colle'))
 			except:
 				pass
 

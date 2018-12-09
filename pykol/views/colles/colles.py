@@ -49,8 +49,7 @@ fichier colloscope.py
 def colle_visible_par(user, colle):
 	"""Renvoie True si et seulement si l'utilisateur a le droit de
 	consulter les détails de la colle."""
-	return user.has_perm('pykol.change_colle', colle) or \
-		user in colle.classe.profs_de(colle.matiere)
+	return user.has_perm('pykol.view_colle', colle)
 
 class ColleVisibleMixin(generic.detail.SingleObjectMixin,
 		UserPassesTestMixin):

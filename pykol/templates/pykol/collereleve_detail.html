@@ -1,4 +1,8 @@
 {% extends "pykol/base.html" %}
+{% block head %}
+{{ block.super }}
+<link rel="alternate" href="?format=json" type="application/json">
+{% endblock %}
 {% block content %}
 <h2>Relevé des colles du {{ collereleve.date }}</h2>
 

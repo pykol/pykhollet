@@ -99,6 +99,9 @@ class User(AbstractUser):
 			null=True, blank=True)
 	username = None
 
+	birth_date = models.DateField(verbose_name="date de naissance",
+			null=True, blank=True)
+
 	USERNAME_FIELD = 'email'
 	REQUIRED_FIELDS = ['sexe',]
 

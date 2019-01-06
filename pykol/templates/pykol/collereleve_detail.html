@@ -1,7 +1,9 @@
 {% extends "pykol/base.html" %}
+{% load static %}
 {% block head %}
 {{ block.super }}
 <link rel="alternate" href="?format=json" type="application/json">
+<script src="{% static 'js/releve_async_payer.js' %}"></script>
 {% endblock %}
 {% block content %}
 <h2>Relevé des colles du {{ collereleve.date }}</h2>
@@ -21,31 +23,35 @@
 <section>
   <h3>Détails</h3>
 
-  <table>
-    <tr>
-      <th>Professeur</th>
-      <th>Taux</th>
-      <th>Heures</th>
-      <th>Durée d'interrogation</th>
-      <th>État</th>
-      <th>Actions</th>
-    </tr>
-    {% for ligne in collereleve.lignes_par_prof %}
-    <tr>
-      <td>{{ ligne.colleur }}</td>
-      <td>{{ ligne.get_taux_display }}</td>
-      <td>{{ ligne.heures|floatformat:"-2" }}</td>
-      <td>{{ ligne.heures_interrogation|floatformat:"-2" }}</td>
-      <td>{{ ligne.get_etat_display }}{% if ligne.etat == ligne.ETAT_PAYE %} − {{ ligne.date_paiement }}{% endif %}</td>
-      <td>{% if ligne.etat != ligne.ETAT_PAYE %}
-        <form action="{% url 'releveligne_payer' ligne.pk %}" method="POST">
-          {% csrf_token %}
-          <button type="submit" class="btn btn-primary btn-sm">Payer</button>
-        </form>
-        {% endif %}
-      </td>
-    </tr>
-    {% endfor %}
+  <table class="releve-lignes">
+    <thead>
+      <tr>
+        <th>Professeur</th>
+        <th>Taux</th>
+        <th>Heures</th>
+        <th>Durée d'interrogation</th>
+        <th>État</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for ligne in collereleve.lignes_par_prof %}
+      <tr id="releve-ligne-{{ ligne.id }}">
+        <td class="ligne-colleur">{{ ligne.colleur }}</td>
+        <td class="ligne-taux">{{ ligne.get_taux_display }}</td>
+        <td class="ligne-heures">{{ ligne.heures|floatformat:"-2" }}</td>
+        <td class="ligne-interrogation">{{ ligne.heures_interrogation|floatformat:"-2" }}</td>
+        <td class="ligne-etat">{{ ligne.get_etat_display }}{% if ligne.etat == ligne.ETAT_PAYE %} − {{ ligne.date_paiement }}{% endif %}</td>
+        <td class="ligne-action">{% if ligne.etat != ligne.ETAT_PAYE %}
+          <form action="{% url 'releveligne_payer' ligne.pk %}" method="POST">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-primary btn-sm">Payer</button>
+          </form>
+          {% endif %}
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
   </table>
 </section>
 

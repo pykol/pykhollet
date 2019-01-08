@@ -73,9 +73,13 @@ def releve_detail_json(request, pk):
 			'nom_asie', 'prenom_asie',))
 	data = {
 		'taux': dict(ColleReleveLigne.TAUX_CHOICES),
-		'etats': dict(ColleReleveLigne.ETAT_CHOICES),
+		'etat_ligne': dict(ColleReleveLigne.ETAT_CHOICES),
 		'lignes': lignes,
 	}
+	data.update(ColleReleve.objects.filter(pk=pk).values('id', 'date',
+		'date_paiement', 'etat')[0],
+		etat_releve=dict(ColleReleve.ETAT_CHOICES))
+
 	return JsonResponse(data)
 
 @login_required

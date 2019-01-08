@@ -75,7 +75,8 @@ class UserForm(forms.ModelForm):
 
 	class Meta:
 		model = User
-		fields = ('last_name', 'first_name', 'email', 'sexe',)
+		fields = ('last_name', 'first_name', 'email', 'sexe',
+				'birth_date',)
 
 class ProfesseurForm(forms.ModelForm):
 	"""
@@ -85,7 +86,8 @@ class ProfesseurForm(forms.ModelForm):
 
 	class Meta:
 		model = Professeur
-		fields = ('corps', 'etablissement', 'id_acad')
+		fields = ('corps', 'etablissement', 'id_acad',
+				'nom_asie', 'prenom_asie')
 
 class EtudiantForm(forms.ModelForm):
 	"""

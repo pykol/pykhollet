@@ -1,0 +1,21 @@
+{% extends 'pykol/base.html' %}
+{% block content %}
+<h2>Planning des colles</h2>
+
+Les <a href="#colles_passees">colles passées</a> se trouvent en bas de
+cette page.
+
+<section id="colles_futures">
+  {% if colles_futures %}
+  <h3>Planning</h3>
+  {% include 'pykol/colles/colle_list_widget.html' with colle_list=colles_futures %}
+  {% endif %}
+</section>
+
+<section id="colles_passees">
+  {% if colles_passees %}
+  <h3>Colles passées</h3>
+  {% include 'pykol/colles/colle_list_widget.html' with colle_list=colles_passees %}
+  {% endif %}
+</section>
+{% endblock content %}

@@ -1,0 +1,30 @@
+{% if colle_list %}
+<table>
+  <thead>
+    <tr>
+      <th>Classe</th>
+      <th>Horaire</th>
+      <th>Matière</th>
+      <th>État</th>
+      <th>Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for colle in colle_list %}
+    <tr>
+      <td>{{ colle.classe }}</td>
+      <td><a href="{{ colle.get_absolute_url }}">{{ colle.details.horaire }}</a></td>
+      <td>{{ colle.matiere }}</td>
+      <td>{% if colle.a_noter and colle.etat == colle.ETAT_PREVUE %}
+        <span class="badge badge-warning">À noter</span>
+        {% else %}
+        <span class="badge badge-success">{{ colle.get_etat_display|title }}</span>
+        {% endif %}</td>
+      <td>{% include 'pykol/colles/noter_button.html' %}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% else %}
+<p>Aucune colle à afficher.</p>
+{% endif %}

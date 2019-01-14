@@ -16,6 +16,8 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+from datetime import timedelta
+
 from django.core.exceptions import PermissionDenied
 from django.shortcuts import render, get_object_or_404, redirect
 from django.views import generic
@@ -209,7 +211,7 @@ class ColleListView(LoginRequiredMixin, generic.ListView):
 	"""
 	Affichage des colles pour le colleur actuellement connecté
 	"""
-	template_name = 'pykol/colles/colle_list.html'
+	template_name = 'pykol/colles/colle_list_passe.html'
 
 	def get_queryset(self):
 		return Colle.objects.filter(
@@ -223,6 +225,14 @@ class ColleListView(LoginRequiredMixin, generic.ListView):
 	def get_context_data(self, **kwargs):
 		context = super().get_context_data(**kwargs)
 		context['next_url'] = reverse('colle_list')
+
+		# Pour la séparation colles passées et futures, on laisse quand
+		# même un délai de grâce de 3 jours avant de les reléguer en fin
+		# de page.
+		limite_futur = timezone.localtime() - timedelta(days=3)
+		colle_list = self.get_queryset()
+		context['colles_futures'] = colle_list.filter(colledetails__actif=True, colledetails__horaire__gte=limite_futur)
+		context['colles_passees'] = colle_list.filter(colledetails__actif=True, colledetails__horaire__lt=limite_futur)
 		return context
 
 colle_list = ColleListView.as_view()
@@ -231,6 +241,8 @@ class ColleANoterListView(ColleListView):
 	"""
 	Affichage des colles en attente de notation pour le colleur
 	"""
+	template_name = 'pykol/colles/colle_list.html'
+
 	def get_queryset(self):
 		return super().get_queryset().filter(etat=Colle.ETAT_PREVUE,
 				colledetails__horaire__lte=timezone.localtime(),

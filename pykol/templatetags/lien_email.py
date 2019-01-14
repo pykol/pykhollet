@@ -21,5 +21,5 @@ register = template.Library()
 
 @register.inclusion_tag('pykol/widgets/lien_email.html')
 def lien_email(users, title=None):
-	return {'emails': users.values_list('email', flat=True),
+	return {'emails': filter(lambda x: bool(x), users.values_list('email', flat=True)),
 			'title': title,}

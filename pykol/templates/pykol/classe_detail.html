@@ -1,7 +1,9 @@
 {% extends "pykol/base.html" %}
 {% load lien_email %}
 {% block content %}
-<h2>Détail de la classe {{ classe.nom }}</h2>
+<h2>Détail de la classe {{ classe.nom }}
+  <small>{% lien_email classe.etudiants.all title="Envoyer un e-mail à la classe" %}</small>
+</h2>
 
 <section>
   {% if gestion_colloscope %}

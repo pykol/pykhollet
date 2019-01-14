@@ -3,9 +3,7 @@
 <h2>Planning des colles</h2>
 
 <section>
-  {% if colle_list %}
   {% include 'pykol/colles/colle_list_widget.html' with colle_list=colle_list only%}
-  {% endif %}
 </section>
 
 {% endblock content %}

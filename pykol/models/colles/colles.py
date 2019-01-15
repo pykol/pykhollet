@@ -22,7 +22,7 @@ from django.db import models, transaction
 from django.urls import reverse
 
 from pykol.models.base import Classe, Professeur, Matiere, Etudiant, \
-		Enseignement
+		Enseignement, Periode
 from pykol.models.fields import NoteField
 
 # Liste des jours de la semaine, numérotation ISO
@@ -323,3 +323,18 @@ class ColleNote(models.Model):
 	class Meta:
 		verbose_name = "note de colle"
 		verbose_name_plural = "notes de colle"
+
+class PeriodeNotation(Periode):
+	"""
+	Période personnalisée pour le calcul des moyennes de colles.
+
+	Ce modèle permet de calculer des moyennes d'oral séparées pour
+	chaque période de l'année définie par le professeur de la classe.
+
+	Chaque période est valable pour une seule matière dans une classe
+	donnée. Chaque professeur de la classe peut définir des périodes de
+	notation indépendamment de ses collègues des autres matières.
+	"""
+	enseignement = models.ForeignKey(Enseignement,
+			on_delete=models.CASCADE)
+	semaines = models.ManyToManyField('Semaine')

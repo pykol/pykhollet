@@ -16,7 +16,7 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-from .colles import Colle, ColleDetails, ColleNote
+from .colles import Colle, ColleDetails, ColleNote, PeriodeNotation
 from .releve import ColleReleve, ColleReleveLigne
 from .conception import Semaine, Creneau, Trinome, \
 		Roulement, RoulementLigne, RoulementApplication, \

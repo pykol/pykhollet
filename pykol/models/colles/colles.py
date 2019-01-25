@@ -97,11 +97,14 @@ class ColleQuerySet(models.QuerySet):
 				semaine=semaine,
 				defaults=colle_data)
 
-		colle.ajout_details(
-			horaire=semaine.horaire_creneau(creneau),
-			salle=creneau.salle,
-			colleur=creneau.colleur,
-			etudiants=trinome.etudiants.all())
+		# On accepte uniquement la modification si la colle n'a pas
+		# encore été effectuée.
+		if colle.etat in (Colle.ETAT_BROUILLON, Colle.ETAT_PREVUE):
+			colle.ajout_details(
+				horaire=semaine.horaire_creneau(creneau),
+				salle=creneau.salle,
+				colleur=creneau.colleur,
+				etudiants=trinome.etudiants.all())
 
 		return (colle, created)
 
@@ -229,7 +232,6 @@ class Colle(AbstractBaseColle):
 		Cette méthode renvoie le nouvel objet ColleDetails actif pour la
 		colle.
 		"""
-
 		try:
 			ancien_detail = self.details
 

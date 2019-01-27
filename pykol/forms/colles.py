@@ -19,8 +19,9 @@
 from django import forms
 from django.utils import timezone
 
-from pykol.models.base import Professeur
-from pykol.models.colles import Colle, ColleNote, Trinome, ColleDetails
+from pykol.models.base import Professeur, Enseignement
+from pykol.models.colles import Colle, ColleNote, Trinome, \
+		ColleDetails, PeriodeNotation
 from . import LabelledHiddenWidget
 
 class ColleNoteForm(forms.ModelForm):
@@ -80,3 +81,15 @@ class ColleModifierForm(forms.Form):
 
 ResaPonctuellesFormSet = forms.modelformset_factory(ColleDetails,
 		fields=('salle',), can_delete=False)
+
+
+class PeriodeNotationForm(forms.ModelForm):
+	class Meta:
+		model = PeriodeNotation
+		fields = ('nom', 'debut', 'fin', 'enseignement',)
+
+PeriodeNotationFormset = forms.inlineformset_factory(Enseignement,
+		PeriodeNotation,
+		form=PeriodeNotationForm,
+		fields=PeriodeNotationForm.Meta.fields,
+		extra=1)

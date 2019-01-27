@@ -10,10 +10,9 @@
   <small><a title="Télécharger au format OpenDocument"
       href="?format=odf"><i class="fa fa-download"></i></a></small>
 </h2>
-{% for matiere, etudiants in matieres.items %}
+{% for matiere, tableau_matiere in matieres.items %}
 <section>
-  <h3>Notes des étudiants en {{matiere}}
-  </h3>
+  <h3>Notes des étudiants en {{matiere}}</h3>
   <table class="resultats">
     <tr>
       <th>Étudiant</th>
@@ -23,7 +22,7 @@
       <th>{{ semaine.numero }}</th>
       {% endfor %}
       </tr>
-      {% for etudiant, resultats in etudiants.items %}
+      {% for etudiant, resultats in tableau_matiere.etudiants.items %}
       <tr>
         <td>{{ etudiant }}</td>
         <td>{{ resultats.moyenne|floatformat }}</td>
@@ -34,6 +33,16 @@
       </tr>
       {% endfor %}
   </table>
+  {% if tableau_matiere.periode_form %}
+  <h3>Périodes de notation</h3>
+  <p>Vous pouvez découper l'année en plusieurs périodes de notation afin
+  de calculer les moyennes de colles séparément sur chaque période.</p>
+  <form method="post" action="{% url 'classe_periode_notation' classe.slug %}">
+    {% csrf_token %}
+    {{ tableau_matiere.periode_form.as_table }}
+    <p><input type="submit" value="Enregistrer les périodes">
+  </form>
+  {% endif %}
 </section>
 {% empty %}
 <section>

@@ -28,3 +28,5 @@ from .decompte import decompte_list, decompte_detail, \
 		decompte_creer
 
 from .resultats import classe_resultats
+
+from .periodenotation import periode_notation

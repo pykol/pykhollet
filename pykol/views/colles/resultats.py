@@ -38,9 +38,10 @@ from odf.style import Style, TableColumnProperties, TableRowProperties, \
 from odf.number import Number, NumberStyle
 from odf.text import P
 
-from pykol.models.base import Classe, Matiere, Etudiant
+from pykol.models.base import Classe, Matiere, Etudiant, Enseignement
 from pykol.models.colles import Semaine, ColleNote, Colle
 from pykol.models.fields import Moyenne, Note
+from pykol.forms.colles import PeriodeNotationFormset
 from pykol.lib.auth import professeur_dans
 from pykol.lib.sortedcollection import SortedCollection
 
@@ -133,7 +134,6 @@ def tableau_resultats(classe, matieres):
 	notesParEtudiantParMatiere = {}
 
 	for matiere in matieres:
-		# etudiants = Etudiant.objects.filter(classe = classe, groupe__enseignement__matiere = matiere).order_by('last_name','first_name')
 		etudiants = Etudiant.objects.filter(classe = classe).order_by('last_name','first_name')
 
 		notesParEtudiant = OrderedDict()
@@ -184,12 +184,24 @@ def tableau_resultats(classe, matieres):
 							semaines]
 				}
 
-		notesParEtudiantParMatiere[matiere] = notesParEtudiant
+		notesParEtudiantParMatiere[matiere] = {
+				'etudiants': notesParEtudiant,
+		}
 
 	return {'matieres': notesParEtudiantParMatiere,
 			'semaines': semaines}
 
 def classe_resultats_html(request, resultats):
+	# Ajout des formulaires pour créer les périodes de notation
+	classe = resultats['classe']
+	for matiere in resultats['matieres']:
+		enseignement = Enseignement.objects.get(classe=classe,
+				matiere=matiere)
+		if request.user.has_perm('pykol.change_periodenotation',
+				enseignement):
+			resultats['matieres'][matiere]['periode_form'] = \
+				PeriodeNotationFormset(instance=enseignement)
+
 	return render(request, 'pykol/colles/classe_resultats.html',
 			context=resultats)
 

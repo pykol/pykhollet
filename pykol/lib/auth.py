@@ -24,7 +24,7 @@ from django.db.models import F, Q
 from django.contrib.auth.backends import ModelBackend
 from django.contrib.auth.decorators import user_passes_test
 
-from pykol.models.base import Classe
+from pykol.models.base import Classe, Enseignement
 from pykol.models.colles import ColloscopePermission, Colle, \
 		ColleNote, Creneau, Trinome
 
@@ -102,6 +102,21 @@ class PykolBackend(ModelBackend):
 					perms.update(('pykol.add_creneau',
 						'pykol.change_trinome', 'pykol.change_semaine',
 						'pykol.change_creneau'))
+
+			return perms
+
+		if isinstance(obj, Enseignement):
+			perms = set()
+
+			# Le professeur de la classe peut voir et modifier les
+			# périodes de notation des colles dans ses propres matières.
+			try:
+				if user_obj.professeur in obj.classe.profs_de(obj.matiere):
+					perms.update(('pykol.add_periodenotation',
+						'pykol.change_periodenotation',
+						'pykol.delete_periodenotation'))
+			except:
+				pass
 
 			return perms
 

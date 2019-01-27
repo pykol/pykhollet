@@ -16,7 +16,7 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-from collections import namedtuple
+from collections import namedtuple, OrderedDict
 
 from django.views import generic
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -71,11 +71,11 @@ class ClasseDetailView(LoginRequiredMixin, generic.DetailView):
 		context['classe_perm'] = classe_perm
 		context['gestion_colloscope'] = any(classe_perm)
 
-		periodes = {}
+		periodes = OrderedDict()
 		qs = classe.trinomes.annotate(
 				nom_as_int=MaybeCast('nom')
 				).order_by('nom_as_int', 'nom')
-		for periode_id, periode_nom in Trinome.PERIODE_CHOICES:
+		for periode_id, periode_nom in reversed(Trinome.PERIODE_CHOICES):
 			trinomes = qs.filter(periode=periode_id)
 			if trinomes:
 				periodes[periode_nom] = trinomes

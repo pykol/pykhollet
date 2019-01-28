@@ -29,16 +29,23 @@ def periode_notation(request):
 	enseignements = Enseignement.objects.filter(professeur=prof)
 
 	if request.method == 'POST':
-		form = PeriodeNotationFormset(request.POST,
-				enseignements=enseignements)
-		if form.is_valid():
-			form.save()
-			return redirect_next('periodenotation_list', request=request)
+		formset = PeriodeNotationFormset(request.POST)
+		if formset.is_valid():
+			formset.save(commit=False)
+			for periode in formset.changed_objects:
+				if request.user.has_perm('pykol.change_periodenotation',
+						periode):
+					periode.save()
+			for periode in formset.deleted_objects:
+				if request.user.has_perm('pykol.delete_periodenotation',
+						periode):
+					periode.delete()
+			for periode in formset.new_objects:
+				if request.user.has_perm('pykol.add_periodenotation',
+						periode):
+					periode.save()
+			return redirect_next('home', request=request)
 	else:
 		form = PeriodeNotationFormset(enseignements=enseignements)
-	
-	return render('periodenotation_list')
 
-@login_required
-def periode_notation_detail(request, pk):
-	periode = get_object_or_404(PeriodeNotation, pk=pk)
+	return render('home')

@@ -26,7 +26,7 @@ from django.contrib.auth.decorators import user_passes_test
 
 from pykol.models.base import Classe, Enseignement
 from pykol.models.colles import ColloscopePermission, Colle, \
-		ColleNote, Creneau, Trinome
+		ColleNote, Creneau, Trinome, PeriodeNotation
 
 def perm_colloscope_qs(professeur, classe, matiere=None,
 		matiere_seulement=True):
@@ -188,6 +188,15 @@ class PykolBackend(ModelBackend):
 					classe=obj.classe):
 				perms.update(('pykol.change_trinome',
 					'pykol.delete_trinome', 'pykol.add_trinome'))
+			return perms
+
+		# Permissions sur les périodes de notation
+		if isinstance(obj, PeriodeNotation):
+			perms = set()
+			if obj.enseignement.professeurs.filter(pk=user_obj.pk).exists():
+				perms.update(('pykol.change_periodenotation',
+					'pykol.delete_periodenotation',
+					'pykol.add_periodenotation'))
 			return perms
 
 		return set()

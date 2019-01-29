@@ -41,7 +41,7 @@ from odf.text import P
 from pykol.models.base import Classe, Matiere, Etudiant, Enseignement
 from pykol.models.colles import Semaine, ColleNote, Colle
 from pykol.models.fields import Moyenne, Note
-from pykol.forms.colles import PeriodeNotationFormset
+from pykol.forms.colles import PeriodeNotationInlineFormset
 from pykol.lib.auth import professeur_dans
 from pykol.lib.sortedcollection import SortedCollection
 
@@ -200,7 +200,7 @@ def classe_resultats_html(request, resultats):
 		if request.user.has_perm('pykol.change_periodenotation',
 				enseignement):
 			resultats['matieres'][matiere]['periode_form'] = \
-				PeriodeNotationFormset(instance=enseignement)
+				PeriodeNotationInlineFormset(instance=enseignement)
 
 	return render(request, 'pykol/colles/classe_resultats.html',
 			context=resultats)

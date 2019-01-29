@@ -37,11 +37,37 @@
   <h3>Périodes de notation</h3>
   <p>Vous pouvez découper l'année en plusieurs périodes de notation afin
   de calculer les moyennes de colles séparément sur chaque période.</p>
+  {% with formset=tableau_matiere.periode_form %}
   <form method="post" action="{% url 'classe_periode_notation' classe.slug %}">
     {% csrf_token %}
-    {{ tableau_matiere.periode_form.as_table }}
-    <p><input type="submit" value="Enregistrer les périodes">
+    {{ formset.non_form_errors }}
+    <table class="formset form_periodenotation">
+      <thead>
+        <tr>
+          <th>Nom</th>
+          <th>Début</th>
+          <th>Fin</th>
+          <th>Supprimer</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for form in formset %}
+        <tr>
+          <td>{{ form.id }}{{ form.enseignement }}{{ form.nom }}{% if form.nom.errors %}<br>{{ form.nom.errors }}{% endif %}</td>
+          <td>{{ form.debut }}{% if form.debut.errors %}<br>{{ form.debut.errors }}{% endif %}</td>
+          <td>{{ form.fin }}{% if form.fin.errors %}<br>{{ form.fin.errors }}{% endif %}</td>
+          <td>{{ form.DELETE }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    <p>
+      {{ tableau_matiere.periode_form.management_form }}
+      <input type="hidden" name="next" value="{% url 'classe_colle_resultats' classe.slug %}">
+      <input type="submit" value="Enregistrer les périodes">
+    </p>
   </form>
+  {% endwith %}
   {% endif %}
 </section>
 {% empty %}

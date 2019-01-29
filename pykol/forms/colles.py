@@ -88,7 +88,13 @@ class PeriodeNotationForm(forms.ModelForm):
 		model = PeriodeNotation
 		fields = ('nom', 'debut', 'fin', 'enseignement',)
 
-PeriodeNotationFormset = forms.inlineformset_factory(Enseignement,
+PeriodeNotationInlineFormset = forms.inlineformset_factory(Enseignement,
+		PeriodeNotation,
+		form=PeriodeNotationForm,
+		fields=PeriodeNotationForm.Meta.fields,
+		extra=1)
+
+PeriodeNotationFormset = forms.modelformset_factory(
 		PeriodeNotation,
 		form=PeriodeNotationForm,
 		fields=PeriodeNotationForm.Meta.fields,

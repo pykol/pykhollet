@@ -24,12 +24,12 @@ from pykol.forms.colles import PeriodeNotationFormset
 from pykol.lib.shortcuts import redirect_next
 
 @login_required
-def periode_notation(request):
+def periode_notation(request, slug):
 	prof = request.user.professeur
-	enseignements = Enseignement.objects.filter(professeur=prof)
 
 	if request.method == 'POST':
-		formset = PeriodeNotationFormset(request.POST)
+		formset = PeriodeNotationFormset(request.POST,
+				prefix='periodenotation_set')
 		if formset.is_valid():
 			formset.save(commit=False)
 			for periode in formset.changed_objects:
@@ -48,4 +48,4 @@ def periode_notation(request):
 	else:
 		form = PeriodeNotationFormset(enseignements=enseignements)
 
-	return render('home')
+	return redirect_next('home', request=request)

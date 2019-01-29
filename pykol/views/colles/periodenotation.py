@@ -25,8 +25,6 @@ from pykol.lib.shortcuts import redirect_next
 
 @login_required
 def periode_notation(request, slug):
-	prof = request.user.professeur
-
 	if request.method == 'POST':
 		formset = PeriodeNotationFormset(request.POST,
 				prefix='periodenotation_set')
@@ -44,8 +42,5 @@ def periode_notation(request, slug):
 				if request.user.has_perm('pykol.add_periodenotation',
 						periode):
 					periode.save()
-			return redirect_next('home', request=request)
-	else:
-		form = PeriodeNotationFormset(enseignements=enseignements)
 
 	return redirect_next('home', request=request)

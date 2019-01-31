@@ -325,7 +325,13 @@ def import_odf(request, slug):
 									"inconnu."))
 								continue
 
-							Colle.objects.update_or_create_from_creneau(creneau, semaine, groupe)
+							try:
+								Colle.objects.update_or_create_from_creneau(creneau, semaine, groupe)
+							except:
+								import_erreurs.append(('update_echoue',
+									(ligne_num, sem_num + nb_entetes_fixes),
+									"Échec de la mise à jour de cette "
+									"colle."))
 
 				if not import_erreurs:
 					return redirect('colloscope', slug=classe.slug)

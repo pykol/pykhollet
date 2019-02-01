@@ -64,6 +64,18 @@
         {% endfor %}
       </tbody>
     </table>
+    <template id="new-form_creneaux">
+      {% with form=formset.empty_form %}
+      <tr>
+        <td>{{ form.id }}{{ form.enseignement_dote }}</td>
+        <td>{{ form.colleur }}</td>
+        <td>{{ form.jour }}</td>
+        <td class="creneau_horaire">{{ form.debut }} − {{ form.fin }}</td>
+        <td>{{ form.salle }}</td>
+        <td>{{ form.DELETE }}</td>
+      </tr>
+      {% endwith %}
+    </template>
     <p><input type="submit" value="Enregistrer les créneaux"></p>
   </form>
 </section>

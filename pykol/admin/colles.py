@@ -68,3 +68,14 @@ class ColleAdmin(admin.ModelAdmin):
 class CollesEnseignementAdmin(admin.ModelAdmin):
 	list_display = ['__str__', ]
 
+@register(ColleNote)
+class ColleNoteAdmin(admin.ModelAdmin):
+	list_display = ['id', 'heure_colle', 'matiere', 'eleve', 'note']
+	list_filter = ['eleve__classe', 'colle__enseignement__matiere']
+	search_fields = ['eleve__first_name', 'eleve__last_name']
+
+	def matiere(self, collenote):
+		return collenote.colle.enseignement.matiere
+
+	def heure_colle(self, collenote):
+		return collenote.colle.details.horaire

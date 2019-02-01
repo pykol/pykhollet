@@ -127,7 +127,7 @@ class Moyenne(Note):
 
 		if note.compte_dans_moyenne():
 			res.nb_notes = self.nb_notes + 1
-			res.points = int(self.points or 0) + int(note.value or 0)
+			res.points = float(self.points or 0) + float(note.value or 0)
 			res.kind = min(self.kind, note.kind)
 
 		return res
@@ -141,7 +141,7 @@ class Moyenne(Note):
 
 		if note.compte_dans_moyenne():
 			self.nb_notes = self.nb_notes + 1
-			self.points = int(self.points or 0) + int(note.value or 0)
+			self.points = float(self.points or 0) + float(note.value or 0)
 			self.kind = min(self.kind, note.kind)
 
 		return self

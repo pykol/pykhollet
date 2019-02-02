@@ -75,7 +75,7 @@ class Note:
 	def __add__(self, note):
 		# Le premier Moyenne() de la liste permet d'appeler ensuite la
 		# méthode __add__ de la classe Moyenne au lieu de celle de Note.
-		return Moyenne() + self + note
+		return (Moyenne() + self) + note
 
 	def __eq__(self, note):
 		if not isinstance(note, Note):
@@ -121,9 +121,12 @@ class Moyenne(Note):
 		res = Moyenne()
 
 		res.points = self.points
+		res.nb_notes = self.nb_notes
 
 		if self.nb_notes == 0:
 			res.kind = note.kind
+		else:
+			res.kind = self.kind
 
 		if note.compte_dans_moyenne():
 			res.nb_notes = self.nb_notes + 1

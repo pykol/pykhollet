@@ -1,5 +1,9 @@
 {% extends "pykol/base.html" %}
 {% load colloscope %}
+{% block head %}
+{{ block.super }}
+<link rel="alternate" href="?format=odf" type="application/vnd.oasis.opendocument.spreadsheet">
+{% endblock %}
 {% block content %}
 <h2>
   Colloscope

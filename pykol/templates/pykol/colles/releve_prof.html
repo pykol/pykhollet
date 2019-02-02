@@ -1,4 +1,5 @@
 {% extends 'pykol/base.html' %}
+{% load timedelta %}
 {% block content %}
 <h2>Relevés des heures de colles</h2>
 
@@ -29,8 +30,8 @@
       <tr>
       {% endif %}
         <td>{{ ligne.get_taux_display }}</td>
-        <td>{{ ligne.heures }}</td>
-        <td>{{ ligne.heures_interrogation }}</td>
+        <td>{{ ligne.heures|floatformat:"-2" }}</td>
+        <td>{{ ligne.heures_interrogation|floatformat:"-2" }}</td>
       </tr>
       {% endfor %}
       {% endfor %}
@@ -59,8 +60,8 @@
       {% for ligne in futures_lignes %}
       <tr>
         <td>{{ ligne.get_taux_display }}</td>
-        <td>{{ ligne.heures }}</td>
-        <td>{{ ligne.heures_interrogation }}</td>
+        <td>{{ ligne.heures|heures }}</td>
+        <td>{{ ligne.heures_interrogation|heures }}</td>
       </tr>
       {% endfor %}
     </tbody>

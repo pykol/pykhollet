@@ -1,4 +1,5 @@
 {% extends "pykol/base.html" %}
+{% load resultats %}
 {% block content %}
 <h2>
   Renseignement sur {{ etudiant }}
@@ -34,7 +35,7 @@
     {% for matiere, notes_matiere in notes.items %}
     <tr>
       <td>{{ matiere }}</td>
-      <td>{{ notes_matiere.moyenne }}</td>
+      <td>{{ notes_matiere.moyenne|floatformat }}</td>
       {% for notes in notes_matiere.semaines.values %}
       <td>{{ notes|join:", " }}</td>
       {% endfor %}

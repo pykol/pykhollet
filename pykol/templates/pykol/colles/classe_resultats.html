@@ -45,11 +45,11 @@
       </tr>
       {% endfor %}
   </table>
-  {% if tableau_enseignement.periode_form %}
+  {% if resultats_enseignement.periode_form %}
   <h3>Périodes de notation</h3>
   <p>Vous pouvez découper l'année en plusieurs périodes de notation afin
   de calculer les moyennes de colles séparément sur chaque période.</p>
-  {% with formset=tableau_enseignement.periode_form %}
+  {% with formset=resultats_enseignement.periode_form %}
   <form method="post" action="{% url 'classe_periode_notation' classe.slug %}">
     {% csrf_token %}
     {{ formset.non_form_errors }}
@@ -74,7 +74,7 @@
       </tbody>
     </table>
     <p>
-      {{ tableau_enseignement.periode_form.management_form }}
+      {{ formset.management_form }}
       <input type="hidden" name="next" value="{% url 'classe_colle_resultats' classe.slug %}">
       <input type="submit" value="Enregistrer les périodes">
     </p>

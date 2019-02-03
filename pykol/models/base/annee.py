@@ -46,6 +46,9 @@ class Periode(models.Model):
 	def duree(self):
 		return self.fin - self.debut + timedelta(days=1)
 
+	def __str__(self):
+		return self.nom
+
 class AnneeManager(models.Manager):
 	"""
 	Gestionnaire qui ajoute l'accès à l'année actuelle.

@@ -10,34 +10,46 @@
   <small><a title="Télécharger au format OpenDocument"
       href="?format=odf"><i class="fa fa-download"></i></a></small>
 </h2>
-{% for matiere, tableau_matiere in matieres.items %}
+{% for enseignement, resultats_enseignement in enseignements.items %}
 <section>
-  <h3>Notes des étudiants en {{matiere}}</h3>
+  <h3>Notes des étudiants en {{ enseignement.matiere }}</h3>
   <table class="resultats">
     <tr>
+      {% if resultats_enseignement.periodes %}
+      <th rowspan="2">Étudiant</th>
+      <th rowspan="2">Moyenne</th>
+      <th rowspan="2">Rang</th>
+      {% for periode in resultats_enseignement.periodes %}
+      <th>{{ periode }}</th>
+    </tr>
+    <tr>
+      {% endfor %}
+      {% else %}
       <th>Étudiant</th>
       <th>Moyenne</th>
       <th>Rang</th>
+      {% endif %}
+
       {% for semaine in semaines %}
       <th>{{ semaine.numero }}</th>
       {% endfor %}
       </tr>
-      {% for etudiant, resultats in tableau_matiere.etudiants.items %}
+      {% for etudiant, resultats in resultats_enseignement.etudiants.items %}
       <tr>
         <td>{{ etudiant }}</td>
         <td>{{ resultats.moyenne|floatformat }}</td>
-        <td>{{ resultats.rang|rang }}</td>
-        {% for notes in resultats.notes %}
+        <td>{% if resultats.rang %}{{ resultats.rang|rang }}{% endif %}</td>
+        {% for semaine, notes in resultats.notes.items %}
         <td>{{ notes|join:', ' }}</td>
         {% endfor %}
       </tr>
       {% endfor %}
   </table>
-  {% if tableau_matiere.periode_form %}
+  {% if tableau_enseignement.periode_form %}
   <h3>Périodes de notation</h3>
   <p>Vous pouvez découper l'année en plusieurs périodes de notation afin
   de calculer les moyennes de colles séparément sur chaque période.</p>
-  {% with formset=tableau_matiere.periode_form %}
+  {% with formset=tableau_enseignement.periode_form %}
   <form method="post" action="{% url 'classe_periode_notation' classe.slug %}">
     {% csrf_token %}
     {{ formset.non_form_errors }}
@@ -62,7 +74,7 @@
       </tbody>
     </table>
     <p>
-      {{ tableau_matiere.periode_form.management_form }}
+      {{ tableau_enseignement.periode_form.management_form }}
       <input type="hidden" name="next" value="{% url 'classe_colle_resultats' classe.slug %}">
       <input type="submit" value="Enregistrer les périodes">
     </p>

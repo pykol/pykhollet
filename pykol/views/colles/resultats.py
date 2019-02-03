@@ -38,8 +38,9 @@ from odf.style import Style, TableColumnProperties, TableRowProperties, \
 from odf.number import Number, NumberStyle
 from odf.text import P
 
-from pykol.models.base import Classe, Matiere, Etudiant, Enseignement
-from pykol.models.colles import Semaine, ColleNote, Colle
+from pykol.models.base import Classe, Etudiant, Enseignement
+from pykol.models.colles import Semaine, ColleNote, Colle, \
+		PeriodeNotation
 from pykol.models.fields import Moyenne, Note
 from pykol.forms.colles import PeriodeNotationInlineFormset
 from pykol.lib.auth import professeur_dans
@@ -48,7 +49,36 @@ from pykol.lib.sortedcollection import SortedCollection
 SemaineTuple = namedtuple('SemaineTuple', ('debut', 'fin',
 	'numero'))
 
-def tableau_resultats(classe, matieres):
+class KeyedDefaultDict:
+	"""
+	Structure de données qui se comporte comme un defaultdict, mais
+	dont la liste des clés est fixée par le paramètre keys. La liste des
+	clés peut évoluer avec le temps. La valeur courante de keys est
+	utilisée lorsque l'on itère un KeyedDefaultDict.
+	"""
+	def __init__(self, keys, default):
+		self._values = defaultdict(default)
+		self._keys = keys
+
+	def items(self):
+		for key in self._keys:
+			yield (key, self._values[key])
+
+	def keys(self):
+		return self._keys
+
+	def __getitem__(self, key):
+		if key == 'items':
+			raise KeyError('items')
+		return self._values[key]
+
+	def __setitem__(self, key, item):
+		print(key, item)
+		if key not in self._keys:
+			raise KeyError(key)
+		self._values[key] = item
+
+def tableau_resultats(classe, enseignements):
 	"""
 	Création du tableau des résultats de colles pour la classe donnée
 	Cette vue affiche les résultats de la classe uniquement pour les
@@ -105,12 +135,22 @@ def tableau_resultats(classe, matieres):
 		l'insère dans la liste triée semaines.
 		"""
 		if colleNoteEtudiant.colle.semaine:
-			return semaine_to_tuple(colleNoteEtudiant.colle.semaine)
+			semaine = semaine_to_tuple(colleNoteEtudiant.colle.semaine)
+			if semaine not in semaines:
+				semaines.insert(semaine)
+			return semaine
 		else:
 			return meilleure_semaine(colleNoteEtudiant.horaire.date(),
 				semaines)
 
-	def calculerRangs(etudiants, moyennesParEtudiant):
+	def calculerRangs(resultats):
+		"""
+		Fonction qui prend en paramètre un itérable qui à chaque clé
+		associe un dictionnaire qui contient deux clés "moyenne" et
+		"rang". Pour chaque clé k, resultats[k]['rang'] est modifié pour
+		stocker un entier qui donne le rang, calculé d'après les valeurs
+		de resultat[k]['moyenne'].
+		"""
 		rangParEtudiant = defaultdict(lambda: '')
 		couplesEtudiantMoyenne = sorted(moyennesParEtudiant.items(),
 				key=lambda v:v[1], reverse=True)
@@ -133,73 +173,96 @@ def tableau_resultats(classe, matieres):
 
 	notesParEtudiantParMatiere = {}
 
-	for matiere in matieres:
+	# On construit le dictionnaire qui à chaque enseignement associe la
+	# liste des périodes de notation.
+	periodes = defaultdict(list)
+	for periode in PeriodeNotation.objects.filter(
+			enseignement__in=list(enseignements)).order_by('debut'):
+		periodes[periode.enseignement].append(periode)
+
+	# Construction du tableau des résultats pour chaque matière
+	for enseignement in enseignements:
+		#TODO on devrait se restreindre aux étudiants qui suivent cette
+		# matière au lieu de prendre tous les étudiants de la classe.
 		etudiants = Etudiant.objects.filter(classe = classe).order_by('last_name','first_name')
 
-		notesParEtudiant = OrderedDict()
-		moyennesParEtudiant = defaultdict(Moyenne)
+		resultats = OrderedDict()
 		for etudiant in etudiants:
-			notesParEtudiant[etudiant] = defaultdict(list)
+			resultats[etudiant] = {
+				'moyenne': Moyenne(),
+				'rang' : None,
+				'notes': KeyedDefaultDict(keys=semaines, default=list),
+				'periodes' : {},
+			}
+			for periode in periodes[enseignement]:
+				resultats[etudiant]['periodes'][periode] = {
+					'moyenne': Moyenne(),
+					'rang': None,
+				}
 
 		colleNoteEtudiant_s = ColleNote.objects.filter(
-			colle__enseignement__matiere = matiere,
+			colle__enseignement=enseignement,
 			eleve__in = etudiants
 		)
 
+		# Ajout de toutes les notes de colles au tableau des résultats
 		for colleNoteEtudiant in colleNoteEtudiant_s:
+			etudiant = colleNoteEtudiant.eleve
 			semaineColle = getSemaine(colleNoteEtudiant, semaines)
-			notesParEtudiant[colleNoteEtudiant.eleve][semaineColle].append(colleNoteEtudiant.note)
-			moyennesParEtudiant[colleNoteEtudiant.eleve] += colleNoteEtudiant.note
+			resultats[etudiant]['notes'][semaineColle].append(colleNoteEtudiant.note)
+			resultats[etudiant]['moyenne'] += colleNoteEtudiant.note
+			# Mise à jour de la moyenne sur la période concernée. On ne
+			# sort pas de la boucle dès qu'une période est trouvée, car
+			# un professeur peut envisager de faire compter une même
+			# note sur plusieurs périodes qui se chevauchent.
+			for periode in periodes[enseignement]:
+				if periode.debut <= semaineColle.debut <= periode.fin:
+					resultats[etudiant]['periodes'][periode]['moyenne'] += \
+						colleNoteEtudiant.note
 
-		rangsParEtudiant = calculerRangs(etudiants, moyennesParEtudiant)
+		# XXX Calcul du rang général et du rang pour chaque période
+		#calculerRangs(resultats)
+		#for periode in periodes[enseignement]:
+		#	calculerRangs(resultats['periodes'][periode])
 
-		# remarque : les deux requetes peuvent être mises avant la boucle sur les matieres si c'est plus rapide
-		colles = Colle.objects.filter(
-			enseignement__matiere = matiere,
+		# Ajout au tableau des colles qui sont en attente de notation
+		colles_non_notees = Colle.objects.filter(
+			enseignement = enseignement,
 			etat = Colle.ETAT_PREVUE,
 			mode = Colle.MODE_INTERROGATION,
 			colledetails__actif=True,
 			colledetails__horaire__lte=timezone.localtime(),
 		).exclude(collenote__isnull = False)
 
-		for colle in colles:
+		for colle in colles_non_notees:
 			# Les élèves présents sur une colle peuvent ne pas tous être
 			# de la même classe.
-			for eleve in colle.details.eleves.intersection(etudiants):
+			for etudiant in colle.details.eleves.intersection(etudiants):
 				if colle.semaine:
 					semaine = semaine_to_tuple(colle.semaine)
 				else:
 					semaine = meilleure_semaine(colle.details.horaire.date(), semaines)
-				notesParEtudiant[eleve][semaine].append(
+				resultats[etudiant]['notes'][semaine].append(
 					mark_safe('<i class="far fa-hourglass"></i>'))
 
-		# On remplace les dictionnaires des semaines par des listes pour faciliter
-		# l'affichage
-		semaines = list(semaines)
-		for etudiant in etudiants:
-			notesParEtudiant[etudiant] = {
-					'moyenne': moyennesParEtudiant[etudiant],
-					'rang': rangsParEtudiant[etudiant],
-					'notes': [notesParEtudiant[etudiant][semaine] for semaine in
-							semaines]
-				}
-
-		notesParEtudiantParMatiere[matiere] = {
-				'etudiants': notesParEtudiant,
+		notesParEtudiantParMatiere[enseignement] = {
+				'etudiants': resultats,
+				'periodes': periodes[enseignement],
 		}
 
-	return {'matieres': notesParEtudiantParMatiere,
-			'semaines': semaines}
+	return {
+			'enseignements': notesParEtudiantParMatiere,
+			'semaines': list(semaines),
+		}
+
 
 def classe_resultats_html(request, resultats):
 	# Ajout des formulaires pour créer les périodes de notation
 	classe = resultats['classe']
-	for matiere in resultats['matieres']:
-		enseignement = Enseignement.objects.get(classe=classe,
-				matiere=matiere)
+	for enseignement in resultats['enseignements']:
 		if request.user.has_perm('pykol.change_periodenotation',
 				enseignement):
-			resultats['matieres'][matiere]['periode_form'] = \
+			resultats['enseignements'][enseignement]['periode_form'] = \
 				PeriodeNotationInlineFormset(instance=enseignement)
 
 	return render(request, 'pykol/colles/classe_resultats.html',
@@ -290,17 +353,17 @@ def classe_resultats(request, slug):
 	if not request.user.has_perm('pykol.view_resultats', classe):
 		raise PermissionDenied
 
-	matieres = Matiere.objects.filter(
-		enseignement__classe = classe,
-		enseignement__service__professeur=request.user,
-		enseignement__collesenseignement__isnull=False,
-	).union(Matiere.objects.filter(
-		enseignement__classe=classe,
-		enseignement__creneau__colleur=request.user,
-		enseignement__collesenseignement__isnull=False,
-	)).order_by('nom')
+	enseignements = Enseignement.objects.filter(
+		classe = classe,
+		service__professeur=request.user,
+		collesenseignement__isnull=False,
+	).union(Enseignement.objects.filter(
+		classe=classe,
+		creneau__colleur=request.user,
+		collesenseignement__isnull=False,
+	)).order_by('matiere')
 
-	resultats = tableau_resultats(classe, matieres)
+	resultats = tableau_resultats(classe, enseignements)
 	resultats['classe'] = classe
 
 	if request.GET.get('format', 'html') == 'odf':

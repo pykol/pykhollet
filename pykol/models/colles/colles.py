@@ -339,4 +339,3 @@ class PeriodeNotation(Periode):
 	"""
 	enseignement = models.ForeignKey(Enseignement,
 			on_delete=models.CASCADE)
-	semaines = models.ManyToManyField('Semaine')

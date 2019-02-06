@@ -19,6 +19,7 @@
 import re
 
 from django.db import models
+from django.db.models import F
 from django.contrib.auth.models import AbstractUser, BaseUserManager
 from django.core.validators import RegexValidator
 from django.core.exceptions import ObjectDoesNotExist
@@ -261,5 +262,10 @@ class Professeur(User):
 		from pykol.models.base import Classe
 		qs = Classe.objects.filter(enseignements__service__professeur=self).union(
 				Classe.objects.filter(coordonnateur=self)).union(
-				Classe.objects.filter(creneau__colleur=self))
+				Classe.objects.filter(creneau__colleur=self)).union(
+				Classe.objects.filter(colle__colledetails__actif=True,
+					colle__colledetails__colleur=self)).union(
+				Classe.objects.filter(colle__colledetails__actif=True,
+					colle__colledetails__eleves__classe__pk=F('pk'),
+					colle__colledetails__colleur=self))
 		return qs

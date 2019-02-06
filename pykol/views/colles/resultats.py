@@ -155,7 +155,6 @@ def tableau_resultats(classe, matieres):
 
 		# remarque : les deux requetes peuvent être mises avant la boucle sur les matieres si c'est plus rapide
 		colles = Colle.objects.filter(
-			classe = classe,
 			enseignement__matiere = matiere,
 			etat = Colle.ETAT_PREVUE,
 			mode = Colle.MODE_INTERROGATION,
@@ -164,7 +163,9 @@ def tableau_resultats(classe, matieres):
 		).exclude(collenote__isnull = False)
 
 		for colle in colles:
-			for eleve in colle.details.eleves.all():
+			# Les élèves présents sur une colle peuvent ne pas tous être
+			# de la même classe.
+			for eleve in colle.details.eleves.intersection(etudiants):
 				if colle.semaine:
 					semaine = semaine_to_tuple(colle.semaine)
 				else:

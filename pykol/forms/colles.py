@@ -98,4 +98,4 @@ PeriodeNotationFormset = forms.modelformset_factory(
 		PeriodeNotation,
 		form=PeriodeNotationForm,
 		fields=PeriodeNotationForm.Meta.fields,
-		extra=1)
+		extra=0)

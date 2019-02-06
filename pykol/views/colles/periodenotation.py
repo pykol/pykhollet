@@ -30,7 +30,7 @@ def periode_notation(request, slug):
 				prefix='periodenotation_set')
 		if formset.is_valid():
 			formset.save(commit=False)
-			for periode in formset.changed_objects:
+			for periode, _ in formset.changed_objects:
 				if request.user.has_perm('pykol.change_periodenotation',
 						periode):
 					periode.save()

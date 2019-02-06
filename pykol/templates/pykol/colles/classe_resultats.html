@@ -36,11 +36,11 @@
       </tr>
       {% for etudiant, resultats in resultats_enseignement.etudiants.items %}
       <tr>
-        <td>{{ etudiant }}</td>
-        <td>{{ resultats.moyenne|floatformat }}</td>
-        <td>{% if resultats.rang %}{{ resultats.rang|rang }}{% endif %}</td>
+        <td class="etudiant">{{ etudiant }}</td>
+        <td class="moyenne">{{ resultats.moyenne|floatformat }}</td>
+        <td class="rang">{% if resultats.rang %}{{ resultats.rang|rang }}{% endif %}</td>
         {% for semaine, notes in resultats.notes.items %}
-        <td>{{ notes|join:', ' }}</td>
+        <td class="notes">{{ notes|join:', ' }}</td>
         {% endfor %}
       </tr>
       {% endfor %}

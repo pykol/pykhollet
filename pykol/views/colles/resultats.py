@@ -68,8 +68,8 @@ class KeyedDefaultDict:
 		return self._keys
 
 	def __getitem__(self, key):
-		if key == 'items':
-			raise KeyError('items')
+		if key not in self._keys:
+			raise KeyError(key)
 		return self._values[key]
 
 	def __setitem__(self, key, item):
@@ -244,6 +244,11 @@ def tableau_resultats(classe, enseignements):
 					semaine = meilleure_semaine(colle.details.horaire.date(), semaines)
 				resultats[etudiant]['notes'][semaine].append(
 					mark_safe('<i class="far fa-hourglass"></i>'))
+
+		# Calcul des semaines pour chaque période de notation
+		for periode in periodes[enseignement]:
+			periode.semaines = semaines.between(periode.debut,
+					periode.fin)
 
 		notesParEtudiantParMatiere[enseignement] = {
 				'etudiants': resultats,

@@ -20,7 +20,7 @@
       <th rowspan="2">Moyenne annuelle</th>
       <th rowspan="2">Rang annuel</th>
       {% for periode in resultats_enseignement.periodes %}
-      <th>{{ periode }}</th>
+      <th colspan="{{ periode.semaines|length }}">{{ periode }}</th>
     </tr>
     <tr>
       {% endfor %}

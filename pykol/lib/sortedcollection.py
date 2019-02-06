@@ -216,3 +216,9 @@ class SortedCollection(object):
         if i != len(self):
             return self._items[i]
         raise ValueError('No item found with key above: %r' % (k,))
+
+    def between(self, kleft, kright):
+        'Return the list of elements with key satisfying kleft <= key < kright.'
+        ileft = bisect_left(self._keys, kleft)
+        iright = bisect_left(self._keys, kright)
+        return self._items[ileft:iright]

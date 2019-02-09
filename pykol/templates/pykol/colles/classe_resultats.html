@@ -21,9 +21,9 @@
       <th rowspan="2">Rang annuel</th>
       {% for periode in resultats_enseignement.periodes %}
       <th colspan="{{ periode.semaines|length }}">{{ periode }}</th>
+      {% endfor %}
     </tr>
     <tr>
-      {% endfor %}
       {% else %}
       <th>Étudiant</th>
       <th>Moyenne</th>

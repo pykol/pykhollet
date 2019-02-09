@@ -27,6 +27,7 @@ from django.utils.timezone import localtime
 from django.template.loader import get_template
 
 from pykol.models.base import Annee, Professeur, Classe, Etablissement
+from pykol.models.comptabilite import ColleDureeTaux
 from pykol.models.colles import Colle
 
 class ColleReleve(models.Model):
@@ -123,7 +124,7 @@ class ColleReleve(models.Model):
 		template = get_template('pykol/widgets/collereleve_etat.html')
 		return template.render(context={'object': self})
 
-class ColleReleveLigne(models.Model):
+class ColleReleveLigne(ColleDureeTaux):
 	"""
 	Une ligne d'un relevé de colles. Une ligne correspond au total des
 	heures effectuées par un professeur donné sur la période, et pour un
@@ -132,28 +133,6 @@ class ColleReleveLigne(models.Model):
 	releve = models.ForeignKey(ColleReleve, on_delete=models.CASCADE,
 			related_name='lignes')
 	colleur = models.ForeignKey(Professeur, on_delete=models.CASCADE)
-
-	TAUX_1A_INF20 = 1
-	TAUX_1A_INF35 = 2
-	TAUX_1A_SUP36 = 3
-	TAUX_2A_INF20 = 4
-	TAUX_2A_INF35 = 5
-	TAUX_2A_SUP36 = 6
-
-	TAUX_CHOICES = (
-		(TAUX_1A_INF20, "1è année - Moins de 20 étudiants"),
-		(TAUX_1A_INF35, "1è année - Entre 21 et 35 étudiants"),
-		(TAUX_1A_SUP36, "1è année - Plus de 35 étudiants"),
-		(TAUX_2A_INF20, "2è année - Moins de 20 étudiants"),
-		(TAUX_2A_INF35, "2è année - Entre 21 et 35 étudiants"),
-		(TAUX_2A_SUP36, "2è année - Plus de 35 étudiants"),
-		)
-	taux = models.PositiveSmallIntegerField(verbose_name="taux",
-			choices=TAUX_CHOICES)
-	duree_interrogation = models.DurationField(
-			verbose_name="durée d'interrogation", default=timedelta)
-	duree = models.DurationField(verbose_name="nombre d'heures",
-			default=timedelta)
 
 	ETAT_NOUVEAU = 0
 	ETAT_PAYE = 1

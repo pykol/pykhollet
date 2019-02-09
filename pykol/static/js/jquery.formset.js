@@ -194,7 +194,6 @@
         var html_template = document.querySelector('template[id="new-' + options.prefix + '"]');
         if(html_template) {
           template = $(document.importNode(html_template.content.querySelector(':first-child'), true));
-          console.log(template);
           insertDeleteLink(template);
         } else {
           // Otherwise, use the last form in the formset; this works much better if you've got

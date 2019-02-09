@@ -73,6 +73,16 @@
         {% endfor %}
       </tbody>
     </table>
+    <template id="new-periodenotation_set">
+      {% with form=formset.empty_form %}
+      <tr>
+        <td>{{ form.id }}{{ form.enseignement }}{{ form.nom }}</td>
+        <td>{{ form.debut }}</td>
+        <td>{{ form.fin }}</td>
+        <td>{{ form.DELETE }}</td>
+      </tr>
+      {% endwith %}
+    </template>
     <p>
       {{ formset.management_form }}
       <input type="hidden" name="next" value="{% url 'classe_colle_resultats' classe.slug %}">

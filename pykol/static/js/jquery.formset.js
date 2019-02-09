@@ -189,21 +189,30 @@
         });
         insertDeleteLink(template);
       } else {
-        // Otherwise, use the last form in the formset; this works much better if you've got
-        // extra (>= 1) forms (thanks to justhamade for pointing this out):
-        template = $('.' + options.formCssClass + ':last').clone(true).removeAttr('id');
-        template.find('input:hidden[id $= "-DELETE"]').remove();
-        // Clear all cloned fields, except those the user wants to keep (thanks to brunogola for the suggestion):
-        template.find(childElementSelector).not(options.keepFieldValues).each(function() {
-          var elem = $(this);
-          // If this is a checkbox or radiobutton, uncheck it.
-          // This fixes Issue 1, reported by Wilson.Andrew.J:
-          if (elem.is('input:checkbox') || elem.is('input:radio')) {
-            elem.attr('checked', false);
-          } else {
-            elem.val('');
-          }
-        });
+        // Try to import a <template> tag whose id "new-formprefix",
+        // where formprefix is options.prefix.
+        var html_template = document.querySelector('template[id="new-' + options.prefix + '"]');
+        if(html_template) {
+          template = $(document.importNode(html_template.content.querySelector(':first-child'), true));
+          console.log(template);
+          insertDeleteLink(template);
+        } else {
+          // Otherwise, use the last form in the formset; this works much better if you've got
+          // extra (>= 1) forms (thanks to justhamade for pointing this out):
+          template = $('.' + options.formCssClass + ':last').clone(true).removeAttr('id');
+          template.find('input:hidden[id $= "-DELETE"]').remove();
+          // Clear all cloned fields, except those the user wants to keep (thanks to brunogola for the suggestion):
+          template.find(childElementSelector).not(options.keepFieldValues).each(function() {
+            var elem = $(this);
+            // If this is a checkbox or radiobutton, uncheck it.
+            // This fixes Issue 1, reported by Wilson.Andrew.J:
+            if (elem.is('input:checkbox') || elem.is('input:radio')) {
+              elem.attr('checked', false);
+            } else {
+              elem.val('');
+            }
+          });
+        }
       }
       // FIXME: Perhaps using $.data would be a better idea?
       options.formTemplate = template;

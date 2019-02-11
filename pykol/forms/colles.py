@@ -105,10 +105,12 @@ PeriodeNotationInlineFormset = forms.inlineformset_factory(Enseignement,
 		PeriodeNotation,
 		form=PeriodeNotationForm,
 		fields=PeriodeNotationForm.Meta.fields,
-		extra=0)
+		extra=0,
+		can_delete=True)
 
 PeriodeNotationFormset = forms.modelformset_factory(
 		PeriodeNotation,
 		form=PeriodeNotationForm,
 		fields=PeriodeNotationForm.Meta.fields,
-		extra=0)
+		extra=0,
+		can_delete=True)

@@ -84,6 +84,19 @@ ResaPonctuellesFormSet = forms.modelformset_factory(ColleDetails,
 
 
 class PeriodeNotationForm(forms.ModelForm):
+	@property
+	def changed_data(self):
+		# Ce formulaire est utilisé avec un ModelFormset standard et
+		# un InlineModelFormset sur le champ "enseignement". Pour éviter
+		# qu'une ligne vide de l'InlineModelFormset ne soit considérée
+		# comme une nouvelle instance par le ModelFormset qui reçoit les
+		# données, on ignore les modifications qui ne touchent que ce
+		# champ.
+		data = super().changed_data
+		if data == ['enseignement']:
+			data.pop()
+		return data
+
 	class Meta:
 		model = PeriodeNotation
 		fields = ('nom', 'debut', 'fin', 'enseignement',)

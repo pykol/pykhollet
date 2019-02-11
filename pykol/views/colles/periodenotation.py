@@ -19,15 +19,24 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 
+from pykol.models.base import Classe, Enseignement
 from pykol.models.colles import PeriodeNotation
 from pykol.forms.colles import PeriodeNotationFormset
 from pykol.lib.shortcuts import redirect_next
 
 @login_required
 def periode_notation(request, slug):
+	classe = get_object_or_404(Classe, slug=slug)
+	periodenotation_qs = PeriodeNotation.objects.filter(
+			enseignement__classe=classe,
+			enseignement__service__professeur=request.user)
+
+	context = {'classe': classe}
+
 	if request.method == 'POST':
 		formset = PeriodeNotationFormset(request.POST,
-				prefix='periodenotation_set')
+				prefix='periodenotation_set', queryset=periodenotation_qs)
+
 		if formset.is_valid():
 			formset.save(commit=False)
 			for periode, _ in formset.changed_objects:
@@ -42,5 +51,13 @@ def periode_notation(request, slug):
 				if request.user.has_perm('pykol.add_periodenotation',
 						periode):
 					periode.save()
+			return redirect_next('classe_periode_notation',
+					classe.slug, request=request)
 
-	return redirect_next('home', request=request)
+	else:
+		formset = PeriodeNotationFormset(prefix='periodenotation_set',
+				queryset=periodenotation_qs)
+
+	context['formset'] = formset
+
+	return render(request, 'pykol/colles/periodenotation.html', context=context)

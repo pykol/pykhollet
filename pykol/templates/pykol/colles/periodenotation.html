@@ -1,0 +1,50 @@
+{% extends "pykol/base.html" %}
+{% load resultats %}
+{% block content %}
+<h2>Périodes de notation des colles
+  <small>− {{ classe }}</small>
+</h2>
+<section>
+  <form method="post" action="">
+    {% csrf_token %}
+    {{ formset.non_form_errors }}
+    <table class="formset form_periodenotation">
+      <thead>
+        <tr>
+          <th>Enseignement</th>
+          <th>Nom</th>
+          <th>Début</th>
+          <th>Fin</th>
+          <th>Supprimer</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for form in formset %}
+        <tr>
+          <td>{{ form.id }}{{ form.enseignement }}{% if form.enseignement.errors %}<br>{{ form.enseignement.errors }}{% endif %}</td>
+          <td>{{ form.nom }}{% if form.nom.errors %}<br>{{ form.nom.errors }}{% endif %}</td>
+          <td>{{ form.debut }}{% if form.debut.errors %}<br>{{ form.debut.errors }}{% endif %}</td>
+          <td>{{ form.fin }}{% if form.fin.errors %}<br>{{ form.fin.errors }}{% endif %}</td>
+          <td>{{ form.DELETE }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    <template id="new-periodenotation_set">
+      {% with form=formset.empty_form %}
+      <tr>
+        <td>{{ form.id }}{{ form.enseignement }}</td>
+        <td>{{ form.nom }}</td>
+        <td>{{ form.debut }}</td>
+        <td>{{ form.fin }}</td>
+        <td>{{ form.DELETE }}</td>
+      </tr>
+      {% endwith %}
+    </template>
+    <p>
+      {{ formset.management_form }}
+      <input type="submit" value="Enregistrer les périodes">
+    </p>
+  </form>
+</section>
+{% endblock %}

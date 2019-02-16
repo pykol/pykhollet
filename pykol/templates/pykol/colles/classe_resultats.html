@@ -14,36 +14,40 @@
 <section>
   <h3>Notes des étudiants en {{ enseignement.matiere }}</h3>
   <table class="resultats">
+    {% with periodes=resultats_enseignement.periodes %}
     <tr>
-      {% if resultats_enseignement.periodes %}
-      <th rowspan="2">Étudiant</th>
-      <th rowspan="2">Moyenne annuelle</th>
-      <th rowspan="2">Rang annuel</th>
-      {% for periode in resultats_enseignement.periodes %}
-      <th colspan="{{ periode.semaines|length }}">{{ periode }}</th>
+      <th{% if periodes %} rowspan="2"{% endif %}>Étudiant</th>
+      <th{% if periodes %} colspan="{{ periodes|length|add:1 }}"{% endif %}>Moyenne</th>
+      {# <th{% if periodes %} rowspan="2"{% endif %}>Rang annuel</th> #}
+      {% for periode, semaines in resultats_enseignement.periodes_entete %}
+      <th colspan="{{ semaines|length }}">{{ periode|default_if_none:"Hors période" }}</th>
       {% endfor %}
+    {% if periodes %}
     </tr>
     <tr>
-      {% else %}
-      <th>Étudiant</th>
-      <th>Moyenne</th>
-      <th>Rang</th>
-      {% endif %}
-
+      <th>Annuelle</th>
+      {% for periode in periodes %}
+      <th>{{ periode.nom }}</th>
+      {% endfor %}
+    {% endif %}
       {% for semaine in semaines %}
       <th>{{ semaine.numero }}</th>
       {% endfor %}
-      </tr>
-      {% for etudiant, resultats in resultats_enseignement.etudiants.items %}
-      <tr>
-        <td class="etudiant">{{ etudiant }}</td>
-        <td class="moyenne">{{ resultats.moyenne|floatformat }}</td>
-        <td class="rang">{% if resultats.rang %}{{ resultats.rang|rang }}{% endif %}</td>
-        {% for semaine, notes in resultats.notes.items %}
-        <td class="notes">{{ notes|join:', ' }}</td>
-        {% endfor %}
-      </tr>
+    </tr>
+    {% endwith %}
+    {% for etudiant, resultats in resultats_enseignement.etudiants.items %}
+    <tr>
+      <td class="etudiant">{{ etudiant }}</td>
+      <td class="moyenne">{{ resultats.moyenne|floatformat }}</td>
+      {% for periode, resultats_periode in resultats.periodes.items %}
+      <td class="moyenne">{{ resultats_periode.moyenne|floatformat }}</td>
       {% endfor %}
+      {# <td class="rang">{% if resultats.rang %}{{ resultats.rang|rang }}{% endif %}</td> #}
+      {% for semaine, notes in resultats.notes.items %}
+      <td class="notes">{{ notes|join:', ' }}</td>
+      {% endfor %}
+    </tr>
+    {% endfor %}
   </table>
   {% if resultats_enseignement.periode_form %}
   <h3>Périodes de notation</h3>

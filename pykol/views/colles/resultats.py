@@ -257,18 +257,50 @@ def tableau_resultats(classe, enseignements):
 
 	return {
 			'enseignements': notesParEtudiantParMatiere,
-			'semaines': list(semaines),
+			'semaines': semaines,
 		}
 
 
 def classe_resultats_html(request, resultats):
-	# Ajout des formulaires pour créer les périodes de notation
 	classe = resultats['classe']
 	for enseignement in resultats['enseignements']:
+		# Ajout des formulaires pour créer les périodes de notation
 		if request.user.has_perm('pykol.change_periodenotation',
 				enseignement):
 			resultats['enseignements'][enseignement]['periode_form'] = \
 				PeriodeNotationInlineFormset(instance=enseignement)
+
+		# Ajout d'un itérateur pour créer l'en-tête en présence de périodes
+		# de notation. Cet itérateur renvoie des couples (periode,
+		# semaines) où semaines est la liste ordonnée des semaines
+		# contenues dans la période periode. Lorsque des semaines
+		# n'appartiennent à aucune période, l'itérateur renvoie un
+		# couple (None, semaines).
+		if resultats['enseignements'][enseignement]['periodes']:
+			semaines = resultats['semaines']
+			periodes = resultats['enseignements'][enseignement]['periodes']
+			def periodes_entete():
+				semaines_debut = semaines.items_lt(periodes[0].debut)
+				if semaines_debut:
+					yield (None, semaines_debut)
+
+				prev_periode = None
+				for periode in periodes:
+					if prev_periode is not None:
+						semaines_intercalaires = semaines.between(
+							prev_periode.fin, periode.debut)
+						if semaines_intercalaires:
+							yield (None, semaines_intercalaires)
+					yield (periode, semaines.between(periode.debut,
+						periode.fin))
+					prev_periode = periode
+
+				if prev_periode is not None:
+					semaines_fin = semaines.items_ge(prev_periode.fin)
+					if semaines_fin:
+						yield (None, semaines_fin)
+
+			resultats['enseignements'][enseignement]['periodes_entete'] = periodes_entete
 
 	return render(request, 'pykol/colles/classe_resultats.html',
 			context=resultats)

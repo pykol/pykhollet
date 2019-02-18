@@ -73,10 +73,13 @@ class KeyedDefaultDict:
 		return self._values[key]
 
 	def __setitem__(self, key, item):
-		print(key, item)
 		if key not in self._keys:
 			raise KeyError(key)
 		self._values[key] = item
+
+	def __iter__(self):
+		for key in self._keys:
+			yield self._values[key]
 
 def tableau_resultats(classe, enseignements):
 	"""
@@ -324,7 +327,7 @@ def classe_resultats_odf(request, resultats):
 	style_rang = Style(datastylename=style_number_rang,
 			parent=ods.styles, name="Rang", family='table-column')
 
-	for matiere, etudiants in resultats['matieres'].items():
+	for matiere, ens_resultats in resultats['enseignements'].items():
 		table = Table(name="{} - {}".format(resultats['classe'], matiere),
 				parent=ods.spreadsheet)
 
@@ -346,7 +349,7 @@ def classe_resultats_odf(request, resultats):
 				text=semaine.numero)
 
 		# Ligne pour chaque étudiant
-		for etudiant, resultats in etudiants.items():
+		for etudiant, resultats in ens_resultats['etudiants'].items():
 			tr = TableRow(parent=table)
 
 			# Nom de l'étudiant

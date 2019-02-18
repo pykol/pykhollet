@@ -38,7 +38,7 @@
     {% endwith %}
     {% for etudiant, resultats in resultats_enseignement.etudiants.items %}
     <tr>
-      <td class="etudiant">{{ etudiant }}</td>
+      <td class="etudiant"><a href="{{ etudiant.get_absolute_url }}">{{ etudiant }}</a></td>
       <td class="moyenne">{{ resultats.moyenne|floatformat }}</td>
       {% for periode, resultats_periode in resultats.periodes.items %}
       <td class="moyenne">{{ resultats_periode.moyenne|floatformat }}</td>

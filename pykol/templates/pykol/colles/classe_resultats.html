@@ -1,5 +1,6 @@
 ﻿{% extends "pykol/base.html" %}
 {% load resultats %}
+{% block title %}Notes de colles en {{ classe }} − {{ block.super }}{% endblock %}
 {% block head %}
 {{ block.super }}
 <link rel="alternate" href="?format=odf" type="application/vnd.oasis.opendocument.spreadsheet">

@@ -97,6 +97,12 @@ class PeriodeNotationForm(forms.ModelForm):
 			data.pop()
 		return data
 
+	def __init__(self, *args, **kwargs):
+		enseignement_qs = kwargs.pop('enseignement_qs',
+				Enseignement.objects.all())
+		super().__init__(*args, **kwargs)
+		self.fields['enseignement'].queryset = enseignement_qs
+
 	class Meta:
 		model = PeriodeNotation
 		fields = ('nom', 'debut', 'fin', 'enseignement',)

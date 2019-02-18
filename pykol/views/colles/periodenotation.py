@@ -30,12 +30,17 @@ def periode_notation(request, slug):
 	periodenotation_qs = PeriodeNotation.objects.filter(
 			enseignement__classe=classe,
 			enseignement__service__professeur=request.user)
+	enseignement_qs = Enseignement.objects.filter(
+			service__professeur=request.user,
+			classe=classe)
 
 	context = {'classe': classe}
 
 	if request.method == 'POST':
 		formset = PeriodeNotationFormset(request.POST,
-				prefix='periodenotation_set', queryset=periodenotation_qs)
+				prefix='periodenotation_set',
+				queryset=periodenotation_qs,
+				form_kwargs={'enseignement_qs': enseignement_qs,})
 
 		if formset.is_valid():
 			formset.save(commit=False)
@@ -56,7 +61,8 @@ def periode_notation(request, slug):
 
 	else:
 		formset = PeriodeNotationFormset(prefix='periodenotation_set',
-				queryset=periodenotation_qs)
+				queryset=periodenotation_qs,
+				form_kwargs={'enseignement_qs': enseignement_qs,})
 
 	context['formset'] = formset
 

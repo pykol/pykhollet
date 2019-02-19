@@ -22,6 +22,7 @@
 }
 </style>
 {% endblock %}
+{% block title %}Édition d'un utilisateur − {{ block.super }}{% endblock %}
 {% block content %}
 <h2>{% if concerned_user %}
 Profil de {{ concerned_user }}

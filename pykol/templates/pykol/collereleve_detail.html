@@ -5,6 +5,7 @@
 <link rel="alternate" href="?format=json" type="application/json">
 <script src="{% static 'js/releve_async_payer.js' %}"></script>
 {% endblock %}
+{% block title %}Relevé des colles du {{ collereleve.date }} − {{ block.super }}{% endblock %}
 {% block content %}
 <h2>Relevé des colles du {{ collereleve.date }}</h2>
 

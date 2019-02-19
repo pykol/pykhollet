@@ -1,5 +1,6 @@
 {% extends 'pykol/base.html' %}
 {% load lien_email %}
+{% block title %}Colle du {{ colle.details.horaire }} − {{ block.super }}{% endblock %}
 {% block content %}
 <h2>Colle du {{ colle.details.horaire }}{% if colle.semaine %} − {{ colle.semaine }}{% endif %}</h2>
 

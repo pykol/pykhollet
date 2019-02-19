@@ -1,5 +1,6 @@
 {% extends "pykol/base.html" %}
 {% load timedelta %}
+{% block title %}Année scolaire {{ annee }} − {{ block.super }}{% endblock %}
 {% block content %}
 <h2>Année scolaire {{ annee }}</h2>
 

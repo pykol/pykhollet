@@ -1,5 +1,6 @@
 {% extends "pykol/base.html" %}
 {% load resultats %}
+{% block title %}{{ etudiant }} − {{ etudiant.classe }} − {{ block.super }}{% endblock %}
 {% block content %}
 <h2>
   Renseignement sur {{ etudiant }}

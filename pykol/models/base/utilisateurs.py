@@ -17,6 +17,7 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 import re
+import uuid
 
 from django.db import models
 from django.db.models import F
@@ -269,3 +270,9 @@ class Professeur(User):
 					colle__colledetails__eleves__classe__pk=F('pk'),
 					colle__colledetails__colleur=self))
 		return qs
+
+class JetonAcces(models.Model):
+	uuid = models.UUIDField(default=uuid.uuid4, editable=False,
+			primary_key=True)
+	owner = models.ForeignKey(User, on_delete=models.CASCADE)
+	scope = models.CharField(max_length=100)

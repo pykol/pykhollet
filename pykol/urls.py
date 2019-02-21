@@ -23,6 +23,7 @@ from . import views
 
 colles_urlpatterns = [
 	path('', views.colles.colle_list, name='colle_list'),
+	path('icalendar/<uuid:uuid>', views.colles.calendrier, name='colle_calendrier'),
 	path('a_noter/', views.colles.colle_a_noter_list, name="colles_a_noter"),
 	path('<int:pk>/', views.colles.colle_detail, name='colle_detail'),
 	path('<int:pk>/noter', views.colles.colle_declarer, name='colle_declarer'),

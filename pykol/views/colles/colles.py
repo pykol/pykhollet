@@ -31,7 +31,7 @@ from django.contrib import messages
 from django.urls import reverse
 from django.utils.http import is_safe_url
 
-from pykol.models.base import Etudiant, Annee
+from pykol.models.base import Etudiant, Annee, JetonAcces
 from pykol.models.colles import Colle
 from pykol.forms.colles import ColleNoteFormSet, ColleModifierForm
 from pykol.lib.auth import colle_user_permissions
@@ -233,6 +233,20 @@ class ColleListView(LoginRequiredMixin, generic.ListView):
 		colle_list = self.get_queryset()
 		context['colles_futures'] = colle_list.filter(colledetails__actif=True, colledetails__horaire__gte=limite_futur)
 		context['colles_passees'] = colle_list.filter(colledetails__actif=True, colledetails__horaire__lt=limite_futur)
+
+		# Ajout d'un lien vers la version iCalendar du planning des
+		# colles. Si nécessaire, on crée automatiquement le jeton
+		# d'accès.
+		try:
+			ical_jeton = JetonAcces.objects.filter(owner=self.request.user,
+				scope='colles_icalendar')[0]
+		except IndexError:
+			ical_jeton = JetonAcces(owner=self.request.user,
+				scope='colles_icalendar')
+			ical_jeton.save()
+		context['ical_url'] = reverse('colle_calendrier',
+				kwargs={'uuid': ical_jeton.uuid})
+
 		return context
 
 colle_list = ColleListView.as_view()

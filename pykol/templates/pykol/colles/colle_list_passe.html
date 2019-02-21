@@ -1,10 +1,20 @@
 {% extends 'pykol/base.html' %}
 {% block title %}Planning des colles − {{ block.super }}{% endblock %}
+{% block head %}
+{{ block.super }}
+<link rel="alternate" type="text/calendar" href="{{ ical_url }}">
+{% endblock %}
 {% block content %}
-<h2>Planning des colles</h2>
+<h2>Planning des colles
+  <small><a title="Télécharger au format iCalendar" href="{{ ical_url }}"><i class="fa fa-calendar-plus"></i></a></small>
+</h2>
 
-Les <a href="#colles_passees">colles passées</a> se trouvent en bas de
-cette page.
+<p>Les <a href="#colles_passees">colles passées</a> se trouvent en bas de
+cette page.</p>
+
+<p>Les données de ce planning sont <a href="{{ ical_url}}">disponibles
+  au format iCalendar</a> afin de vous permettre d'importer vos colles
+dans un agenda électronique.</p>
 
 <section id="colles_futures">
   {% if colles_futures %}

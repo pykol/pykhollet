@@ -18,7 +18,8 @@
 
 
 from .etablissement import Academie, Etablissement
-from .utilisateurs import User, Etudiant, Professeur, Discipline
+from .utilisateurs import User, Etudiant, Professeur, Discipline, \
+		JetonAcces
 from .annee import Periode, Annee, Vacances
 from .enseignement import Matiere, Groupe, Service, \
 		Enseignement, Classe, GroupeEffectif, \

@@ -30,3 +30,5 @@ from .decompte import decompte_list, decompte_detail, \
 from .resultats import classe_resultats
 
 from .periodenotation import periode_notation
+
+from .calendrier import calendrier

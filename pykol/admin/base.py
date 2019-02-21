@@ -23,7 +23,7 @@ from django.contrib import admin
 from django.contrib.auth import get_user_model
 from django.contrib.auth.admin import UserAdmin
 
-from pykol.models.base import User, Professeur, Etudiant
+from pykol.models.base import User, Professeur, Etudiant, JetonAcces
 from pykol.models.base import Academie, Annee, Vacances, Etablissement
 from pykol.models.base import Matiere, Classe, Enseignement, Service, Groupe
 
@@ -187,3 +187,5 @@ class ClasseAdmin(admin.ModelAdmin):
 			)
 	inlines = [EnseignementInline, EtudiantInline]
 	list_display = ('nom', 'annee')
+
+admin_site.register(JetonAcces)

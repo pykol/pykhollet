@@ -1,6 +1,10 @@
 {% extends "pykol/base.html" %}
 {% load resultats %}
 {% block title %}{{ etudiant }} − {{ etudiant.classe }} − {{ block.super }}{% endblock %}
+{% block head %}
+{{ block.super }}
+<link rel="alternate" type="text/vcf" href="?format=vcard">
+{% endblock %}
 {% block content %}
 <h2>
   Renseignement sur {{ etudiant }}

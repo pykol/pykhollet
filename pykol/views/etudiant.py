@@ -20,6 +20,12 @@ from collections import defaultdict, OrderedDict, namedtuple
 
 from django.views import generic
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.decorators import login_required
+from django.utils.text import slugify
+from django.shortcuts import get_object_or_404
+from django.http import HttpResponse
+
+import vobject
 
 from pykol.models.base import Etudiant, Matiere
 from pykol.models.colles import Semaine, ColleNote
@@ -89,3 +95,32 @@ class EtudiantDetailView(LoginRequiredMixin, generic.DetailView):
 		})
 
 		return context
+
+def etudiant_vcard(request, pk):
+	etudiant = get_object_or_404(Etudiant, pk=pk)
+
+	card = vobject.vCard()
+
+	card.add('n')
+	card.n.value = vobject.vcard.Name(family=etudiant.last_name,
+			given=etudiant.first_name)
+
+	card.add('fn')
+	card.fn.value = str(etudiant)
+
+	if etudiant.email:
+		card.add('email')
+		card.email.value = etudiant.email
+		card.email.type_param = 'INTERNET'
+
+	response = HttpResponse(card.serialize(), content_type='text/vcf')
+	response['Content-Disposition'] = 'attachment; filename="{etudiant}.vcf"'.format(
+			etudiant=slugify(str(etudiant)))
+	return response
+
+@login_required
+def etudiant_detail_dispatch(request, pk):
+	if request.GET.get('format', 'html') == 'vcard':
+		return etudiant_vcard(request, pk)
+
+	return EtudiantDetailView.as_view()(request, pk=pk)

@@ -21,6 +21,7 @@ from django.core.validators import validate_comma_separated_integer_list
 
 from pykol.models.fields import Lettre23Field
 import pykol.lib.files
+from pykol.models.comptabilite import Compte
 
 class Academie(models.Model):
 	"""
@@ -33,6 +34,11 @@ class Academie(models.Model):
 	slug = models.SlugField()
 	departements = models.CharField(max_length=100, verbose_name="départements",
 			validators=[validate_comma_separated_integer_list])
+
+	compte_dotation = models.ForeignKey(Compte,
+			on_delete=models.PROTECT, related_name='rectorat')
+	compte_paiement = models.ForeignKey(Compte,
+			on_delete=models.PROTECT, related_name='asie')
 
 	class Meta:
 		verbose_name = "académie"
@@ -100,6 +106,8 @@ class Etablissement(models.Model):
 			upload_to='tampon_etablissement/')
 
 	ville = models.CharField(max_length=100, blank=True)
+
+	compte_colles = models.ForeignKey(Compte, on_delete=models.PROTECT)
 
 	class Meta:
 		ordering = ['numero_uai']

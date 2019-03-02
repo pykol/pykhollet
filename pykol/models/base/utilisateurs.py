@@ -28,6 +28,7 @@ from django.urls import reverse
 
 from pykol.models.fields import Lettre23Field
 from pykol.models.base import Etablissement
+from pykol.models.comptabilite import Compte
 import pykol.lib.files
 
 class UserManager(BaseUserManager):
@@ -279,6 +280,23 @@ class Professeur(User):
 			  "ce professeur ne correspond pas au prénom sous lequel il "
 			  "est connu dans ASIE. Ce champ peut être laissé vide si "
 			  "le prénom connu dans ASIE n'est pas différent.")
+
+	# Comptes de paiement des heures de colles. Quand une heure de colle
+	# est programmée au colloscope, une heure de colle est débitée sur
+	# le compte de dotation de la classe/de la matière et créditée sur
+	# le "compte_prevu" du professeur. Quand le professeur a effectué la
+	# colle, l'heure est transférée de "compte_prevu" vers
+	# "compte_effectue".
+	# Lors de la mise en paiement, les heures sont transférées du
+	# "compte_effectue" vers le compte de paiement de relevé d'heures
+	# tenu par l'établissement.
+	# À la fin de l'année scolaire, les comptes des professeurs
+	# devraient avoir un solde nul.
+	compte_prevu = models.ForeignKey(Compte, on_delete=models.PROTECT,
+			related_name='professeur_prevues')
+	compte_effectue = models.ForeignKey(Compte,
+			on_delete=models.PROTECT,
+			related_name='professeur_effectue')
 
 	class Meta:
 		verbose_name = "professeur"

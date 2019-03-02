@@ -27,7 +27,7 @@ from django.utils.timezone import localtime
 from django.template.loader import get_template
 
 from pykol.models.base import Annee, Professeur, Classe, Etablissement
-from pykol.models.comptabilite import ColleDureeTaux
+from pykol.models.comptabilite import ColleDureeTaux, Compte, Mouvement
 from pykol.models.colles import Colle
 
 class ColleReleve(models.Model):
@@ -47,6 +47,8 @@ class ColleReleve(models.Model):
 
 	etablissement = models.ForeignKey(Etablissement,
 		on_delete=models.CASCADE)
+
+	compte_colles = models.ForeignKey(Compte, on_delete=models.PROTECT)
 
 	ETAT_NOUVEAU = 0
 	ETAT_PAYE = 1
@@ -146,6 +148,8 @@ class ColleReleveLigne(ColleDureeTaux):
 			choices=ETAT_CHOICES,
 			default=ETAT_NOUVEAU)
 	date_paiement = models.DateTimeField(blank=True, null=True)
+
+	mouvement = models.OneToOneField(Mouvement, on_delete=models.PROTECT)
 
 	@classmethod
 	def taux_colle(cls, classe):

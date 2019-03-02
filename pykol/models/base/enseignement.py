@@ -21,6 +21,7 @@ from django.db.models import Q, F
 from django.urls import reverse
 
 from pykol.models import constantes
+from pykol.models.comptabilite import Compte
 from .annee import Annee
 from .utilisateurs import Professeur, Etudiant
 from .etablissement import Etablissement
@@ -443,6 +444,8 @@ class Classe(Groupe):
 	# Établissement de rattachement de la classe
 	etablissement = models.ForeignKey(Etablissement,
 		on_delete=models.CASCADE)
+
+	compte_colles = models.ForeignKey(Compte, on_delete=models.PROTECT)
 
 	class Meta:
 		ordering = ['annee', 'niveau', 'nom']

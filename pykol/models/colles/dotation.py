@@ -24,6 +24,7 @@ from django.db.models import Q
 from pykol.models.base import Annee, Enseignement, Classe, Etudiant, \
 		Matiere
 from pykol.models import constantes
+from pykol.models.comptabilite import Compte
 from .colles import Colle
 
 class Dotation(models.Model):
@@ -73,6 +74,8 @@ class CollesEnseignement(models.Model):
 			verbose_name="mode par défaut",
 			choices=MODE_CHOICES,
 			default=MODE_INTERROGATION)
+
+	compte_colles = models.OneToOneField(Compte, on_delete=models.PROTECT)
 
 	@property
 	def duree(self):

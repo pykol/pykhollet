@@ -18,7 +18,7 @@
 
 from datetime import timedelta
 
-from django.db import models
+from django.db import models, transaction
 from django.db.models import Q
 from django.utils import timezone
 #from django.contrib.auth import get_user_model
@@ -87,6 +87,67 @@ class Mouvement(models.Model):
 	)
 	etat = models.SmallIntegerField(verbose_name="état",
 			choices=ETAT_CHOICES, default=ETAT_BROUILLON)
+
+	@classmethod
+	@transaction.atomic
+	def virement(cls, compte_debit, compte_credit,
+			duree, duree_interrogation=None,
+			taux=None, **kwargs):
+		"""
+		Méthode de classe pour faciliter la création d'un virement
+		simple d'heures d'un compte à un autre.
+		"""
+		mv = cls(**kwargs)
+		mv.save()
+
+		# Ligne de débit
+		MouvementLigne(
+			compte=compte_debit,
+			mouvement=mv,
+			duree=-duree,
+			duree_interrogation=-duree_interrogation,
+			taux=taux,
+			motif=mv.motif).save()
+
+		# Ligne de crédit
+		MouvementLigne(
+			compte=compte_credit,
+			mouvement=mv,
+			duree=duree,
+			duree_interrogation=duree_interrogation,
+			taux=taux,
+			motif=mv.motif).save()
+
+		return mv
+
+	@transaction.atomic
+	def virement_retour(self, lettrage=True):
+		"""
+		Crée un virement retour qui annule le mouvement actuel.
+
+		La ligne de crédit du mouvement actuel sera lettrée avec la
+		ligne de débit du mouvement retour si le paramètre lettrage vaut
+		True.
+		"""
+		mv = Mouvement(annee=self.annee,
+			motif="Annulation du mouvement {pk}".format(pk=self.pk))
+		mv.save()
+
+		for ligne in self.lignes:
+			# Ceci provoque la création d'une nouvelle instance lors de
+			# la sauvegarde.
+			ligne.pk = None
+			ligne.duree = -ligne.duree
+			ligne.duree_interrogation = -ligne.duree_interrogation
+			ligne.mouvement = mv
+			ligne.save()
+
+		if lettrage:
+			lignes_lettrage = self.lignes.filter(duree__gt=timedelta()
+				).union(mv.lignes.filter(duree__lt=timedelta()))
+			Lettrage.lettrage_total(lignes_lettrage)
+
+		return mv
 
 	def solde(self):
 		return self.lignes.aggregate(duree=models.Sum('duree'),

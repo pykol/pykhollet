@@ -209,6 +209,10 @@ class Colle(AbstractBaseColle):
 					self.colles_ens.duree_frequentielle
 		self.save()
 
+	def __str__(self):
+		return "Colle du {date} en {classe}".format(
+			date=self.details.horaire, classe=self.classe)
+
 	@transaction.atomic
 	def ajout_details(self, horaire=None, salle='', colleur=None,
 			etudiants=[]):

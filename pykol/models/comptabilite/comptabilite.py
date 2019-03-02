@@ -158,6 +158,9 @@ class Mouvement(models.Model):
 		return solde['duree'] == timedelta() and \
 				solde['duree_interrogation'] == timedelta()
 
+class LettrageNonEquilibre(Exception):
+	pass
+
 class Lettrage(models.Model):
 	"""
 	Rapprochement de lignes de mouvements.
@@ -173,6 +176,37 @@ class Lettrage(models.Model):
 	  paiement et à quelle date.
 	"""
 	date = models.DateTimeField(default=timezone.now)
+
+	LETTRAGE_PARTIEL = 0
+	LETTRAGE_TOTAL = 1
+	LETTRAGE_CHOICES = (
+		(LETTRAGE_PARTIEL, "partiel"),
+		(LETTRAGE_TOTAL, "total"),
+	)
+	mode = models.PositiveSmallIntegerField(default=LETTRAGE_PARTIEL,
+			choices=LETTRAGE_CHOICES)
+
+	@classmethod
+	@transaction.atomic
+	def lettrage_total(cls, lignes):
+		durees = lignes.aggregate(duree=Sum('duree'),
+			duree_interrogation=Sum('duree_interrogation'))
+		if durees['duree'] != timedelta() or \
+			durees['duree_interrogation'] != timedelta():
+			raise LettrageNonEquilibre
+
+		lettrage = cls.lettrage_partiel(lignes)
+		lettrage.mode = cls.LETTRAGE_TOTAL
+		lettrage.save()
+		return lettrage
+
+	@classmethod
+	@transaction.atomic
+	def lettrage_partiel(cls, lignes):
+		lettrage = cls(mode=cls.LETTRAGE_PARTIEL)
+		lettrage.save()
+		lignes.update(lettrage=lettrage)
+		return lettrage
 
 class ColleDureeTaux(models.Model):
 	TAUX_1A_INF20 = 1

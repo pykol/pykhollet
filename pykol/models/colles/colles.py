@@ -291,6 +291,17 @@ class Colle(AbstractBaseColle):
 	def matiere(self):
 		return self.enseignement.matiere
 
+	@property
+	def est_effectuee(self):
+		return self.etat in (ETAT_NOTEE, ETAT_EFFECTUEE, ETAT_RELEVEE)
+
+	@property
+	def duree_interrogation(self):
+		if self.mode == Colle.MODE_TD:
+			return self.duree
+		else:
+			return len(self.details.eleves) * self.colles_ens.duree
+
 class ColleDetails(models.Model):
 	"""
 	Détails sur le déroulement d'une colle (date, heure, lieu, élèves).

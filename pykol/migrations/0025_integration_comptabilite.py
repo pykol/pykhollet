@@ -276,7 +276,7 @@ def reverse_migrer_releves(apps, schema_editor):
 class Migration(migrations.Migration):
 
 	dependencies = [
-		('pykol', '0024_classe_etablissement'),
+		('pykol', '0024_lien_etablissement'),
 	]
 
 	operations = [

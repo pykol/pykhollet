@@ -255,16 +255,19 @@ def migrer_releves(apps, schema_editor):
 	MouvementLigne = apps.get_model('pykol', 'MouvementLigne')
 	Colle = apps.get_model('pykol', 'Colle')
 
-	# TODO création des comptes des ColleReleve
+	# Création d'un compte spécifique pour chaque relevé d'heures
 	for releve in ColleReleve.objects.all():
 		compte_colles = Compte(
-				...)
+				categorie=Compte.CATEGORIE_ACTIFS,
+				nom=str(releve),
+				parent=releve.etablissement.compte_releves)
 		compte_colles.save()
 		releve.compte_colles = compte_colles
 
 	# Création des mouvements comptables correspondant au paiement des
 	# colles.
 	for ligne_releve in ColleReleveLigne.objects.all():
+		# On crée d'abord le mouvement pour la relève des colles
 		mv = Mouvement(
 			annee=ligne_releve.releve.annee,
 			motif="Relevé du {date}".format(date=ligne_releve.releve.date),
@@ -281,6 +284,20 @@ def migrer_releves(apps, schema_editor):
 			duree_interrogation=ligne_releve.duree_interrogation,
 			taux=ligne_releve.taux)
 		ligne_credit.save()
+
+		# Si la ligne du relevé est payée, on crée également les
+		# mouvement correspondant au paiement de ces lignes.
+		if ligne_releve.etat == ColleReleveLigne.ETAT_PAYEE:
+			Mouvement.virement(
+				compte_debit=ligne_releve.releve.compte_colles,
+				compte_credit=ligne_releve.releve.etablissement.academie.compte_paiement,
+				annee=ligne_releve.releve.annee,
+				motif="Paiement du relevé {releve}".format(ligne_releve.releve),
+				duree=ligne_releve.duree,
+				duree_interrogation=ligne_releve.duree_interrogation,
+				taux=ligne_releve.taux,
+				)
+		# TODO lettrer les lignes de relevé avec les lignes de paiement
 	
 	# Création des lignes de débit des colles relevées
 	for colle in Colle.objects.filter(releve__isnull=False):

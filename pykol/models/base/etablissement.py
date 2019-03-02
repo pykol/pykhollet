@@ -107,7 +107,12 @@ class Etablissement(models.Model):
 
 	ville = models.CharField(max_length=100, blank=True)
 
-	compte_colles = models.ForeignKey(Compte, on_delete=models.PROTECT)
+	# Compte de dotation en colles
+	compte_colles = models.ForeignKey(Compte, on_delete=models.PROTECT,
+			related_name='etablissement_dotation')
+	# Compte racine des relevés de colles
+	compte_releves = models.ForeignKey(Compte, on_delete=models.PROTECT,
+			related_name='etablissement_releves')
 
 	class Meta:
 		ordering = ['numero_uai']

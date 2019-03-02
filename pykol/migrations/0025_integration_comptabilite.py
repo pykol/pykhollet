@@ -53,6 +53,46 @@ def reverse_cree_comptes_rectorats(apps, schema_editor):
 		models.Q(asie__isnull=False)
 		).get_ancestors(include_self=True).delete()
 
+def cree_comptes_etablissements(apps, schema_editor):
+	"""
+	Création des comptes pour les établissements.
+	"""
+	Compte = apps.get_model('pykol', 'Compte')
+	Etablissement = apps.get_model('pykol', 'Etablissement')
+
+	racine_etab = Compte(categorie=Compte.CATEGORIE_ACTIFS,
+		nom="Établissements")
+	racine_etab.save()
+
+	for etablissement in Etablissement.objects.filter(classe__isnull=False):
+		compte_etab = Compte(
+			categorie=Compte.CATEGORIE_ACTIFS,
+			nom=str(etablissement),
+			parent=racine_etab)
+		compte_etab.save()
+
+		etablissement.compte_colles = Compte(
+			categorie=Compte.CATEGORIE_ACTIFS,
+			nom="Dotation",
+			parent=compte_etab)
+		etablissement.compte_colles.save()
+
+		etablissement.compte_releves = Compte(
+			categorie=Compte.CATEGORIE_ACTIFS,
+			nom="Relevés",
+			parent=compte_etab)
+		etablissement.compte_releves.save()
+
+def reverse_cree_comptes_etablissements(apps, schema_editor):
+	"""
+	Suppression des comptes des établissements.
+	"""
+	Compte = apps.get_model('pykol', 'Compte')
+	Compte.objects.filter(
+		models.Q(etablissement_dotation__isnull=False) |
+		models.Q(etablissement_releves__isnull=False)
+		).get_ancestors(include_self=True).delete()
+
 def cree_comptes_classes(apps, schema_editor):
 	"""
 	Création des comptes de dotation en heures pour chaque classe.
@@ -63,27 +103,23 @@ def cree_comptes_classes(apps, schema_editor):
 	Compte = apps.get_model('pykol', 'Compte')
 	Classe = apps.get_model('pykol', 'Classe')
 
-	racine_classes = Compte(categorie=Compte.CATEGORIE_ACTIFS,
-		nom="Établissement")
-	racine_classes.save()
-
 	for classe in Classe.all_objects.all():
 		classe.compte_colles = Compte(
 			categorie=Compte.CATEGORIE_ACTIFS,
 			nom="{classe} - {annee}".format(classe=classe,
 				annee=classe.annee),
-			parent=racine_classes)
+			parent=classe.etablissement.compte_colles)
 
 		classe.compte_colles.save()
 		classe.save()
 
+
 def reverse_cree_comptes_classes(apps, schema_editor):
 	"""
-	Suppression des comptes des classes et de leurs ancêtres.
+	Suppression des comptes des classes.
 	"""
 	Compte = apps.get_model('pykol', 'Compte')
-	Compte.objects.filter(classe__isnull=False
-		).get_ancestors(include_self=True).delete()
+	Compte.objects.filter(classe__isnull=False).delete()
 
 def cree_comptes_enseignements(apps, schema_editor):
 	"""
@@ -402,7 +438,26 @@ class Migration(migrations.Migration):
 		migrations.AddField(
 			model_name='etablissement',
 			name='compte_colles',
-			field=models.ForeignKey(default=42, on_delete=django.db.models.deletion.PROTECT, to='pykol.Compte'),
+			field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='etablissement_dotation', to='pykol.Compte'),
+			preserve_default=False,
+		),
+		migrations.AddField(
+			model_name='etablissement',
+			name='compte_releves',
+			field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='etablissement_releves', to='pykol.Compte'),
+			preserve_default=False,
+		),
+		migrations.RunPython(cree_comptes_etablissements, reverse_cree_comptes_etablissements),
+		migrations.AlterField(
+			model_name='etablissement',
+			name='compte_colles',
+			field=models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, related_name='etablissement_dotation', to='pykol.Compte'),
+			preserve_default=False,
+		),
+		migrations.AlterField(
+			model_name='etablissement',
+			name='compte_releves',
+			field=models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, related_name='etablissement_releves', to='pykol.Compte'),
 			preserve_default=False,
 		),
 	]

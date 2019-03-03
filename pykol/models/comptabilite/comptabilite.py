@@ -245,6 +245,7 @@ class MouvementLigne(ColleDureeTaux):
 			related_name='lignes')
 	mouvement = models.ForeignKey(Mouvement, related_name='lignes',
 			on_delete=models.CASCADE)
-	motif = models.CharField(max_length=100)
+
+	motif = models.CharField(blank=True, max_length=100)
 	lettrage = models.ForeignKey(Lettrage, related_name='lignes',
 			blank=True, null=True, on_delete=models.SET_NULL)

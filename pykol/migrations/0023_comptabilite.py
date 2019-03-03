@@ -60,7 +60,7 @@ class Migration(migrations.Migration):
                 ('taux', models.PositiveSmallIntegerField(blank=True, null=True, choices=[(1, '1è année - Moins de 20 étudiants'), (2, '1è année - Entre 21 et 35 étudiants'), (3, '1è année - Plus de 35 étudiants'), (4, '2è année - Moins de 20 étudiants'), (5, '2è année - Entre 21 et 35 étudiants'), (6, '2è année - Plus de 35 étudiants')], verbose_name='taux')),
                 ('duree_interrogation', models.DurationField(default=datetime.timedelta, verbose_name="durée d'interrogation")),
                 ('duree', models.DurationField(default=datetime.timedelta, verbose_name="nombre d'heures")),
-                ('motif', models.CharField(max_length=100)),
+                ('motif', models.CharField(max_length=100, blank=True)),
                 ('compte', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='lignes', to='pykol.Compte')),
                 ('lettrage', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='lignes', to='pykol.Lettrage')),
                 ('mouvement', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='lignes', to='pykol.Mouvement')),

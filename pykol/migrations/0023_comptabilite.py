@@ -50,13 +50,14 @@ class Migration(migrations.Migration):
                 ('motif', models.CharField(max_length=100)),
                 ('etat', models.SmallIntegerField(choices=[(0, 'brouillon'), (1, 'validé')], default=0, verbose_name='état')),
                 ('annee', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='pykol.Annee')),
+                ('colle', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, to='pykol.Colle')),
             ],
         ),
         migrations.CreateModel(
             name='MouvementLigne',
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('taux', models.PositiveSmallIntegerField(choices=[(1, '1è année - Moins de 20 étudiants'), (2, '1è année - Entre 21 et 35 étudiants'), (3, '1è année - Plus de 35 étudiants'), (4, '2è année - Moins de 20 étudiants'), (5, '2è année - Entre 21 et 35 étudiants'), (6, '2è année - Plus de 35 étudiants')], verbose_name='taux')),
+                ('taux', models.PositiveSmallIntegerField(blank=True, null=True, choices=[(1, '1è année - Moins de 20 étudiants'), (2, '1è année - Entre 21 et 35 étudiants'), (3, '1è année - Plus de 35 étudiants'), (4, '2è année - Moins de 20 étudiants'), (5, '2è année - Entre 21 et 35 étudiants'), (6, '2è année - Plus de 35 étudiants')], verbose_name='taux')),
                 ('duree_interrogation', models.DurationField(default=datetime.timedelta, verbose_name="durée d'interrogation")),
                 ('duree', models.DurationField(default=datetime.timedelta, verbose_name="nombre d'heures")),
                 ('motif', models.CharField(max_length=100)),

@@ -133,7 +133,7 @@ class Mouvement(models.Model):
 			motif="Annulation du mouvement {pk}".format(pk=self.pk))
 		mv.save()
 
-		for ligne in self.lignes:
+		for ligne in self.lignes.all():
 			# Ceci provoque la création d'une nouvelle instance lors de
 			# la sauvegarde.
 			ligne.pk = None
@@ -224,8 +224,8 @@ class ColleDureeTaux(models.Model):
 		(TAUX_2A_INF35, "2è année - Entre 21 et 35 étudiants"),
 		(TAUX_2A_SUP36, "2è année - Plus de 35 étudiants"),
 		)
-	taux = models.PositiveSmallIntegerField(verbose_name="taux",
-			choices=TAUX_CHOICES)
+	taux = models.PositiveSmallIntegerField(blank=True, null=True,
+			verbose_name="taux", choices=TAUX_CHOICES)
 	duree_interrogation = models.DurationField(
 			verbose_name="durée d'interrogation", default=timedelta)
 	duree = models.DurationField(verbose_name="nombre d'heures",

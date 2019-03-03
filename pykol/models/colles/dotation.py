@@ -75,7 +75,7 @@ class CollesEnseignement(models.Model):
 			choices=MODE_CHOICES,
 			default=MODE_INTERROGATION)
 
-	compte_colles = models.OneToOneField(Compte, on_delete=models.PROTECT)
+	compte_colles = models.ForeignKey(Compte, on_delete=models.PROTECT)
 
 	@property
 	def duree(self):

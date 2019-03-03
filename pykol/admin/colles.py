@@ -63,6 +63,7 @@ class ColleNoteInline(admin.TabularInline):
 @register(Colle)
 class ColleAdmin(admin.ModelAdmin):
 	inlines = [ColleDetailsInline, ColleNoteInline]
+	search_fields = ('classe',)
 
 @register(CollesEnseignement)
 class CollesEnseignementAdmin(admin.ModelAdmin):

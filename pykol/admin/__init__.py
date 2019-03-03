@@ -21,3 +21,4 @@ from .base import *
 from .colles import *
 from .permissions import *
 from .ects import *
+from .comptabilite import *

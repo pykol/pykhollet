@@ -48,6 +48,9 @@ class Compte(MPTTModel):
 	categorie = models.SmallIntegerField(verbose_name="type de compte",
 			choices=CATEGORIE_CHOICES)
 
+	def __str__(self):
+		return self.nom
+
 	def solde(self, annee):
 		"""
 		Calcul du solde du compte pour l'année donnée en paramètre.
@@ -56,9 +59,11 @@ class Compte(MPTTModel):
 		dictionnaire donne la durée totale et la durée d'interrogation
 		pour un taux donné.
 		"""
-		return self.lignes.filter(mouvement__annee=annee
-				).values('taux').aggregate(duree=models.Sum('duree'),
-				duree_interrogation=models.Sum('interrogation')).values()
+		comptes = self.get_descendants(include_self=True)
+
+		return MouvementLigne.objects.filter(compte__in=comptes,
+			mouvement__annee=annee).values('taux').aggregate(duree=models.Sum('duree'),
+				duree_interrogation=models.Sum('duree_interrogation'))
 
 class Mouvement(models.Model):
 	"""
@@ -87,6 +92,9 @@ class Mouvement(models.Model):
 	)
 	etat = models.SmallIntegerField(verbose_name="état",
 			choices=ETAT_CHOICES, default=ETAT_BROUILLON)
+
+	def __str__(self):
+		return self.motif
 
 	@classmethod
 	@transaction.atomic

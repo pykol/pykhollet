@@ -326,6 +326,11 @@ def comptabilite_colloscopes(apps, schema_editor):
 	for colle in Colle.all_objects.all():
 		# On ajoute un premier mouvement correspondant à la création de
 		# la colle. Ce mouvement débite la dotation de la classe.
+		if colle.etat == COLLE_ETAT_BROUILLON:
+			etat = MOUVEMENT_ETAT_BROUILLON
+		else:
+			etat = MOUVEMENT_ETAT_VALIDE
+
 		mv = mouvement_virement(apps,
 			compte_debit=colle.colles_ens.compte_colles,
 			compte_credit=colle_details(colle).colleur.compte_prevu,
@@ -335,10 +340,8 @@ def comptabilite_colloscopes(apps, schema_editor):
 			motif="Ajout au colloscope en {classe} de la colle du {date}".format(
 				classe=colle.classe.nom,
 				date=colle_details(colle).horaire),
-			colle=colle)
-		# Confirmation du mouvement si la colle n'est pas en brouillon
-		if colle.etat != COLLE_ETAT_BROUILLON:
-			mv.etat = MOUVEMENT_ETAT_VALIDE
+			colle=colle,
+			etat=etat)
 
 		# Si la colle est annulée, on crée le mouvement inverse pour
 		# rendre la dotation à la classe.
@@ -358,9 +361,10 @@ def comptabilite_colloscopes(apps, schema_editor):
 				duree_interrogation=colle_duree_interrogation(colle),
 				annee=colle.classe.annee,
 				motif="Colle du {date} en {classe} effectuée".format(
-					classe=colle.classe,
+					classe=colle.classe.nom,
 					date=colle_details(colle).horaire),
-				colle=colle)
+				colle=colle,
+				etat=MOUVEMENT_ETAT_VALIDE)
 
 def reverse_comptabilite_colloscopes(apps, schema_editor):
 	"""
@@ -442,6 +446,7 @@ def migrer_releves(apps, schema_editor):
 				duree=ligne_releve.duree,
 				duree_interrogation=ligne_releve.duree_interrogation,
 				taux=ligne_releve.taux,
+				etat=MOUVEMENT_ETAT_VALIDE,
 				)
 		# TODO lettrer les lignes de relevé avec les lignes de paiement
 	

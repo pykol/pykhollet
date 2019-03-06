@@ -60,6 +60,20 @@ class ColleReleve(models.Model):
 	etat = models.PositiveSmallIntegerField(verbose_name="état",
 			choices=ETAT_CHOICES, default=ETAT_NOUVEAU)
 
+	def save(self, *args, **kwargs):
+		"""
+		Sauvegarde d'un relevé. Si aucun compte n'est attribué à ce
+		relevé, on en crée un automatiquement en fonction de
+		l'établissement.
+		"""
+		if self.compte_colles is None:
+			self.compte_colles = Compte(
+				categorie=Compte.CATEGORIE_ACTIFS,
+				parent=self.etablissement.compte_releves,
+				nom=str(self))
+			self.compte_colles.save()
+		super().save(*args, **kwargs)
+
 	class Meta:
 		verbose_name = "relevé des colles"
 		verbose_name_plural = "relevés des colles"

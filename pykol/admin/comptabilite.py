@@ -19,7 +19,7 @@
 from datetime import timedelta
 
 from django.contrib import admin
-from mptt.admin import DraggableMPTTAdmin
+from mptt.admin import DraggableMPTTAdmin, TreeRelatedFieldListFilter
 
 from pykol.admin.base import register, admin_site
 
@@ -45,4 +45,7 @@ class MouvementAdmin(admin.ModelAdmin):
 	autocomplete_fields = ('colle',)
 	inlines = (MouvementLigneInline,)
 
-admin_site.register(MouvementLigne)
+@register(MouvementLigne)
+class MouvementLigneAdmin(admin.ModelAdmin):
+	list_display = ('pk', 'compte', 'duree', 'duree_interrogation')
+	list_filter = (('compte', TreeRelatedFieldListFilter),)

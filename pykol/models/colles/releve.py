@@ -60,6 +60,9 @@ class ColleReleve(models.Model):
 	etat = models.PositiveSmallIntegerField(verbose_name="état",
 			choices=ETAT_CHOICES, default=ETAT_NOUVEAU)
 
+	def __str__(self):
+		return "Relevé du {date}".format(date=self.date)
+
 	def save(self, *args, **kwargs):
 		"""
 		Sauvegarde d'un relevé. Si aucun compte n'est attribué à ce

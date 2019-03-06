@@ -72,6 +72,28 @@ class Compte(MPTTModel):
 			mouvement__annee=annee).values('taux').aggregate(duree=models.Sum('duree'),
 				duree_interrogation=models.Sum('duree_interrogation'))
 
+	def sens_affichage(self):
+		"""
+		Renvoie -1 ou 1 pour indiquer si, étant donné sa catégorie, le
+		compte doit normalement avoir un solde négatif (notamment pour
+		les comptes de revenus) ou un solde positif.
+		"""
+		if self.categorie in (CATEGORIE_REVENUS, CATEGORIE_DETTES):
+			return -1
+		else:
+			return 1
+
+	def format_duree(self, duree, sens=True):
+		"""
+		Formate une durée en prenant en compte le sens d'affichage du
+		compte.
+		"""
+		if sens:
+			return "{:.2f}".format(self.sens_affichage() *
+				duree.total_seconds() / 3600)
+		else:
+			return "{:.2f}".format(duree.total_seconds() / 3600)
+
 class Mouvement(models.Model):
 	"""
 	Transfert d'heures de colles entre comptes.

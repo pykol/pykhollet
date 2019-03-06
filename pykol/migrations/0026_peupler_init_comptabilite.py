@@ -423,8 +423,6 @@ def migrer_releves(apps, schema_editor):
 			motif="Relevé du {date}".format(date=ligne_releve.releve.date),
 			etat=MOUVEMENT_ETAT_VALIDE)
 		mv.save()
-		ligne_releve.mouvement = mv
-		ligne_releve.save()
 
 		# Ajout de la ligne de crédit vers le compte du relevé
 		ligne_credit = MouvementLigne(
@@ -434,6 +432,9 @@ def migrer_releves(apps, schema_editor):
 			duree_interrogation=ligne_releve.duree_interrogation,
 			taux=ligne_releve.taux)
 		ligne_credit.save()
+
+		ligne_releve.mouvement_ligne = ligne_credit
+		ligne_releve.save()
 
 		# Si la ligne du relevé est payée, on crée également les
 		# mouvement correspondant au paiement de ces lignes.
@@ -469,7 +470,7 @@ def migrer_releves(apps, schema_editor):
 
 		MouvementLigne(
 			compte=colleur.compte_effectue,
-			mouvement=ligne.mouvement,
+			mouvement=ligne.mouvement_ligne.mouvement,
 			duree=-colle.duree,
 			duree_interrogation=-duree_interrogation,
 			taux=taux).save()

@@ -74,8 +74,8 @@ class Migration(migrations.Migration):
 		),
 		migrations.AddField(
 			model_name='collereleveligne',
-			name='mouvement',
-			field=models.OneToOneField(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, to='pykol.Mouvement'),
+			name='mouvement_ligne',
+			field=models.OneToOneField(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, to='pykol.MouvementLigne'),
 			preserve_default=False,
 		),
 	]

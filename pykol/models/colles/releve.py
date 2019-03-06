@@ -1,7 +1,7 @@
 # -*- coding:utf8 -*-
 
 # pyKol - Gestion de colles en CPGE
-# Copyright (c) 2018 Florian Hatat
+# Copyright (c) 2018-2019 Florian Hatat
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Affero General Public License as published by
@@ -27,7 +27,8 @@ from django.utils.timezone import localtime
 from django.template.loader import get_template
 
 from pykol.models.base import Annee, Professeur, Classe, Etablissement
-from pykol.models.comptabilite import ColleDureeTaux, Compte, Mouvement
+from pykol.models.comptabilite import ColleDureeTaux, Compte, \
+		Mouvement, MouvementLigne
 from pykol.models.colles import Colle
 
 class ColleReleve(models.Model):
@@ -149,7 +150,8 @@ class ColleReleveLigne(ColleDureeTaux):
 			default=ETAT_NOUVEAU)
 	date_paiement = models.DateTimeField(blank=True, null=True)
 
-	mouvement = models.OneToOneField(Mouvement, on_delete=models.PROTECT)
+	# Ligne qui crédite le compte des colles effectuées
+	mouvement_ligne = models.OneToOneField(MouvementLigne, on_delete=models.PROTECT)
 
 	@classmethod
 	def taux_colle(cls, classe):
@@ -179,6 +181,37 @@ class ColleReleveLigne(ColleDureeTaux):
 	def heures_interrogation(self):
 		return self.duree_interrogation.total_seconds() / 3600
 
+	def _init_mouvement(self):
+		"""
+		Initialisation d'un mouvement comptable vide pour cette ligne de
+		relevé. Il est nécessaire de sauvegarder manuellement l'instance
+		de ColleReleveLigne par la suite, cette méthode ne le fait pas.
+		"""
+		if self.mouvement_ligne is not None:
+			return
+
+		mouvement = Mouvement(
+			annee=self.releve.annee,
+			date=self.releve.date,
+			motif=str(self.releve)
+			)
+		mouvement.save()
+
+		self.mouvement_ligne = MouvementLigne(
+			compte=self.releve.compte_colles,
+			mouvement=mouvement,
+			duree=timedelta(),
+			duree_interrogation=timedelta(),
+			taux=taux,
+			motif=str(self.releve))
+		self.mouvement_ligne.save()
+
+	def save(self, *args, **kwargs):
+		# Si la ligne actuelle ne possède encore aucun mouvement, on
+		# l'initialise avant de sauvegarder dans la base.
+		self._init_mouvement()
+		self.save(*args, **kwargs)
+
 	def ajout_colle(self, colle):
 		"""
 		Ajout d'une Colle à la ligne de relevé actuelle
@@ -186,12 +219,31 @@ class ColleReleveLigne(ColleDureeTaux):
 		# Cette fonction ne vérifie rien du tout (ni que le colleur est
 		# le même, ni que la colle a été notée, ni le code de paiement).
 		if colle.mode == Colle.MODE_INTERROGATION:
+			duree_interrogation = timedelta()
 			for collenote in colle.collenote_set.all():
-				self.duree_interrogation += collenote.duree
+				duree_interrogation += collenote.duree
 		else:
-			self.duree_interrogation += colle.duree
+			duree_interrogation = colle.duree
 
 		self.duree += colle.duree
+		self.duree_interrogation += duree_interrogation
+
+		# Augmentation du mouvement comptable avec cette colle.
+		self._init_mouvement()
+
+		# On augmente la ligne de crédit des colles effectuées...
+		self.mouvement_ligne.duree = self.duree
+		self.mouvement_ligne.duree_interrogation = self.duree_interrogation
+
+		# et on compense par une nouvelle ligne de débit.
+		MouvementLigne(
+			compte=self.colleur.compte_effectue,
+			mouvement=self.mouvement_ligne.mouvement,
+			duree=-colle.duree,
+			duree_interrogation=-duree_interrogation,
+			taux=self.taux,
+			motif=str(self.releve)).save()
+
 		self.save()
 
 	@transaction.atomic

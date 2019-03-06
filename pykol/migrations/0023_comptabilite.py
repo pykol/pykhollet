@@ -29,6 +29,8 @@ class Migration(migrations.Migration):
                 ('level', models.PositiveIntegerField(db_index=True, editable=False)),
                 ('parent', mptt.fields.TreeForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, related_name='sous_comptes', to='pykol.Compte')),
                 ('proprietaire', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, to=settings.AUTH_USER_MODEL)),
+                ('decouvert_duree', models.DurationField(default=datetime.timedelta, verbose_name='durée à découvert autorisée')),
+                ('decouvert_duree_interrogation', models.DurationField(default=datetime.timedelta, verbose_name="durée d'interrogation à découvert autorisée")),
             ],
             options={
                 'abstract': False,

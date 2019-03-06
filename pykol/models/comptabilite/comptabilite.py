@@ -48,6 +48,13 @@ class Compte(MPTTModel):
 	categorie = models.SmallIntegerField(verbose_name="type de compte",
 			choices=CATEGORIE_CHOICES)
 
+	decouvert_duree = models.DurationField(default=timedelta,
+			verbose_name="durée à découvert autorisée")
+
+	decouvert_duree_interrogation = models.DurationField(
+			default=timedelta,
+			verbose_name="durée d'interrogation à découvert autorisée")
+
 	def __str__(self):
 		return self.nom
 

@@ -22,6 +22,7 @@ from django.urls import reverse
 from pykol.models import constantes
 from .annee import Annee
 from .utilisateurs import Professeur, Etudiant
+from .etablissement import Etablissement
 
 class Matiere(models.Model):
 	"""
@@ -394,6 +395,10 @@ class Classe(Groupe):
 		(NIVEAU_PREMIERE_ANNEE, "1è année"),
 		(NIVEAU_DEUXIEME_ANNEE, "2è année"),
 		))
+
+	# Établissement de rattachement de la classe
+	etablissement = models.ForeignKey(Etablissement,
+		on_delete=models.CASCADE)
 
 	class Meta:
 		ordering = ['annee', 'niveau', 'nom']

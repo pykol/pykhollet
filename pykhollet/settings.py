@@ -128,3 +128,9 @@ STATIC_URL = '/static/'
 
 LOGIN_URL = 'login'
 LOGIN_REDIRECT_URL = 'home'
+
+# Numéro UAI par défaut pour la création des classes. Ce numéro est
+# utilisé par pyKol pour déterminer l'établissement sur lequel on
+# travaille (pour la création de classes ou de professeurs) quand aucun
+# autre élément de contexte ne le permet.
+PYKOL_UAI_DEFAUT = None

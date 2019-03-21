@@ -26,7 +26,7 @@ from django.db import models, transaction
 from django.utils.timezone import localtime
 from django.template.loader import get_template
 
-from pykol.models.base import Annee, Professeur, Classe
+from pykol.models.base import Annee, Professeur, Classe, Etablissement
 from pykol.models.colles import Colle
 
 class ColleReleve(models.Model):
@@ -43,6 +43,9 @@ class ColleReleve(models.Model):
 	date_paiement = models.DateTimeField(blank=True, null=True,
 			help_text="Date où toutes les colles de ce relevé ont été "
 			"mises en paiement.")
+
+	etablissement = models.ForeignKey(Etablissement,
+		on_delete=models.CASCADE)
 
 	ETAT_NOUVEAU = 0
 	ETAT_PAYE = 1

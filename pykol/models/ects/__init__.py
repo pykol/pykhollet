@@ -1,7 +1,7 @@
 # -*- coding: utf-8
 
 # pyKol - Gestion de colles en CPGE
-# Copyright (c) 2018-2019 Florian Hatat
+# Copyright (c) 2019 Florian Hatat
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Affero General Public License as published by
@@ -16,7 +16,6 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-from . import constantes
-from . import base
-from . import colles
-from . import ects
+from .grille import Grille, GrilleLigne, GrilleMatchLigne, \
+		GrilleGroupeLignes
+from .jury import Jury, Mention

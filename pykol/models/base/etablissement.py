@@ -1,7 +1,7 @@
 # -*- coding:utf8 -*-
 
 # pyKol - Gestion de colles en CPGE
-# Copyright (c) 2018 Florian Hatat
+# Copyright (c) 2018-2019 Florian Hatat
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Affero General Public License as published by
@@ -88,6 +88,13 @@ class Etablissement(models.Model):
 			(390,"Section d'enseignement général et professionnel adapté"),
 		)
 	nature_uai = models.PositiveSmallIntegerField(choices=NATURE_UAI)
+
+	chef_etablissement = models.ForeignKey('User', blank=True, null=True,
+			on_delete=models.SET_NULL,
+			related_name='etablissement_proviseur',
+			verbose_name="chef d'établissement")
+	tampon_etablissement = models.ImageField(blank=True, null=True,
+			verbose_name="tampon de l'établissement")
 
 	class Meta:
 		ordering = ['numero_uai']

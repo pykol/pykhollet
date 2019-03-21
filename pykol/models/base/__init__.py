@@ -23,5 +23,5 @@ from .utilisateurs import User, Etudiant, Professeur, Discipline, \
 from .annee import Periode, Annee, Vacances
 from .enseignement import Matiere, Groupe, Service, \
 		Enseignement, Classe, GroupeEffectif, \
-		AbstractBaseGroupe, OptionEtudiant
+		AbstractBaseGroupe, OptionEtudiant, AbstractPeriode
 from .enseignement import ModuleElementaireFormation, MEFMatiere

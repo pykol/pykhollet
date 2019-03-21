@@ -1,7 +1,7 @@
 # -*- coding:utf8 -*-
 
 # pyKol - Gestion de colles en CPGE
-# Copyright (c) 2018 Florian Hatat
+# Copyright (c) 2018-2019 Florian Hatat
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Affero General Public License as published by
@@ -103,6 +103,8 @@ class User(AbstractUser):
 
 	birth_date = models.DateField(verbose_name="date de naissance",
 			null=True, blank=True)
+
+	signature = models.ImageField(blank=True, null=True)
 
 	USERNAME_FIELD = 'email'
 	REQUIRED_FIELDS = ['sexe',]

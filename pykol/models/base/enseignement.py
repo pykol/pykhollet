@@ -1,7 +1,7 @@
 # -*- coding:utf8 -*-
 
 # pyKol - Gestion de colles en CPGE
-# Copyright (c) 2018 Florian Hatat
+# Copyright (c) 2018-2019 Florian Hatat
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Affero General Public License as published by
@@ -106,6 +106,10 @@ class AbstractLienMatiere(models.Model):
 			return cls.MODALITE_COMMUN
 		return res
 
+	def __str__(self):
+		return '{matiere} ({modalite})'.format(matiere=self.matiere,
+				modalite=self.get_modalite_option_display())
+
 class OptionEtudiant(AbstractLienMatiere):
 	"""
 	Option choisie par un étudiant
@@ -114,7 +118,7 @@ class OptionEtudiant(AbstractLienMatiere):
 	etudiant = models.ForeignKey('Etudiant', on_delete=models.CASCADE)
 
 	# On écrase les champs hérités pour changer un peu les valeurs
-	# autorisés (pas de null ici, CASCADE à la suppression).
+	# autorisées (pas de NULL ici, CASCADE à la suppression).
 	matiere = models.ForeignKey('Matiere', on_delete=models.CASCADE,
 			verbose_name="matière")
 	rang_option = models.PositiveSmallIntegerField()
@@ -258,7 +262,7 @@ class Service(models.Model):
 	fin = models.DateField(null=True, blank=True,
 			verbose_name="Date de fin")
 
-class AbstractEnseignement(AbstractLienMatiere):
+class AbstractPeriode(models.Model):
 	PERIODE_ANNEE = constantes.PERIODE_ANNEE
 	PERIODE_PREMIERE = constantes.PERIODE_PREMIERE
 	PERIODE_DEUXIEME = constantes.PERIODE_DEUXIEME
@@ -339,7 +343,13 @@ class ModuleElementaireFormation(models.Model):
 	"""
 	code_mef = models.CharField(max_length=11)
 	matieres = models.ManyToManyField(Matiere, through='MEFMatiere')
-	libelle = models.CharField(max_length=100)
+	libelle = models.CharField(max_length=100, verbose_name="libellé")
+
+	# Descriptif pour les attestations ECTS
+	libelle_ects = models.CharField(max_length=200, blank=True,
+			null=False, verbose_name="libellé ECTS")
+	domaines_etude = models.CharField(max_length=400, blank=True,
+			null=False, verbose_name="domaines d'étude")
 
 	def __str__(self):
 		return self.code_mef

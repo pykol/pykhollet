@@ -22,6 +22,43 @@ from pykol.models.base import Etudiant, Classe, Enseignement, \
 		AbstractPeriode
 from .grille import Grille, GrilleLigne
 
+class JuryManager(models.Manager):
+	def create_from_classe(self, classe, **kwargs):
+		"""
+		Crée un jury pour une classe, en peuplant ce jury de mentions
+		vierges pour toutes les matières suivies par les étudiants,
+		selon les grilles ECTS présentes dans la base de données.
+		"""
+		jury = Jury(classe=classe, **kwargs)
+		jury.save()
+
+		# On recherche toutes les grilles qui peuvent s'appliquer à
+		# cette classe.
+		grilles = Grille.objects.filter(code_mef=classe.code_mef)
+
+		# Pour chaque étudiant, on crée toutes les mentions qui
+		# s'appliquent, en fonction des matières suivies par l'étudiant.
+		for etudiant in classe.etudiants.all():
+			grille_applicable = grilles.filter_applicables(classe=classe,
+					etudiant=etudiant).first()
+			if grille_applicable:
+				# On fait la liste de tous les enseignements présents
+				# dans grille_applicable et qui sont suivis par
+				# l'étudiant.
+				enseignements = Enseignement.objects.filter_etudiant(
+					etudiant=etudiant,
+					classe=classe).filter(
+					enseignement__matiere__grilleligne__grille=grille_applicable,
+				).annotate(ligne_ects=enseignement__matiere__grilleligne)
+
+				for enseignement in enseignements:
+					Mention(etudiant=etudiant, jury=jury,
+							enseignement=enseignement,
+							credits=enseignement.ligne_ects.credits,
+							grille_ligne=enseignement.ligne_ects).save()
+
+		return jury
+
 class Jury(AbstractPeriode, models.Model):
 	"""
 	Réunion de jury pour l'attribution des ECTS.
@@ -37,6 +74,8 @@ class Jury(AbstractPeriode, models.Model):
 	)
 	etat = models.PositiveSmallIntegerField(verbose_name="état",
 		choices=ETAT_CHOICES, default=ETAT_PREVU)
+
+	objects = JuryManager()
 
 class Mention(models.Model):
 	"""

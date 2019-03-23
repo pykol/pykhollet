@@ -1,0 +1,66 @@
+<?xml version="1.0"?>
+<grilles_ects
+  xmlns:html="http://www.w3.org/1999/xhtml"
+  xmlns="pykol:grille_ects"
+  xmlns:pykol="pykol:grille_ects">
+  <grille_ects id="2008-hypokhagne">
+    <groupe nom="Lettres/langues">
+      <!-- Français -->
+      <ligne>
+        <matiere code="020700" credits="5"/>
+      </ligne>
+      <!-- Langue vivante A -->
+      <ligne credits="4">
+        <matiere code="030101"/>
+        <matiere code="030201"/>
+        <matiere code="030601"/>
+        <matiere code="030901"/>
+        <matiere code="031401"/>
+      </ligne>
+      <!-- Langue vivante B -->
+      <ligne credits="2">
+        <matiere code="030102"/>
+        <matiere code="030202"/>
+        <matiere code="030602"/>
+        <matiere code="030902"/>
+        <matiere code="031402"/>
+      </ligne>
+      <!-- LCA latin ou grec -->
+      <ligne credits="3">
+        <matiere code="020300" modalite_option="O" rang_option="3"/>
+        <matiere code="020400" modalite_option="O" rang_option="3"/>
+      </ligne>
+    </groupe>
+
+    <groupe nom="Sciences humaines et sociales">
+      <!-- Histoire -->
+      <ligne credits="5">
+        <matiere code="040800"/>
+      </ligne>
+      <!-- Géographie -->
+      <ligne credits="2">
+        <matiere code="040900"/>
+      </ligne>
+      <!-- Philosophie -->
+      <ligne credits="4">
+        <matiere code="010300"/>
+      </ligne>
+    </groupe>
+
+    <!-- EPS -->
+    <groupe nom="EPS">
+      <ligne credits="1">
+        <matiere code="100100"/>
+      </ligne>
+    </groupe>
+
+    <groupe nom="Options">
+      <ligne credits="4">
+        <matiere modalite_option="O" rang_option="4"/>
+      </ligne>
+    </groupe>
+  </grille_ects>
+
+  <classe code_mef="30113004210" semestre="1" grille_ref="2008-hypokhagne"/>
+  <classe code_mef="30113004210" semestre="2" grille_ref="2008-hypokhagne"/>
+</grilles_ects>

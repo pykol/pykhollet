@@ -1,0 +1,53 @@
+<?xml version="1.0"?>
+<grilles_ects
+  xmlns:html="http://www.w3.org/1999/xhtml"
+  xmlns="pykol:grille_ects"
+  xmlns:pykol="pykol:grille_ects">
+  <grille_ects id="2008-khagne-lsh">
+    <groupe nom="Lettres/langues">
+      <!-- Français -->
+      <ligne credits="7">
+        <matiere code="020700"/>
+      </ligne>
+      <!-- Langue vivante A -->
+      <ligne credits="4">
+        <matiere code="030101"/>
+        <matiere code="030201"/>
+        <matiere code="030601"/>
+        <matiere code="030901"/>
+        <matiere code="031401"/>
+      </ligne>
+    </groupe>
+
+    <groupe nom="Sciences humaines et sociales">
+      <!-- Histoire -->
+      <ligne credits="4">
+        <matiere code="040800"/>
+      </ligne>
+      <!-- Géographie -->
+      <ligne credits="4">
+        <matiere code="040900"/>
+      </ligne>
+      <!-- Philosophie -->
+      <ligne credits="6">
+        <matiere code="010300"/>
+      </ligne>
+    </groupe>
+
+    <!-- EPS -->
+    <groupe nom="EPS">
+      <ligne credits="1">
+        <matiere code="100100"/>
+      </ligne>
+    </groupe>
+
+    <groupe nom="Options">
+      <ligne credits="4">
+        <matiere modalite_option="O" rang_option="2"/>
+      </ligne>
+    </groupe>
+  </grille_ects>
+
+  <classe code_mef="30113006220" semestre="1" grille_ref="2008-khagne-lsh"/>
+  <classe code_mef="30113006220" semestre="2" grille_ref="2008-khagne-lsh"/>
+</grilles_ects>

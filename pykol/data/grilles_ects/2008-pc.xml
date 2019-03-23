@@ -6,30 +6,30 @@
   <grille_ects id="2008-pc">
     <groupe nom="Sciences">
       <!-- Mathématiques -->
-      <ligne>
-        <matiere code="061300" credits="8"/>
+      <ligne credits="8">
+        <matiere code="061300"/>
       </ligne>
       <!-- Physique -->
-      <ligne>
-        <matiere code="065700" credits="8"/>
+      <ligne credits="8">
+        <matiere code="065700"/>
       </ligne>
       <!-- Chimie -->
-      <ligne>
-        <matiere code="066300" credits="6"/>
+      <ligne credits="6">
+        <matiere code="066300"/>
       </ligne>
-      <ligne nom="Informatique commune">
-        <matiere code="240500" credits="1"/>
+      <ligne nom="Informatique commune" credits="1">
+        <matiere code="240500"/>
       </ligne>
       <!-- TIPE -->
-      <ligne>
-        <matiere code="003300" credits="2"/>
+      <ligne credits="2">
+        <matiere code="003300"/>
       </ligne>
     </groupe>
 
     <groupe nom="Lettres/langues">
       <!-- Français/philosophie -->
-      <ligne>
-        <matiere code="022700" credits="2"/>
+      <ligne credits="2">
+        <matiere code="022700"/>
       </ligne>
       <!-- Langue vivante 1 -->
       <ligne credits="2">

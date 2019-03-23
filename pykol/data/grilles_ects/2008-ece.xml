@@ -6,17 +6,17 @@
   <grille_ects id="2008-ece">
     <!-- Mathématiques et informatique -->
     <groupe nom="Sciences">
-      <ligne nom="Mathématiques">
-        <matiere code="061600" credits="7"/>
+      <ligne nom="Mathématiques" credits="7">
+        <matiere code="061600"/>
       </ligne>
-      <ligne nom="Informatique">
-        <matiere code="061600" credits="1"/>
+      <ligne nom="Informatique" credits="1">
+        <matiere code="061600"/>
       </ligne>
     </groupe>
     <groupe nom="Sciences humaines et sociales">
       <!-- Histoire, géographie, géopolitique -->
-      <ligne>
-        <matiere code="043600" credits="6"/>
+      <ligne credits="6">
+        <matiere code="043600"/>
       </ligne>
       <!-- Culture générale -->
       <ligne>

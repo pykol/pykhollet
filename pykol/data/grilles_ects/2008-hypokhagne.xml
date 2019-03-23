@@ -6,8 +6,8 @@
   <grille_ects id="2008-hypokhagne">
     <groupe nom="Lettres/langues">
       <!-- Français -->
-      <ligne>
-        <matiere code="020700" credits="5"/>
+      <ligne credits="5">
+        <matiere code="020700"/>
       </ligne>
       <!-- Langue vivante A -->
       <ligne credits="4">

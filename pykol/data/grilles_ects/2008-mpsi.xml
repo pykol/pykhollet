@@ -6,30 +6,30 @@
   <grille_ects id="2008-mpsi-s1">
     <groupe nom="Sciences">
       <!-- Mathématiques -->
-      <ligne>
-        <matiere code="061300" credits="12"/>
+      <ligne credits="12">
+        <matiere code="061300"/>
       </ligne>
       <!-- Physique/chimie -->
-      <ligne>
-        <matiere code="065700" credits="8"/>
+      <ligne credits="8">
+        <matiere code="065700"/>
       </ligne>
       <!-- SI -->
-      <ligne>
-        <matiere code="067000" credits="2"/>
+      <ligne credits="2">
+        <matiere code="067000"/>
       </ligne>
-      <ligne nom="Informatique commune">
-        <matiere code="240500" credits="2"/>
+      <ligne nom="Informatique commune" credits="2">
+        <matiere code="240500"/>
       </ligne>
       <!-- TIPE -->
-      <ligne>
-        <matiere code="003300" credits="1"/>
+      <ligne credit="1">
+        <matiere code="003300"/>
       </ligne>
     </groupe>
 
     <groupe nom="Lettres/langues">
       <!-- Français/philosophie -->
-      <ligne>
-        <matiere code="022700" credits="2"/>
+      <ligne credits="2">
+        <matiere code="022700"/>
       </ligne>
       <!-- Langue vivante 1 -->
       <ligne credits="2">
@@ -52,30 +52,30 @@
   <grille_ects id="2008-mpsi-s2-info">
     <groupe nom="Sciences">
       <!-- Mathématiques -->
-      <ligne>
-        <matiere code="061300" credits="12"/>
+      <ligne credits="12">
+        <matiere code="061300"/>
       </ligne>
       <!-- Physique/chimie -->
-      <ligne>
-        <matiere code="065700" credits="8"/>
+      <ligne credits="8">
+        <matiere code="065700"/>
       </ligne>
       <!-- Option info -->
-      <ligne>
-        <matiere code="240500" credits="2" modalite_option="F"/>
+      <ligne credits="2">
+        <matiere code="240500"/>
       </ligne>
-      <ligne nom="Informatique commune">
-        <matiere code="240500" credits="1"/>
+      <ligne nom="Informatique commune" credits="1">
+        <matiere code="240500"/>
       </ligne>
       <!-- TIPE -->
-      <ligne>
-        <matiere code="003300" credits="2"/>
+      <ligne credits="2">
+        <matiere code="003300"/>
       </ligne>
     </groupe>
 
     <groupe nom="Lettres/langues">
       <!-- Français/philosophie -->
-      <ligne>
-        <matiere code="022700" credits="2"/>
+      <ligne credits="2">
+        <matiere code="022700"/>
       </ligne>
       <!-- Langue vivante 1 -->
       <ligne credits="2">
@@ -104,30 +104,30 @@
   <grille_ects id="2008-mpsi-s2-si2h">
     <groupe nom="Sciences">
       <!-- Mathématiques -->
-      <ligne>
-        <matiere code="061300" credits="12"/>
+      <ligne credits="12">
+        <matiere code="061300"/>
       </ligne>
       <!-- Physique/chimie -->
-      <ligne>
-        <matiere code="065700" credits="8"/>
+      <ligne credits="8">
+        <matiere code="065700"/>
       </ligne>
       <!-- SI 2h -->
-      <ligne>
-        <matiere code="240500" credits="2"/>
+      <ligne credits="2">
+        <matiere code="240500"/>
       </ligne>
-      <ligne nom="Informatique commune">
-        <matiere code="240500" credits="1"/>
+      <ligne nom="Informatique commune" credit="1">
+        <matiere code="240500"/>
       </ligne>
       <!-- TIPE -->
-      <ligne>
-        <matiere code="003300" credits="2"/>
+      <ligne credits="2">
+        <matiere code="003300"/>
       </ligne>
     </groupe>
 
     <groupe nom="Lettres/langues">
       <!-- Français/philosophie -->
-      <ligne>
-        <matiere code="022700" credits="2"/>
+      <ligne credits="2">
+        <matiere code="022700"/>
       </ligne>
       <!-- Langue vivante 1 -->
       <ligne credits="2">
@@ -150,30 +150,30 @@
   <grille_ects id="2008-mpsi-s2-si4h">
     <groupe nom="Sciences">
       <!-- Mathématiques -->
-      <ligne>
-        <matiere code="061300" credits="10"/>
+      <ligne credits="10">
+        <matiere code="061300"/>
       </ligne>
       <!-- Physique/chimie -->
-      <ligne>
-        <matiere code="065700" credits="8"/>
+      <ligne credits="8">
+        <matiere code="065700"/>
       </ligne>
       <!-- SI 4h -->
-      <ligne>
-        <matiere code="240500" credits="4"/>
+      <ligne credits="4">
+        <matiere code="240500"/>
       </ligne>
-      <ligne nom="Informatique commune">
-        <matiere code="240500" credits="1"/>
+      <ligne nom="Informatique commune" credits="1">
+        <matiere code="240500"/>
       </ligne>
       <!-- TIPE -->
-      <ligne>
-        <matiere code="003300" credits="2"/>
+      <ligne credits="2">
+        <matiere code="003300"/>
       </ligne>
     </groupe>
 
     <groupe nom="Lettres/langues">
       <!-- Français/philosophie -->
-      <ligne>
-        <matiere code="022700" credits="2"/>
+      <ligne credits="2">
+        <matiere code="022700"/>
       </ligne>
       <!-- Langue vivante 1 -->
       <ligne credits="2">

@@ -20,6 +20,20 @@ from django.db import models
 
 from pykol.models.base import ModuleElementaireFormation, MEFMatiere
 
+class GrilleQuerySet(models.QuerySet):
+	def filter_applicables(self, classe, etudiant):
+		"""
+		Filtre pour conserver uniquement les grilles qui sont
+		applicables à l'étudiant donné, en fonction des matières qu'il
+		suit dans la classe. On utilise pour cela les GrilleMatchLigne :
+		une grille est applicable si l'étudiant suit toutes les matières
+		présentes dans les GrilleMatchLigne.
+		"""
+		#TODO implémenter sur des querysets
+		pass
+
+GrilleManager = GrilleQuerySet.as_manager
+
 class Grille(models.Model):
 	"""
 	Grille de référence pour la répartition des crédits ECTS entre les

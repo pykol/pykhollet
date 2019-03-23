@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 # pyKol - Gestion de colles en CPGE
-# Copyright (c) 2018-2019 Florian Hatat
+# Copyright (c) 2019 Florian Hatat
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Affero General Public License as published by
@@ -16,8 +16,10 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+from django.contrib import admin
 
-from .base import *
-from .colles import *
-from .permissions import *
-from .ects import *
+from pykol.admin.base import register, admin_site
+from pykol.models.ects import Jury, Mention, Grille
+
+admin_site.register(Jury)
+admin_site.register(Grille)

@@ -1,0 +1,693 @@
+<?xml version="1.0" encoding="utf-8"?>
+<grilles_ects xmlns:xi="http://www.w3.org/2003/XInclude" xmlns="http://hatat.me/2018/pykol">
+  <!--
+    Ce document décrit les crédits ECTS attribués pour chaque classe
+    en CPGE.
+
+    Sources :
+    * Bulletin officiel n°11 du 13 mars 2008.
+  -->
+  <grille_ects xml:id="bo2008-ece" xml:base="grilles_ects/2008-ece.xml">
+    <!-- Mathématiques et informatique -->
+    <groupe nom="Sciences">
+      <ligne nom="Mathématiques" credits="7">
+        <matiere code="061600"/>
+      </ligne>
+      <ligne nom="Informatique" credits="1">
+        <matiere code="061600"/>
+      </ligne>
+    </groupe>
+    <groupe nom="Sciences humaines et sociales">
+      <!-- Histoire, géographie, géopolitique -->
+      <ligne credits="6">
+        <matiere code="043600"/>
+      </ligne>
+      <!-- Culture générale -->
+      <ligne>
+        <matiere code="001700" credits="6"/>
+        <matiere code="001701" credits="3"/>
+        <matiere code="001702" credits="3"/>
+      </ligne>
+      <!-- Langue vivante 1 -->
+      <ligne credits="3">
+        <matiere code="030101"/>
+        <matiere code="030201"/>
+        <matiere code="030601"/>
+        <matiere code="030901"/>
+        <matiere code="031401"/>
+      </ligne>
+      <!-- Langue vivante 2 -->
+      <ligne credits="3">
+        <matiere code="030102"/>
+        <matiere code="030202"/>
+        <matiere code="030602"/>
+        <matiere code="030902"/>
+        <matiere code="031402"/>
+      </ligne>
+      <!-- ESH -->
+      <ligne credits="7">
+        <matiere code="052300"/>
+      </ligne>
+      <!-- Économie -->
+      <ligne credits="2">
+        <matiere code="052200"/>
+      </ligne>
+    </groupe>
+    <!-- EPS -->
+    <groupe nom="EPS">
+      <ligne credits="1">
+        <matiere code="100100"/>
+      </ligne>
+    </groupe>
+  </grille_ects>
+  <classe code_mef="30112013210" semestre="1" grille_ref="bo2008-ece" xml:base="grilles_ects/2008-ece.xml"/>
+  <classe code_mef="30112013220" semestre="2" grille_ref="bo2008-ece" xml:base="grilles_ects/2008-ece.xml"/>
+  <classe code_mef="30112013210" semestre="1" grille_ref="bo2008-ece" xml:base="grilles_ects/2008-ece.xml"/>
+  <classe code_mef="30112013220" semestre="2" grille_ref="bo2008-ece" xml:base="grilles_ects/2008-ece.xml"/>
+  <grille_ects xml:id="bo2008-ecs" xml:base="grilles_ects/2008-ecs.xml">
+    <!-- Mathématiques et informatique -->
+    <groupe nom="Sciences">
+      <ligne nom="Mathématiques" credits="9">
+        <matiere code="061600"/>
+      </ligne>
+      <ligne nom="Informatique" credits="1">
+        <matiere code="061600"/>
+      </ligne>
+    </groupe>
+    <groupe nom="Sciences humaines et sociales">
+      <!-- Histoire, géographie, géopolitique -->
+      <ligne credits="6">
+        <matiere code="043600"/>
+      </ligne>
+      <!-- Culture générale -->
+      <ligne>
+        <matiere code="001700" credits="6"/>
+        <matiere code="001701" credits="3"/>
+        <matiere code="001702" credits="3"/>
+      </ligne>
+      <!-- Langue vivante 1 -->
+      <ligne credits="3">
+        <matiere code="030101"/>
+        <matiere code="030201"/>
+        <matiere code="030601"/>
+        <matiere code="030901"/>
+        <matiere code="031401"/>
+      </ligne>
+      <!-- Langue vivante 2 -->
+      <ligne credits="3">
+        <matiere code="030102"/>
+        <matiere code="030202"/>
+        <matiere code="030602"/>
+        <matiere code="030902"/>
+        <matiere code="031402"/>
+      </ligne>
+      <!-- Économie -->
+      <ligne credits="1">
+        <matiere code="380800"/>
+      </ligne>
+    </groupe>
+    <!-- EPS -->
+    <groupe nom="EPS">
+      <ligne credits="1">
+        <matiere code="100100"/>
+      </ligne>
+    </groupe>
+  </grille_ects>
+  <classe code_mef="30112012210" semestre="1" grille_ref="bo2008-ecs" xml:base="grilles_ects/2008-ecs.xml"/>
+  <classe code_mef="30112012220" semestre="2" grille_ref="bo2008-ecs" xml:base="grilles_ects/2008-ecs.xml"/>
+  <classe code_mef="30112012210" semestre="1" grille_ref="bo2008-ecs" xml:base="grilles_ects/2008-ecs.xml"/>
+  <classe code_mef="30112012220" semestre="2" grille_ref="bo2008-ecs" xml:base="grilles_ects/2008-ecs.xml"/>
+  <grille_ects xml:id="bo2008-hypokhagne" xml:base="grilles_ects/2008-hypokhagne.xml">
+    <groupe nom="Lettres/langues">
+      <!-- Français -->
+      <ligne credits="5">
+        <matiere code="020700"/>
+      </ligne>
+      <!-- Langue vivante A -->
+      <ligne credits="4">
+        <matiere code="030101"/>
+        <matiere code="030201"/>
+        <matiere code="030601"/>
+        <matiere code="030901"/>
+        <matiere code="031401"/>
+      </ligne>
+      <!-- Langue vivante B -->
+      <ligne credits="2">
+        <matiere code="030102"/>
+        <matiere code="030202"/>
+        <matiere code="030602"/>
+        <matiere code="030902"/>
+        <matiere code="031402"/>
+      </ligne>
+      <!-- LCA latin ou grec -->
+      <ligne credits="3">
+        <matiere code="020300" modalite_option="O" rang_option="3"/>
+        <matiere code="020400" modalite_option="O" rang_option="3"/>
+      </ligne>
+    </groupe>
+    <groupe nom="Sciences humaines et sociales">
+      <!-- Histoire -->
+      <ligne credits="5">
+        <matiere code="040800"/>
+      </ligne>
+      <!-- Géographie -->
+      <ligne credits="2">
+        <matiere code="040900"/>
+      </ligne>
+      <!-- Philosophie -->
+      <ligne credits="4">
+        <matiere code="010300"/>
+      </ligne>
+    </groupe>
+    <!-- EPS -->
+    <groupe nom="EPS">
+      <ligne credits="1">
+        <matiere code="100100"/>
+      </ligne>
+    </groupe>
+    <groupe nom="Options">
+      <ligne credits="4">
+        <matiere modalite_option="O" rang_option="4"/>
+      </ligne>
+    </groupe>
+  </grille_ects>
+  <classe code_mef="30113004210" semestre="1" grille_ref="bo2008-hypokhagne" xml:base="grilles_ects/2008-hypokhagne.xml"/>
+  <classe code_mef="30113004210" semestre="2" grille_ref="bo2008-hypokhagne" xml:base="grilles_ects/2008-hypokhagne.xml"/>
+  <grille_ects xml:id="bo2008-khagne-lsh" xml:base="grilles_ects/2008-khagne-lsh.xml">
+    <groupe nom="Lettres/langues">
+      <!-- Français -->
+      <ligne credits="7">
+        <matiere code="020700"/>
+      </ligne>
+      <!-- Langue vivante A -->
+      <ligne credits="4">
+        <matiere code="030101"/>
+        <matiere code="030201"/>
+        <matiere code="030601"/>
+        <matiere code="030901"/>
+        <matiere code="031401"/>
+      </ligne>
+    </groupe>
+    <groupe nom="Sciences humaines et sociales">
+      <!-- Histoire -->
+      <ligne credits="4">
+        <matiere code="040800"/>
+      </ligne>
+      <!-- Géographie -->
+      <ligne credits="4">
+        <matiere code="040900"/>
+      </ligne>
+      <!-- Philosophie -->
+      <ligne credits="6">
+        <matiere code="010300"/>
+      </ligne>
+    </groupe>
+    <!-- EPS -->
+    <groupe nom="EPS">
+      <ligne credits="1">
+        <matiere code="100100"/>
+      </ligne>
+    </groupe>
+    <groupe nom="Options">
+      <ligne credits="4">
+        <matiere modalite_option="O" rang_option="2"/>
+      </ligne>
+    </groupe>
+  </grille_ects>
+  <classe code_mef="30113006220" semestre="1" grille_ref="bo2008-khagne-lsh" xml:base="grilles_ects/2008-khagne-lsh.xml"/>
+  <classe code_mef="30113006220" semestre="2" grille_ref="bo2008-khagne-lsh" xml:base="grilles_ects/2008-khagne-lsh.xml"/>
+  <grille_ects xml:id="bo2008-mp" xml:base="grilles_ects/2008-mp.xml">
+    <groupe nom="Sciences">
+      <!-- Mathématiques -->
+      <ligne credits="12">
+        <matiere code="061300"/>
+      </ligne>
+      <!-- Physique/chimie -->
+      <ligne credits="8">
+        <matiere code="065700"/>
+      </ligne>
+      <!-- SI ou info -->
+      <ligne credits="2">
+        <matiere code="067000" modalite_option="O" rang_option="2"/>
+        <matiere code="240500" modalite_option="O" rang_option="2"/>
+      </ligne>
+      <ligne nom="Informatique commune" credits="1">
+        <matiere code="240500"/>
+      </ligne>
+      <!-- TIPE -->
+      <ligne credits="2">
+        <matiere code="003300"/>
+      </ligne>
+    </groupe>
+    <groupe nom="Lettres/langues">
+      <!-- Français/philosophie -->
+      <ligne credits="2">
+        <matiere code="022700"/>
+      </ligne>
+      <!-- Langue vivante 1 -->
+      <ligne credits="2">
+        <matiere code="030101"/>
+        <matiere code="030201"/>
+        <matiere code="030601"/>
+        <matiere code="030901"/>
+        <matiere code="031401"/>
+      </ligne>
+    </groupe>
+    <!-- EPS -->
+    <groupe nom="EPS">
+      <ligne credits="1">
+        <matiere code="100100"/>
+      </ligne>
+    </groupe>
+  </grille_ects>
+  <classe code_mef="30111027220" semestre="1" grille_ref="bo2008-mp" xml:base="grilles_ects/2008-mp.xml"/>
+  <classe code_mef="30111027220" semestre="2" grille_ref="bo2008-mp" xml:base="grilles_ects/2008-mp.xml"/>
+  <classe code_mef="30111030220" semestre="1" grille_ref="bo2008-mp" xml:base="grilles_ects/2008-mp.xml"/>
+  <classe code_mef="30111030220" semestre="2" grille_ref="bo2008-mp" xml:base="grilles_ects/2008-mp.xml"/>
+  <grille_ects xml:id="bo2008-mpsi-s1" xml:base="grilles_ects/2008-mpsi.xml">
+    <groupe nom="Sciences">
+      <!-- Mathématiques -->
+      <ligne credits="12">
+        <matiere code="061300"/>
+      </ligne>
+      <!-- Physique/chimie -->
+      <ligne credits="8">
+        <matiere code="065700"/>
+      </ligne>
+      <!-- SI -->
+      <ligne credits="2">
+        <matiere code="067000"/>
+      </ligne>
+      <ligne nom="Informatique commune" credits="2">
+        <matiere code="240500"/>
+      </ligne>
+      <!-- TIPE -->
+      <ligne credit="1">
+        <matiere code="003300"/>
+      </ligne>
+    </groupe>
+    <groupe nom="Lettres/langues">
+      <!-- Français/philosophie -->
+      <ligne credits="2">
+        <matiere code="022700"/>
+      </ligne>
+      <!-- Langue vivante 1 -->
+      <ligne credits="2">
+        <matiere code="030101"/>
+        <matiere code="030201"/>
+        <matiere code="030601"/>
+        <matiere code="030901"/>
+        <matiere code="031401"/>
+      </ligne>
+    </groupe>
+    <!-- EPS -->
+    <groupe nom="EPS">
+      <ligne credits="1">
+        <matiere code="100100"/>
+      </ligne>
+    </groupe>
+  </grille_ects>
+  <classe code_mef="30111018210" semestre="1" grille_ref="bo2008-mpsi-s1" xml:base="grilles_ects/2008-mpsi.xml"/>
+  <grille_ects xml:id="bo2008-mpsi-s2-info" xml:base="grilles_ects/2008-mpsi.xml">
+    <groupe nom="Sciences">
+      <!-- Mathématiques -->
+      <ligne credits="12">
+        <matiere code="061300"/>
+      </ligne>
+      <!-- Physique/chimie -->
+      <ligne credits="8">
+        <matiere code="065700"/>
+      </ligne>
+      <!-- Option info -->
+      <ligne credits="2">
+        <matiere code="240500"/>
+      </ligne>
+      <ligne nom="Informatique commune" credits="1">
+        <matiere code="240500"/>
+      </ligne>
+      <!-- TIPE -->
+      <ligne credits="2">
+        <matiere code="003300"/>
+      </ligne>
+    </groupe>
+    <groupe nom="Lettres/langues">
+      <!-- Français/philosophie -->
+      <ligne credits="2">
+        <matiere code="022700"/>
+      </ligne>
+      <!-- Langue vivante 1 -->
+      <ligne credits="2">
+        <matiere code="030101"/>
+        <matiere code="030201"/>
+        <matiere code="030601"/>
+        <matiere code="030901"/>
+        <matiere code="031401"/>
+      </ligne>
+    </groupe>
+    <!-- EPS -->
+    <groupe nom="EPS">
+      <ligne credits="1">
+        <matiere code="100100"/>
+      </ligne>
+    </groupe>
+    <match>
+      <matiere code="240500" modalite_option="F"/>
+    </match>
+  </grille_ects>
+  <classe code_mef="30111018210" semestre="2" grille_ref="bo2008-mpsi-s2-info" xml:base="grilles_ects/2008-mpsi.xml"/>
+  <grille_ects xml:id="bo2008-mpsi-s2-si2h" xml:base="grilles_ects/2008-mpsi.xml">
+    <groupe nom="Sciences">
+      <!-- Mathématiques -->
+      <ligne credits="12">
+        <matiere code="061300"/>
+      </ligne>
+      <!-- Physique/chimie -->
+      <ligne credits="8">
+        <matiere code="065700"/>
+      </ligne>
+      <!-- SI 2h -->
+      <ligne credits="2">
+        <matiere code="240500"/>
+      </ligne>
+      <ligne nom="Informatique commune" credit="1">
+        <matiere code="240500"/>
+      </ligne>
+      <!-- TIPE -->
+      <ligne credits="2">
+        <matiere code="003300"/>
+      </ligne>
+    </groupe>
+    <groupe nom="Lettres/langues">
+      <!-- Français/philosophie -->
+      <ligne credits="2">
+        <matiere code="022700"/>
+      </ligne>
+      <!-- Langue vivante 1 -->
+      <ligne credits="2">
+        <matiere code="030101"/>
+        <matiere code="030201"/>
+        <matiere code="030601"/>
+        <matiere code="030901"/>
+        <matiere code="031401"/>
+      </ligne>
+    </groupe>
+    <!-- EPS -->
+    <groupe nom="EPS">
+      <ligne credits="1">
+        <matiere code="100100"/>
+      </ligne>
+    </groupe>
+  </grille_ects>
+  <classe code_mef="30111018210" semestre="2" grille_ref="bo2008-mpsi-s2-si2h" xml:base="grilles_ects/2008-mpsi.xml"/>
+  <grille_ects xml:id="bo2008-mpsi-s2-si4h" xml:base="grilles_ects/2008-mpsi.xml">
+    <groupe nom="Sciences">
+      <!-- Mathématiques -->
+      <ligne credits="10">
+        <matiere code="061300"/>
+      </ligne>
+      <!-- Physique/chimie -->
+      <ligne credits="8">
+        <matiere code="065700"/>
+      </ligne>
+      <!-- SI 4h -->
+      <ligne credits="4">
+        <matiere code="240500"/>
+      </ligne>
+      <ligne nom="Informatique commune" credits="1">
+        <matiere code="240500"/>
+      </ligne>
+      <!-- TIPE -->
+      <ligne credits="2">
+        <matiere code="003300"/>
+      </ligne>
+    </groupe>
+    <groupe nom="Lettres/langues">
+      <!-- Français/philosophie -->
+      <ligne credits="2">
+        <matiere code="022700"/>
+      </ligne>
+      <!-- Langue vivante 1 -->
+      <ligne credits="2">
+        <matiere code="030101"/>
+        <matiere code="030201"/>
+        <matiere code="030601"/>
+        <matiere code="030901"/>
+        <matiere code="031401"/>
+      </ligne>
+    </groupe>
+    <!-- EPS -->
+    <groupe nom="EPS">
+      <ligne credits="1">
+        <matiere code="100100"/>
+      </ligne>
+    </groupe>
+    <match>
+      <matiere code="067000" modalite_option="F"/>
+    </match>
+  </grille_ects>
+  <classe code_mef="30111018210" semestre="2" grille_ref="bo2008-mpsi-s2-si4h" xml:base="grilles_ects/2008-mpsi.xml"/>
+  <grille_ects xml:id="bo2008-pc" xml:base="grilles_ects/2008-pc.xml">
+    <groupe nom="Sciences">
+      <!-- Mathématiques -->
+      <ligne credits="8">
+        <matiere code="061300"/>
+      </ligne>
+      <!-- Physique -->
+      <ligne credits="8">
+        <matiere code="065700"/>
+      </ligne>
+      <!-- Chimie -->
+      <ligne credits="6">
+        <matiere code="066300"/>
+      </ligne>
+      <ligne nom="Informatique commune" credits="1">
+        <matiere code="240500"/>
+      </ligne>
+      <!-- TIPE -->
+      <ligne credits="2">
+        <matiere code="003300"/>
+      </ligne>
+    </groupe>
+    <groupe nom="Lettres/langues">
+      <!-- Français/philosophie -->
+      <ligne credits="2">
+        <matiere code="022700"/>
+      </ligne>
+      <!-- Langue vivante 1 -->
+      <ligne credits="2">
+        <matiere code="030101"/>
+        <matiere code="030201"/>
+        <matiere code="030601"/>
+        <matiere code="030901"/>
+        <matiere code="031401"/>
+      </ligne>
+    </groupe>
+    <!-- EPS -->
+    <groupe nom="EPS">
+      <ligne credits="1">
+        <matiere code="100100"/>
+      </ligne>
+    </groupe>
+  </grille_ects>
+  <classe code_mef="30111028220" semestre="1" grille_ref="bo2008-pc" xml:base="grilles_ects/2008-pc.xml"/>
+  <classe code_mef="30111028220" semestre="2" grille_ref="bo2008-pc" xml:base="grilles_ects/2008-pc.xml"/>
+  <classe code_mef="30111032220" semestre="1" grille_ref="bo2008-pc" xml:base="grilles_ects/2008-pc.xml"/>
+  <classe code_mef="30111032220" semestre="2" grille_ref="bo2008-pc" xml:base="grilles_ects/2008-pc.xml"/>
+  <grille_ects xml:id="bo2008-pcsi-s1" xml:base="grilles_ects/2008-pcsi.xml">
+    <groupe nom="Sciences">
+      <!-- Mathématiques -->
+      <ligne credits="8">
+        <matiere code="061300"/>
+      </ligne>
+      <!-- Physique -->
+      <ligne credits="7">
+        <matiere code="065700"/>
+      </ligne>
+      <!-- Chimie -->
+      <ligne credits="4">
+        <matiere code="067100" force="true"/>
+      </ligne>
+      <!-- SI -->
+      <ligne credits="4">
+        <matiere code="067000" force="true"/>
+      </ligne>
+      <ligne nom="Informatique commune" credits="1">
+        <matiere code="240500"/>
+      </ligne>
+      <!-- TIPE -->
+      <ligne credits="1">
+        <matiere code="003300"/>
+      </ligne>
+    </groupe>
+    <groupe nom="Lettres/langues">
+      <!-- Français/philosophie -->
+      <ligne credits="2">
+        <matiere code="022700"/>
+      </ligne>
+      <!-- Langue vivante 1 -->
+      <ligne credits="2">
+        <matiere code="030101"/>
+        <matiere code="030201"/>
+        <matiere code="030601"/>
+        <matiere code="030901"/>
+        <matiere code="031401"/>
+      </ligne>
+    </groupe>
+    <!-- EPS -->
+    <groupe nom="EPS">
+      <ligne credits="1">
+        <matiere code="100100"/>
+      </ligne>
+    </groupe>
+  </grille_ects>
+  <classe code_mef="30111019210" semestre="1" grille_ref="bo2008-pcsi-s1" xml:base="grilles_ects/2008-pcsi.xml"/>
+  <grille_ects xml:id="bo2008-pcsi-s2-si" xml:base="grilles_ects/2008-pcsi.xml">
+    <groupe nom="Sciences">
+      <!-- Mathématiques -->
+      <ligne credits="8">
+        <matiere code="061300"/>
+      </ligne>
+      <!-- Physique -->
+      <ligne credits="9">
+        <matiere code="065700"/>
+      </ligne>
+      <!-- Chimie -->
+      <ligne credits="1">
+        <matiere code="067200" modalite_option="F"/>
+      </ligne>
+      <!-- SI -->
+      <ligne credits="4">
+        <matiere code="067000"/>
+      </ligne>
+      <ligne nom="Informatique commune" credits="1">
+        <matiere code="240500"/>
+      </ligne>
+      <!-- TIPE -->
+      <ligne credits="2">
+        <matiere code="003300"/>
+      </ligne>
+    </groupe>
+    <groupe nom="Lettres/langues">
+      <!-- Français/philosophie -->
+      <ligne credits="2">
+        <matiere code="022700"/>
+      </ligne>
+      <!-- Langue vivante 1 -->
+      <ligne credits="2">
+        <matiere code="030101"/>
+        <matiere code="030201"/>
+        <matiere code="030601"/>
+        <matiere code="030901"/>
+        <matiere code="031401"/>
+      </ligne>
+    </groupe>
+    <!-- EPS -->
+    <groupe nom="EPS">
+      <ligne credits="1">
+        <matiere code="100100"/>
+      </ligne>
+    </groupe>
+    <match>
+      <matiere code="067000" modalite_option="O"/>
+    </match>
+  </grille_ects>
+  <classe code_mef="30111019210" semestre="2" grille_ref="bo2008-pcsi-s2-si" xml:base="grilles_ects/2008-pcsi.xml"/>
+  <grille_ects xml:id="bo2008-pcsi-s2-chimie" xml:base="grilles_ects/2008-pcsi.xml">
+    <groupe nom="Sciences">
+      <!-- Mathématiques -->
+      <ligne credits="8">
+        <matiere code="061300"/>
+      </ligne>
+      <!-- Physique -->
+      <ligne credits="9">
+        <matiere code="065700"/>
+      </ligne>
+      <!-- Chimie -->
+      <ligne credits="5">
+        <matiere code="067100"/>
+      </ligne>
+      <ligne nom="Informatique commune" credits="1">
+        <matiere code="240500"/>
+      </ligne>
+      <!-- TIPE -->
+      <ligne credits="2">
+        <matiere code="003300"/>
+      </ligne>
+    </groupe>
+    <groupe nom="Lettres/langues">
+      <!-- Français/philosophie -->
+      <ligne credits="2">
+        <matiere code="022700"/>
+      </ligne>
+      <!-- Langue vivante 1 -->
+      <ligne credits="2">
+        <matiere code="030101"/>
+        <matiere code="030201"/>
+        <matiere code="030601"/>
+        <matiere code="030901"/>
+        <matiere code="031401"/>
+      </ligne>
+    </groupe>
+    <!-- EPS -->
+    <groupe nom="EPS">
+      <ligne credits="1">
+        <matiere code="100100"/>
+      </ligne>
+    </groupe>
+    <match>
+      <matiere code="067100" modalite_option="O"/>
+    </match>
+  </grille_ects>
+  <classe code_mef="30111019210" semestre="2" grille_ref="bo2008-pcsi-s2-chimie" xml:base="grilles_ects/2008-pcsi.xml"/>
+  <grille_ects xml:id="bo2008-psi" xml:base="grilles_ects/2008-psi.xml">
+    <groupe nom="Sciences">
+      <!-- Mathématiques -->
+      <ligne credits="9">
+        <matiere code="061300"/>
+      </ligne>
+      <!-- Physique -->
+      <ligne credits="8">
+        <matiere code="065700"/>
+      </ligne>
+      <!-- Chimie -->
+      <ligne credits="1">
+        <matiere code="066300"/>
+      </ligne>
+      <!-- SI -->
+      <ligne credits="7">
+        <matiere code="067000"/>
+      </ligne>
+      <ligne nom="Informatique commune" credits="1">
+        <matiere code="240500"/>
+      </ligne>
+      <!-- TIPE -->
+      <ligne credits="2">
+        <matiere code="003300"/>
+      </ligne>
+    </groupe>
+    <groupe nom="Lettres/langues">
+      <!-- Français/philosophie -->
+      <ligne credits="2">
+        <matiere code="022700"/>
+      </ligne>
+      <!-- Langue vivante 1 -->
+      <ligne credits="2">
+        <matiere code="030101"/>
+        <matiere code="030201"/>
+        <matiere code="030601"/>
+        <matiere code="030901"/>
+        <matiere code="031401"/>
+      </ligne>
+    </groupe>
+    <!-- EPS -->
+    <groupe nom="EPS">
+      <ligne credits="1">
+        <matiere code="100100"/>
+      </ligne>
+    </groupe>
+  </grille_ects>
+  <classe code_mef="30111029220" semestre="1" grille_ref="bo2008-psi" xml:base="grilles_ects/2008-psi.xml"/>
+  <classe code_mef="30111029220" semestre="2" grille_ref="bo2008-psi" xml:base="grilles_ects/2008-psi.xml"/>
+  <classe code_mef="30111033220" semestre="1" grille_ref="bo2008-psi" xml:base="grilles_ects/2008-psi.xml"/>
+  <classe code_mef="30111033220" semestre="2" grille_ref="bo2008-psi" xml:base="grilles_ects/2008-psi.xml"/>
+</grilles_ects>

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<grilles_ects
+  xmlns:xi="http://www.w3.org/2003/XInclude"
+  xmlns="http://hatat.me/2018/pykol"
+  >
+  <!--
+    Ce document décrit les crédits ECTS attribués pour chaque classe
+    en CPGE.
+
+    Sources :
+    * Bulletin officiel n°11 du 13 mars 2008.
+  -->
+  <xi:include href="grilles_ects/2008-ece.xml"        xpointer="xmlns(pykol=http://hatat.me/2018/pykol)xpointer(/pykol:grilles_ects/*)"/>
+  <xi:include href="grilles_ects/2008-ecs.xml"        xpointer="xmlns(pykol=http://hatat.me/2018/pykol)xpointer(/pykol:grilles_ects/*)"/>
+  <xi:include href="grilles_ects/2008-hypokhagne.xml" xpointer="xmlns(pykol=http://hatat.me/2018/pykol)xpointer(/pykol:grilles_ects/*)"/>
+  <xi:include href="grilles_ects/2008-khagne-lsh.xml" xpointer="xmlns(pykol=http://hatat.me/2018/pykol)xpointer(/pykol:grilles_ects/*)"/>
+  <xi:include href="grilles_ects/2008-mp.xml"         xpointer="xmlns(pykol=http://hatat.me/2018/pykol)xpointer(/pykol:grilles_ects/*)"/>
+  <xi:include href="grilles_ects/2008-mpsi.xml"       xpointer="xmlns(pykol=http://hatat.me/2018/pykol)xpointer(/pykol:grilles_ects/*)"/>
+  <xi:include href="grilles_ects/2008-pc.xml"         xpointer="xmlns(pykol=http://hatat.me/2018/pykol)xpointer(/pykol:grilles_ects/*)"/>
+  <xi:include href="grilles_ects/2008-pcsi.xml"       xpointer="xmlns(pykol=http://hatat.me/2018/pykol)xpointer(/pykol:grilles_ects/*)"/>
+  <xi:include href="grilles_ects/2008-psi.xml"        xpointer="xmlns(pykol=http://hatat.me/2018/pykol)xpointer(/pykol:grilles_ects/*)"/>
+</grilles_ects>

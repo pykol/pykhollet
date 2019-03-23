@@ -3,7 +3,7 @@
   xmlns:html="http://www.w3.org/1999/xhtml"
   xmlns="pykol:grille_ects"
   xmlns:pykol="pykol:grille_ects">
-  <grille_ects id="2008-ecs">
+  <grille_ects xml:id="2008-ecs">
     <!-- Mathématiques et informatique -->
     <groupe nom="Sciences">
       <ligne nom="Mathématiques" credits="9">

@@ -3,7 +3,7 @@
   xmlns:html="http://www.w3.org/1999/xhtml"
   xmlns="pykol:grille_ects"
   xmlns:pykol="pykol:grille_ects">
-  <grille_ects id="2008-khagne-lsh">
+  <grille_ects xml:id="2008-khagne-lsh">
     <groupe nom="Lettres/langues">
       <!-- Français -->
       <ligne credits="7">

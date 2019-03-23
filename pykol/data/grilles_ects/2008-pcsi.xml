@@ -3,7 +3,7 @@
   xmlns:html="http://www.w3.org/1999/xhtml"
   xmlns="pykol:grille_ects"
   xmlns:pykol="pykol:grille_ects">
-  <grille_ects id="2008-pcsi-s1">
+  <grille_ects xml:id="2008-pcsi-s1">
     <groupe nom="Sciences">
       <!-- Mathématiques -->
       <ligne credits="8">
@@ -53,7 +53,7 @@
   </grille_ects>
   <classe code_mef="30111019210" semestre="1" grille_ref="2008-pcsi-s1"/>
 
-  <grille_ects id="2008-pcsi-s2-si">
+  <grille_ects xml:id="2008-pcsi-s2-si">
     <groupe nom="Sciences">
       <!-- Mathématiques -->
       <ligne credits="8">
@@ -107,7 +107,7 @@
   </grille_ects>
   <classe code_mef="30111019210" semestre="2" grille_ref="2008-pcsi-s2-si"/>
 
-  <grille_ects id="2008-pcsi-s2-chimie">
+  <grille_ects xml:id="2008-pcsi-s2-chimie">
     <groupe nom="Sciences">
       <!-- Mathématiques -->
       <ligne credits="8">

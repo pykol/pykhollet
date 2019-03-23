@@ -1,9 +1,6 @@
 <?xml version="1.0"?>
-<grilles_ects
-  xmlns:html="http://www.w3.org/1999/xhtml"
-  xmlns="pykol:grille_ects"
-  xmlns:pykol="pykol:grille_ects">
-  <grille_ects xml:id="2008-pcsi-s1">
+<grilles_ects xmlns="http://hatat.me/2018/pykol">
+  <grille_ects xml:id="bo2008-pcsi-s1">
     <groupe nom="Sciences">
       <!-- Mathématiques -->
       <ligne credits="8">
@@ -51,9 +48,9 @@
       </ligne>
     </groupe>
   </grille_ects>
-  <classe code_mef="30111019210" semestre="1" grille_ref="2008-pcsi-s1"/>
+  <classe code_mef="30111019210" semestre="1" grille_ref="bo2008-pcsi-s1"/>
 
-  <grille_ects xml:id="2008-pcsi-s2-si">
+  <grille_ects xml:id="bo2008-pcsi-s2-si">
     <groupe nom="Sciences">
       <!-- Mathématiques -->
       <ligne credits="8">
@@ -105,9 +102,9 @@
       <matiere code="067000" modalite_option="O"/>
     </match>
   </grille_ects>
-  <classe code_mef="30111019210" semestre="2" grille_ref="2008-pcsi-s2-si"/>
+  <classe code_mef="30111019210" semestre="2" grille_ref="bo2008-pcsi-s2-si"/>
 
-  <grille_ects xml:id="2008-pcsi-s2-chimie">
+  <grille_ects xml:id="bo2008-pcsi-s2-chimie">
     <groupe nom="Sciences">
       <!-- Mathématiques -->
       <ligne credits="8">
@@ -155,5 +152,5 @@
       <matiere code="067100" modalite_option="O"/>
     </match>
   </grille_ects>
-  <classe code_mef="30111019210" semestre="2" grille_ref="2008-pcsi-s2-chimie"/>
+  <classe code_mef="30111019210" semestre="2" grille_ref="bo2008-pcsi-s2-chimie"/>
 </grilles_ects>

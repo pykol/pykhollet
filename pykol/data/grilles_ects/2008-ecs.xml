@@ -1,9 +1,6 @@
 <?xml version="1.0"?>
-<grilles_ects
-  xmlns:html="http://www.w3.org/1999/xhtml"
-  xmlns="pykol:grille_ects"
-  xmlns:pykol="pykol:grille_ects">
-  <grille_ects xml:id="2008-ecs">
+<grilles_ects xmlns="http://hatat.me/2018/pykol">
+  <grille_ects xml:id="bo2008-ecs">
     <!-- Mathématiques et informatique -->
     <groupe nom="Sciences">
       <ligne nom="Mathématiques" credits="9">
@@ -53,8 +50,8 @@
     </groupe>
   </grille_ects>
 
-  <classe code_mef="30112012210" semestre="1" grille_ref="2008-ecs"/>
-  <classe code_mef="30112012220" semestre="2" grille_ref="2008-ecs"/>
-  <classe code_mef="30112012210" semestre="1" grille_ref="2008-ecs"/>
-  <classe code_mef="30112012220" semestre="2" grille_ref="2008-ecs"/>
+  <classe code_mef="30112012210" semestre="1" grille_ref="bo2008-ecs"/>
+  <classe code_mef="30112012220" semestre="2" grille_ref="bo2008-ecs"/>
+  <classe code_mef="30112012210" semestre="1" grille_ref="bo2008-ecs"/>
+  <classe code_mef="30112012220" semestre="2" grille_ref="bo2008-ecs"/>
 </grilles_ects>

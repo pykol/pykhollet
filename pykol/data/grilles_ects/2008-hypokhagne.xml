@@ -1,9 +1,6 @@
 <?xml version="1.0"?>
-<grilles_ects
-  xmlns:html="http://www.w3.org/1999/xhtml"
-  xmlns="pykol:grille_ects"
-  xmlns:pykol="pykol:grille_ects">
-  <grille_ects xml:id="2008-hypokhagne">
+<grilles_ects xmlns="http://hatat.me/2018/pykol">
+  <grille_ects xml:id="bo2008-hypokhagne">
     <groupe nom="Lettres/langues">
       <!-- Français -->
       <ligne credits="5">
@@ -61,6 +58,6 @@
     </groupe>
   </grille_ects>
 
-  <classe code_mef="30113004210" semestre="1" grille_ref="2008-hypokhagne"/>
-  <classe code_mef="30113004210" semestre="2" grille_ref="2008-hypokhagne"/>
+  <classe code_mef="30113004210" semestre="1" grille_ref="bo2008-hypokhagne"/>
+  <classe code_mef="30113004210" semestre="2" grille_ref="bo2008-hypokhagne"/>
 </grilles_ects>

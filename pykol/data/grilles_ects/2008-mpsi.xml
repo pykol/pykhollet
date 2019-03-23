@@ -1,9 +1,6 @@
 <?xml version="1.0"?>
-<grilles_ects
-  xmlns:html="http://www.w3.org/1999/xhtml"
-  xmlns="pykol:grille_ects"
-  xmlns:pykol="pykol:grille_ects">
-  <grille_ects xml:id="2008-mpsi-s1">
+<grilles_ects xmlns="http://hatat.me/2018/pykol">
+  <grille_ects xml:id="bo2008-mpsi-s1">
     <groupe nom="Sciences">
       <!-- Mathématiques -->
       <ligne credits="12">
@@ -47,9 +44,9 @@
       </ligne>
     </groupe>
   </grille_ects>
-  <classe code_mef="30111018210" semestre="1" grille_ref="2008-mpsi-s1"/>
+  <classe code_mef="30111018210" semestre="1" grille_ref="bo2008-mpsi-s1"/>
 
-  <grille_ects xml:id="2008-mpsi-s2-info">
+  <grille_ects xml:id="bo2008-mpsi-s2-info">
     <groupe nom="Sciences">
       <!-- Mathématiques -->
       <ligne credits="12">
@@ -97,11 +94,11 @@
       <matiere code="240500" modalite_option="F"/>
     </match>
   </grille_ects>
-  <classe code_mef="30111018210" semestre="2" grille_ref="2008-mpsi-s2-info"/>
+  <classe code_mef="30111018210" semestre="2" grille_ref="bo2008-mpsi-s2-info"/>
 
   <!-- Au deuxième semestre, on distingue l'option SI 2h de l'option SI 4h
     par la présence de l'option facultative SI. -->
-  <grille_ects xml:id="2008-mpsi-s2-si2h">
+  <grille_ects xml:id="bo2008-mpsi-s2-si2h">
     <groupe nom="Sciences">
       <!-- Mathématiques -->
       <ligne credits="12">
@@ -145,9 +142,9 @@
       </ligne>
     </groupe>
   </grille_ects>
-  <classe code_mef="30111018210" semestre="2" grille_ref="2008-mpsi-s2-si2h"/>
+  <classe code_mef="30111018210" semestre="2" grille_ref="bo2008-mpsi-s2-si2h"/>
 
-  <grille_ects xml:id="2008-mpsi-s2-si4h">
+  <grille_ects xml:id="bo2008-mpsi-s2-si4h">
     <groupe nom="Sciences">
       <!-- Mathématiques -->
       <ligne credits="10">
@@ -195,6 +192,6 @@
       <matiere code="067000" modalite_option="F"/>
     </match>
   </grille_ects>
-  <classe code_mef="30111018210" semestre="2" grille_ref="2008-mpsi-s2-si4h"/>
+  <classe code_mef="30111018210" semestre="2" grille_ref="bo2008-mpsi-s2-si4h"/>
 
 </grilles_ects>

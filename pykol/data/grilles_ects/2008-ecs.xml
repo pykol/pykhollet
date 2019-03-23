@@ -1,0 +1,60 @@
+<?xml version="1.0"?>
+<grilles_ects
+  xmlns:html="http://www.w3.org/1999/xhtml"
+  xmlns="pykol:grille_ects"
+  xmlns:pykol="pykol:grille_ects">
+  <grille_ects id="2008-ecs">
+    <!-- Mathématiques et informatique -->
+    <groupe nom="Sciences">
+      <ligne nom="Mathématiques">
+        <matiere code="061600" credits="9"/>
+      </ligne>
+      <ligne nom="Informatique">
+        <matiere code="061600" credits="1"/>
+      </ligne>
+    </groupe>
+    <groupe nom="Sciences humaines et sociales">
+      <!-- Histoire, géographie, géopolitique -->
+      <ligne>
+        <matiere code="043600" credits="6"/>
+      </ligne>
+      <!-- Culture générale -->
+      <ligne>
+        <matiere code="001700" credits="6"/>
+        <matiere code="001701" credits="3"/>
+        <matiere code="001702" credits="3"/>
+      </ligne>
+      <!-- Langue vivante 1 -->
+      <ligne credits="3">
+        <matiere code="030101"/>
+        <matiere code="030201"/>
+        <matiere code="030601"/>
+        <matiere code="030901"/>
+        <matiere code="031401"/>
+      </ligne>
+      <!-- Langue vivante 2 -->
+      <ligne credits="3">
+        <matiere code="030102"/>
+        <matiere code="030202"/>
+        <matiere code="030602"/>
+        <matiere code="030902"/>
+        <matiere code="031402"/>
+      </ligne>
+      <!-- Économie -->
+      <ligne credits="1">
+        <matiere code="380800"/>
+      </ligne>
+    </groupe>
+    <!-- EPS -->
+    <groupe nom="EPS">
+      <ligne credits="1">
+        <matiere code="100100"/>
+      </ligne>
+    </groupe>
+  </grille_ects>
+
+  <classe code_mef="30112012210" semestre="1" grille_ref="2008-ecs"/>
+  <classe code_mef="30112012220" semestre="2" grille_ref="2008-ecs"/>
+  <classe code_mef="30112012210" semestre="1" grille_ref="2008-ecs"/>
+  <classe code_mef="30112012220" semestre="2" grille_ref="2008-ecs"/>
+</grilles_ects>

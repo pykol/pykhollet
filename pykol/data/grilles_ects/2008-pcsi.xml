@@ -1,0 +1,159 @@
+<?xml version="1.0"?>
+<grilles_ects
+  xmlns:html="http://www.w3.org/1999/xhtml"
+  xmlns="pykol:grille_ects"
+  xmlns:pykol="pykol:grille_ects">
+  <grille_ects id="2008-pcsi-s1">
+    <groupe nom="Sciences">
+      <!-- Mathématiques -->
+      <ligne>
+        <matiere code="061300" credits="8"/>
+      </ligne>
+      <!-- Physique -->
+      <ligne>
+        <matiere code="065700" credits="7"/>
+      </ligne>
+      <!-- Chimie -->
+      <ligne>
+        <matiere code="067100" credits="4" force="true"/>
+      </ligne>
+      <!-- SI -->
+      <ligne>
+        <matiere code="067000" credits="4" force="true"/>
+      </ligne>
+      <ligne nom="Informatique commune">
+        <matiere code="240500" credits="1"/>
+      </ligne>
+      <!-- TIPE -->
+      <ligne>
+        <matiere code="003300" credits="1"/>
+      </ligne>
+    </groupe>
+
+    <groupe nom="Lettres/langues">
+      <!-- Français/philosophie -->
+      <ligne>
+        <matiere code="022700" credits="2"/>
+      </ligne>
+      <!-- Langue vivante 1 -->
+      <ligne credits="2">
+        <matiere code="030101"/>
+        <matiere code="030201"/>
+        <matiere code="030601"/>
+        <matiere code="030901"/>
+        <matiere code="031401"/>
+      </ligne>
+    </groupe>
+    <!-- EPS -->
+    <groupe nom="EPS">
+      <ligne credits="1">
+        <matiere code="100100"/>
+      </ligne>
+    </groupe>
+  </grille_ects>
+  <classe code_mef="30111019210" semestre="1" grille_ref="2008-pcsi-s1"/>
+
+  <grille_ects id="2008-pcsi-s2-si">
+    <groupe nom="Sciences">
+      <!-- Mathématiques -->
+      <ligne>
+        <matiere code="061300" credits="8"/>
+      </ligne>
+      <!-- Physique -->
+      <ligne>
+        <matiere code="065700" credits="9"/>
+      </ligne>
+      <!-- Chimie -->
+      <ligne>
+        <matiere code="067200" credits="1" modalite_option="F"/>
+      </ligne>
+      <!-- SI -->
+      <ligne>
+        <matiere code="067000" credits="4"/>
+      </ligne>
+      <ligne nom="Informatique commune">
+        <matiere code="240500" credits="1"/>
+      </ligne>
+      <!-- TIPE -->
+      <ligne>
+        <matiere code="003300" credits="2"/>
+      </ligne>
+    </groupe>
+
+    <groupe nom="Lettres/langues">
+      <!-- Français/philosophie -->
+      <ligne>
+        <matiere code="022700" credits="2"/>
+      </ligne>
+      <!-- Langue vivante 1 -->
+      <ligne credits="2">
+        <matiere code="030101"/>
+        <matiere code="030201"/>
+        <matiere code="030601"/>
+        <matiere code="030901"/>
+        <matiere code="031401"/>
+      </ligne>
+    </groupe>
+    <!-- EPS -->
+    <groupe nom="EPS">
+      <ligne credits="1">
+        <matiere code="100100"/>
+      </ligne>
+    </groupe>
+
+    <match>
+      <matiere code="067000" modalite_option="O"/>
+    </match>
+  </grille_ects>
+  <classe code_mef="30111019210" semestre="2" grille_ref="2008-pcsi-s2-si"/>
+
+  <grille_ects id="2008-pcsi-s2-chimie">
+    <groupe nom="Sciences">
+      <!-- Mathématiques -->
+      <ligne>
+        <matiere code="061300" credits="8"/>
+      </ligne>
+      <!-- Physique -->
+      <ligne>
+        <matiere code="065700" credits="9"/>
+      </ligne>
+      <!-- Chimie -->
+      <ligne>
+        <matiere code="067100" credits="5"/>
+      </ligne>
+      <ligne nom="Informatique commune">
+        <matiere code="240500" credits="1"/>
+      </ligne>
+      <!-- TIPE -->
+      <ligne>
+        <matiere code="003300" credits="2"/>
+      </ligne>
+    </groupe>
+
+    <groupe nom="Lettres/langues">
+      <!-- Français/philosophie -->
+      <ligne>
+        <matiere code="022700" credits="2"/>
+      </ligne>
+      <!-- Langue vivante 1 -->
+      <ligne credits="2">
+        <matiere code="030101"/>
+        <matiere code="030201"/>
+        <matiere code="030601"/>
+        <matiere code="030901"/>
+        <matiere code="031401"/>
+      </ligne>
+    </groupe>
+    <!-- EPS -->
+    <groupe nom="EPS">
+      <ligne credits="1">
+        <matiere code="100100"/>
+      </ligne>
+    </groupe>
+
+    <match>
+      <matiere code="067100" modalite_option="O"/>
+    </match>
+  </grille_ects>
+  <classe code_mef="30111019210" semestre="2" grille_ref="2008-pcsi-s2-chimie"/>
+</grilles_ects>

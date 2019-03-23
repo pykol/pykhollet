@@ -274,6 +274,31 @@ class AbstractPeriode(models.Model):
 	class Meta:
 		abstract = True
 
+class AbstractEnseignement(AbstractLienMatiere, AbstractPeriode):
+	class Meta:
+		abstract = True
+
+class EnseignementQuerySet(models.QuerySet):
+	def filter_etudiant(self, etudiant, classe):
+		"""
+		Renvoie la liste des enseignements suivis par un étudiant durant
+		sa scolarité dans la classe.
+		"""
+		base_qs = self.filter(classe=classe)
+		communs = base_qs.filter(
+			modalite_option=Enseignement.MODALITE_COMMUN,
+		)
+		options = base_qs.exclude(modalite_option=Enseignement.MODALITE_COMMUN
+			).filter(
+				matiere__optionetudiant__etudiant=etudiant,
+				matiere__optionetudiant__classe=classe,
+				matiere__rang_option=models.F('rang_option'),
+				matiere__modalite_option=models.F('modalite_option')
+			)
+		return communs.union(options)
+
+EnseignementManager = EnseignementQuerySet.as_manager
+
 class Enseignement(AbstractEnseignement):
 	"""
 	Enseignement dispensé devant un groupe d'étudiants
@@ -303,6 +328,8 @@ class Enseignement(AbstractEnseignement):
 			related_name='enseignements')
 
 	professeurs = models.ManyToManyField(Professeur, through=Service)
+
+	objects = EnseignementManager()
 
 	class Meta:
 		ordering = ['groupe', 'matiere']

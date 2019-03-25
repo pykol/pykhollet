@@ -18,7 +18,7 @@
         <matiere code="240500"/>
       </ligne>
       <!-- TIPE -->
-      <ligne credit="1">
+      <ligne credits="1">
         <matiere code="003300"/>
       </ligne>
     </groupe>
@@ -30,11 +30,7 @@
       </ligne>
       <!-- Langue vivante 1 -->
       <ligne credits="2">
-        <matiere code="030101"/>
-        <matiere code="030201"/>
-        <matiere code="030601"/>
-        <matiere code="030901"/>
-        <matiere code="031401"/>
+        <matiere modalite_option="O" rang_option="1"/>
       </ligne>
     </groupe>
     <!-- EPS -->
@@ -58,7 +54,7 @@
       </ligne>
       <!-- Option info -->
       <ligne credits="2">
-        <matiere code="240500"/>
+        <matiere code="240500" modalite_option="F"/>
       </ligne>
       <ligne nom="Informatique commune" credits="1">
         <matiere code="240500"/>
@@ -76,11 +72,7 @@
       </ligne>
       <!-- Langue vivante 1 -->
       <ligne credits="2">
-        <matiere code="030101"/>
-        <matiere code="030201"/>
-        <matiere code="030601"/>
-        <matiere code="030901"/>
-        <matiere code="031401"/>
+        <matiere modalite_option="O" rang_option="1"/>
       </ligne>
     </groupe>
     <!-- EPS -->
@@ -110,9 +102,9 @@
       </ligne>
       <!-- SI 2h -->
       <ligne credits="2">
-        <matiere code="240500"/>
+        <matiere code="067000"/>
       </ligne>
-      <ligne nom="Informatique commune" credit="1">
+      <ligne nom="Informatique commune" credits="1">
         <matiere code="240500"/>
       </ligne>
       <!-- TIPE -->
@@ -128,11 +120,7 @@
       </ligne>
       <!-- Langue vivante 1 -->
       <ligne credits="2">
-        <matiere code="030101"/>
-        <matiere code="030201"/>
-        <matiere code="030601"/>
-        <matiere code="030901"/>
-        <matiere code="031401"/>
+        <matiere modalite_option="O" rang_option="1"/>
       </ligne>
     </groupe>
     <!-- EPS -->
@@ -156,7 +144,7 @@
       </ligne>
       <!-- SI 4h -->
       <ligne credits="4">
-        <matiere code="240500"/>
+        <matiere code="067000"/>
       </ligne>
       <ligne nom="Informatique commune" credits="1">
         <matiere code="240500"/>
@@ -174,11 +162,7 @@
       </ligne>
       <!-- Langue vivante 1 -->
       <ligne credits="2">
-        <matiere code="030101"/>
-        <matiere code="030201"/>
-        <matiere code="030601"/>
-        <matiere code="030901"/>
-        <matiere code="031401"/>
+        <matiere modalite_option="O" rang_option="1"/>
       </ligne>
     </groupe>
     <!-- EPS -->

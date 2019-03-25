@@ -12,10 +12,10 @@
       </ligne>
       <!-- Chimie -->
       <ligne credits="1">
-        <matiere code="066300"/>
+        <matiere code="063300"/>
       </ligne>
       <!-- SI -->
-      <ligne credits="7">
+      <ligne credits="4">
         <matiere code="067000"/>
       </ligne>
       <ligne nom="Informatique commune" credits="1">
@@ -34,11 +34,7 @@
       </ligne>
       <!-- Langue vivante 1 -->
       <ligne credits="2">
-        <matiere code="030101"/>
-        <matiere code="030201"/>
-        <matiere code="030601"/>
-        <matiere code="030901"/>
-        <matiere code="031401"/>
+        <matiere modalite_option="O" rang_option="1"/>
       </ligne>
     </groupe>
     <!-- EPS -->

@@ -30,19 +30,11 @@
       </ligne>
       <!-- Langue vivante 1 -->
       <ligne credits="3">
-        <matiere code="030101"/>
-        <matiere code="030201"/>
-        <matiere code="030601"/>
-        <matiere code="030901"/>
-        <matiere code="031401"/>
+        <matiere modalite_option="O" rang_option="1"/>
       </ligne>
       <!-- Langue vivante 2 -->
       <ligne credits="3">
-        <matiere code="030102"/>
-        <matiere code="030202"/>
-        <matiere code="030602"/>
-        <matiere code="030902"/>
-        <matiere code="031402"/>
+        <matiere modalite_option="O" rang_option="2"/>
       </ligne>
       <!-- ESH -->
       <ligne credits="7">
@@ -61,8 +53,8 @@
     </groupe>
   </grille_ects>
   <classe code_mef="30112013210" semestre="1" grille_ref="bo2008-ece" xml:base="grilles_ects/2008-ece.xml"/>
-  <classe code_mef="30112013220" semestre="2" grille_ref="bo2008-ece" xml:base="grilles_ects/2008-ece.xml"/>
-  <classe code_mef="30112013210" semestre="1" grille_ref="bo2008-ece" xml:base="grilles_ects/2008-ece.xml"/>
+  <classe code_mef="30112013210" semestre="2" grille_ref="bo2008-ece" xml:base="grilles_ects/2008-ece.xml"/>
+  <classe code_mef="30112013220" semestre="1" grille_ref="bo2008-ece" xml:base="grilles_ects/2008-ece.xml"/>
   <classe code_mef="30112013220" semestre="2" grille_ref="bo2008-ece" xml:base="grilles_ects/2008-ece.xml"/>
   <grille_ects xml:id="bo2008-ecs" xml:base="grilles_ects/2008-ecs.xml">
     <!-- Mathématiques et informatique -->
@@ -87,23 +79,15 @@
       </ligne>
       <!-- Langue vivante 1 -->
       <ligne credits="3">
-        <matiere code="030101"/>
-        <matiere code="030201"/>
-        <matiere code="030601"/>
-        <matiere code="030901"/>
-        <matiere code="031401"/>
+        <matiere modalite_option="O" rang_option="1"/>
       </ligne>
       <!-- Langue vivante 2 -->
       <ligne credits="3">
-        <matiere code="030102"/>
-        <matiere code="030202"/>
-        <matiere code="030602"/>
-        <matiere code="030902"/>
-        <matiere code="031402"/>
+        <matiere modalite_option="O" rang_option="2"/>
       </ligne>
       <!-- Économie -->
       <ligne credits="1">
-        <matiere code="380800"/>
+        <matiere code="380800" modalite_option="F"/>
       </ligne>
     </groupe>
     <!-- EPS -->
@@ -114,8 +98,8 @@
     </groupe>
   </grille_ects>
   <classe code_mef="30112012210" semestre="1" grille_ref="bo2008-ecs" xml:base="grilles_ects/2008-ecs.xml"/>
-  <classe code_mef="30112012220" semestre="2" grille_ref="bo2008-ecs" xml:base="grilles_ects/2008-ecs.xml"/>
-  <classe code_mef="30112012210" semestre="1" grille_ref="bo2008-ecs" xml:base="grilles_ects/2008-ecs.xml"/>
+  <classe code_mef="30112012210" semestre="2" grille_ref="bo2008-ecs" xml:base="grilles_ects/2008-ecs.xml"/>
+  <classe code_mef="30112012220" semestre="1" grille_ref="bo2008-ecs" xml:base="grilles_ects/2008-ecs.xml"/>
   <classe code_mef="30112012220" semestre="2" grille_ref="bo2008-ecs" xml:base="grilles_ects/2008-ecs.xml"/>
   <grille_ects xml:id="bo2008-hypokhagne" xml:base="grilles_ects/2008-hypokhagne.xml">
     <groupe nom="Lettres/langues">
@@ -125,19 +109,11 @@
       </ligne>
       <!-- Langue vivante A -->
       <ligne credits="4">
-        <matiere code="030101"/>
-        <matiere code="030201"/>
-        <matiere code="030601"/>
-        <matiere code="030901"/>
-        <matiere code="031401"/>
+        <matiere modalite_option="O" rang_option="1"/>
       </ligne>
       <!-- Langue vivante B -->
       <ligne credits="2">
-        <matiere code="030102"/>
-        <matiere code="030202"/>
-        <matiere code="030602"/>
-        <matiere code="030902"/>
-        <matiere code="031402"/>
+        <matiere modalite_option="O" rang_option="2"/>
       </ligne>
       <!-- LCA latin ou grec -->
       <ligne credits="3">
@@ -181,11 +157,7 @@
       </ligne>
       <!-- Langue vivante A -->
       <ligne credits="4">
-        <matiere code="030101"/>
-        <matiere code="030201"/>
-        <matiere code="030601"/>
-        <matiere code="030901"/>
-        <matiere code="031401"/>
+        <matiere modalite_option="O" rang_option="1"/>
       </ligne>
     </groupe>
     <groupe nom="Sciences humaines et sociales">
@@ -246,11 +218,7 @@
       </ligne>
       <!-- Langue vivante 1 -->
       <ligne credits="2">
-        <matiere code="030101"/>
-        <matiere code="030201"/>
-        <matiere code="030601"/>
-        <matiere code="030901"/>
-        <matiere code="031401"/>
+        <matiere modalite_option="O" rang_option="1"/>
       </ligne>
     </groupe>
     <!-- EPS -->
@@ -282,7 +250,7 @@
         <matiere code="240500"/>
       </ligne>
       <!-- TIPE -->
-      <ligne credit="1">
+      <ligne credits="1">
         <matiere code="003300"/>
       </ligne>
     </groupe>
@@ -293,11 +261,7 @@
       </ligne>
       <!-- Langue vivante 1 -->
       <ligne credits="2">
-        <matiere code="030101"/>
-        <matiere code="030201"/>
-        <matiere code="030601"/>
-        <matiere code="030901"/>
-        <matiere code="031401"/>
+        <matiere modalite_option="O" rang_option="1"/>
       </ligne>
     </groupe>
     <!-- EPS -->
@@ -320,7 +284,7 @@
       </ligne>
       <!-- Option info -->
       <ligne credits="2">
-        <matiere code="240500"/>
+        <matiere code="240500" modalite_option="F"/>
       </ligne>
       <ligne nom="Informatique commune" credits="1">
         <matiere code="240500"/>
@@ -337,11 +301,7 @@
       </ligne>
       <!-- Langue vivante 1 -->
       <ligne credits="2">
-        <matiere code="030101"/>
-        <matiere code="030201"/>
-        <matiere code="030601"/>
-        <matiere code="030901"/>
-        <matiere code="031401"/>
+        <matiere modalite_option="O" rang_option="1"/>
       </ligne>
     </groupe>
     <!-- EPS -->
@@ -367,9 +327,9 @@
       </ligne>
       <!-- SI 2h -->
       <ligne credits="2">
-        <matiere code="240500"/>
+        <matiere code="067000"/>
       </ligne>
-      <ligne nom="Informatique commune" credit="1">
+      <ligne nom="Informatique commune" credits="1">
         <matiere code="240500"/>
       </ligne>
       <!-- TIPE -->
@@ -384,11 +344,7 @@
       </ligne>
       <!-- Langue vivante 1 -->
       <ligne credits="2">
-        <matiere code="030101"/>
-        <matiere code="030201"/>
-        <matiere code="030601"/>
-        <matiere code="030901"/>
-        <matiere code="031401"/>
+        <matiere modalite_option="O" rang_option="1"/>
       </ligne>
     </groupe>
     <!-- EPS -->
@@ -411,7 +367,7 @@
       </ligne>
       <!-- SI 4h -->
       <ligne credits="4">
-        <matiere code="240500"/>
+        <matiere code="067000"/>
       </ligne>
       <ligne nom="Informatique commune" credits="1">
         <matiere code="240500"/>
@@ -428,11 +384,7 @@
       </ligne>
       <!-- Langue vivante 1 -->
       <ligne credits="2">
-        <matiere code="030101"/>
-        <matiere code="030201"/>
-        <matiere code="030601"/>
-        <matiere code="030901"/>
-        <matiere code="031401"/>
+        <matiere modalite_option="O" rang_option="1"/>
       </ligne>
     </groupe>
     <!-- EPS -->
@@ -458,7 +410,7 @@
       </ligne>
       <!-- Chimie -->
       <ligne credits="6">
-        <matiere code="066300"/>
+        <matiere code="063300"/>
       </ligne>
       <ligne nom="Informatique commune" credits="1">
         <matiere code="240500"/>
@@ -475,11 +427,7 @@
       </ligne>
       <!-- Langue vivante 1 -->
       <ligne credits="2">
-        <matiere code="030101"/>
-        <matiere code="030201"/>
-        <matiere code="030601"/>
-        <matiere code="030901"/>
-        <matiere code="031401"/>
+        <matiere modalite_option="O" rang_option="1"/>
       </ligne>
     </groupe>
     <!-- EPS -->
@@ -526,11 +474,7 @@
       </ligne>
       <!-- Langue vivante 1 -->
       <ligne credits="2">
-        <matiere code="030101"/>
-        <matiere code="030201"/>
-        <matiere code="030601"/>
-        <matiere code="030901"/>
-        <matiere code="031401"/>
+        <matiere modalite_option="O" rang_option="1"/>
       </ligne>
     </groupe>
     <!-- EPS -->
@@ -574,11 +518,7 @@
       </ligne>
       <!-- Langue vivante 1 -->
       <ligne credits="2">
-        <matiere code="030101"/>
-        <matiere code="030201"/>
-        <matiere code="030601"/>
-        <matiere code="030901"/>
-        <matiere code="031401"/>
+        <matiere modalite_option="O" rang_option="1"/>
       </ligne>
     </groupe>
     <!-- EPS -->
@@ -621,11 +561,7 @@
       </ligne>
       <!-- Langue vivante 1 -->
       <ligne credits="2">
-        <matiere code="030101"/>
-        <matiere code="030201"/>
-        <matiere code="030601"/>
-        <matiere code="030901"/>
-        <matiere code="031401"/>
+        <matiere modalite_option="O" rang_option="1"/>
       </ligne>
     </groupe>
     <!-- EPS -->
@@ -651,10 +587,10 @@
       </ligne>
       <!-- Chimie -->
       <ligne credits="1">
-        <matiere code="066300"/>
+        <matiere code="063300"/>
       </ligne>
       <!-- SI -->
-      <ligne credits="7">
+      <ligne credits="4">
         <matiere code="067000"/>
       </ligne>
       <ligne nom="Informatique commune" credits="1">
@@ -672,11 +608,7 @@
       </ligne>
       <!-- Langue vivante 1 -->
       <ligne credits="2">
-        <matiere code="030101"/>
-        <matiere code="030201"/>
-        <matiere code="030601"/>
-        <matiere code="030901"/>
-        <matiere code="031401"/>
+        <matiere modalite_option="O" rang_option="1"/>
       </ligne>
     </groupe>
     <!-- EPS -->

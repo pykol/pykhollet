@@ -8,19 +8,11 @@
       </ligne>
       <!-- Langue vivante A -->
       <ligne credits="4">
-        <matiere code="030101"/>
-        <matiere code="030201"/>
-        <matiere code="030601"/>
-        <matiere code="030901"/>
-        <matiere code="031401"/>
+        <matiere modalite_option="O" rang_option="1"/>
       </ligne>
       <!-- Langue vivante B -->
       <ligne credits="2">
-        <matiere code="030102"/>
-        <matiere code="030202"/>
-        <matiere code="030602"/>
-        <matiere code="030902"/>
-        <matiere code="031402"/>
+        <matiere modalite_option="O" rang_option="2"/>
       </ligne>
       <!-- LCA latin ou grec -->
       <ligne credits="3">

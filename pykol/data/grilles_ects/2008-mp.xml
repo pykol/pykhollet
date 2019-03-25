@@ -31,11 +31,7 @@
       </ligne>
       <!-- Langue vivante 1 -->
       <ligne credits="2">
-        <matiere code="030101"/>
-        <matiere code="030201"/>
-        <matiere code="030601"/>
-        <matiere code="030901"/>
-        <matiere code="031401"/>
+        <matiere modalite_option="O" rang_option="1"/>
       </ligne>
     </groupe>
     <!-- EPS -->

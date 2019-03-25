@@ -23,23 +23,15 @@
       </ligne>
       <!-- Langue vivante 1 -->
       <ligne credits="3">
-        <matiere code="030101"/>
-        <matiere code="030201"/>
-        <matiere code="030601"/>
-        <matiere code="030901"/>
-        <matiere code="031401"/>
+        <matiere modalite_option="O" rang_option="1"/>
       </ligne>
       <!-- Langue vivante 2 -->
       <ligne credits="3">
-        <matiere code="030102"/>
-        <matiere code="030202"/>
-        <matiere code="030602"/>
-        <matiere code="030902"/>
-        <matiere code="031402"/>
+        <matiere modalite_option="O" rang_option="2"/>
       </ligne>
       <!-- Économie -->
       <ligne credits="1">
-        <matiere code="380800"/>
+        <matiere code="380800" modalite_option="F"/>
       </ligne>
     </groupe>
     <!-- EPS -->
@@ -51,7 +43,7 @@
   </grille_ects>
 
   <classe code_mef="30112012210" semestre="1" grille_ref="bo2008-ecs"/>
-  <classe code_mef="30112012220" semestre="2" grille_ref="bo2008-ecs"/>
-  <classe code_mef="30112012210" semestre="1" grille_ref="bo2008-ecs"/>
+  <classe code_mef="30112012210" semestre="2" grille_ref="bo2008-ecs"/>
+  <classe code_mef="30112012220" semestre="1" grille_ref="bo2008-ecs"/>
   <classe code_mef="30112012220" semestre="2" grille_ref="bo2008-ecs"/>
 </grilles_ects>

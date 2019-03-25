@@ -19,6 +19,7 @@
 from django.db import models
 from django.db.models import F, Count, OuterRef, Subquery
 
+from pykol.models import constantes
 from pykol.models.base import ModuleElementaireFormation, MEFMatiere
 
 class GrilleQuerySet(models.QuerySet):
@@ -29,6 +30,11 @@ class GrilleQuerySet(models.QuerySet):
 		suit dans la classe. On utilise pour cela les GrilleMatchLigne :
 		une grille est applicable si l'étudiant suit toutes les matières
 		présentes dans les GrilleMatchLigne.
+
+		Les grilles sont triées en plaçant la plus pertinente pour
+		l'étudiant en premier (le critère de pertinence correspondant
+		pour le moment au plus grand nombre de GrilleMatchLigne
+		présent).
 		"""
 		if classe is None:
 			classe = etudiant.classe

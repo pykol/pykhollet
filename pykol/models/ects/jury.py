@@ -23,39 +23,59 @@ from pykol.models.base import Etudiant, Classe, Enseignement, \
 from .grille import Grille, GrilleLigne
 
 class JuryManager(models.Manager):
-	def create_from_classe(self, classe, **kwargs):
+	def create_from_classe(self, classe, periode, **kwargs):
 		"""
 		Crée un jury pour une classe, en peuplant ce jury de mentions
 		vierges pour toutes les matières suivies par les étudiants,
 		selon les grilles ECTS présentes dans la base de données.
 		"""
-		jury = Jury(classe=classe, **kwargs)
+		jury = Jury(classe=classe, periode=periode, **kwargs)
 		jury.save()
 
 		# On recherche toutes les grilles qui peuvent s'appliquer à
 		# cette classe.
 		grilles = Grille.objects.filter(code_mef=classe.code_mef)
 
+		if periode != Jury.PERIODE_ANNEE:
+			grilles = grilles.filter(semestre=periode)
+
 		# Pour chaque étudiant, on crée toutes les mentions qui
 		# s'appliquent, en fonction des matières suivies par l'étudiant.
 		for etudiant in classe.etudiants.all():
-			grille_applicable = grilles.filter_applicables(classe=classe,
-					etudiant=etudiant).first()
-			if grille_applicable:
+			grille_applicables = grilles.filter_applicables(classe=classe,
+					etudiant=etudiant)
+			periodes_traitees = set()
+
+			for grille in grilles_applicables:
+				# On ne garde qu'une grille par semestre
+				if grille.periode in periodes_traitees:
+					continue
+				periodes_traitees.add(grille.periode)
+
 				# On fait la liste de tous les enseignements présents
-				# dans grille_applicable et qui sont suivis par
-				# l'étudiant.
+				# dans grille et qui sont suivis par l'étudiant.
 				enseignements = Enseignement.objects.filter_etudiant(
 					etudiant=etudiant,
 					classe=classe).filter(
-					enseignement__matiere__grilleligne__grille=grille_applicable,
+					enseignement__matiere__grilleligne__grille=grille,
 				).annotate(ligne_ects=enseignement__matiere__grilleligne)
 
+				lignes_traitees = []
 				for enseignement in enseignements:
 					Mention(etudiant=etudiant, jury=jury,
 							enseignement=enseignement,
 							credits=enseignement.ligne_ects.credits,
 							grille_ligne=enseignement.ligne_ects).save()
+					lignes_traitees.append(enseignement.ligne_ects.pk)
+
+				# Certaines lignes doivent être créées de force même si
+				# aucun enseignement n'est présent.
+				lignes_forcees = grille.lignes.filter(
+					force_creation=True).exclude(pk__in=lignes_traitees)
+				for ligne_forcee in lignes_forcees:
+					Mention(etudiant=etudiant, jury=jury,
+							credits=ligne_forcee.credits,
+							grille_ligne=ligne_forcee).save()
 
 		return jury
 

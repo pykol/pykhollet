@@ -17,11 +17,12 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 from django.db import models
+from django.db.models import F, Count, OuterRef, Subquery
 
 from pykol.models.base import ModuleElementaireFormation, MEFMatiere
 
 class GrilleQuerySet(models.QuerySet):
-	def filter_applicables(self, classe, etudiant):
+	def filter_applicables(self, etudiant, classe=None):
 		"""
 		Filtre pour conserver uniquement les grilles qui sont
 		applicables à l'étudiant donné, en fonction des matières qu'il
@@ -29,8 +30,19 @@ class GrilleQuerySet(models.QuerySet):
 		une grille est applicable si l'étudiant suit toutes les matières
 		présentes dans les GrilleMatchLigne.
 		"""
-		#TODO implémenter sur des querysets
-		pass
+		if classe is None:
+			classe = etudiant.classe
+
+		match_subq = GrilleMatchLigne.objects.filter(
+				matiere__matiere__optionetudiant__etudiant=etudiant,
+				matiere__matiere__optionetudiant__classe=classe,
+				grille=OuterRef('pk')).values('pk')
+
+		return self.filter(code_mef=classe.mef
+			).annotate(
+				expected_match=Count('match_options')).annotate(
+				actual_match=Count(Subquery(match_subq))
+			).filter(expected_match=F('actual_match')).order_by('actual_match')
 
 GrilleManager = GrilleQuerySet.as_manager
 

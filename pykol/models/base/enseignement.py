@@ -17,6 +17,7 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 from django.db import models
+from django.db.models import Q, F
 from django.urls import reverse
 
 from pykol.models import constantes
@@ -279,23 +280,24 @@ class AbstractEnseignement(AbstractLienMatiere, AbstractPeriode):
 		abstract = True
 
 class EnseignementQuerySet(models.QuerySet):
-	def filter_etudiant(self, etudiant, classe):
+	def filter_etudiant(self, etudiant, *args, classe=None, **kwargs):
 		"""
 		Renvoie la liste des enseignements suivis par un étudiant durant
 		sa scolarité dans la classe.
 		"""
+		if classe is None:
+			classe = etudiant.classe
+
 		base_qs = self.filter(classe=classe)
-		communs = base_qs.filter(
-			modalite_option=Enseignement.MODALITE_COMMUN,
-		)
-		options = base_qs.exclude(modalite_option=Enseignement.MODALITE_COMMUN
-			).filter(
+		communs = Q(modalite_option=Enseignement.MODALITE_COMMUN)
+		options = ~Q(modalite_option=Enseignement.MODALITE_COMMUN) & \
+			Q(
 				matiere__optionetudiant__etudiant=etudiant,
 				matiere__optionetudiant__classe=classe,
-				matiere__rang_option=models.F('rang_option'),
-				matiere__modalite_option=models.F('modalite_option')
+				matiere__optionetudiant__rang_option=F('rang_option'),
+				matiere__optionetudiant__modalite_option=F('modalite_option')
 			)
-		return communs.union(options)
+		return base_qs.filter(communs | options, *args, **kwargs)
 
 EnseignementManager = EnseignementQuerySet.as_manager
 

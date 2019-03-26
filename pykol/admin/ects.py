@@ -42,6 +42,10 @@ class GrilleAdmin(admin.ModelAdmin):
 	list_display = ('__str__', 'semestre')
 	inlines = (GrilleLigneInline, GrilleMatchLigneInline)
 
+@register(Mention)
+class MentionAdmin(admin.ModelAdmin):
+	list_display = ('__str__', 'jury', 'etudiant', 'enseignement')
+
 
 PYKOL_NS = 'http://hatat.me/2018/pykol'
 def nstag(tagname):

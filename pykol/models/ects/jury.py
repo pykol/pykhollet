@@ -16,13 +16,14 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-from django.db import models
+from django.db import models, transaction
 
 from pykol.models.base import Etudiant, Classe, Enseignement, \
 		AbstractPeriode
 from .grille import Grille, GrilleLigne
 
 class JuryManager(models.Manager):
+	@transaction.atomic
 	def create_from_classe(self, classe, periode, **kwargs):
 		"""
 		Crée un jury pour une classe, en peuplant ce jury de mentions
@@ -34,7 +35,7 @@ class JuryManager(models.Manager):
 
 		# On recherche toutes les grilles qui peuvent s'appliquer à
 		# cette classe.
-		grilles = Grille.objects.filter(code_mef=classe.code_mef)
+		grilles = Grille.objects.filter(code_mef=classe.mef)
 
 		if periode != Jury.PERIODE_ANNEE:
 			grilles = grilles.filter(semestre=periode)
@@ -42,31 +43,33 @@ class JuryManager(models.Manager):
 		# Pour chaque étudiant, on crée toutes les mentions qui
 		# s'appliquent, en fonction des matières suivies par l'étudiant.
 		for etudiant in classe.etudiants.all():
-			grille_applicables = grilles.filter_applicables(classe=classe,
+			grilles_applicables = grilles.filter_applicables(classe=classe,
 					etudiant=etudiant)
 			periodes_traitees = set()
 
 			for grille in grilles_applicables:
 				# On ne garde qu'une grille par semestre
-				if grille.periode in periodes_traitees:
+				if grille.semestre in periodes_traitees:
 					continue
-				periodes_traitees.add(grille.periode)
+				periodes_traitees.add(grille.semestre)
 
 				# On fait la liste de tous les enseignements présents
 				# dans grille et qui sont suivis par l'étudiant.
 				enseignements = Enseignement.objects.filter_etudiant(
 					etudiant=etudiant,
-					classe=classe).filter(
-					enseignement__matiere__grilleligne__grille=grille,
-				).annotate(ligne_ects=enseignement__matiere__grilleligne)
+					classe=classe,
+					matiere__mefmatiere__grilleligne__grille=grille,
+				).annotate(ligne_ects=models.F('matiere__mefmatiere__grilleligne'))
 
 				lignes_traitees = []
 				for enseignement in enseignements:
+					ligne = GrilleLigne.objects.get(pk=enseignement.ligne_ects)
+
 					Mention(etudiant=etudiant, jury=jury,
 							enseignement=enseignement,
-							credits=enseignement.ligne_ects.credits,
-							grille_ligne=enseignement.ligne_ects).save()
-					lignes_traitees.append(enseignement.ligne_ects.pk)
+							credits=ligne.credits,
+							grille_ligne=ligne).save()
+					lignes_traitees.append(ligne.pk)
 
 				# Certaines lignes doivent être créées de force même si
 				# aucun enseignement n'est présent.

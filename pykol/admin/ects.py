@@ -78,6 +78,8 @@ def creer_grille_ligne(ligne_et, grille, position=0, groupe=None):
 	Création des GrilleLigne engendrées par la balise <ligne> donnée en
 	paramètre.
 	"""
+	libelle = ligne_et.attrib.get('nom', "")
+
 	for matiere_et in ligne_et.findall(nstag('matiere')):
 		matieres = query_matieres_from_tag(matiere_et, grille.code_mef)
 
@@ -89,6 +91,7 @@ def creer_grille_ligne(ligne_et, grille, position=0, groupe=None):
 			GrilleLigne.objects.get_or_create(grille=grille,
 				groupe=groupe,
 				matiere=matiere,
+				libelle=libelle,
 				defaults={
 					'credits': credits,
 					'position': position,

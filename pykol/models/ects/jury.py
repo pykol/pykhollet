@@ -139,6 +139,9 @@ class Mention(models.Model):
 		"cette mention est la mention globale de l'étudiant pour ce "
 		"jury.", default=False)
 
+	def __str__(self):
+		return "Mention {}".format(self.pk)
+
 	MENTION_LETTRES = ['F', 'E', 'D', 'C', 'B', 'A']
 	def get_mention_lettre_display(self):
 		return self.MENTION_LETTRES[self.mention]

@@ -16,13 +16,16 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+from collections import OrderedDict
+
 from django.db.models import Count, Q
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, get_object_or_404, redirect
 from django.core.exceptions import PermissionDenied
 
 from pykol.models.ects import Jury, Mention
-from pykol.models.base import Etudiant
+from pykol.models.base import Etudiant, Enseignement
+from pykol.forms.ects import MentionFormSet
 
 def jury_list_direction(request):
 	"""
@@ -75,10 +78,66 @@ def jury_list(request):
 	else:
 		raise PermissionDenied
 
+def jury_detail_direction(request, jury):
+	pass
+
+def jury_detail_professeur(request, jury):
+	mention_qs = Mention.objects.filter(jury=jury,
+			enseignement__professeurs=request.user)
+
+	if request.method == 'POST':
+		formset = MentionFormSet(request.POST, instance=jury,
+				queryset=mention_qs)
+		if formset.is_valid():
+			formset.save()
+			return redirect('ects_jury_detail', jury.pk)
+	else:
+		formset = MentionFormSet(instance=jury,
+			queryset=mention_qs)
+
+	# On réarrange le formset pour présenter un étudiant par ligne, une
+	# matière par colonne.
+	enseignements = set()
+	for mention in mention_qs:
+		enseignements.add((mention.enseignement, mention.grille_ligne))
+	enseignements = sorted(enseignements,
+		key=lambda x: (x[0].periode, -x[1].credits, x[0].pk))
+
+	etudiants = Etudiant.objects.filter(
+		mention__in=mention_qs).order_by('last_name', 'first_name')
+
+	formsettab = OrderedDict()
+	for etudiant in etudiants:
+		formsettab[etudiant] = OrderedDict()
+		for enseignement in enseignements:
+			formsettab[etudiant][enseignement] = None
+	for form in formset:
+		formsettab[form.instance.etudiant][(form.instance.enseignement,
+			form.instance.grille_ligne)] = form
+	formsettab.management_form = formset.management_form
+
+	return render(request, 'pykol/ects/jury_detail_professeur.html',
+		context={
+			'formsettab': formsettab,
+			'jury': jury,
+			'enseignements': enseignements,
+			'etudiants': etudiants,
+		})
+
+def jury_detail_etudiant(request, jury):
+	pass
+
 @login_required
 def jury_detail(request, pk):
 	jury = get_object_or_404(Jury, pk=pk)
-	pass
+	if request.user.has_perm('pykol.direction'):
+		return jury_detail_direction(request, jury)
+	elif hasattr(request.user, 'professeur'):
+		return jury_detail_professeur(request, jury)
+	elif hasattr(request.user, 'etudiant'):
+		return jury_detail_etudiant(request, jury)
+	else:
+		raise PermissionDenied
 
 @login_required
 def jury_creer(request):

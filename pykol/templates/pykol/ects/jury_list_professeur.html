@@ -23,7 +23,7 @@
         <td>{{ jury.classe }}</td>
         <td>{{ jury.date }}</td>
         <td>{{ jury.mentions_reste }} mentions à saisir</td>
-        <td><a href="{{ jury.get_absolute_url }}">{% if jury.etat == jury.ETAT_PREVU %}Saisir les mentions{% else %}Consulter les mentions{% endif %}</a></td>
+        <td><a class="btn btn-primary" href="{{ jury.get_absolute_url }}">{% if jury.etat == jury.ETAT_PREVU %}Saisir les mentions{% else %}Consulter les mentions{% endif %}</a></td>
       </tr>
       {% endfor %}
     </tbody>

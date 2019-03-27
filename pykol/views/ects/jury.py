@@ -107,7 +107,7 @@ def jury_detail_professeur(request, jury):
 	mention_qs = Mention.objects.filter(jury=jury,
 			enseignement__professeurs=request.user)
 
-	if request.method == 'POST':
+	if request.method == 'POST' and jury.etat != Jury.ETAT_PREVU:
 		formset = MentionFormSet(request.POST, instance=jury,
 				queryset=mention_qs)
 		if formset.is_valid():

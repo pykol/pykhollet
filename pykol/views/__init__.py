@@ -6,3 +6,4 @@ from .etudiant import etudiant_detail_dispatch
 from . import colles
 from . import direction
 from . import colloscope
+from . import ects

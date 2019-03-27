@@ -112,6 +112,13 @@ classes = item(name="classes",
 classes.children = MesClassesChildren()
 nav.register(classes)
 
+ects = item(name="ects",
+	label="ECTS",
+	icon="credit-card",
+	url="ects_jury_list",
+)
+nav.register(ects)
+
 gestion = item(name="gestion",
 	label="Gestion",
 	icon="paperclip",

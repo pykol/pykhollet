@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 # pyKol - Gestion de colles en CPGE
-# Copyright (c) 2018 Florian Hatat
+# Copyright (c) 2018-2019 Florian Hatat
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Affero General Public License as published by
@@ -94,6 +94,15 @@ trinomes_urlpatterns = [
 	path('<int:pk>/supprimer', views.colloscope.trinome_supprimer, name='trinome_supprimer'),
 ]
 
+ects_urlpatterns = [
+	path('', views.ects.jury_list, name='ects_jury_list'),
+	path('<int:pk>/', views.ects.jury_detail, name='ects_jury_detail'),
+	path('creer_jury/', views.ects.jury_creer, name='ects_jury_creer'),
+	path('<int:pk>/supprimer/', views.ects.jury_supprimer, name='ects_jury_supprimer'),
+	path('<int:pk>/attestation/', views.ects.jury_toutes_attestations, name='ects_jury_attestation'),
+	path('<int:pk>/attestation/<int:etu_pk>/', views.ects.jury_attestation_etudiant, name='ects_jury_attestation_etudiant'),
+]
+
 urlpatterns = [
 	path('', views.home, name='home'),
 	path('about/', views.mentions_legales, name='mentions_legales'),
@@ -106,4 +115,5 @@ urlpatterns = [
 	path('etudiant/', include(etudiants_urlpatterns)),
 	path('releves/', include(releves_urlpatterns)),
 	path('trinomes/', include(trinomes_urlpatterns)),
+	path('ects/', include(ects_urlpatterns)),
 ]

@@ -1,0 +1,37 @@
+{% extends "pykol/base.html" %}
+{% block title %}Liste des jurys ECTS − {{ block.super }}{% endblock %}
+{% block content %}
+<h2>Liste des jurys
+  <abbr title="European Credit Transfer System" lang="en">ECTS</abbr></h2>
+
+<section>
+  {% if jury_list %}
+  <table id="ects_jury_list">
+    <thead>
+      <tr>
+        <th>Nom</th>
+        <th>Classe</th>
+        <th>Date du jury</th>
+        <th>Mentions</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for jury in jury_list %}
+      <tr>
+        <td>{{ jury }}</td>
+        <td>{{ jury.classe }}</td>
+        <td>{{ jury.date }}</td>
+        <td>{{ jury.mentions_reste }} mentions à saisir</td>
+        <td><a href="{{ jury.get_absolute_url }}">{% if jury.etat == jury.ETAT_PREVU %}Saisir les mentions{% else %}Consulter les mentions{% endif %}</a></td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% else %}
+  <p>Vous ne participez pour le moment à aucun jury de validation de
+  crédits <abbr>ECTS</abbr>.</p>
+  {% endif %}
+</section>
+
+{% endblock %}

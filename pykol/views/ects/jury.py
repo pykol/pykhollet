@@ -1,0 +1,101 @@
+# -*- coding: utf-8 -*-
+
+# pyKol - Gestion de colles en CPGE
+# Copyright (c) 2019 Florian Hatat
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU Affero General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU Affero General Public License for more details.
+#
+# You should have received a copy of the GNU Affero General Public License
+# along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
+from django.db.models import Count, Q
+from django.contrib.auth.decorators import login_required
+from django.shortcuts import render, get_object_or_404, redirect
+from django.core.exceptions import PermissionDenied
+
+from pykol.models.ects import Jury, Mention
+from pykol.models.base import Etudiant
+
+def jury_list_direction(request):
+	"""
+	Affichage de tous les jurys par la direction.
+	"""
+	pass
+
+def jury_list_professeur(request):
+	"""
+	Affichage des jurys auxquels participe un professeur.
+	"""
+	jury_list = Jury.objects.filter(
+			mention__enseignement__professeurs=request.user
+		).annotate(
+			mentions_reste=Count('mention',
+				filter=Q(
+					mention__mention__isnull=True,
+				)
+			)
+		).order_by('date')
+
+	return render(request, 'pykol/ects/jury_list_professeur.html',
+		context={
+			'jury_list': jury_list,
+		})
+
+def jury_list_etudiant(request):
+	"""
+	Affichage des jurys qui ont évalué l'étudiant.
+	"""
+	pass
+
+@login_required
+def jury_list(request):
+	"""
+	Affichage de la liste de tous les jurys, adaptée en fonction du
+	profil de l'utilisateur connecté.
+
+	La direction peut consulter tous les jurys, les professeurs peuvent
+	consulter les jurys dont ils sont membres et les étudiants peuvent
+	consulter les jurys dans lesquels des crédits leur ont été
+	attribués.
+	"""
+	if request.user.has_perm('pykol.direction'):
+		return jury_list_direction(request)
+	elif hasattr(request.user, 'professeur'):
+		return jury_list_professeur(request)
+	elif hasattr(request.user, 'etudiant'):
+		return jury_list_etudiant(request)
+	else:
+		raise PermissionDenied
+
+@login_required
+def jury_detail(request, pk):
+	jury = get_object_or_404(Jury, pk=pk)
+	pass
+
+@login_required
+def jury_creer(request):
+	pass
+
+@login_required
+def jury_supprimer(request, pk):
+	jury = get_object_or_404(Jury, pk=pk)
+	pass
+
+@login_required
+def jury_toutes_attestations(request, pk):
+	jury = get_object_or_404(Jury, pk=pk)
+	pass
+
+@login_required
+def jury_attestation_etudiant(request, pk, etu_pk):
+	jury = get_object_or_404(Jury, pk=pk)
+	etudiant = get_object_or_404(Etudiant, pk=etu_pk)
+	pass

@@ -31,7 +31,12 @@ def jury_list_direction(request):
 	"""
 	Affichage de tous les jurys par la direction.
 	"""
-	pass
+	jury_list = Jury.objects.all().order_by('date')
+
+	return render(request, 'pykol/ects/jury_list_direction.html',
+		context={
+			'jury_list': jury_list,
+		})
 
 def jury_list_professeur(request):
 	"""

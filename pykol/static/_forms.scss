@@ -165,3 +165,51 @@ fieldset {
     width: 18rem;
   }
 }
+
+.form_ects_mentions ul {
+  display: flex;
+  flex-wrap: no-wrap;
+  li {
+    &:before {
+      content: none;
+    }
+    input {
+      display: none;
+    }
+    label {
+      width: 100%;
+      display: inline-block;
+      text-align: center;
+      padding: 0.7em 0.2em;
+      font-weight: normal;
+      cursor: pointer;
+    }
+    width: 1/7 * 100%;
+    flex: 1 0 auto;
+    display: flex;
+  }
+
+  // Échelle de couleur des mentions ECTS
+  $mentions: (
+    null: ("", #eee),
+    f: ("0", #ffffff),
+    e: ("1", #b7effb),
+    d: ("2", #baf6ff),
+    c: ("3", #c7f2cc),
+    b: ("4", #fdd0e4),
+    a: ("5", #e3c6f0),
+  );
+
+  @each $name, $mention in $mentions {
+    $valeur: nth($mention, 1);
+    $couleur: nth($mention, 2);
+    input[type="radio"][value="#{$valeur}"] ~ label {
+      background-color: $couleur;
+    }
+    input[type="radio"][value="#{$valeur}"]:checked ~ label {
+      background-color: darken($couleur, 50%);
+      color: white;
+      box-shadow: 2px 2px $couleur;
+    }
+  }
+}

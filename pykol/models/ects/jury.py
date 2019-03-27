@@ -17,6 +17,7 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 from django.db import models, transaction
+from django.urls import reverse
 
 from pykol.models.base import Etudiant, Classe, Enseignement, \
 		AbstractPeriode
@@ -102,6 +103,9 @@ class Jury(AbstractPeriode, models.Model):
 
 	def __str__(self):
 		return "Jury {pk}".format(pk=self.pk)
+
+	def get_absolute_url(self):
+		return reverse('ects_jury_detail', kwargs={'pk': self.pk,})
 
 class Mention(models.Model):
 	"""

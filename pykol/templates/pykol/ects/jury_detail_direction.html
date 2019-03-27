@@ -1,0 +1,54 @@
+{% extends "pykol/base.html" %}
+{% block title %}Liste des jurys ECTS − {{ block.super }}{% endblock %}
+{% block content %}
+<h2>Saisie des mentions
+  <small>− {{ jury }} − {{ jury.classe }}</small></h2>
+
+<section>
+  <form method="post" action="" class="form_ects_mentions">
+    {% csrf_token %}
+    {{ formsettab.management_form }}
+    <table>
+      <thead>
+        <tr>
+          <th>Étudiants</th>
+          {% for enseignement, grille_ligne in enseignements %}
+          <th>{{ grille_ligne }}</th>
+          {% endfor %}
+        </tr>
+      </thead>
+      <tbody>
+        {% for etudiant, enseignements in formsettab.items %}
+        <tr>
+          <td>{{ etudiant }}</td>
+          {% for form in enseignements.values %}
+          <td>
+            <ul>
+              {% for radio in form.mention %}
+              <li>{% if forloop.first %}{% for field in form.hidden_fields %}{{ field }}{% endfor %}{% endif %}
+                {{ radio.tag }}
+                <label for="{{ radio.id_for_label }}">{{ radio.choice_label|title }}</label>
+              </li>
+              {% endfor %}
+            </ul>
+          </td>
+          {% endfor %}
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    <p><input type="submit" value="Enregistrer les mentions"></p>
+  </form>
+</section>
+
+<section>
+  <h3>Modification du jury</h3>
+  <form method="post" action="">
+    {% csrf_token %}
+    <table>
+      {{ form.as_table }}
+    </table>
+    <p><input type="submit" value="Enregistrer les modifications"></p>
+  </form>
+</section>
+{% endblock %}

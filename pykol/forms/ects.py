@@ -16,6 +16,7 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+from django import forms
 from django.forms import inlineformset_factory, RadioSelect
 
 from pykol.models.ects import Jury, Mention
@@ -25,3 +26,13 @@ MentionFormSet = inlineformset_factory(Jury, Mention,
 		widgets={
 			'mention': RadioSelect(),
 		})
+
+class JuryForm(forms.ModelForm):
+	class Meta:
+		model = Jury
+		fields = ('classe', 'date', 'periode',)
+
+class JuryDateForm(forms.ModelForm):
+	class Meta:
+		model = Jury
+		fields = ('date',)

@@ -25,17 +25,23 @@ from django.core.exceptions import PermissionDenied
 
 from pykol.models.ects import Jury, Mention
 from pykol.models.base import Etudiant, Enseignement
-from pykol.forms.ects import MentionFormSet
+from pykol.forms.ects import MentionFormSet, JuryForm, JuryDateForm
 
 def jury_list_direction(request):
 	"""
 	Affichage de tous les jurys par la direction.
 	"""
-	jury_list = Jury.objects.all().order_by('date')
+	jury_list = Jury.objects.all().annotate(
+			mentions_reste=Count('mention',
+				filter=Q(mention__mention__isnull=True))
+		).order_by('date')
+
+	jury_creer_form = JuryForm()
 
 	return render(request, 'pykol/ects/jury_list_direction.html',
 		context={
 			'jury_list': jury_list,
+			'jury_creer_form': jury_creer_form,
 		})
 
 def jury_list_professeur(request):
@@ -84,7 +90,18 @@ def jury_list(request):
 		raise PermissionDenied
 
 def jury_detail_direction(request, jury):
-	pass
+	if request.method == 'POST':
+		form = JuryDateForm(request.POST, instance=jury)
+		if form.is_valid():
+			form.save()
+	else:
+		form = JuryDateForm(instance=jury)
+
+	return render(request, 'pykol/ects/jury_detail_direction.html',
+		context={
+			'form': form,
+			'jury': jury,
+		})
 
 def jury_detail_professeur(request, jury):
 	mention_qs = Mention.objects.filter(jury=jury,

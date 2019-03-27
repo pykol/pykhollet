@@ -122,6 +122,12 @@ class GrilleLigne(models.Model):
 			"certaines défectuosités (notamment pour la chimie en PCSI "
 			"dans les nomenclatures SIECLE.")
 
+	def __str__(self):
+		if self.libelle:
+			return self.libelle
+		else:
+			return str(self.matiere)
+
 class GrilleMatchLigne(models.Model):
 	"""
 	Condition sur les options de l'étudiant pour que la grille

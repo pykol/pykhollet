@@ -100,6 +100,9 @@ class Jury(AbstractPeriode, models.Model):
 
 	objects = JuryManager()
 
+	def __str__(self):
+		return "Jury {pk}".format(pk=self.pk)
+
 class Mention(models.Model):
 	"""
 	Mention attribuée à un étudiant pour une matière donnée et un jury

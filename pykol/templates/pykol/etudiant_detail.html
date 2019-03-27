@@ -21,7 +21,13 @@
     {% if etudiant.options %}
     <tr>
       <th>Options</th>
-      <td><ul>{{ etudiant.options.all|unordered_list }}</ul></td>
+      <td>
+        <ul>
+          {% for option in etudiant.optionetudiant_set.all %}
+          <li>{{ option }}</li>
+          {% endfor %}
+        </ul>
+      </td>
     </tr>
     {% endif %}
   </table>

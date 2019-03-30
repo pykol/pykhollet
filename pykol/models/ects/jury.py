@@ -121,9 +121,9 @@ class Mention(models.Model):
 	Mention attribuée à un étudiant pour une matière donnée et un jury
 	donné.
 
-	La mention est considérée comme globale (pour l'ensemble de toutes
-	les matières suite au jury pour l'étudiant) si l'enseignement est
-	laissé vide.
+	Une mention peut être globale (il s'agit alors de la mention finale
+	accordée pour toute la période du jury) si le champ globale est
+	vrai.
 	"""
 	etudiant = models.ForeignKey(Etudiant, on_delete=models.CASCADE,
 			verbose_name="étudiant")

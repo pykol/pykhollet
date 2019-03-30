@@ -46,6 +46,7 @@
   {% if jury_creer_form %}
   <h3>Création d'un jury ECTS</h3>
   <form method="post" action="{% url 'ects_jury_creer' %}">
+    {% csrf_token %}
     <table>
       {{ jury_creer_form.as_table }}
     </table>

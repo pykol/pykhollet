@@ -23,9 +23,9 @@ from django.contrib import admin
 from django.contrib.auth import get_user_model
 from django.contrib.auth.admin import UserAdmin
 
-from pykol.models.base import User, Professeur, Etudiant, JetonAcces
-from pykol.models.base import Academie, Annee, Vacances, Etablissement
-from pykol.models.base import Matiere, Classe, Enseignement, Service, Groupe
+from pykol.models.base import User, Professeur, Etudiant, JetonAcces, \
+		Academie, Annee, Vacances, Etablissement, Matiere, Classe, \
+		Enseignement, Service, Groupe, OptionEtudiant
 
 class PykolAdminSite(admin.AdminSite):
 	site_header = 'Administration de pyKol'
@@ -189,3 +189,9 @@ class ClasseAdmin(admin.ModelAdmin):
 	list_display = ('nom', 'annee')
 
 admin_site.register(JetonAcces)
+
+@register(OptionEtudiant)
+class OptionEtudiantAdmin(admin.ModelAdmin):
+	list_display = ('pk', 'etudiant', 'classe', 'matiere',
+			'modalite_option')
+	list_filter = ('classe', 'matiere')

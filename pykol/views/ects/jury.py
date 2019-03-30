@@ -137,6 +137,7 @@ def jury_detail_professeur(request, jury):
 		formsettab[form.instance.etudiant][(form.instance.enseignement,
 			form.instance.grille_ligne)] = form
 	formsettab.management_form = formset.management_form
+	formsettab.errors = formset.errors
 
 	return render(request, 'pykol/ects/jury_detail_professeur.html',
 		context={

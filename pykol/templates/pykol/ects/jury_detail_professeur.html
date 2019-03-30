@@ -25,7 +25,10 @@
           <td>
             <ul>
               {% for radio in form.mention %}
-              <li>{% if forloop.first %}{% for field in form.hidden_fields %}{{ field }}{% endfor %}{% endif %}
+              <li>{% if forloop.first %}{% for field in form.hidden_fields %}{{ field }}{% endfor %}
+                {{ form.non_field_errors }}
+                {{ radio.errors }}
+                {% endif %}
                 {{ radio.tag }}
                 <label for="{{ radio.id_for_label }}">{{ radio.choice_label|title }}</label>
               </li>

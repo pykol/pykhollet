@@ -45,6 +45,7 @@ class GrilleAdmin(admin.ModelAdmin):
 @register(Mention)
 class MentionAdmin(admin.ModelAdmin):
 	list_display = ('__str__', 'jury', 'etudiant', 'enseignement')
+	list_filter = ('jury',)
 
 
 PYKOL_NS = 'http://hatat.me/2018/pykol'

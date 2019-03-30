@@ -59,13 +59,14 @@ class JuryManager(models.Manager):
 					classe=classe,
 				)
 
-				for ligne in grille.lignes.all():
-					# On cherche un enseignement qui correspond à cette
-					# ligne. Oui, c'est quadratique, mais vu le tout
-					# petit nombre d'enseignements en pratique, il ne
-					# semble pas bien pertinent d'optimiser la
+				lignes_restantes = set(grille.lignes.all())
+				for enseignement in enseignements:
+					# On cherche une ligne de la grille qui correspond à
+					# cet enseignement. Oui, c'est quadratique, mais vu
+					# le tout petit nombre d'enseignements en pratique,
+					# il ne semble pas bien pertinent d'optimiser la
 					# complexité asymptotique.
-					for enseignement in enseignements:
+					for ligne in lignes_restantes:
 						if enseignement.matiere != ligne.matiere.matiere or \
 							enseignement.rang_option != ligne.matiere.rang_option or \
 							enseignement.modalite_option != ligne.matiere.modalite_option:
@@ -75,20 +76,34 @@ class JuryManager(models.Manager):
 							enseignement=enseignement,
 							credits=ligne.credits,
 							grille_ligne=ligne).save()
+						lignes_restantes.remove(ligne)
 						break
-					else:
-						# Code exécuté quand on n'a trouvé aucun
-						# enseignement correspondant à la ligne parmi
-						# les enseignements suivi par l'élève.
-						# Certaines lignes doivent être créées de force
-						# même si aucun enseignement n'est présent.
-						if ligne.force_creation:
-							Mention(etudiant=etudiant, jury=jury,
-								credits=ligne.credits,
-								grille_ligne=ligne).save()
 
-				# TODO créer des mentions pour les enseignements
-				# facultatifs suivis par l'élève.
+					else:
+						# Code exécuté quand un enseignement suivi par
+						# un étudiant ne figure dans aucune ligne de la
+						# grille. Si l'enseignement est facultatif, on
+						# l'ajoute malgré tout à l'attestation ECTS mais
+						# sans aucun crédit.
+						if enseignement.modalite_option == \
+								Enseignement.MODALITE_FACULTATIVE:
+							Mention(etudiant=etudiant, jury=jury,
+								enseignement=enseignement,
+								credits=0).save()
+
+				# Certaines lignes doivent être créées dans tous les
+				# cas, même si elles ne correspondent à aucun
+				# enseignement suivi par l'étudiant.
+				for ligne in lignes_restantes:
+					# Dans ce cas, on tente de rattacher la ligne au
+					# premier enseignement dont la matière est la bonne.
+					if ligne.force_creation:
+						enseignement = Enseignement.objects.filter(classe=classe,
+							matiere=ligne.matiere.matiere
+						).order_by('modalite_option').first()
+						Mention(etudiant=etudiant, jury=jury,
+							credits=ligne.credits,
+							grille_ligne=ligne).save()
 
 		return jury
 

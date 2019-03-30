@@ -163,7 +163,18 @@ def jury_detail(request, pk):
 
 @login_required
 def jury_creer(request):
-	pass
+	if request.method == 'POST':
+		form = JuryForm(request.POST)
+		if form.is_valid():
+			Jury.objects.create_from_classe(classe=form.cleaned_data['classe'],
+				date=form.cleaned_data['date'],
+				periode=form.cleaned_data['periode'])
+			return redirect('ects_jury_list')
+	else:
+		form = JuryForm()
+
+	return render(request, 'pykol/ects/jury_creer.html',
+		context={'jury_creer_form': form})
 
 @login_required
 def jury_supprimer(request, pk):

@@ -1,0 +1,16 @@
+{% extends "pykol/base.html" %}
+{% block title %}Création d'un jury ECTS − {{ block.super }}{% endblock %}
+{% block content %}
+<h2>Création d'un jury
+  <abbr title="European Credit Transfer System" lang="en">ECTS</abbr></h2>
+
+<section>
+  <form method="post" action="{% url 'ects_jury_creer' %}">
+    {% csrf_token %}
+    <table>
+      {{ jury_creer_form.as_table }}
+    </table>
+    <p><input type="submit" value="Créer le jury"></p>
+  </form>
+</section>
+{% endblock %}

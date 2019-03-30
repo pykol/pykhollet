@@ -131,6 +131,12 @@ class User(AbstractUser):
 			else:
 				return 'Madame'
 
+	def name_civilite(self, abrege=True):
+		return "{civilite} {last} {first}".format(
+			civilite=self.civilite,
+			last=self.last_name.upper(),
+			first=self.first_name)
+
 	def __str__(self):
 		nom = '{last} {first}'.format(last=self.last_name.upper(),
 				first=self.first_name)

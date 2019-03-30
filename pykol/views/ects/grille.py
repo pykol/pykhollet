@@ -16,7 +16,12 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-from .jury import jury_list, jury_detail, jury_creer, jury_supprimer
-from .attestations import jury_toutes_attestations, \
-		jury_attestation_etudiant
-from .grille import grilles_charger
+from django.contrib.auth.decorators import user_passes_test
+from django.shortcuts import redirect
+
+from pykol.admin.ects import charger_grilles_xml
+
+@user_passes_test(lambda u: u.is_superuser)
+def grilles_charger(request):
+	charger_grilles_xml()
+	return redirect('ects_jury_list')

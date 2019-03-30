@@ -54,32 +54,41 @@ class JuryManager(models.Manager):
 					continue
 				periodes_traitees.add(grille.semestre)
 
-				# On fait la liste de tous les enseignements présents
-				# dans grille et qui sont suivis par l'étudiant.
 				enseignements = Enseignement.objects.filter_etudiant(
 					etudiant=etudiant,
 					classe=classe,
-					matiere__mefmatiere__grilleligne__grille=grille,
-				).annotate(ligne_ects=models.F('matiere__mefmatiere__grilleligne'))
+				)
 
-				lignes_traitees = []
-				for enseignement in enseignements:
-					ligne = GrilleLigne.objects.get(pk=enseignement.ligne_ects)
+				for ligne in grille.lignes.all():
+					# On cherche un enseignement qui correspond à cette
+					# ligne. Oui, c'est quadratique, mais vu le tout
+					# petit nombre d'enseignements en pratique, il ne
+					# semble pas bien pertinent d'optimiser la
+					# complexité asymptotique.
+					for enseignement in enseignements:
+						if enseignement.matiere != ligne.matiere.matiere or \
+							enseignement.rang_option != ligne.matiere.rang_option or \
+							enseignement.modalite_option != ligne.matiere.modalite_option:
+							continue
 
-					Mention(etudiant=etudiant, jury=jury,
+						Mention(etudiant=etudiant, jury=jury,
 							enseignement=enseignement,
 							credits=ligne.credits,
 							grille_ligne=ligne).save()
-					lignes_traitees.append(ligne.pk)
+						break
+					else:
+						# Code exécuté quand on n'a trouvé aucun
+						# enseignement correspondant à la ligne parmi
+						# les enseignements suivi par l'élève.
+						# Certaines lignes doivent être créées de force
+						# même si aucun enseignement n'est présent.
+						if ligne.force_creation:
+							Mention(etudiant=etudiant, jury=jury,
+								credits=ligne.credits,
+								grille_ligne=ligne).save()
 
-				# Certaines lignes doivent être créées de force même si
-				# aucun enseignement n'est présent.
-				lignes_forcees = grille.lignes.filter(
-					force_creation=True).exclude(pk__in=lignes_traitees)
-				for ligne_forcee in lignes_forcees:
-					Mention(etudiant=etudiant, jury=jury,
-							credits=ligne_forcee.credits,
-							grille_ligne=ligne_forcee).save()
+				# TODO créer des mentions pour les enseignements
+				# facultatifs suivis par l'élève.
 
 		return jury
 

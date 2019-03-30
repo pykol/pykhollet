@@ -48,7 +48,7 @@ class GrilleQuerySet(models.QuerySet):
 			).annotate(
 				expected_match=Count('match_options')).annotate(
 				actual_match=Count(Subquery(match_subq))
-			).filter(expected_match=F('actual_match')).order_by('actual_match')
+			).filter(expected_match=F('actual_match')).order_by('-actual_match')
 
 GrilleManager = GrilleQuerySet.as_manager
 

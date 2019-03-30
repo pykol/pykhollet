@@ -169,14 +169,3 @@ def jury_creer(request):
 def jury_supprimer(request, pk):
 	jury = get_object_or_404(Jury, pk=pk)
 	pass
-
-@login_required
-def jury_toutes_attestations(request, pk):
-	jury = get_object_or_404(Jury, pk=pk)
-	pass
-
-@login_required
-def jury_attestation_etudiant(request, pk, etu_pk):
-	jury = get_object_or_404(Jury, pk=pk)
-	etudiant = get_object_or_404(Etudiant, pk=etu_pk)
-	pass

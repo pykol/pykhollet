@@ -224,8 +224,8 @@
       </ligne>
       <!-- SI ou info -->
       <ligne credits="2">
-        <matiere code="067000" modalite_option="O" rang_option="2"/>
-        <matiere code="240500" modalite_option="O" rang_option="2"/>
+        <matiere code="067000" modalite_option="F"/>
+        <matiere code="240500" modalite_option="F"/>
       </ligne>
       <ligne nom="Informatique commune" credits="1">
         <matiere code="240500"/>

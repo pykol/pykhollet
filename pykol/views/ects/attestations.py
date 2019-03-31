@@ -51,7 +51,7 @@ def fusion_attestation(etudiant, jury):
 		'pykol.nom_signataire': jury.classe.etablissement.chef_etablissement.name_civilite(),
 		'pykol.nom_lycee': jury.classe.etablissement.appellation,
 		'pykol.statut_lycee': jury.classe.etablissement.get_nature_uai_display(),
-		'pykol.ville_lycee': "Quelque part", #FIXME
+		'pykol.ville_lycee': jury.classe.etablissement.ville,
 	}
 
 	# Remplacement des champs utilisateurs par leurs valeurs.

@@ -51,4 +51,13 @@
   <!-- PSI* -->
   <classe code_mef="30111033220" semestre="1" grille_ref="bo2008-psi"/>
   <classe code_mef="30111033220" semestre="2" grille_ref="bo2008-psi"/>
+
+  <mef code_mef="30111029220">
+    <libelle>Classe préparatoire scientifique, parcours PSI</libelle>
+    <domaines_etude>Mathématiques, physique, sciences industrielles pour l'ingénieur</domaines_etude>
+  </mef>
+  <mef code_mef="30111033220">
+    <libelle>Classe préparatoire scientifique, parcours PSI*</libelle>
+    <domaines_etude>Mathématiques, physique, sciences industrielles pour l'ingénieur</domaines_etude>
+  </mef>
 </grilles_ects>

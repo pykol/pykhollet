@@ -46,4 +46,14 @@
   <classe code_mef="30112012210" semestre="2" grille_ref="bo2008-ecs"/>
   <classe code_mef="30112012220" semestre="1" grille_ref="bo2008-ecs"/>
   <classe code_mef="30112012220" semestre="2" grille_ref="bo2008-ecs"/>
+
+  <mef code_mef="30112012210">
+    <libelle>Classe préparatoire économique et commerciale voie scientifique, parcours ECS</libelle>
+    <domaines_etude>Culture générale, langues, mathématiques, sciences sociales et géopolitique</domaines_etude>
+  </mef>
+
+  <mef code_mef="30112012220">
+    <libelle>Classe préparatoire économique et commerciale voie scientifique, parcours ECS</libelle>
+    <domaines_etude>Culture générale, langues, mathématiques, sciences sociales et géopolitique</domaines_etude>
+  </mef>
 </grilles_ects>

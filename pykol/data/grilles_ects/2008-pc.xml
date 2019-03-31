@@ -47,4 +47,14 @@
   <!-- PC* -->
   <classe code_mef="30111032220" semestre="1" grille_ref="bo2008-pc"/>
   <classe code_mef="30111032220" semestre="2" grille_ref="bo2008-pc"/>
+
+  <mef code_mef="30111028220">
+    <libelle>Classe préparatoire scientifique, parcours PC</libelle>
+    <domaines_etude>Mathématiques, physique, chimie</domaines_etude>
+  </mef>
+
+  <mef code_mef="30111032220">
+    <libelle>Classe préparatoire scientifique, parcours PC*</libelle>
+    <domaines_etude>Mathématiques, physique, chimie</domaines_etude>
+  </mef>
 </grilles_ects>

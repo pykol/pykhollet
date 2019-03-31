@@ -48,4 +48,14 @@
   <!-- MP* -->
   <classe code_mef="30111030220" semestre="1" grille_ref="bo2008-mp"/>
   <classe code_mef="30111030220" semestre="2" grille_ref="bo2008-mp"/>
+
+  <mef code_mef="30111027220">
+    <libelle>Classe préparatoire scientifique, parcours MP</libelle>
+    <domaines_etude>Mathématiques, physique, chimie</domaines_etude>
+  </mef>
+
+  <mef code_mef="30111030220">
+    <libelle>Classe préparatoire scientifique, parcours MP*</libelle>
+    <domaines_etude>Mathématiques, physique, chimie</domaines_etude>
+  </mef>
 </grilles_ects>

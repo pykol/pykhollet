@@ -43,4 +43,9 @@
 
   <classe code_mef="30113006220" semestre="1" grille_ref="bo2008-khagne-lsh"/>
   <classe code_mef="30113006220" semestre="2" grille_ref="bo2008-khagne-lsh"/>
+
+  <mef code_mef="30113006220">
+    <libelle>Classe préparatoire littéraire voie LSH</libelle>
+    <domaines_etude>Lettres, langues, sciences humaines</domaines_etude>
+  </mef>
 </grilles_ects>

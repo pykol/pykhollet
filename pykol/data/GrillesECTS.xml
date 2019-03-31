@@ -56,6 +56,14 @@
   <classe code_mef="30112013210" semestre="2" grille_ref="bo2008-ece" xml:base="grilles_ects/2008-ece.xml"/>
   <classe code_mef="30112013220" semestre="1" grille_ref="bo2008-ece" xml:base="grilles_ects/2008-ece.xml"/>
   <classe code_mef="30112013220" semestre="2" grille_ref="bo2008-ece" xml:base="grilles_ects/2008-ece.xml"/>
+  <mef code_mef="30112013210" xml:base="grilles_ects/2008-ece.xml">
+    <libelle>Classe préparatoire économique et commerciale, voie économique (ECE)</libelle>
+    <domaines_etude>Culture générale, langues, mathématiques, économie et sciences sociales</domaines_etude>
+  </mef>
+  <mef code_mef="30112013220" xml:base="grilles_ects/2008-ece.xml">
+    <libelle>Classe préparatoire économique et commerciale, voie économique (ECE)</libelle>
+    <domaines_etude>Culture générale, langues, mathématiques, économie et sciences sociales</domaines_etude>
+  </mef>
   <grille_ects xml:id="bo2008-ecs" xml:base="grilles_ects/2008-ecs.xml">
     <!-- Mathématiques et informatique -->
     <groupe nom="Sciences">
@@ -101,6 +109,14 @@
   <classe code_mef="30112012210" semestre="2" grille_ref="bo2008-ecs" xml:base="grilles_ects/2008-ecs.xml"/>
   <classe code_mef="30112012220" semestre="1" grille_ref="bo2008-ecs" xml:base="grilles_ects/2008-ecs.xml"/>
   <classe code_mef="30112012220" semestre="2" grille_ref="bo2008-ecs" xml:base="grilles_ects/2008-ecs.xml"/>
+  <mef code_mef="30112012210" xml:base="grilles_ects/2008-ecs.xml">
+    <libelle>Classe préparatoire économique et commerciale voie scientifique, parcours ECS</libelle>
+    <domaines_etude>Culture générale, langues, mathématiques, sciences sociales et géopolitique</domaines_etude>
+  </mef>
+  <mef code_mef="30112012220" xml:base="grilles_ects/2008-ecs.xml">
+    <libelle>Classe préparatoire économique et commerciale voie scientifique, parcours ECS</libelle>
+    <domaines_etude>Culture générale, langues, mathématiques, sciences sociales et géopolitique</domaines_etude>
+  </mef>
   <grille_ects xml:id="bo2008-hypokhagne" xml:base="grilles_ects/2008-hypokhagne.xml">
     <groupe nom="Lettres/langues">
       <!-- Français -->
@@ -149,6 +165,10 @@
   </grille_ects>
   <classe code_mef="30113004210" semestre="1" grille_ref="bo2008-hypokhagne" xml:base="grilles_ects/2008-hypokhagne.xml"/>
   <classe code_mef="30113004210" semestre="2" grille_ref="bo2008-hypokhagne" xml:base="grilles_ects/2008-hypokhagne.xml"/>
+  <mef code_mef="30113004210" xml:base="grilles_ects/2008-hypokhagne.xml">
+    <libelle>Classe préparatoire littéraire</libelle>
+    <domaines_etude>Lettres, langues, sciences humaines</domaines_etude>
+  </mef>
   <grille_ects xml:id="bo2008-khagne-lsh" xml:base="grilles_ects/2008-khagne-lsh.xml">
     <groupe nom="Lettres/langues">
       <!-- Français -->
@@ -188,6 +208,10 @@
   </grille_ects>
   <classe code_mef="30113006220" semestre="1" grille_ref="bo2008-khagne-lsh" xml:base="grilles_ects/2008-khagne-lsh.xml"/>
   <classe code_mef="30113006220" semestre="2" grille_ref="bo2008-khagne-lsh" xml:base="grilles_ects/2008-khagne-lsh.xml"/>
+  <mef code_mef="30113006220" xml:base="grilles_ects/2008-khagne-lsh.xml">
+    <libelle>Classe préparatoire littéraire voie LSH</libelle>
+    <domaines_etude>Lettres, langues, sciences humaines</domaines_etude>
+  </mef>
   <grille_ects xml:id="bo2008-mp" xml:base="grilles_ects/2008-mp.xml">
     <groupe nom="Sciences">
       <!-- Mathématiques -->
@@ -232,6 +256,14 @@
   <classe code_mef="30111027220" semestre="2" grille_ref="bo2008-mp" xml:base="grilles_ects/2008-mp.xml"/>
   <classe code_mef="30111030220" semestre="1" grille_ref="bo2008-mp" xml:base="grilles_ects/2008-mp.xml"/>
   <classe code_mef="30111030220" semestre="2" grille_ref="bo2008-mp" xml:base="grilles_ects/2008-mp.xml"/>
+  <mef code_mef="30111027220" xml:base="grilles_ects/2008-mp.xml">
+    <libelle>Classe préparatoire scientifique, parcours MP</libelle>
+    <domaines_etude>Mathématiques, physique, chimie</domaines_etude>
+  </mef>
+  <mef code_mef="30111030220" xml:base="grilles_ects/2008-mp.xml">
+    <libelle>Classe préparatoire scientifique, parcours MP*</libelle>
+    <domaines_etude>Mathématiques, physique, chimie</domaines_etude>
+  </mef>
   <grille_ects xml:id="bo2008-mpsi-s1" xml:base="grilles_ects/2008-mpsi.xml">
     <groupe nom="Sciences">
       <!-- Mathématiques -->
@@ -398,6 +430,10 @@
     </match>
   </grille_ects>
   <classe code_mef="30111018210" semestre="2" grille_ref="bo2008-mpsi-s2-si4h" xml:base="grilles_ects/2008-mpsi.xml"/>
+  <mef code_mef="30111018210" xml:base="grilles_ects/2008-mpsi.xml">
+    <libelle>Classe préparatoire scientifique, parcours MPSI</libelle>
+    <domaines_etude>Mathématiques, physique, chimie, sciences industrielles pour l'ingénieur</domaines_etude>
+  </mef>
   <grille_ects xml:id="bo2008-pc" xml:base="grilles_ects/2008-pc.xml">
     <groupe nom="Sciences">
       <!-- Mathématiques -->
@@ -441,6 +477,14 @@
   <classe code_mef="30111028220" semestre="2" grille_ref="bo2008-pc" xml:base="grilles_ects/2008-pc.xml"/>
   <classe code_mef="30111032220" semestre="1" grille_ref="bo2008-pc" xml:base="grilles_ects/2008-pc.xml"/>
   <classe code_mef="30111032220" semestre="2" grille_ref="bo2008-pc" xml:base="grilles_ects/2008-pc.xml"/>
+  <mef code_mef="30111028220" xml:base="grilles_ects/2008-pc.xml">
+    <libelle>Classe préparatoire scientifique, parcours PC</libelle>
+    <domaines_etude>Mathématiques, physique, chimie</domaines_etude>
+  </mef>
+  <mef code_mef="30111032220" xml:base="grilles_ects/2008-pc.xml">
+    <libelle>Classe préparatoire scientifique, parcours PC*</libelle>
+    <domaines_etude>Mathématiques, physique, chimie</domaines_etude>
+  </mef>
   <grille_ects xml:id="bo2008-pcsi-s1" xml:base="grilles_ects/2008-pcsi.xml">
     <groupe nom="Sciences">
       <!-- Mathématiques -->
@@ -575,6 +619,10 @@
     </match>
   </grille_ects>
   <classe code_mef="30111019210" semestre="2" grille_ref="bo2008-pcsi-s2-chimie" xml:base="grilles_ects/2008-pcsi.xml"/>
+  <mef code_mef="30111019210" xml:base="grilles_ects/2008-pcsi.xml">
+    <libelle>Classe préparatoire scientifique, parcours PCSI</libelle>
+    <domaines_etude>Mathématiques, physique, chimie, sciences industrielles pour l'ingénieur</domaines_etude>
+  </mef>
   <grille_ects xml:id="bo2008-psi" xml:base="grilles_ects/2008-psi.xml">
     <groupe nom="Sciences">
       <!-- Mathématiques -->
@@ -622,4 +670,12 @@
   <classe code_mef="30111029220" semestre="2" grille_ref="bo2008-psi" xml:base="grilles_ects/2008-psi.xml"/>
   <classe code_mef="30111033220" semestre="1" grille_ref="bo2008-psi" xml:base="grilles_ects/2008-psi.xml"/>
   <classe code_mef="30111033220" semestre="2" grille_ref="bo2008-psi" xml:base="grilles_ects/2008-psi.xml"/>
+  <mef code_mef="30111029220" xml:base="grilles_ects/2008-psi.xml">
+    <libelle>Classe préparatoire scientifique, parcours PSI</libelle>
+    <domaines_etude>Mathématiques, physique, sciences industrielles pour l'ingénieur</domaines_etude>
+  </mef>
+  <mef code_mef="30111033220" xml:base="grilles_ects/2008-psi.xml">
+    <libelle>Classe préparatoire scientifique, parcours PSI*</libelle>
+    <domaines_etude>Mathématiques, physique, sciences industrielles pour l'ingénieur</domaines_etude>
+  </mef>
 </grilles_ects>

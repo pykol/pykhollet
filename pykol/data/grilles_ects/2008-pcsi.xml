@@ -141,4 +141,9 @@
     </match>
   </grille_ects>
   <classe code_mef="30111019210" semestre="2" grille_ref="bo2008-pcsi-s2-chimie"/>
+
+  <mef code_mef="30111019210">
+    <libelle>Classe préparatoire scientifique, parcours PCSI</libelle>
+    <domaines_etude>Mathématiques, physique, chimie, sciences industrielles pour l'ingénieur</domaines_etude>
+  </mef>
 </grilles_ects>

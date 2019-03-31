@@ -50,5 +50,14 @@
   <classe code_mef="30112013210" semestre="2" grille_ref="bo2008-ece"/>
   <classe code_mef="30112013220" semestre="1" grille_ref="bo2008-ece"/>
   <classe code_mef="30112013220" semestre="2" grille_ref="bo2008-ece"/>
-</grilles_ects>
 
+  <mef code_mef="30112013210">
+    <libelle>Classe préparatoire économique et commerciale, voie économique (ECE)</libelle>
+    <domaines_etude>Culture générale, langues, mathématiques, économie et sciences sociales</domaines_etude>
+  </mef>
+
+  <mef code_mef="30112013220">
+    <libelle>Classe préparatoire économique et commerciale, voie économique (ECE)</libelle>
+    <domaines_etude>Culture générale, langues, mathématiques, économie et sciences sociales</domaines_etude>
+  </mef>
+</grilles_ects>

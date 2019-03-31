@@ -52,4 +52,9 @@
 
   <classe code_mef="30113004210" semestre="1" grille_ref="bo2008-hypokhagne"/>
   <classe code_mef="30113004210" semestre="2" grille_ref="bo2008-hypokhagne"/>
+
+  <mef code_mef="30113004210">
+    <libelle>Classe préparatoire littéraire</libelle>
+    <domaines_etude>Lettres, langues, sciences humaines</domaines_etude>
+  </mef>
 </grilles_ects>

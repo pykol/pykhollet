@@ -178,4 +178,8 @@
   </grille_ects>
   <classe code_mef="30111018210" semestre="2" grille_ref="bo2008-mpsi-s2-si4h"/>
 
+  <mef code_mef="30111018210">
+    <libelle>Classe préparatoire scientifique, parcours MPSI</libelle>
+    <domaines_etude>Mathématiques, physique, chimie, sciences industrielles pour l'ingénieur</domaines_etude>
+  </mef>
 </grilles_ects>

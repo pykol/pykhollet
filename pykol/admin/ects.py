@@ -140,3 +140,12 @@ def charger_grilles_xml():
 							grille=grille,
 							matiere=matiere,
 							defaults={})
+
+	for mef_et in xml_et.findall(nstag('mef')):
+		libelle = mef_et.find(nstag('libelle')).text
+		domaines_etude = mef_et.find(nstag('domaines_etude')).text
+
+		mef = ModuleElementaireFormation.objects.get(code_mef=mef_et.attrib['code_mef'])
+		mef.libelle_ects = libelle
+		mef.domaines_etude = domaines_etude
+		mef.save()

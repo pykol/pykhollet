@@ -121,7 +121,8 @@ def jury_detail_professeur(request, jury):
 	# matière par colonne.
 	enseignements = set()
 	for mention in mention_qs:
-		enseignements.add((mention.enseignement, mention.grille_ligne))
+		enseignements.add((mention.enseignement,
+			mention.grille_lignes.first()))
 	enseignements = sorted(enseignements,
 		key=lambda x: (x[0].periode, -x[1].credits, x[0].pk))
 
@@ -135,7 +136,7 @@ def jury_detail_professeur(request, jury):
 			formsettab[etudiant][enseignement] = None
 	for form in formset:
 		formsettab[form.instance.etudiant][(form.instance.enseignement,
-			form.instance.grille_ligne)] = form
+			form.instance.grille_lignes.first())] = form
 	formsettab.management_form = formset.management_form
 	formsettab.errors = formset.errors
 

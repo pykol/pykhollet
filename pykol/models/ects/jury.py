@@ -49,16 +49,16 @@ class JuryManager(models.Manager):
 					etudiant=etudiant)
 			periodes_traitees = set()
 
+			enseignements = Enseignement.objects.filter_etudiant(
+				etudiant=etudiant,
+				classe=classe,
+			)
+
 			for grille in grilles_applicables:
 				# On ne garde qu'une grille par semestre
 				if grille.semestre in periodes_traitees:
 					continue
 				periodes_traitees.add(grille.semestre)
-
-				enseignements = Enseignement.objects.filter_etudiant(
-					etudiant=etudiant,
-					classe=classe,
-				)
 
 				lignes_restantes = set(grille.lignes.all())
 				for enseignement in enseignements:
@@ -67,20 +67,25 @@ class JuryManager(models.Manager):
 					# le tout petit nombre d'enseignements en pratique,
 					# il ne semble pas bien pertinent d'optimiser la
 					# complexité asymptotique.
-					for ligne in lignes_restantes:
+					mention = None
+					for ligne in lignes_restantes.copy():
 						if enseignement.matiere != ligne.matiere.matiere or \
 							enseignement.rang_option != ligne.matiere.rang_option or \
 							enseignement.modalite_option != ligne.matiere.modalite_option:
 							continue
 
-						Mention(etudiant=etudiant, jury=jury,
+						mention, _ = Mention.objects.credit_or_create(
+							etudiant=etudiant, jury=jury,
 							enseignement=enseignement,
-							credits=ligne.credits,
-							grille_ligne=ligne).save()
-						lignes_restantes.remove(ligne)
-						break
+							grille_ligne__similar=ligne,
+							defaults = {
+								'grille_ligne': ligne,
+								'credits': ligne.credits,
+							})
 
-					else:
+						lignes_restantes.remove(ligne)
+
+					if mention is None:
 						# Code exécuté quand un enseignement suivi par
 						# un étudiant ne figure dans aucune ligne de la
 						# grille. Si l'enseignement est facultatif, on
@@ -88,9 +93,12 @@ class JuryManager(models.Manager):
 						# sans aucun crédit.
 						if enseignement.modalite_option == \
 								Enseignement.MODALITE_FACULTATIVE:
-							Mention(etudiant=etudiant, jury=jury,
+							Mention.objects.credit_or_create(
+								etudiant=etudiant, jury=jury,
 								enseignement=enseignement,
-								credits=0).save()
+								defaults={
+									'credits': 0,
+								})
 
 				# Certaines lignes doivent être créées dans tous les
 				# cas, même si elles ne correspondent à aucun
@@ -102,9 +110,15 @@ class JuryManager(models.Manager):
 						enseignement = Enseignement.objects.filter(classe=classe,
 							matiere=ligne.matiere.matiere
 						).order_by('modalite_option').first()
-						Mention(etudiant=etudiant, jury=jury,
+						Mention.objects.credit_or_create(
+							etudiant=etudiant, jury=jury,
 							credits=ligne.credits,
-							grille_ligne=ligne).save()
+							grille_ligne__similar=ligne,
+							defaults={
+								'grille_ligne': ligne,
+								'credits': ligne.credits,
+							}
+						)
 
 		return jury
 

@@ -22,9 +22,11 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, get_object_or_404, redirect
 from django.http import HttpResponse
 from django.conf import settings
+from django.utils.text import slugify
 
 import odf.opendocument
-from odf.text import UserFieldDecl, UserFieldGet, Span
+from odf.text import UserFieldDecl, UserFieldGet, Span, P
+from odf.table import Table, TableCell, TableRow, CoveredTableCell
 import odf.namespaces
 
 from pykol.models.ects import Jury, Mention
@@ -40,18 +42,16 @@ def fusion_attestation(etudiant, jury):
 			'pykol/data/ects_modele_resultats.odt')
 	doc = odf.opendocument.load(modele_path)
 	remplacement = {
-		'pykol.date_naissance_etudiant':
-			etudiant.date_naissance.strftime("%d/%m/%Y"),
+		#'pykol.date_naissance_etudiant': etudiant.birth_date.strftime("%d/%m/%Y"),
 		'pykol.ine_etudiant': etudiant.ine,
 		'pykol.nom_formation': jury.classe.mef.libelle_ects,
 		'pykol.domaines_etude': jury.classe.mef.domaines_etude,
 		'pykol.nom_etudiant': str(etudiant),
 		'pykol.date_attestation': jury.date.strftime("%d/%m/%Y"),
-		'pykol.nom_signataire':
-			jury.classe.etablissement.chef_etablissement.name_civilite(),
+		'pykol.nom_signataire': jury.classe.etablissement.chef_etablissement.name_civilite(),
 		'pykol.nom_lycee': jury.classe.etablissement.appellation,
 		'pykol.statut_lycee': jury.classe.etablissement.get_nature_uai_display(),
-		'pykol.ville_lycee': ...,
+		'pykol.ville_lycee': "Quelque part", #FIXME
 	}
 
 	# Remplacement des champs utilisateurs par leurs valeurs.
@@ -72,20 +72,40 @@ def fusion_attestation(etudiant, jury):
 
 	# Création du tableau des résultats.
 	mentions = Mention.objects.filter(etudiant=etudiant,
-			jury=jury).order_by('ligne__position')
+			jury=jury).order_by('grille_lignes__groupe__position',
+					'grille_lignes__position').distinct()
 	for table_resultats in doc.getElementsByType(Table):
 		if table_resultats.getAttrNS(odf.namespaces.TABLENS, 'name') != 'enseignements':
 			continue
+
+		# Insertion de la ligne donnant le titre de la formation
+		ligne = TableRow(parent=table_resultats)
+		P(text=jury.classe.mef.libelle_ects,
+			parent=TableCell(parent=ligne, stylename='enseignements.C1',
+				numbercolumnsspanned=3),
+			stylename='Filière_20_ECTS')
+		CoveredTableCell(parent=ligne, numbercolumnsrepeated=2)
 
 		mention_globale = None
 		for mention in mentions:
 			if mention.globale:
 				mention_globale = mention_globale
 				continue
-			ligne = TableRow()
-			P(text=mention.ligne, parent=TableCell(parent=ligne))
-			P(text=mention.credits, parent=TableCell(parent=ligne))
-			P(text=mention.get_mention_display(), parent=TableCell(parent=ligne))
+			if mention.mention is None or \
+				Mention.mention == Mention.MENTION_INSUFFISANT:
+				# continue
+				pass
+
+			ligne = TableRow(parent=table_resultats)
+			P(text=mention.grille_lignes.first(),
+					parent=TableCell(parent=ligne, stylename='enseignements.A1'),
+					stylename='Matière_20_ECTS')
+			P(text=mention.credits,
+					parent=TableCell(parent=ligne, stylename='enseignements.A1'),
+					stylename='Crédits_20_ECTS')
+			P(text=mention.get_mention_display(),
+					parent=TableCell(parent=ligne, stylename='enseignements.C1'),
+					stylename='Mention_20_ECTS')
 
 		# TODO insérer la mention globale ?
 

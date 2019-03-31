@@ -1,3 +1,4 @@
+#! env python3
 # -*- coding: utf-8 -*-
 
 # pyKol - Gestion de colles en CPGE
@@ -37,32 +38,46 @@ def main():
 		etab_csv = csv.DictReader(etab_file, delimiter=';')
 
 		for idx, ligne in enumerate(etab_csv):
-			nature_uai = int(ligne['nature_uai'])
+			nature_uai = int(ligne['Code nature'])
 
 			# On importe uniquement les lycées généraux
 			if nature_uai < 300 or nature_uai >= 310:
 				continue
 
 			# Formatage de l'adresse
-			if ligne['boite_postale_uai']:
-				ligne['boite_postale_uai'] = "BP" + ligne['boite_postale_uai']
-			adresse = norm("{adresse_uai}\n" \
-					"{lieu_dit_uai}\n" \
-					"{boite_postale_uai}\n" \
-					"{code_postal_uai} {localite_acheminement_uai}".format(**ligne))
+			donnees_adresse = {}
+			if ligne['Boite postale']:
+				donnees_adresse['boite_postale'] = "BP" + ligne['Boite postale']
+			else:
+				donnees_adresse['boite_postale'] = ""
 
-			denomination = norm("{denomination_principale} {patronyme_uai}".format(**ligne))
+			donnees_adresse['adresse'] = ligne['Adresse']
+			donnees_adresse['lieu_dit'] = ligne['Lieu dit']
+			donnees_adresse['code_postal'] = ligne['Code postal']
+			donnees_adresse['localite'] = ligne['Localite d\'acheminement']
 
-			appellation = norm(ligne['appellation_officielle']) or denomination
+			adresse = norm("{adresse}\n" \
+					"{lieu_dit}\n" \
+					"{boite_postale}\n" \
+					"{code_postal} {localite}".format(**donnees_adresse))
+
+			denomination = norm("{denomination_principale} {patronyme}".format(
+				denomination_principale=ligne['Dénomination principale'],
+				patronyme=ligne['Patronyme uai']))
+
+			appellation = norm(ligne['Appellation officielle']) or denomination
+
+			ville = norm(ligne['Commune'])
 
 			etablissements.append({
 				'model': 'pykol.etablissement',
-				'pk': ligne['numero_uai'],
+				'pk': ligne['Code établissement'],
 				'fields': {
 					'appellation': appellation,
 					'denomination': denomination,
 					'adresse': adresse,
-					'nature_uai': int(ligne['nature_uai']),
+					'nature_uai': nature_uai,
+					'ville': ville,
 				}
 			})
 

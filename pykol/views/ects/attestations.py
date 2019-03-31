@@ -21,7 +21,7 @@ import os
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, get_object_or_404, redirect
 from django.http import HttpResponse
-from django.config import settings
+from django.conf import settings
 
 import odf.opendocument
 from odf.text import UserFieldDecl, UserFieldGet, Span
@@ -77,11 +77,17 @@ def fusion_attestation(etudiant, jury):
 		if table_resultats.getAttrNS(odf.namespaces.TABLENS, 'name') != 'enseignements':
 			continue
 
+		mention_globale = None
 		for mention in mentions:
+			if mention.globale:
+				mention_globale = mention_globale
+				continue
 			ligne = TableRow()
-			TableColumn(parent=ligne, P(text=mention.ligne))
-			TableColumn(parent=ligne, P(text=mention.credits))
-			TableColumn(parent=ligne, P(text=mention.get_mention_display()))
+			P(text=mention.ligne, parent=TableCell(parent=ligne))
+			P(text=mention.credits, parent=TableCell(parent=ligne))
+			P(text=mention.get_mention_display(), parent=TableCell(parent=ligne))
+
+		# TODO insérer la mention globale ?
 
 	return doc
 

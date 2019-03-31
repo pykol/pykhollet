@@ -25,7 +25,8 @@ from django.contrib.auth.admin import UserAdmin
 
 from pykol.models.base import User, Professeur, Etudiant, JetonAcces, \
 		Academie, Annee, Vacances, Etablissement, Matiere, Classe, \
-		Enseignement, Service, Groupe, OptionEtudiant
+		Enseignement, Service, Groupe, OptionEtudiant, \
+		ModuleElementaireFormation
 
 class PykolAdminSite(admin.AdminSite):
 	site_header = 'Administration de pyKol'
@@ -148,6 +149,8 @@ class AnneeAdmin(admin.ModelAdmin):
 admin_site.register(Academie)
 
 admin_site.register(Matiere)
+
+admin_site.register(ModuleElementaireFormation)
 
 class ServiceInline(admin.TabularInline):
 	model = Service

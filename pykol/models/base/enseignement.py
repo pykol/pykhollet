@@ -291,19 +291,27 @@ class EnseignementQuerySet(models.QuerySet):
 		base_qs = self.filter(classe=classe)
 
 		communs_pks = base_qs.filter(*args,
-				modalite_option=Enseignement.MODALITE_COMMUN,
-				**kwargs)
-		options_pks = base_qs.exclude(
-			modalite_option=Enseignement.MODALITE_COMMUN
-		).filter(
+			modalite_option=Enseignement.MODALITE_COMMUN,
+			**kwargs)
+		options_obligatoires_pks = base_qs.filter(
 			*args,
+			modalite_option=Enseignement.MODALITE_OBLIGATOIRE,
 			matiere__optionetudiant__etudiant=etudiant,
 			matiere__optionetudiant__classe=classe,
 			matiere__optionetudiant__rang_option=F('rang_option'),
 			matiere__optionetudiant__modalite_option=F('modalite_option'),
 			**kwargs,
 		)
-		all_pks = communs_pks.union(options_pks).values('pk')
+		options_facultatives_pks = base_qs.filter(
+			*args,
+			modalite_option=Enseignement.MODALITE_FACULTATIVE,
+			matiere__optionetudiant__etudiant=etudiant,
+			matiere__optionetudiant__classe=classe,
+			matiere__optionetudiant__modalite_option=F('modalite_option'),
+			**kwargs,
+		)
+		all_pks = communs_pks.union(options_obligatoires_pks,
+				options_facultatives_pks).values('pk')
 		return self.filter(pk__in=all_pks)
 
 EnseignementManager = EnseignementQuerySet.as_manager

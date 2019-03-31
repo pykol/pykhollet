@@ -96,6 +96,8 @@ class Etablissement(models.Model):
 	tampon_etablissement = models.ImageField(blank=True, null=True,
 			verbose_name="tampon de l'établissement")
 
+	ville = models.CharField(max_length=100, blank=True)
+
 	class Meta:
 		ordering = ['numero_uai']
 		verbose_name = "établissement"

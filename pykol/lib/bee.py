@@ -753,6 +753,7 @@ class BEEImporter:
 			etudiant_data['sexe'] = int(eleve.find('CODE_SEXE').text)
 			etudiant_data['first_name'] = eleve.find('PRENOM').text.title()
 			etudiant_data['last_name'] = eleve.find('NOM_DE_FAMILLE').text.title()
+			etudiant_data['birth_date'] = parse_date_francaise(eleve.find('DATE_NAISS').text)
 
 			# On tente de retrouver l'étudiant avec son INE, et au pire
 			# le numéro SIECLE.

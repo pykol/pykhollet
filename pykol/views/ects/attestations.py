@@ -42,7 +42,7 @@ def fusion_attestation(etudiant, jury):
 			'pykol/data/ects_modele_resultats.odt')
 	doc = odf.opendocument.load(modele_path)
 	remplacement = {
-		#'pykol.date_naissance_etudiant': etudiant.birth_date.strftime("%d/%m/%Y"),
+		'pykol.date_naissance_etudiant': etudiant.birth_date.strftime("%d/%m/%Y"),
 		'pykol.ine_etudiant': etudiant.ine,
 		'pykol.nom_formation': jury.classe.mef.libelle_ects,
 		'pykol.domaines_etude': jury.classe.mef.domaines_etude,

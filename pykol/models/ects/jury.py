@@ -17,6 +17,7 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 from django.db import models, transaction
+from django.db.models import Q
 from django.urls import reverse
 
 from pykol.models.base import Etudiant, Classe, Enseignement, \
@@ -131,6 +132,34 @@ class Jury(AbstractPeriode, models.Model):
 	def get_absolute_url(self):
 		return reverse('ects_jury_detail', kwargs={'pk': self.pk,})
 
+class MentionManager(models.Manager):
+	@transaction.atomic
+	def credit_or_create(self, **kwargs):
+		defaults = kwargs['defaults']
+		nouvelle_ligne = defaults.pop('grille_ligne', None)
+
+		ligne = kwargs.pop('grille_ligne__similar', None)
+		args = tuple()
+		if ligne is not None:
+			args += (Q(
+				grille_lignes__position=ligne.position
+			),)
+			if ligne.groupe:
+				args += (Q(
+					grille_lignes__groupe__libelle=ligne.groupe.libelle
+				),)
+
+		print(args)
+		print(kwargs)
+		mention, created = self.filter(*args).get_or_create(**kwargs)
+		if not created:
+			mention.credits += defaults.get('credits', 0)
+			mention.save()
+		if nouvelle_ligne:
+			mention.grille_lignes.add(nouvelle_ligne)
+
+		return (mention, created)
+
 class Mention(models.Model):
 	"""
 	Mention attribuée à un étudiant pour une matière donnée et un jury
@@ -168,6 +197,8 @@ class Mention(models.Model):
 	globale = models.BooleanField(help_text="Champ qui indique si "
 		"cette mention est la mention globale de l'étudiant pour ce "
 		"jury.", default=False)
+
+	objects = MentionManager()
 
 	def __str__(self):
 		return "Mention {}".format(self.pk)

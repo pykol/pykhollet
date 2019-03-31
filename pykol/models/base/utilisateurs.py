@@ -119,13 +119,13 @@ class User(AbstractUser):
 			)
 
 	def civilite(self, abrege=True):
-		if self.sexe == SEXE_HOMME:
+		if self.sexe == User.SEXE_HOMME:
 			if abrege:
 				return 'M.'
 			else:
 				return 'Monsieur'
 
-		if self.sexe == SEXE_FEMME:
+		if self.sexe == User.SEXE_FEMME:
 			if abrege:
 				return 'Mme'
 			else:
@@ -133,7 +133,7 @@ class User(AbstractUser):
 
 	def name_civilite(self, abrege=True):
 		return "{civilite} {last} {first}".format(
-			civilite=self.civilite,
+			civilite=self.civilite(),
 			last=self.last_name.upper(),
 			first=self.first_name)
 

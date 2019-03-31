@@ -254,13 +254,13 @@
   </grille_ects>
   <classe code_mef="30111027220" semestre="1" grille_ref="bo2008-mp" xml:base="grilles_ects/2008-mp.xml"/>
   <classe code_mef="30111027220" semestre="2" grille_ref="bo2008-mp" xml:base="grilles_ects/2008-mp.xml"/>
-  <classe code_mef="30111030220" semestre="1" grille_ref="bo2008-mp" xml:base="grilles_ects/2008-mp.xml"/>
-  <classe code_mef="30111030220" semestre="2" grille_ref="bo2008-mp" xml:base="grilles_ects/2008-mp.xml"/>
+  <classe code_mef="30111031220" semestre="1" grille_ref="bo2008-mp" xml:base="grilles_ects/2008-mp.xml"/>
+  <classe code_mef="30111031220" semestre="2" grille_ref="bo2008-mp" xml:base="grilles_ects/2008-mp.xml"/>
   <mef code_mef="30111027220" xml:base="grilles_ects/2008-mp.xml">
     <libelle>Classe préparatoire scientifique, parcours MP</libelle>
     <domaines_etude>Mathématiques, physique, chimie</domaines_etude>
   </mef>
-  <mef code_mef="30111030220" xml:base="grilles_ects/2008-mp.xml">
+  <mef code_mef="30111031220" xml:base="grilles_ects/2008-mp.xml">
     <libelle>Classe préparatoire scientifique, parcours MP*</libelle>
     <domaines_etude>Mathématiques, physique, chimie</domaines_etude>
   </mef>

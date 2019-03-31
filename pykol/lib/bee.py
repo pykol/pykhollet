@@ -28,7 +28,7 @@ from itertools import chain
 import xml.etree.ElementTree as ET
 import datetime
 import re
-from collections import defaultdict
+from collections import defaultdict, namedtuple
 
 from django.utils.text import slugify
 from django.contrib.auth.models import Permission
@@ -788,36 +788,57 @@ class BEEImporter:
 		if not self.eleves_et:
 			return
 
+		# Représentation temporaire des options afin de comparer la
+		# liste de celles présentes dans SIECLE avec celles présentes
+		# dans la base de données.
+		SiecleOption = namedtuple('SiecleOption', ['rang', 'modalite',
+			'matiere'])
+
 		for eleve_et in self.eleves_et.getroot().findall('DONNEES/OPTIONS/OPTION'):
 			try:
 				etudiant = self.etudiants[eleve_et.attrib['ELENOET']]
 			except:
 				continue
 
+			# On commence par faire la liste des options présentes dans
+			# le fichier SIECLE.
+			options_siecle = set()
 			for option_et in eleve_et.findall('OPTIONS_ELEVE'):
-				rang_option = int(option_et.find('NUM_OPTION').text)
-				modalite = OptionEtudiant.parse_modalite_election(
-						option_et.find('CODE_MODALITE_ELECT').text)
-				matiere = self.matieres[option_et.find('CODE_MATIERE').text]
+				options_siecle.add(SiecleOption(
+					rang=int(option_et.find('NUM_OPTION').text),
+					modalite=OptionEtudiant.parse_modalite_election(
+						option_et.find('CODE_MODALITE_ELECT').text),
+					matiere=self.matieres[option_et.find('CODE_MATIERE').text]
+				))
 
-				# Les options obligatoires sont identifiées par leur
-				# rang.
-				if modalite == OptionEtudiant.MODALITE_OBLIGATOIRE:
-					OptionEtudiant.objects.update_or_create(
-							etudiant=etudiant,
-							classe=etudiant.classe,
-							rang_option=rang_option,
-							modalite_option=modalite,
-							defaults={'matiere': matiere})
-				else:
-					# On ajoute toutes les options facultatives
-					OptionEtudiant.objects.get_or_create(
-							etudiant=etudiant,
-							classe=etudiant.classe,
-							matiere=matiere,
-							rang_option=rang_option,
-							modalite_option=modalite)
+			# On obtient ensuite la liste des options présentes dans la
+			# base de données.
+			options_db = set()
+			for option_db in OptionEtudiant.objects.filter(etudiant=etudiant,
+					classe=etudiant.classe):
+				options_db.add(SiecleOption(
+					rang=option_db.rang_option,
+					modalite=option_db.modalite_option,
+					matiere=option_db.matiere.code_matiere,
+				))
 
+			# On supprime les options qui ont disparu de SIECLE
+			for option_suppr in options_db.difference(options_siecle):
+				OptionEtudiant.objects.filter(etudiant=etudiant,
+					classe=etudiant.classe,
+					rang_option=option_suppr.rang,
+					modalite_option=option_suppr.modalite,
+					matiere__code_matiere=option_suppr.matiere).delete()
+
+			# On ajoute les options qui n'étaient pas présentes dans la
+			# base de données.
+			for option_add in options_siecle.difference(options_db):
+				OptionEtudiant(
+					etudiant=etudiant,
+					classe=etudiant.classe,
+					rang_option=option_add.rang,
+					modalite_option=option_add.modalite,
+					matiere=option_add.matiere).save()
 
 	def _dict_matieres(self):
 		"""

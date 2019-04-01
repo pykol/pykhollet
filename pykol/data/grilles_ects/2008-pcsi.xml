@@ -58,7 +58,7 @@
       </ligne>
       <!-- Chimie -->
       <ligne credits="1">
-        <matiere code="067200" modalite_option="F"/>
+        <matiere code="067200" force="true"/>
       </ligne>
       <!-- SI -->
       <ligne credits="4">

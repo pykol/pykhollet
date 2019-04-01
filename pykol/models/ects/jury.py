@@ -156,15 +156,14 @@ class MentionManager(models.Manager):
 		args = tuple()
 		if ligne is not None:
 			args += (Q(
-				grille_lignes__position=ligne.position
+				grille_lignes__libelle=ligne.libelle,
+				grille_lignes__matiere=ligne.matiere,
 			),)
 			if ligne.groupe:
 				args += (Q(
 					grille_lignes__groupe__libelle=ligne.groupe.libelle
 				),)
 
-		print(args)
-		print(kwargs)
 		mention, created = self.filter(*args).get_or_create(**kwargs)
 		if not created:
 			mention.credits += defaults.get('credits', 0)

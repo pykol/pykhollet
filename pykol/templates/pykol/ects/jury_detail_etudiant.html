@@ -1,0 +1,27 @@
+{% extends "pykol/base.html" %}
+{% block title %}Mentions ECTS pour {{ etudiant }} − {{ block.super }}{% endblock %}
+{% block content %}
+<h2>Détail des mentions pour {{ etudiant }}
+  <small>− {{ jury }} − {{ jury.classe }}</small></h2>
+
+<section>
+  <table>
+    <thead>
+      <tr>
+        <th>Matière</th>
+        <th>Mention</th>
+        <th>Crédits</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for mention in mentions %}
+      <tr>
+        <td>{{ mention.enseignement }}</td>
+        <td>{{ mention.get_mention_display|default:"Non attribuée"|capfirst }}</td>
+        <td>{{ mention.credits }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</section>
+{% endblock %}

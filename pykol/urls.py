@@ -101,6 +101,7 @@ ects_urlpatterns = [
 	path('<int:pk>/supprimer/', views.ects.jury_supprimer, name='ects_jury_supprimer'),
 	path('<int:pk>/attestation/', views.ects.jury_toutes_attestations, name='ects_jury_attestation'),
 	path('<int:pk>/attestation/<int:etu_pk>/', views.ects.jury_attestation_etudiant, name='ects_jury_attestation_etudiant'),
+	path('<int:pk>/detail/<int:etu_pk>/', views.ects.jury_detail_etudiant, name='ects_jury_detail_etudiant'),
 	path('charger_grilles/', views.ects.grilles_charger, name='ects_grilles_charger'),
 ]
 

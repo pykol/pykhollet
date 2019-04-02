@@ -259,3 +259,25 @@ def jury_creer(request):
 def jury_supprimer(request, pk):
 	jury = get_object_or_404(Jury, pk=pk)
 	pass
+
+@login_required
+def jury_detail_etudiant(request, pk, etu_pk):
+	jury = get_object_or_404(Jury, pk=pk)
+	# On filtre les étudiants par jury pour ne pas éditer une
+	# attestation pour un étudiant qui ne ferait pas partie de ce jury.
+	etudiant = get_object_or_404(Etudiant, pk=etu_pk,
+			classe__jury=jury)
+
+	mentions = etudiant.mention_set.filter(jury=jury, globale=False
+		)
+
+	mention_globale = etudiant.mention_set.filter(jury=jury,
+			globale=True).first()
+
+	return render(request, 'pykol/ects/jury_detail_etudiant.html',
+			context={
+				'jury': jury,
+				'etudiant': etudiant,
+				'mentions': mentions,
+				'mention_globale': mention_globale,
+			})

@@ -7,37 +7,56 @@
 <section>
   <form method="post" action="" class="form_ects_mentions">
     {% csrf_token %}
-    {{ formsettab.management_form }}
+    {{ mention_formset.management_form }}
     <table>
       <thead>
         <tr>
-          <th>Étudiants</th>
-          {% for enseignement, grille_ligne in enseignements %}
-          <th>{{ grille_ligne }}</th>
-          {% endfor %}
+          <th rowspan="2">Étudiant</th>
+          <th rowspan="2">Mention globale</th>
+          <th colspan="3">Crédits</th>
+          <th rowspan="2">Actions</th>
+        </tr>
+        <tr>
+          <th>Attribués</th>
+          <th>Prévus</th>
+          <th>Refusés</th>
         </tr>
       </thead>
       <tbody>
-        {% for etudiant, enseignements in formsettab.items %}
+        {% for etudiant in etudiants %}
         <tr>
           <td>{{ etudiant }}</td>
-          {% for form in enseignements.values %}
           <td>
+            {% if etudiant.mention_globale_form %}
+            {% with form=etudiant.mention_globale_form %}
             <ul>
               {% for radio in form.mention %}
-              <li>{% if forloop.first %}{% for field in form.hidden_fields %}{{ field }}{% endfor %}{% endif %}
+              <li>{% if forloop.first %}{% for field in form.hidden_fields %}{{ field }}{% endfor %}
+                {{ form.non_field_errors }}
+                {{ radio.errors }}
+                {% endif %}
                 {{ radio.tag }}
                 <label for="{{ radio.id_for_label }}">{{ radio.choice_label|title }}</label>
               </li>
               {% endfor %}
             </ul>
+            {% endwith %}
+            {% else %}
+            Non attribuable
+            {% endif %}
           </td>
-          {% endfor %}
+          <td>{{ etudiant.credits_attribues }}</td>
+          <td>{{ etudiant.credits_prevus }}</td>
+          <td>{{ etudiant.credits_refuses }}</td>
+          <td>
+            <a class="btn btn-primary" href="{% url 'ects_jury_attestation_etudiant' jury.pk etudiant.pk %}">Attestation</a>
+            <a class="btn btn-primary" href="{% url 'ects_jury_detail_etudiant' jury.pk etudiant.pk %}">Détail</a>
+          </td>
         </tr>
         {% endfor %}
       </tbody>
     </table>
-    <p><input type="submit" value="Enregistrer les mentions"></p>
+    <p><input type="submit" name="submit_mentions" value="Enregistrer les mentions"></p>
   </form>
 </section>
 
@@ -48,7 +67,7 @@
     <table>
       {{ form.as_table }}
     </table>
-    <p><input type="submit" value="Enregistrer les modifications"></p>
+    <p><input type="submit" name="submit_jurymodif" value="Enregistrer les modifications"></p>
   </form>
 </section>
 {% endblock %}

@@ -18,14 +18,17 @@
 
 from collections import OrderedDict
 
-from django.db.models import Count, Q
+from django.db.models import Count, Q, Sum
+from django.db.models.functions import Coalesce
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, get_object_or_404, redirect
 from django.core.exceptions import PermissionDenied
+from django.forms import modelformset_factory
 
 from pykol.models.ects import Jury, Mention
 from pykol.models.base import Etudiant, Enseignement
-from pykol.forms.ects import MentionFormSet, JuryForm, JuryDateForm
+from pykol.forms.ects import MentionFormSet, JuryForm, JuryDateForm, \
+		MentionGlobaleForm, JuryTerminerForm
 
 def jury_list_direction(request):
 	"""
@@ -90,17 +93,91 @@ def jury_list(request):
 		raise PermissionDenied
 
 def jury_detail_direction(request, jury):
-	if request.method == 'POST':
-		form = JuryDateForm(request.POST, instance=jury)
+	if request.method == 'POST' and 'submit_jurymodif' in request.POST:
+		form = JuryDateForm(request.POST, instance=jury, prefix='jurymodif')
 		if form.is_valid():
 			form.save()
+			return redirec('ects_jury_detail', jury.pk)
 	else:
-		form = JuryDateForm(instance=jury)
+		form = JuryDateForm(instance=jury, prefix='jurymodif')
+
+	# Liste des étudiants de ce jury avec les décomptes de crédits ECTS
+	etudiants = Etudiant.objects.filter(
+		mention__jury=jury,
+		mention__globale=False,
+	).annotate(
+		credits_prevus=Coalesce(Sum('mention__credits'), 0),
+		credits_attribues=Coalesce(Sum('mention__credits',
+			filter=~Q(mention__mention=Mention.MENTION_INSUFFISANT)
+				& Q(mention__mention__isnull=False)
+			), 0),
+		credits_refuses=Coalesce(Sum('mention__credits',
+			filter=Q(mention__mention=Mention.MENTION_INSUFFISANT)), 0)
+	).order_by('last_name', 'first_name')
+
+	# On convertit tout de suite la requête sur les étudiants en liste
+	# afin d'ajouter les formulaires pour donner les mentions globales.
+	etudiants = list(etudiants)
+	mention_initial = []
+	mention_extra = 0
+	# Dictionnaire qui à chaque étudiant de la liste etudiants, associe
+	# un entier j qui désigne une position dans mention_initial (donc
+	# plus tard, une position dans les formulaires de mention_formset).
+	# Ceci permet, une fois le formulaire mention_formset construit,
+	# d'ajouter facilement le champ mention_globale_form à chaque
+	# étudiant.
+	map_form_etudiant = {}
+	for etudiant in etudiants:
+		# TODO veut-on vérifier que les mentions facultatives ont été
+		# remplies ?
+		try:
+			mention = Mention.objects.get(globale=True, jury=jury,
+				etudiant=etudiant)
+			mention_initial.append({
+					'etudiant': etudiant.pk,
+					'id': mention.pk,
+					'mention': mention.mention,
+					'jury': jury.pk,
+					'credits': mention.credits,
+				})
+			map_form_etudiant[etudiant] = len(mention_initial) - 1
+		except Mention.DoesNotExist:
+			if etudiant.credits_prevus == etudiant.credits_attribues:
+				mention_initial.append({
+					'etudiant': etudiant.pk,
+					'jury': jury.pk,
+					'credits': etudiant.credits_attribues,
+				})
+				map_form_etudiant[etudiant] = len(mention_initial) - 1
+				mention_extra += 1
+	MentionGlobaleFormSet = modelformset_factory(Mention,
+		fields=MentionGlobaleForm.Meta.fields, can_delete=False,
+		extra=mention_extra, form=MentionGlobaleForm)
+
+	if request.method == 'POST' and 'submit_mentions' in request.POST:
+		mention_formset = MentionGlobaleFormSet(request.POST,
+				initial=mention_initial,
+				prefix='mentions',
+				queryset=Mention.objects.filter(jury=jury, globale=True))
+		if mention_formset.is_valid():
+			mention_formset.save()
+			return redirect('ects_jury_detail', jury.pk)
+	else:
+		mention_formset = MentionGlobaleFormSet(
+				initial=mention_initial,
+				prefix='mentions',
+				queryset=Mention.objects.filter(jury=jury, globale=True))
+
+	# On attache chaque formulaire du mention_formset à son étudiant
+	for etudiant, pos_form in map_form_etudiant.items():
+		etudiant.mention_globale_form = mention_formset.forms[pos_form]
 
 	return render(request, 'pykol/ects/jury_detail_direction.html',
 		context={
 			'form': form,
 			'jury': jury,
+			'etudiants': etudiants,
+			'mention_formset': mention_formset,
 		})
 
 def jury_detail_professeur(request, jury):

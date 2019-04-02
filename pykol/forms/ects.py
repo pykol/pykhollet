@@ -17,7 +17,8 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 from django import forms
-from django.forms import inlineformset_factory, RadioSelect
+from django.forms import inlineformset_factory, RadioSelect, \
+		modelformset_factory, HiddenInput
 
 from pykol.models.ects import Jury, Mention
 
@@ -26,6 +27,22 @@ MentionFormSet = inlineformset_factory(Jury, Mention,
 		widgets={
 			'mention': RadioSelect(),
 		})
+
+class MentionGlobaleForm(forms.ModelForm):
+	class Meta:
+		model = Mention
+		fields = ('jury', 'etudiant', 'mention', 'credits',)
+		widgets = {
+			'mention': RadioSelect(),
+			'etudiant': HiddenInput(),
+			'jury': HiddenInput(),
+			'credits': HiddenInput(),
+		}
+	def save(self, commit=True):
+		super().save(commit=False)
+		self.instance.globale = True
+		if commit:
+			self.instance.save()
 
 class JuryForm(forms.ModelForm):
 	class Meta:

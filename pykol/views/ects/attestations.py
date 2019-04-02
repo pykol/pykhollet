@@ -89,7 +89,7 @@ def fusion_attestation(etudiant, jury):
 		mention_globale = None
 		for mention in mentions:
 			if mention.globale:
-				mention_globale = mention_globale
+				mention_globale = mention
 				continue
 			if mention.mention is None or \
 				Mention.mention == Mention.MENTION_INSUFFISANT:
@@ -103,11 +103,22 @@ def fusion_attestation(etudiant, jury):
 			P(text=mention.credits,
 					parent=TableCell(parent=ligne, stylename='enseignements.A1'),
 					stylename='Crédits_20_ECTS')
-			P(text=mention.get_mention_display(),
+			P(text=(mention.get_mention_display() or "").capitalize(),
 					parent=TableCell(parent=ligne, stylename='enseignements.C1'),
 					stylename='Mention_20_ECTS')
 
-		# TODO insérer la mention globale ?
+		# Insertion de la mention globale
+		if mention_globale is not None:
+			ligne = TableRow(parent=table_resultats)
+			P(text="Mention globale",
+				parent=TableCell(parent=ligne, stylename='enseignements.A1'),
+				stylename='Matière_20_ECTS')
+			P(text=mention_globale.credits,
+				parent=TableCell(parent=ligne, stylename='enseignements.A1'),
+				stylename='Crédits_20_ECTS')
+			P(text=(mention_globale.get_mention_display() or "").capitalize(),
+				parent=TableCell(parent=ligne, stylename='enseignements.C1'),
+				stylename='Mention_20_ECTS')
 
 	return doc
 

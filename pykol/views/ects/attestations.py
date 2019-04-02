@@ -128,13 +128,20 @@ def jury_toutes_attestations(request, pk):
 	pass
 
 @login_required
+#@permission_required('pykol.direction')
 def jury_attestation_etudiant(request, pk, etu_pk):
 	jury = get_object_or_404(Jury, pk=pk)
-	etudiant = get_object_or_404(Etudiant, pk=etu_pk)
+	# On filtre les étudiants par jury pour ne pas éditer une
+	# attestation pour un étudiant qui ne ferait pas partie de ce jury.
+	etudiant = get_object_or_404(Etudiant, pk=etu_pk,
+			classe__jury=jury)
+
 	doc = fusion_attestation(etudiant, jury)
+
 	response = HttpResponse(content_type=doc.getMediaType())
 	response['Content-Disposition'] = \
 		'attachment; filename="attestation-ects-{etudiant}-{jury}.odt"'.format(
 				etudiant=slugify(str(etudiant)), jury=jury.pk)
 	doc.write(response)
+
 	return response

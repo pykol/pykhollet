@@ -45,11 +45,38 @@ class MentionGlobaleForm(forms.ModelForm):
 			self.instance.save()
 
 class JuryForm(forms.ModelForm):
+	"""
+	Formulaire de création d'un jury ECTS par la direction.
+	"""
 	class Meta:
 		model = Jury
 		fields = ('classe', 'date', 'periode',)
 
 class JuryDateForm(forms.ModelForm):
+	"""
+	Formulaire de modification de la date d'un jury.
+	"""
 	class Meta:
 		model = Jury
 		fields = ('date',)
+
+class JuryTerminerForm(forms.ModelForm):
+	"""
+	Formulaire de clôture d'un jury ECTS.
+
+	Ce formulaire ne contient aucun champ, il permet simplement de
+	changer l'état du jury en "terminé" lorsqu'il est enregistré.
+	"""
+	class Meta:
+		model = Jury
+		fields = tuple()
+
+	def save(self, commit=True):
+		"""
+		Cette méthode sauvegarde l'instance de Jury désignée par ce
+		formulaire et change l'état en Jury.ETAT_TERMINE.
+		"""
+		super().save(commit=False)
+		self.instance.etat = Jury.ETAT_TERMINE
+		if commit:
+			self.instance.save()

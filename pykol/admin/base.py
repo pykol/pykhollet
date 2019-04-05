@@ -57,7 +57,8 @@ class PykolUserAdmin(UserAdmin):
 			}),)
 	fieldsets = (
 		(None, {'fields': ('password',)}),
-		(_('Personal info'), {'fields': ('first_name', 'last_name', 'sexe', 'email')}),
+		(_('Personal info'), {'fields': ('first_name', 'last_name',
+			'sexe', 'email', 'signature')}),
 		(_('Permissions'), {'fields': ('is_active', 'is_staff', 'is_superuser',
 									   'groups', 'user_permissions')}),
 		(_('Important dates'), {'fields': ('last_login', 'date_joined')}),

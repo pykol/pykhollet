@@ -27,6 +27,7 @@ from django.utils.text import slugify
 import odf.opendocument
 from odf.text import UserFieldDecl, UserFieldGet, Span, P
 from odf.table import Table, TableCell, TableRow, CoveredTableCell
+from odf.draw import Frame, Image
 import odf.namespaces
 
 from pykol.models.ects import Jury, Mention
@@ -69,6 +70,34 @@ def fusion_attestation(etudiant, jury):
 	for field in doc.getElementsByType(UserFieldDecl):
 		if field.getAttrNS(odf.namespaces.TEXTNS, 'name') in remplacement:
 			field.parentNode.removeChild(field)
+
+
+	# Substitution des images (signature du chef et tampon du lycée)
+	remplacement_images = {
+		'signature_proviseur':
+			jury.classe.etablissement.chef_etablissement.signature,
+		'tampon_lycee':
+			jury.classe.etablissement.tampon_etablissement,
+		}
+	remplacement_href = {}
+
+	for frame in doc.getElementsByType(Frame):
+		frame_name = frame.getAttrNS(odf.namespaces.DRAWNS, 'name')
+		if not remplacement_images.get(frame_name):
+			continue
+
+		# Si c'est la première fois que l'on voit cette image, on
+		# l'attache au fichier.
+		if frame_name not in remplacement_href:
+			remplacement_href[frame_name] = doc.addPicture(
+				filename="Pictures/{name}{ext}".format(
+					name=frame_name,
+					ext=os.path.splitext(remplacement_images[frame_name].name)[1]),
+				content=remplacement_images[frame_name].read())
+
+		for child in frame.childNodes:
+			frame.removeChild(child)
+		Image(parent=frame, href=remplacement_href[frame_name])
 
 	# Création du tableau des résultats.
 	mentions = Mention.objects.filter(etudiant=etudiant,

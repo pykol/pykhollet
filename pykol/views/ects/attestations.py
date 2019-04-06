@@ -96,8 +96,15 @@ def fusion_attestation(etudiant, jury):
 				content=remplacement_images[frame_name].read())
 
 		for child in frame.childNodes:
-			frame.removeChild(child)
+			if child.nodeType == child.ELEMENT_NODE:
+				child.parentNode.removeChild(child)
 		Image(parent=frame, href=remplacement_href[frame_name])
+
+	# Un bug de odfpy fait que le cache d'éléments n'est plus à jour à
+	# case de l'ajout des objets Image dans la boucle précédente. On
+	# vide ce cache de force sinon l'appel suivant de getElementsByType
+	# échoue et renvoie une liste vide.
+	doc.clear_caches()
 
 	# Création du tableau des résultats.
 	mentions = Mention.objects.filter(etudiant=etudiant,

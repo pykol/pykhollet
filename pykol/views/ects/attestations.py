@@ -129,8 +129,7 @@ def fusion_attestation(etudiant, jury):
 				continue
 			if mention.mention is None or \
 				Mention.mention == Mention.MENTION_INSUFFISANT:
-				# continue
-				pass
+				continue
 
 			ligne = TableRow(parent=table_resultats)
 			P(text=mention.grille_lignes.first(),

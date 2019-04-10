@@ -204,7 +204,9 @@ def jury_detail_professeur(request, jury):
 		enseignements.add((mention.enseignement,
 			mention.grille_lignes.first()))
 	enseignements = sorted(enseignements,
-		key=lambda x: (x[0].periode, -x[1].credits, x[0].pk))
+		key=lambda x: (x[0].periode,
+			-x[1].credits if x[1] is not None else 0,
+			x[0].pk))
 
 	etudiants = Etudiant.objects.filter(
 		mention__in=mention_qs).order_by('last_name', 'first_name')

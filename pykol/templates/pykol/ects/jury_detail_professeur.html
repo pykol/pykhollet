@@ -13,7 +13,8 @@
         <tr>
           <th>Étudiants</th>
           {% for enseignement, grille_ligne in enseignements %}
-          <th>{{ grille_ligne }}</th>
+          <th>{% if grille_ligne %}{{ grille_ligne }}{% else %}
+            {{ enseignement.matiere }} ({{ enseignement.get_modalite_option_display }}){% endif %}</th>
           {% endfor %}
         </tr>
       </thead>

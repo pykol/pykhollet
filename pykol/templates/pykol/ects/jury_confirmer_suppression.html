@@ -1,0 +1,24 @@
+{% extends "pykol/base.html" %}
+{% block title %}Suppression du jury − {{ jury }} − {{ block.super }}{% endblock %}
+{% block content %}
+<h2>Suppression du jury
+  <small>− {{ jury }} − {{ jury.classe }}</small></h2>
+
+<section>
+  <p>Vous souhaitez supprimer le jury prévu en {{ jury.classe }},
+  cependant, les professeurs de cette classe ont déjà saisi des mentions
+  pour les étudiants.</p>
+
+  <p>À ce jour, <strong>{{ nombre_mentions }} mentions</strong> ont déjà
+  été enregistrées.</p>
+
+  <form method="post" action="">
+    {% csrf_token %}
+    <p><input class="btn btn-danger" type="submit" name="confirmer"
+      value="Confirmer la suppression">
+    <a class="btn btn-primary"
+      href="{% url 'ects_jury_detail' jury.pk %}">Ne pas modifier ce jury</a>
+    </p>
+  </form>
+</section>
+{% endblock %}

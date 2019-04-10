@@ -20,15 +20,18 @@ from collections import OrderedDict
 
 from django.db.models import Count, Q, Sum
 from django.db.models.functions import Coalesce
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required, \
+		permission_required
 from django.shortcuts import render, get_object_or_404, redirect
 from django.core.exceptions import PermissionDenied
 from django.forms import modelformset_factory
+from django.views.decorators.http import require_POST
 
 from pykol.models.ects import Jury, Mention
 from pykol.models.base import Etudiant, Enseignement
 from pykol.forms.ects import MentionFormSet, JuryForm, JuryDateForm, \
 		MentionGlobaleForm, JuryTerminerForm
+from pykol.lib.shortcuts import redirect_next
 
 def jury_list_direction(request):
 	"""
@@ -255,10 +258,27 @@ def jury_creer(request):
 	return render(request, 'pykol/ects/jury_creer.html',
 		context={'jury_creer_form': form})
 
+@require_POST
 @login_required
+@permission_required('pykol.direction')
 def jury_supprimer(request, pk):
+	"""
+	Suppression d'un jury par la direction. Si des mentions ont déjà été
+	saisies par les professeurs, cette vue demande une confirmation
+	avant de supprimer le jury.
+	"""
 	jury = get_object_or_404(Jury, pk=pk)
-	pass
+	if 'confirmer' in request.POST or \
+		not jury.mention_set.filter(mention__isnull=False):
+			jury.delete()
+			return redirect_next('ects_jury_list', request=request)
+	else:
+		return render(request,
+			'pykol/ects/jury_confirmer_suppression.html',
+			context={
+				'jury': jury,
+				'nombre_mentions': len(jury.mention_set.filter(mention__isnull=False)),
+			})
 
 @login_required
 def jury_detail_etudiant(request, pk, etu_pk):

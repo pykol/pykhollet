@@ -97,7 +97,7 @@ def jury_detail_direction(request, jury):
 		form = JuryDateForm(request.POST, instance=jury, prefix='jurymodif')
 		if form.is_valid():
 			form.save()
-			return redirec('ects_jury_detail', jury.pk)
+			return redirect('ects_jury_detail', jury.pk)
 	else:
 		form = JuryDateForm(instance=jury, prefix='jurymodif')
 

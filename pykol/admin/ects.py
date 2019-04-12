@@ -42,10 +42,16 @@ class GrilleAdmin(admin.ModelAdmin):
 	list_display = ('__str__', 'semestre')
 	inlines = (GrilleLigneInline, GrilleMatchLigneInline)
 
+@register(GrilleLigne)
+class GrilleLigneAdmin(admin.ModelAdmin):
+	list_display = ('__str__',)
+	search_fields = ('libelle', 'matiere__matiere__nom',)
+
 @register(Mention)
 class MentionAdmin(admin.ModelAdmin):
 	list_display = ('__str__', 'jury', 'etudiant', 'enseignement')
 	list_filter = ('jury',)
+	autocomplete_fields = ('etudiant', 'enseignement', 'grille_lignes')
 
 
 PYKOL_NS = 'http://hatat.me/2018/pykol'

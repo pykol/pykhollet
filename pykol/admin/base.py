@@ -161,6 +161,7 @@ class EnseignementAdmin(admin.ModelAdmin):
 	inlines = [ServiceInline,]
 	list_display = ('__str__', 'classe',)
 	list_filter = ('classe__annee', 'classe',)
+	search_fields = ('matiere__nom',)
 
 class EnseignementInline(admin.TabularInline):
 	model = Enseignement

@@ -17,7 +17,7 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 from .jury import jury_list, jury_detail, jury_creer, jury_supprimer, \
-		jury_detail_etudiant
+		jury_detail_etudiant, jury_retirer_etudiant
 from .attestations import jury_toutes_attestations, \
 		jury_attestation_etudiant
 from .grille import grilles_charger

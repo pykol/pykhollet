@@ -1,0 +1,27 @@
+{% extends "pykol/base.html" %}
+{% block title %}Retrait de {{ etudiant }} − {{ jury }} − {{ block.super }}{% endblock %}
+{% block content %}
+<h2>Retrait de l'étudiant {{ etudiant }}
+  <small>− {{ jury }} − {{ jury.classe }}</small></h2>
+
+<section>
+  <p>Vous souhaitez retirer l'étudiant {{ etudiant }} du jury prévu en {{ jury.classe }},
+  cependant, les professeurs de cette classe ont déjà saisi des mentions
+  pour cette personne.</p>
+
+  <p>À ce jour, <strong>{{ nombre_mentions }} mentions</strong> ont déjà
+  été enregistrées.</p>
+
+  <p>En retirant l'étudiant du jury, aucune attestation ECTS ne lui sera
+  délivrée.</p>
+
+  <form method="post" action="">
+    {% csrf_token %}
+    <p><input class="btn btn-danger" type="submit" name="confirmer"
+      value="Confirmer le retrait">
+    <a class="btn btn-primary"
+      href="{% url 'ects_jury_detail' jury.pk %}">Ne rien modifier</a>
+    </p>
+  </form>
+</section>
+{% endblock %}

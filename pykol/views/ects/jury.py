@@ -303,3 +303,28 @@ def jury_detail_etudiant(request, pk, etu_pk):
 				'mentions': mentions,
 				'mention_globale': mention_globale,
 			})
+
+@require_POST
+@permission_required('pykol.direction')
+def jury_retirer_etudiant(request, pk, etu_pk):
+	"""
+	Suppression de toutes les mentions prévues pour un étudiant dans le
+	jury donné.
+	"""
+	jury = get_object_or_404(Jury, pk=pk)
+	etudiant = get_object_or_404(Etudiant, pk=etu_pk,
+			classe__jury=jury)
+
+	mentions = etudiant.mention_set.filter(jury=jury)
+
+	if 'confirmer' in request.POST or not mentions:
+			mentions.delete()
+			return redirect_next('ects_jury_detail', jury.pk, request=request)
+	else:
+		return render(request,
+			'pykol/ects/jury_confirmer_suppression_etudiant.html',
+			context={
+				'jury': jury,
+				'etudiant': etudiant,
+				'nombre_mentions': len(mentions.filter(mention__isnull=False)),
+			})

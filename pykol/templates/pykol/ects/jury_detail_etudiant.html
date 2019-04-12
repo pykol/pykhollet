@@ -23,5 +23,12 @@
       {% endfor %}
     </tbody>
   </table>
+  {% if perms.pykol.direction %}
+  <form method="post" action="{% url 'ects_jury_retirer_etudiant' jury.pk etudiant.pk %}">
+    {% csrf_token %}
+    <p><input type="submit" class="btn btn-danger"
+                            value="Retirer l'étudiant de ce jury"></p>
+  </form>
+  {% endif %}
 </section>
 {% endblock %}

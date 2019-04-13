@@ -21,7 +21,7 @@
       <tbody>
         {% for etudiant, enseignements in formsettab.items %}
         <tr>
-          <td>{{ etudiant }}</td>
+          <td>{{ etudiant }}{% if etudiant.sortie %}<br>Démission le {{ etudiant.sortie }}{% endif %}</td>
           {% for form in enseignements.values %}
           <td>
             <ul>

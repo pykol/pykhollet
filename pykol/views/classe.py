@@ -62,8 +62,11 @@ class ClasseDetailView(LoginRequiredMixin, generic.DetailView):
 	def get_context_data(self, **kwargs):
 		context = super().get_context_data(**kwargs)
 		classe = self.get_object()
-		context['etudiant_list'] = classe.etudiant_set.order_by(
-				'last_name', 'first_name')
+
+		etudiants = classe.etudiant_set.order_by('last_name',
+				'first_name')
+		context['etudiant_list'] = etudiants.exclude(sortie__isnull=False)
+		context['etudiant_demissionnaire_list'] = etudiants.demissionnaire()
 
 		classe_perm = ClassePerm._make([
 			self.request.user.has_perm('pykol.{}'.format(f), classe)

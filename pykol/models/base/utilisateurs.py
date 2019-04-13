@@ -171,6 +171,18 @@ class EtudiantQuerySet(models.QuerySet):
 		quinze_octobre = annee.debut.replace(month=10, day=15)
 		return self.filter(models.Q(sortie__isnull=True) |
 				models.Q(sortie__gt=quinze_octobre))
+	
+	def demissionnaire(self, annee=None):
+		"""
+		Renvoie uniquement les étudiants démissionnaires sur l'année
+		donnée. Si l'année n'est pas précisée, cette méthode renvoie
+		tous les étudiants qui ont quitté l'établissement.
+		"""
+		if annee is not None:
+			return self.filter(sortie__isnull=False,
+					classe__annee=annee)
+		else:
+			return self.filter(sortie__isnull=False)
 
 class EtudiantManager(UserManager):
 	def get_queryset(self):
@@ -178,6 +190,9 @@ class EtudiantManager(UserManager):
 
 	def sur_ventilation_service(self, *args, **kwargs):
 		return self.get_queryset().sur_ventilation_service(*args, **kwargs)
+
+	def demissionnaire(self, *args, **kwargs):
+		return self.get_queryset().demissionnaire(*args, **kwargs)
 
 class Etudiant(User):
 	"""

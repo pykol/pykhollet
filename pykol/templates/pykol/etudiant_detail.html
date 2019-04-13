@@ -30,6 +30,12 @@
       </td>
     </tr>
     {% endif %}
+    {% if etudiant.sortie %}
+    <tr>
+      <th>Démission</th>
+      <td>{{ etudiant.sortie }}
+    </tr>
+    {% endif %}
   </table>
 </section>
 

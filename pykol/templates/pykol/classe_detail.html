@@ -85,6 +85,18 @@
     <li><a href="{{ etudiant.get_absolute_url }}">{{ etudiant }}</a></li>
     {% endfor %}
   </ul>
+
+  {% if etudiant_demissionnaire_list %}
+  <h4>Anciens étudiants</h4>
+  <p>Les étudiants suivants étaient inscrits dans cette classe mais ont
+  démissionné.</p>
+  <ul>
+    {% for etudiant in etudiant_demissionnaire_list %}
+    <li><a href="{{ etudiant.get_absolute_url }}">{{ etudiant }}</a>,
+      démission le {{ etudiant.sortie }}</li>
+    {% endfor %}
+  </ul>
+  {% endif %}
 </section>
 
 {% endblock %}

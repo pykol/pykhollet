@@ -219,3 +219,10 @@ class Mention(models.Model):
 	MENTION_LETTRES = ['F', 'E', 'D', 'C', 'B', 'A']
 	def get_mention_lettre_display(self):
 		return self.MENTION_LETTRES[self.mention]
+
+	def get_libelle_attestation(self):
+		ligne = self.grille_lignes.first()
+		if ligne and ligne.libelle:
+			return ligne.libelle
+		else:
+			return self.enseignement.matiere

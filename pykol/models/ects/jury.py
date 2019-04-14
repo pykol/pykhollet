@@ -205,7 +205,7 @@ class Mention(models.Model):
 	mention = models.PositiveSmallIntegerField(choices=MENTION_CHOICES,
 			blank=True, null=True)
 	credits = models.PositiveSmallIntegerField(verbose_name="crédits")
-	grille_lignes = models.ManyToManyField(GrilleLigne)
+	grille_lignes = models.ManyToManyField(GrilleLigne, blank=True)
 
 	globale = models.BooleanField(help_text="Champ qui indique si "
 		"cette mention est la mention globale de l'étudiant pour ce "

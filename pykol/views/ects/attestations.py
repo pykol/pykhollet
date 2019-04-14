@@ -30,7 +30,7 @@ from odf.table import Table, TableCell, TableRow, CoveredTableCell
 from odf.draw import Frame, Image
 import odf.namespaces
 
-from pykol.models.ects import Jury, Mention
+from pykol.models.ects import Jury, Mention, GrilleGroupeLignes
 from pykol.models.base import Etudiant, Enseignement
 
 def fusion_attestation(etudiant, jury):
@@ -106,10 +106,18 @@ def fusion_attestation(etudiant, jury):
 	# échoue et renvoie une liste vide.
 	doc.clear_caches()
 
-	# Création du tableau des résultats.
+	# Création du tableau des résultats. On trie les mentions par ordre
+	# inverse de position car, plus bas, l'ajout au tableau se fait avec
+	# insertBefore, avec pour paramètre l'élément immédiatement après
+	# l'intitulé du groupe. Par conséquent, les lignes placées en bas
+	# doivent être ajoutées en premier.
 	mentions = Mention.objects.filter(etudiant=etudiant,
-			jury=jury).order_by('grille_lignes__groupe__position',
-					'grille_lignes__position').distinct()
+			jury=jury).order_by('-grille_lignes__position').distinct()
+	groupes_mentions = GrilleGroupeLignes.objects.filter(
+			lignes__mention__etudiant=etudiant,
+			lignes__mention__jury=jury).order_by('position',
+					'libelle').values_list('libelle', flat=True).distinct()
+
 	for table_resultats in doc.getElementsByType(Table):
 		if table_resultats.getAttrNS(odf.namespaces.TABLENS, 'name') != 'enseignements':
 			continue
@@ -122,6 +130,26 @@ def fusion_attestation(etudiant, jury):
 			stylename='Filière_20_ECTS')
 		CoveredTableCell(parent=ligne, numbercolumnsrepeated=2)
 
+		# On prépare les en-têtes des groupes de lignes
+		odf_groupes = {}
+		for groupe in groupes_mentions:
+			# On évite les doublons éventuels sur les libellés (qui
+			# pourraient intervenir car le queryset groupes_mentions
+			# peut renvoyer le même libellé pour des champs position
+			# distincts).
+			if groupe in odf_groupes:
+				continue
+
+			ligne = TableRow(parent=table_resultats)
+			odf_groupes[groupe] = ligne
+			P(text=str(groupe),
+				parent=TableCell(parent=ligne,
+					stylename='enseignements.C1',
+					numbercolumnsspanned=3),
+				stylename='Groupe_20_ECTS')
+			CoveredTableCell(parent=ligne, numbercolumnsrepeated=2)
+
+		# On ajoute les mentions au tableau
 		mention_globale = None
 		for mention in mentions:
 			if mention.globale:
@@ -131,11 +159,21 @@ def fusion_attestation(etudiant, jury):
 				Mention.mention == Mention.MENTION_INSUFFISANT:
 				continue
 
-			ligne = TableRow(parent=table_resultats)
-			P(text=mention.grille_lignes.first(),
+			# Si la ligne possède un groupe, elle est positionnée juste
+			# après la ligne d'intitulé de ce groupe.
+			try:
+				ligne_nextsibling = \
+					odf_groupes[mention.grille_lignes.first().groupe.libelle].nextSibling
+			except Exception as e:
+				ligne_nextsibling = None
+
+			ligne = TableRow()
+			table_resultats.insertBefore(ligne, ligne_nextsibling)
+
+			P(text=mention.get_libelle_attestation(),
 					parent=TableCell(parent=ligne, stylename='enseignements.A1'),
 					stylename='Matière_20_ECTS')
-			P(text=mention.credits,
+			P(text=mention.credits if mention.credits > 0 else "−",
 					parent=TableCell(parent=ligne, stylename='enseignements.A1'),
 					stylename='Crédits_20_ECTS')
 			P(text=(mention.get_mention_display() or "").capitalize(),

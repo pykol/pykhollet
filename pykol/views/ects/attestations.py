@@ -201,7 +201,7 @@ def fusion_attestation(etudiant, jury):
 			ligne = TableRow(parent=table_resultats)
 			P(text="Mention globale",
 				parent=TableCell(parent=ligne, stylename='enseignements.A1'),
-				stylename='Matière_20_ECTS')
+				stylename='Mention_20_globale_20_ECTS')
 			P(text=mention_globale.credits,
 				parent=TableCell(parent=ligne, stylename='enseignements.A1'),
 				stylename='Crédits_20_ECTS')

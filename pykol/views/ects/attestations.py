@@ -151,6 +151,19 @@ def fusion_attestation(etudiant, jury):
 				stylename='Groupe_20_ECTS')
 			CoveredTableCell(parent=ligne, numbercolumnsrepeated=2)
 
+		# Lorsqu'il existe des mentions présentes dans des groupes et
+		# d'autres hors groupes, on prévoit un pour ces dernières un
+		# intitulé générique associé au groupe de clé "None".
+		if odf_groupes and mentions.filter(grille_lignes__groupe__isnull=True):
+			ligne = TableRow(parent=table_resultats)
+			odf_groupes[None] = ligne
+			P(text="Autres",
+				parent=TableCell(parent=ligne,
+					stylename='enseignements.C1',
+					numbercolumnsspanned=3),
+				stylename='Groupe_20_ECTS')
+			CoveredTableCell(parent=ligne, numbercolumnsrepeated=2)
+
 		# On ajoute les mentions au tableau
 		mention_globale = None
 		for mention in mentions:
@@ -164,8 +177,9 @@ def fusion_attestation(etudiant, jury):
 			# Si la ligne possède un groupe, elle est positionnée juste
 			# après la ligne d'intitulé de ce groupe.
 			try:
-				ligne_nextsibling = \
-					odf_groupes[mention.grille_lignes.first().groupe.libelle].nextSibling
+				groupe = mention.grille_lignes.first().groupe
+				cle_groupe = groupe.libelle if groupe is not None else None
+				ligne_nextsibling = odf_groupes[cle_groupe].nextSibling
 			except Exception as e:
 				ligne_nextsibling = None
 

@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <grilles_ects xmlns="http://hatat.me/2018/pykol">
-  <grille_ects xml:id="bo2008-mp">
+  <grille_ects xml:id="bo2008-mp-etoile">
     <groupe nom="Sciences">
       <!-- Mathématiques -->
       <ligne credits="12">
@@ -42,12 +42,54 @@
     </groupe>
   </grille_ects>
 
+  <grille_ects xml:id="bo2008-mp">
+    <groupe nom="Sciences">
+      <!-- Mathématiques -->
+      <ligne credits="12">
+        <matiere code="061300"/>
+      </ligne>
+      <!-- Physique/chimie -->
+      <ligne credits="8">
+        <matiere code="065700"/>
+      </ligne>
+      <!-- SI ou info -->
+      <ligne credits="2">
+        <matiere code="067000" rang_option="2" modalite_option="O"/>
+        <matiere code="240500" rang_option="2" modalite_option="O"/>
+      </ligne>
+      <ligne nom="Informatique commune" credits="1">
+        <matiere code="240500"/>
+      </ligne>
+      <!-- TIPE -->
+      <ligne credits="2">
+        <matiere code="003300"/>
+      </ligne>
+    </groupe>
+
+    <groupe nom="Lettres/langues">
+      <!-- Français/philosophie -->
+      <ligne credits="2">
+        <matiere code="022700"/>
+      </ligne>
+      <!-- Langue vivante 1 -->
+      <ligne credits="2">
+        <matiere modalite_option="O" rang_option="1"/>
+      </ligne>
+    </groupe>
+    <!-- EPS -->
+    <groupe nom="EPS">
+      <ligne credits="1">
+        <matiere code="100100"/>
+      </ligne>
+    </groupe>
+  </grille_ects>
+
   <!-- MP -->
   <classe code_mef="30111027220" semestre="1" grille_ref="bo2008-mp"/>
   <classe code_mef="30111027220" semestre="2" grille_ref="bo2008-mp"/>
   <!-- MP* -->
-  <classe code_mef="30111031220" semestre="1" grille_ref="bo2008-mp"/>
-  <classe code_mef="30111031220" semestre="2" grille_ref="bo2008-mp"/>
+  <classe code_mef="30111031220" semestre="1" grille_ref="bo2008-mp-etoile"/>
+  <classe code_mef="30111031220" semestre="2" grille_ref="bo2008-mp-etoile"/>
 
   <mef code_mef="30111027220">
     <libelle>Classe préparatoire scientifique, parcours MP</libelle>

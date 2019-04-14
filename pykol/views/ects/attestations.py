@@ -45,7 +45,9 @@ def fusion_attestation(etudiant, jury):
 	remplacement = {
 		'pykol.date_naissance_etudiant': etudiant.birth_date.strftime("%d/%m/%Y"),
 		'pykol.ine_etudiant': etudiant.ine,
-		'pykol.nom_formation': jury.classe.mef.libelle_ects,
+		'pykol.nom_formation': "{libelle} − {niveau}".format(
+			libelle=jury.classe.mef.libelle_ects,
+			niveau=jury.classe.get_niveau_display()),
 		'pykol.domaines_etude': jury.classe.mef.domaines_etude,
 		'pykol.nom_etudiant': str(etudiant),
 		'pykol.date_attestation': jury.date.strftime("%d/%m/%Y"),
@@ -124,7 +126,7 @@ def fusion_attestation(etudiant, jury):
 
 		# Insertion de la ligne donnant le titre de la formation
 		ligne = TableRow(parent=table_resultats)
-		P(text=jury.classe.mef.libelle_ects,
+		P(text=remplacement['pykol.nom_formation'],
 			parent=TableCell(parent=ligne, stylename='enseignements.C1',
 				numbercolumnsspanned=3),
 			stylename='Filière_20_ECTS')

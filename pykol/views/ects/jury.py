@@ -118,41 +118,42 @@ def jury_detail_direction(request, jury):
 			filter=Q(mention__mention=Mention.MENTION_INSUFFISANT)), 0)
 	).order_by('last_name', 'first_name')
 
-	# On convertit tout de suite la requête sur les étudiants en liste
-	# afin d'ajouter les formulaires pour donner les mentions globales.
-	etudiants = list(etudiants)
+	# On convertit tout de suite la requête sur les étudiants en
+	# dictionnaire afin d'ajouter les formulaires pour donner les
+	# mentions globales.
+	etudiants = OrderedDict([(e.pk, e) for e in etudiants])
 	mention_initial = []
+
+	# On récupère d'abord les mentions globales déjà existantes dans la
+	# base de données.
+	mentions_globales = jury.mention_set.filter(globale=True)
+	for mention in mentions_globales:
+		mention_initial.append({
+			'etudiant': mention.etudiant.pk,
+			'id': mention.pk,
+			'mention': mention.mention,
+			'jury': jury.pk,
+			'credits': mention.credits,
+		})
+		etudiants[mention.etudiant.pk].mention_globale = mention
+
+	# On prépare le formulaire pour les mentions globales que l'on peut
+	# créer (lorsque tous les crédits prévus sont effectivement
+	# accordés).
 	mention_extra = 0
-	# Dictionnaire qui à chaque étudiant de la liste etudiants, associe
-	# un entier j qui désigne une position dans mention_initial (donc
-	# plus tard, une position dans les formulaires de mention_formset).
-	# Ceci permet, une fois le formulaire mention_formset construit,
-	# d'ajouter facilement le champ mention_globale_form à chaque
-	# étudiant.
-	map_form_etudiant = {}
-	for etudiant in etudiants:
+	for etudiant in etudiants.values():
 		# TODO veut-on vérifier que les mentions facultatives ont été
 		# remplies ?
-		try:
-			mention = Mention.objects.get(globale=True, jury=jury,
-				etudiant=etudiant)
+		if hasattr(etudiant, 'mention_globale'):
+			continue
+		if etudiant.credits_prevus == etudiant.credits_attribues:
 			mention_initial.append({
-					'etudiant': etudiant.pk,
-					'id': mention.pk,
-					'mention': mention.mention,
-					'jury': jury.pk,
-					'credits': mention.credits,
-				})
-			map_form_etudiant[etudiant] = len(mention_initial) - 1
-		except Mention.DoesNotExist:
-			if etudiant.credits_prevus == etudiant.credits_attribues:
-				mention_initial.append({
-					'etudiant': etudiant.pk,
-					'jury': jury.pk,
-					'credits': etudiant.credits_attribues,
-				})
-				map_form_etudiant[etudiant] = len(mention_initial) - 1
-				mention_extra += 1
+				'etudiant': etudiant.pk,
+				'jury': jury.pk,
+				'credits': etudiant.credits_attribues,
+			})
+			mention_extra += 1
+
 	MentionGlobaleFormSet = modelformset_factory(Mention,
 		fields=MentionGlobaleForm.Meta.fields, can_delete=False,
 		extra=mention_extra, form=MentionGlobaleForm)
@@ -172,14 +173,14 @@ def jury_detail_direction(request, jury):
 				queryset=Mention.objects.filter(jury=jury, globale=True))
 
 	# On attache chaque formulaire du mention_formset à son étudiant
-	for etudiant, pos_form in map_form_etudiant.items():
-		etudiant.mention_globale_form = mention_formset.forms[pos_form]
+	for mention_form in mention_formset:
+		etudiants[mention_form['etudiant'].initial].mention_globale_form = mention_form
 
 	return render(request, 'pykol/ects/jury_detail_direction.html',
 		context={
 			'form': form,
 			'jury': jury,
-			'etudiants': etudiants,
+			'etudiants': etudiants.values(),
 			'mention_formset': mention_formset,
 		})
 

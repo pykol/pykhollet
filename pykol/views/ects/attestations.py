@@ -123,7 +123,8 @@ def fusion_attestation(modele, etudiant, jury):
 		# Lorsqu'il existe des mentions présentes dans des groupes et
 		# d'autres hors groupes, on prévoit un pour ces dernières un
 		# intitulé générique associé au groupe de clé "None".
-		if odf_groupes and mentions.filter(grille_lignes__groupe__isnull=True):
+		if odf_groupes and mentions.filter(grille_lignes__groupe__isnull=True,
+				globale=False):
 			ligne = TableRow(parent=table_resultats)
 			odf_groupes[None] = ligne
 			P(text="Autres",

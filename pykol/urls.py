@@ -97,6 +97,7 @@ trinomes_urlpatterns = [
 ects_urlpatterns = [
 	path('', views.ects.jury_list, name='ects_jury_list'),
 	path('<int:pk>/', views.ects.jury_detail, name='ects_jury_detail'),
+	path('<int:pk>/mentions/', views.ects.jury_mentions_orphelines, name='ects_jury_mentions_orphelines'),
 	path('creer_jury/', views.ects.jury_creer, name='ects_jury_creer'),
 	path('<int:pk>/supprimer/', views.ects.jury_supprimer, name='ects_jury_supprimer'),
 	path('<int:pk>/attestation/', views.ects.jury_toutes_attestations, name='ects_jury_attestation'),

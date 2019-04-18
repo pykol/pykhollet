@@ -184,10 +184,7 @@ def jury_detail_direction(request, jury):
 			'mention_formset': mention_formset,
 		})
 
-def jury_detail_professeur(request, jury):
-	mention_qs = Mention.objects.filter(jury=jury,
-			enseignement__professeurs=request.user)
-
+def jury_saisie_mentions(request, jury, mention_qs):
 	if request.method == 'POST' and jury.etat != Jury.ETAT_TERMINE:
 		formset = MentionFormSet(request.POST, instance=jury,
 				queryset=mention_qs)
@@ -230,6 +227,24 @@ def jury_detail_professeur(request, jury):
 			'enseignements': enseignements,
 			'etudiants': etudiants,
 		})
+	pass
+
+def jury_detail_professeur(request, jury):
+	mention_qs = Mention.objects.filter(jury=jury,
+			enseignement__professeurs=request.user)
+	return jury_saisie_mentions(request, jury, mention_qs)
+
+@permission_required('pykol.direction')
+def jury_mentions_orphelines(request, pk):
+	"""
+	Saisie des mentions par la direction pour les enseignements qui
+	n'ont aucun professeur attribué.
+	"""
+	jury = get_object_or_404(Jury, pk=pk)
+	mention_qs = Mention.objects.filter(jury=jury,
+			enseignement__professeurs__isnull=True,
+			enseignement__isnull=False)
+	return jury_saisie_mentions(request, jury, mention_qs)
 
 def jury_detail_etudiant(request, jury):
 	pass

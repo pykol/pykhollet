@@ -17,6 +17,7 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 import os
+import copy
 
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, get_object_or_404, redirect
@@ -33,15 +34,15 @@ import odf.namespaces
 from pykol.models.ects import Jury, Mention, GrilleGroupeLignes
 from pykol.models.base import Etudiant, Enseignement
 
-def fusion_attestation(etudiant, jury):
+def fusion_attestation(modele, etudiant, jury):
 	"""
-	Charge le modèle OpenDocument d'attestation de résultats et remplace
+	Remplace dans un modèle OpenDocument d'attestation de résultats
 	les champs utilisateurs par les données de l'étudiant. Cette
-	fonction renvoie le document OpenDocument modifié.
+	fonction renvoie le document OpenDocument modifié. Le modèle est
+	copié, donc n'est pas modifié par l'appel.
 	"""
-	modele_path = os.path.join(settings.BASE_DIR, \
-			'pykol/data/ects_modele_resultats.odt')
-	doc = odf.opendocument.load(modele_path)
+	attestation = copy.deepcopy(modele)
+
 	remplacement = {
 		'pykol.date_naissance_etudiant': etudiant.birth_date.strftime("%d/%m/%Y"),
 		'pykol.ine_etudiant': etudiant.ine,
@@ -57,8 +58,10 @@ def fusion_attestation(etudiant, jury):
 		'pykol.ville_lycee': jury.classe.etablissement.ville,
 	}
 
-	# Remplacement des champs utilisateurs par leurs valeurs.
-	for field in doc.getElementsByType(UserFieldGet):
+	# On parcourt la nouvelle attestation à la recherche des
+	# utilisations des champs utilisations que l'on souhaite
+	# substituer.
+	for field in attestation.getElementsByType(UserFieldGet):
 		try:
 			valeur = remplacement[field.getAttrNS(odf.namespaces.TEXTNS,
 				'name')]
@@ -68,45 +71,11 @@ def fusion_attestation(etudiant, jury):
 		field.parentNode.insertBefore(Span(text=valeur), field)
 		field.parentNode.removeChild(field)
 
-	# Suppression des déclarations des champs utilisateurs de l'en-tête.
-	for field in doc.getElementsByType(UserFieldDecl):
+	# Suppression des déclarations des champs utilisateurs de
+	# l'en-tête du document global.
+	for field in attestation.getElementsByType(UserFieldDecl):
 		if field.getAttrNS(odf.namespaces.TEXTNS, 'name') in remplacement:
 			field.parentNode.removeChild(field)
-
-
-	# Substitution des images (signature du chef et tampon du lycée)
-	remplacement_images = {
-		'signature_proviseur':
-			jury.classe.etablissement.chef_etablissement.signature,
-		'tampon_lycee':
-			jury.classe.etablissement.tampon_etablissement,
-		}
-	remplacement_href = {}
-
-	for frame in doc.getElementsByType(Frame):
-		frame_name = frame.getAttrNS(odf.namespaces.DRAWNS, 'name')
-		if not remplacement_images.get(frame_name):
-			continue
-
-		# Si c'est la première fois que l'on voit cette image, on
-		# l'attache au fichier.
-		if frame_name not in remplacement_href:
-			remplacement_href[frame_name] = doc.addPicture(
-				filename="Pictures/{name}{ext}".format(
-					name=frame_name,
-					ext=os.path.splitext(remplacement_images[frame_name].name)[1]),
-				content=remplacement_images[frame_name].read())
-
-		for child in frame.childNodes:
-			if child.nodeType == child.ELEMENT_NODE:
-				child.parentNode.removeChild(child)
-		Image(parent=frame, href=remplacement_href[frame_name])
-
-	# Un bug de odfpy fait que le cache d'éléments n'est plus à jour à
-	# case de l'ajout des objets Image dans la boucle précédente. On
-	# vide ce cache de force sinon l'appel suivant de getElementsByType
-	# échoue et renvoie une liste vide.
-	doc.clear_caches()
 
 	# Création du tableau des résultats. On trie les mentions par ordre
 	# inverse de position car, plus bas, l'ajout au tableau se fait avec
@@ -120,7 +89,7 @@ def fusion_attestation(etudiant, jury):
 			lignes__mention__jury=jury).order_by('position',
 					'libelle').values_list('libelle', flat=True).distinct()
 
-	for table_resultats in doc.getElementsByType(Table):
+	for table_resultats in attestation.getElementsByType(Table):
 		if table_resultats.getAttrNS(odf.namespaces.TABLENS, 'name') != 'enseignements':
 			continue
 
@@ -209,12 +178,83 @@ def fusion_attestation(etudiant, jury):
 				parent=TableCell(parent=ligne, stylename='enseignements.C1'),
 				stylename='Mention_20_ECTS')
 
-	return doc
+	return attestation
+
+def signature_attestation(attestation, jury):
+	"""
+	Ajoute la signature du chef d'établissement et le tampon de
+	l'établissement sur les attestations passées en argument.
+
+	Si plusieurs attestations sont présentes dans le document, on
+	n'ajoute qu'une seule fois les images dans le fichier.
+
+	Cette fonction modifie sur place le paramètre attestation.
+	"""
+	# Substitution des images (signature du chef et tampon du lycée)
+	remplacement_images = {
+		'signature_proviseur':
+			jury.classe.etablissement.chef_etablissement.signature,
+		'tampon_lycee':
+			jury.classe.etablissement.tampon_etablissement,
+		}
+	remplacement_href = {}
+
+	for frame in attestation.getElementsByType(Frame):
+		frame_name = frame.getAttrNS(odf.namespaces.DRAWNS, 'name')
+		if not remplacement_images.get(frame_name):
+			continue
+
+		# Si c'est la première fois que l'on voit cette image, on
+		# l'attache au fichier.
+		if frame_name not in remplacement_href:
+			remplacement_href[frame_name] = attestation.addPicture(
+				filename="Pictures/{name}{ext}".format(
+					name=frame_name,
+					ext=os.path.splitext(remplacement_images[frame_name].name)[1]),
+				content=remplacement_images[frame_name].read())
+
+		for child in frame.childNodes:
+			if child.nodeType == child.ELEMENT_NODE:
+				child.parentNode.removeChild(child)
+		Image(parent=frame, href=remplacement_href[frame_name])
+
+	# Un bug de odfpy fait que le cache d'éléments n'est plus à jour à
+	# case de l'ajout des objets Image dans la boucle précédente. On
+	# vide ce cache de force sinon l'appel suivant de getElementsByType
+	# échoue et renvoie une liste vide.
+	attestation.clear_caches()
 
 @login_required
 def jury_toutes_attestations(request, pk):
 	jury = get_object_or_404(Jury, pk=pk)
-	pass
+	etudiants = Etudiant.objects.filter(mention__jury=jury).distinct()
+
+	attestations = None
+	modele_path = os.path.join(settings.BASE_DIR, \
+		'pykol/data/ects_modele_resultats.odt')
+	modele = odf.opendocument.load(modele_path)
+	for etudiant in etudiants:
+		attestation = fusion_attestation(modele, etudiant, jury)
+		if attestations is None:
+			attestations = attestation
+		else:
+			for child in attestation.body.childNodes:
+				attestations.body.appendChild(child)
+
+	# odfpy ne met pas à jour correctement ses caches en cas d'appel à
+	# appendChild (les fils ne sont pas rattachés au document). On force
+	# la mise à jour.
+	attestations.clear_caches()
+
+	signature_attestation(attestations, jury)
+
+	response = HttpResponse(content_type=attestations.getMediaType())
+	response['Content-Disposition'] = \
+		'attachment; filename="attestation-ects-{classe}-{jury}.odt"'.format(
+				classe=slugify(str(jury.classe)), jury=jury.pk)
+	attestations.write(response)
+
+	return response
 
 @login_required
 #@permission_required('pykol.direction')
@@ -225,12 +265,16 @@ def jury_attestation_etudiant(request, pk, etu_pk):
 	etudiant = get_object_or_404(Etudiant, pk=etu_pk,
 			classe__jury=jury)
 
-	doc = fusion_attestation(etudiant, jury)
+	modele_path = os.path.join(settings.BASE_DIR, \
+		'pykol/data/ects_modele_resultats.odt')
+	attestation = fusion_attestation(odf.opendocument.load(modele_path),
+			etudiant, jury)
+	signature_attestation(attestation, jury)
 
-	response = HttpResponse(content_type=doc.getMediaType())
+	response = HttpResponse(content_type=attestation.getMediaType())
 	response['Content-Disposition'] = \
 		'attachment; filename="attestation-ects-{etudiant}-{jury}.odt"'.format(
 				etudiant=slugify(str(etudiant)), jury=jury.pk)
-	doc.write(response)
+	attestation.write(response)
 
 	return response

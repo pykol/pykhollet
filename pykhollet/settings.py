@@ -134,3 +134,7 @@ LOGIN_REDIRECT_URL = 'home'
 # travaille (pour la création de classes ou de professeurs) quand aucun
 # autre élément de contexte ne le permet.
 PYKOL_UAI_DEFAUT = None
+
+# Emplacement de stockage privé, afin de stocker des données qui ne sont
+# pas accessibles depuis un client web.
+PYKOL_PRIVATE_MEDIA_ROOT = 'filestore/'

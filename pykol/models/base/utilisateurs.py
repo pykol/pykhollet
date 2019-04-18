@@ -28,6 +28,7 @@ from django.urls import reverse
 
 from pykol.models.fields import Lettre23Field
 from pykol.models.base import Etablissement
+import pykol.lib.files
 
 class UserManager(BaseUserManager):
 	"""Define a model manager for User model with no username field."""
@@ -104,7 +105,9 @@ class User(AbstractUser):
 	birth_date = models.DateField(verbose_name="date de naissance",
 			null=True, blank=True)
 
-	signature = models.ImageField(blank=True, null=True)
+	signature = models.ImageField(blank=True, null=True,
+			storage=pykol.lib.files.private_storage,
+			upload_to='signature/')
 
 	USERNAME_FIELD = 'email'
 	REQUIRED_FIELDS = ['sexe',]

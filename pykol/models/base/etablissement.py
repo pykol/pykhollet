@@ -20,6 +20,7 @@ from django.db import models
 from django.core.validators import validate_comma_separated_integer_list
 
 from pykol.models.fields import Lettre23Field
+import pykol.lib.files
 
 class Academie(models.Model):
 	"""
@@ -94,7 +95,9 @@ class Etablissement(models.Model):
 			related_name='etablissement_proviseur',
 			verbose_name="chef d'établissement")
 	tampon_etablissement = models.ImageField(blank=True, null=True,
-			verbose_name="tampon de l'établissement")
+			verbose_name="tampon de l'établissement",
+			storage=pykol.lib.files.private_storage,
+			upload_to='tampon_etablissement/')
 
 	ville = models.CharField(max_length=100, blank=True)
 

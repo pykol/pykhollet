@@ -13,7 +13,7 @@ import django.utils.timezone
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('pykol', '0022_jetonacces'),
+        ('pykol', '0027_private_storage'),
     ]
 
     operations = [

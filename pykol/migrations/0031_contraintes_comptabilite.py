@@ -6,7 +6,7 @@ import django.db.models.deletion
 class Migration(migrations.Migration):
 
 	dependencies = [
-		('pykol', '0026_peupler_init_comptabilite'),
+		('pykol', '0030_peupler_init_comptabilite'),
 	]
 
 	operations = [

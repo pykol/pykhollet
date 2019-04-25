@@ -486,7 +486,7 @@ def reverse_migrer_releves(apps, schema_editor):
 class Migration(migrations.Migration):
 
 	dependencies = [
-		('pykol', '0025_integration_comptabilite'),
+		('pykol', '0029_integration_comptabilite'),
 	]
 
 	operations = [

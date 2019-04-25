@@ -43,7 +43,7 @@
         <td class="ligne-heures">{{ ligne.heures|floatformat:"-2" }}</td>
         <td class="ligne-interrogation">{{ ligne.heures_interrogation|floatformat:"-2" }}</td>
         <td class="ligne-etat">{{ ligne.get_etat_display }}{% if ligne.etat == ligne.ETAT_PAYE %} − {{ ligne.date_paiement }}{% endif %}</td>
-        <td class="ligne-action">{% if ligne.etat != ligne.ETAT_PAYE %}
+        <td class="actions ligne-action">{% if ligne.etat != ligne.ETAT_PAYE %}
           <form action="{% url 'releveligne_payer' ligne.pk %}" method="POST">
             {% csrf_token %}
             <button type="submit" class="btn btn-primary btn-sm">Payer</button>

@@ -4,8 +4,11 @@
 <h2>Saisie des mentions
   <small>− {{ jury }} − {{ jury.classe }}</small></h2>
 
-<p><a class="btn btn-primary" href="{% url 'ects_jury_attestation' jury.pk %}">Imprimer toutes les attestations</a></p>
-<p><a class="btn btn-primary" href="{% url 'ects_jury_mentions_orphelines' jury.pk %}">Saisir les mentions orphelines</a></p>
+<ul class="actions">
+  <li><a class="btn btn-primary" href="{% url 'ects_jury_attestation' jury.pk %}">Imprimer toutes les attestations</a></li>
+  <li><a class="btn btn-primary" href="{% url 'ects_jury_mentions_orphelines' jury.pk %}">Saisir les mentions orphelines</a></li>
+</ul>
+
 <section>
   <form method="post" action="" class="form_ects_mentions">
     {% csrf_token %}
@@ -51,8 +54,10 @@
           <td>{{ etudiant.credits_prevus }}</td>
           <td>{{ etudiant.credits_refuses }}</td>
           <td>
-            <a class="btn btn-primary" href="{% url 'ects_jury_attestation_etudiant' jury.pk etudiant.pk %}">Attestation</a>
-            <a class="btn btn-primary" href="{% url 'ects_jury_detail_etudiant' jury.pk etudiant.pk %}">Détail</a>
+            <ul class="actions">
+              <li><a class="btn btn-primary" href="{% url 'ects_jury_attestation_etudiant' jury.pk etudiant.pk %}">Attestation</a></li>
+              <li><a class="btn btn-primary" href="{% url 'ects_jury_detail_etudiant' jury.pk etudiant.pk %}">Détail</a></li>
+            </ul>
           </td>
         </tr>
         {% endfor %}

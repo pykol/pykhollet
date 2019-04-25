@@ -23,16 +23,23 @@
         <td>{{ jury.classe }}</td>
         <td>{{ jury.date }}</td>
         <td>{{ jury.mentions_reste }} mentions à saisir</td>
-        <td class="actions"><a class="btn btn-primary" href="{{ jury.get_absolute_url }}">Détails</a>
-          {% if jury.etat == jury.ETAT_TERMINE %}
-          <a class="btn btn-success" href="{% url 'ects_jury_attestation' jury.pk %}">Éditer les attestations</a>
-          {% endif %}
-          {% if jury.etat == jury.ETAT_PREVU %}
-          <form method="post" action="{% url 'ects_jury_supprimer' jury.pk %}">
-            {% csrf_token %}
-            <button type="submit" class="btn btn-danger">Supprimer</button>
-          </form>
-          {% endif %}
+        <td>
+          <ul class="actions">
+            <li><a class="btn btn-primary" href="{{ jury.get_absolute_url }}">Détails</a></li>
+            {% if jury.etat == jury.ETAT_TERMINE %}
+            <li>
+              <a class="btn btn-success" href="{% url 'ects_jury_attestation' jury.pk %}">Éditer les attestations</a>
+            </li>
+            {% endif %}
+            {% if jury.etat == jury.ETAT_PREVU %}
+            <li>
+              <form method="post" action="{% url 'ects_jury_supprimer' jury.pk %}">
+              {% csrf_token %}
+              <button type="submit" class="btn btn-danger">Supprimer</button>
+              </form>
+            </li>
+            {% endif %}
+          </ul>
         </td>
       </tr>
       {% endfor %}

@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<chapter xmlns="http://docbook.org/ns/docbook"
+  xmlns:xlink="http://www.w3.org/1999/xlink"
+  xml:lang="fr"
+  xml:id="chapter-comptabilite">
+  <info>
+    <title>Comptabilité des heures</title>
+  </info>
+
+  <para>
+    pyKol intègre une comptabilité des heures de colles qui permet de suivre précisément les dotations en heures d'interrogation, l'utilisation de ces heures selon les classes et les matières et le paiement des heures aux professeurs. Nous avons repris les idées de base d'une comptabilité à double entrée usuelle :
+    <itemizedlist>
+      <listitem><simpara>
+          l'état courant d'utilisation des heures de colles est représentée par une hiérarchie de comptes d'heures, chaque compte pouvant avoir des comptes enfants pour détailler la répartition des heures ;
+      </simpara></listitem>
+
+      <listitem><simpara>
+          chaque action sur une colle crée un mouvement d'heures d'un compte à un autre. Par exemple lorsque le rectorat délègue dans <acronym>ASIE</acronym> des heures de colles à l'établissement, cela correspond dans pyKol à un transfert d'heures depuis le compte représentant le rectorat vers le compte représentant l'établissement. De même, lorsqu'une heure de colle est programmée, cela donne lieu à un transfert d'une heure depuis le compte de la classe vers un compte détenu par le colleur ;
+      </simpara></listitem>
+
+      <listitem><simpara>
+          la comptabilité est à double entrée : un transfert d'heures d'un compte vers un autre correspond en fait à deux écritures. La première écriture débite le compte source, la deuxième écriture crédite le compte destination. Les mouvements peuvent être plus compliqués, avec un plus grand nombre de lignes. La seule condition est qu'un mouvement doit être équilibré, c'est-à-dire que la somme de ses lignes doit être nulle ;
+      </simpara></listitem>
+
+      <listitem><simpara>
+          pyKol maintient l'indication d'un double solde, l'un exprimé en heures et l'autre exprimé en durée d'interrogation, afin de prendre en compte les différences entre les dotations réglementaires (exprimées en durée par élève) et leur utilisation à l'emploi du temps (où les heures des professeurs sont comptées à l'unité).
+      </simpara></listitem>
+    </itemizedlist>
+  </para>
+
+  <para>
+    La plupart du temps, les opérations de comptabilité sont transparentes et ne nécessitent aucune intervention de l'utilisateur. Par exemple les transferts d'une classe vers les professeurs se font automatiquement au moment de la création du colloscope, ceux des professeurs vers le compte de paiement se font également automatiquement au moment de la création d'un relevé d'heures. Le module de comptabilité n'est vraiment visible de l'utilisateur que pour la gestion des enveloppes : lorsque l'administration saisit les dotations du rectorat et répartit les heures dans les différentes classes ou lorque l'administration, ou le professeur responsable du colloscope d'une classe, répartir l'enveloppe d'une classe dans les différentes matières.
+  </para>
+
+  <para>
+    Cette comptabilité offre un suivi fin de l'utilisation des heures de colles. À tout moment, il est possible de savoir combien d'heures sont prévues au colloscope d'une classe, combien ont déjà été consommées. Ces informations permettent notamment de vérifier, au moment de l'organisation des colles entre les écrits et les oraux en deuxième année, que le planning des révisions est compatible avec le solde de l'enveloppe de colles. Il est notamment possible d'accorder la gestion de certains comptes de colles à des professeurs, ce qui leur permet de programmer librement les colles qu'ils souhaitent dans la limite du solde du compte.
+  </para>
+
+  <para>
+    La comptabilité permet enfin de gérer quelques situations particulières :
+    <itemizedlist>
+      <listitem><simpara>
+          lorsque l'administration décide de compléter le service hebdomadaire d'un professeur avec des heures de colles, pyKol permet d'enregistrer en début d'année un débit d'heures pour ce professeur. Ce débit est équilibré au fur et à mesure de l'année par les colles effectuées. Ceci permet à tout moment de savoir quelles heures de colles ont été incluses dans le service d'enseignement et quelles heures doivent être payées ;
+      </simpara></listitem>
+
+      <listitem><simpara>
+          lorsque des heures d'interrogation sont mutualisées entre différentes classes (par exemple pour constituer un groupe de langue vivante complet à trois étudiants pour une heure d'interrogation), il est possible de déterminer la hauteur à laquelle chaque classe contribue sur sa dotation dans le financement de la colle.
+      </simpara></listitem>
+    </itemizedlist>
+  </para>
+
+  <section>
+    <title>Hiérarchie des comptes</title>
+  </section>
+
+  <section>
+    <title>Gestion des enveloppes d'heures</title>
+
+    <section>
+      <title>Saisie des heures déléguées par le rectorat</title>
+    </section>
+
+    <section>
+      <title>Répartition des heures dans les classes</title>
+    </section>
+
+    <section>
+      <title>Délégation des droits de gestion des heures</title>
+    </section>
+  </section>
+
+  <section>
+    <title>Relevé et paiement des heures</title>
+
+    <section>
+      <title>Relevé des heures</title>
+    </section>
+
+    <section>
+      <title>Cas d'un complément de service</title>
+    </section>
+  </section>
+</chapter>

@@ -23,5 +23,6 @@
   </info>
 
   <xi:include href="installation.xml"/>
+  <xi:include href="comptabilite.xml"/>
   <xi:include href="ects.xml"/>
 </book>

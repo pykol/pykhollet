@@ -1,0 +1,243 @@
+<?xml version="1.0" encoding="utf-8"?>
+<chapter xmlns="http://docbook.org/ns/docbook"
+  xmlns:xlink="http://www.w3.org/1999/xlink"
+  xml:lang="fr"
+  xml:id="chapter-ects">
+  <info>
+    <title>Gestion des crédits <acronym>ECTS</acronym></title>
+  </info>
+
+  <section xml:id="section-ects-direction">
+    <title>Gestion des jurys par la direction</title>
+
+    <para>
+      pyKol aide à l'organisation de jurys d'attribution des crédits <acronym>ECTS</acronym> :
+      <itemizedlist>
+        <listitem><simpara>
+            en générant les mentions <acronym>ECTS</acronym> matière par matière, automatiquement en fonction de la scolarité suivie par chaque étudiant ;
+        </simpara></listitem>
+        <listitem><simpara>
+            en affichant pour chaque professeur une vue personnalisée pour valider les mentions dans ses propres matières ;
+        </simpara></listitem>
+        <listitem><simpara>
+            en affichant une vue de saisie, pour la direction, de la mention globale retenue pour chaque étudiant ;
+        </simpara></listitem>
+        <listitem><simpara>
+            en générant, avec les données précédentes, les attestations de parcours personnalisées pour les étudiants.
+        </simpara></listitem>
+      </itemizedlist>
+    </para>
+
+    <para>
+      La génération des mentions <acronym>ECTS</acronym> utilise la liste des options saisies dans SIECLE. Avant de créer des jurys, vérifiez que les options des étudiants sont à jour dans la base élèves et mettez à jour si nécessaire ces données dans pyKol.
+    </para>
+
+    <section>
+      <title>Création d'un jury</title>
+
+      <para>
+        La vue d'ensemble des jurys est accessible dans la rubrique <guimenuitem>ECTS</guimenuitem> du menu de navigation (voir <xref linkend="figure-ects-jury-list-direction"/>). En bas de cette page se trouve un formulaire qui permet de programmer un nouveau jury en indiquant :
+        <itemizedlist>
+          <listitem><simpara>
+              la classe concernée ;
+          </simpara></listitem>
+          <listitem><simpara>
+              la date et l'heure prévues pour la réunion de jury. Elles sont indicatives (elles ne bloquent pas la saisie des mentions par les professeurs) et peuvent être modifiées par la suite. C'est cette date qui sera reportée sur la signature des attestations des étudiants ;
+          </simpara></listitem>
+          <listitem><simpara>
+              la période couverte par le jury. Il est possible de programmer un jury pour seulement l'un des deux semestres, ou bien pour l'année entière. Dans le cas d'un jury créé pour l'année entière, chaque professeur n'aura à saisir qu'une seule mention pour toute l'année au lieu d'une mention par semestre.
+          </simpara></listitem>
+        </itemizedlist>
+        Pour valider la création du jury, cliquez sur le bouton <guibutton>Créer le jury</guibutton>. pyKol crée alors le jury et prépare les mentions vierges qui devront être remplies par les professeurs. Les professeurs ont immédiatement accès à la saisie de ces mentions depuis leur compte.
+      </para>
+
+      <figure xml:id="figure-ects-jury-list-direction">
+        <title>Liste des jurys pour la direction</title>
+        <screenshot>
+          <mediaobject>
+            <imageobject>
+              <imagedata fileref="captures/ects_jury_list_direction.png" format="image/png"
+                width="12cm" scalefit="1"/>
+            </imageobject>
+          </mediaobject>
+        </screenshot>
+      </figure>
+
+      <para>
+        Vous pouvez supprimer un jury après sa création. Cette suppression est définitive. Si aucun professeur n'a saisi de mention pour ce jury, pyKol le supprime immédiatement. Si, au contraire, certaines mentions sont déjà saisies, elles seront perdues lors de la suppression du jury : pyKol vous demandera de confirmer la suppression.
+      </para>
+    </section>
+
+    <section>
+      <title>Attribution des mentions globales et clôture du jury</title>
+
+      <para>
+        Le jour de la réunion du jury, la commission d'évaluation doit attribuer une mention globale pour chaque étudiant. Trois cas sont possibles :
+        <itemizedlist>
+          <listitem><simpara>
+              si les professeurs ont validé toutes les mentions d'un étudiant, alors il est possible de saisir directement une mention globale pour valider le parcours ;
+          </simpara></listitem>
+          <listitem><simpara>
+              si certains professeurs ont refusé la validation pour leur cours, la commission peut décider de valider malgré tout l'ensemble du parcours par compensation entre les matières. Dans ce cas, la saisie d'une mention globale va modifier les mentions des professeurs : les mentions <guilabel>Insuffisant</guilabel> passeront automatiquement au niveau <guilabel>Passable</guilabel> (il s'agit du plus bas niveau de validation possible) ;
+          </simpara></listitem>
+          <listitem><simpara>
+              si certaines mentions sont refusées et que la commission décide que la compensation entre matières ne suffit pas à valider l'ensemble du parcours, il n'y a rien de particulier à saisir. L'attestation de parcours éditée pour l'étudiant mentionnera simplement la validation partielle de l'année, avec les mentions données pour les enseignements validés.
+          </simpara></listitem>
+        </itemizedlist>
+      </para>
+
+      <formalpara>
+        <title>Cas des mentions orphelines</title>
+        <para>
+          <termdef>Dans certains cas, les grilles <acronym>ECTS</acronym> prévoient l'attribution de crédits pour certaines matières, cependant aucun professeur n'est renseigné dans pyKol pour ces matières. C'est par exemple souvent le cas de l'<acronym>EPS</acronym> où les professeurs qui encadrent les étudiants n'interviennent pas dans pyKol. Ces mentions sont regroupées par pyKol sous le terme de <firstterm>mentions orphelines</firstterm>.</termdef>.
+        </para>
+
+        <para>Étant donné qu'aucun professeur ne peut saisir ces mentions mais que leur validation est nécessaire, vous pouvez attribuer directement les mentions manquantes en cliquant sur le bouton <guibutton>Saisir les mentions orphelines</guibutton>.
+        </para>
+      </formalpara>
+
+      <para>
+        Une fois que toutes les mentions ont été saisies par la commission, cliquez sur le bouton <guilabel>Clôturer le jury</guilabel>. Ceci valide définitivement les données saisies pour ce jury. En particulier, les mentions par matières ne seront plus modifiables par les professeurs.
+      </para>
+    </section>
+
+    <section>
+      <title>Édition des attestations</title>
+
+      <para>
+        La page de détail d'un jury dispose :
+        <itemizedlist>
+          <listitem><simpara>
+              d'un bouton <guibutton>Attestation</guibutton> qui permet, pour chaque étudiant, de télécharger son attestation de résultats personnalisée au format OpenDocument ;
+          </simpara></listitem>
+          <listitem><simpara>
+              d'un bouton général <guibutton>Imprimer toutes les attestations</guibutton> qui permet de télécharger un seul fichier, au format OpenDocument, contenant les attestations de tous les étudiants du jury.
+          </simpara></listitem>
+        </itemizedlist>
+      </para>
+
+      <para>
+        Ces fichiers sont mis à jour en temps réel, au fur et à mesure de la saisie des mentions par les professeurs. Ils ne doivent pas être considérés comme définitifs tant que le jury n'est pas clôturé.
+      </para>
+    </section>
+
+  </section>
+
+  <section xml:id="section-ects-professeurs">
+    <title>Saisie des mentions par les professeurs</title>
+
+    <para>
+      Chaque professeur a accès à l'ensemble des jurys <acronym>ECTS</acronym> auxquels il participe dans la rubrique <guimenuitem>ECTS</guimenuitem> du menu de navigation (voir <xref linkend="figure-ects-jury-list-professeur"/>). Pour chaque jury, le bouton <guibutton>Saisir les mentions</guibutton> donne accès à la page de saisie des mentions pour chacune des matières enseignées par le professeur (voir <xref linkend="figure-ects-jury-detail-professeur"/>).
+    </para>
+    <figure xml:id="figure-ects-jury-list-professeur">
+      <title>Liste des jurys pour un professeur</title>
+      <screenshot>
+        <mediaobject>
+          <imageobject>
+            <imagedata fileref="captures/ects_jury_list_professeur.png" format="image/png"
+              width="12cm" scalefit="1"/>
+          </imageobject>
+        </mediaobject>
+      </screenshot>
+    </figure>
+    <figure xml:id="figure-ects-jury-detail-professeur">
+      <title>Saisie des mentions par un professeur</title>
+      <screenshot>
+        <mediaobject>
+          <imageobject>
+            <imagedata fileref="captures/ects_jury_detail_professeur.png" format="image/png"
+              width="12cm" scalefit="1"/>
+          </imageobject>
+        </mediaobject>
+      </screenshot>
+    </figure>
+
+    <warning>
+      <para>
+        Les mentions ne sont pour le moment pas enregistrées au fil de l'eau. Elles doivent être sauvegardées en cliquant sur le bouton <guibutton>Enregistrer les mentions</guibutton> situé en bas de la page.
+      </para>
+    </warning>
+
+    <para>
+      La saisie des mentions est possible tant que la direction n'a pas clôturé le jury. Il est possible, durant toute la période de saisie, de modifier les mentions attribuées précédemment. De plus, il n'est pas nécessaire de saisir immédiatement toutes les mentions : un professeur peut n'attribuer qu'une partie des mentions, les sauvegarder puis revenir plus tard pour saisir les mentions restantes.
+    </para>
+
+    <qandaset>
+      <title>Questions fréquentes</title>
+
+      <qandaentry>
+        <question>
+          <para>
+            Que faire s'il manque des étudiants pour une classe ?
+          </para>
+        </question>
+        <answer>
+          <para>
+            pyKol importe la liste des options suivies par les étudiants depuis la base <acronym>SIECLE</acronym> de l'établissement. S'il manque certains étudiants, cela provient probablement du fait que ces options sont mal renseignées dans la base de données administrative.
+          </para>
+        </answer>
+      </qandaentry>
+
+      <qandaentry>
+        <question>
+          <para>
+            Pourquoi manque-t-il certains de mes cours ?
+          </para>
+        </question>
+        <answer>
+          <para>
+            Pour chaque enseignement, l'administration doit indiquer dans pyKol la liste des professeurs qui le dispensent. S'il manque les mentions ECTS pour tout un cours, cela provient du fait que le professeur n'a pas été ajouté sur le cours correspondant par l'administration. Les mentions apparaitront ensuite automatiquement sur le compte du professeur.
+          </para>
+        </answer>
+      </qandaentry>
+
+      <qandaentry>
+        <question>
+          <para>La direction peut-elle modifier les mentions d'un professeur ?</para>
+        </question>
+        <answer>
+          <para>
+            Rien de tel n'est prévu. La direction peut définir la mention globale pour chaque étudiant ainsi que les mentions des cours pour lesquels aucun professeur n'est renseigné. Cependant, si un professeur a refusé les crédits de sa matière, en attribuant la mention Insuffisant, mais que le jury décide de valider l'ensemble des crédits par compensation, alors la mention Insuffisant sera changée en Passable.
+          </para>
+        </answer>
+      </qandaentry>
+
+      <qandaentry>
+        <question>
+          <para>
+            Comment est décidé le nombre de crédits attribués à chaque matière ?
+          </para>
+        </question>
+        <answer>
+          <para>
+            pyKol reprend les grilles ECTS publiées au bulletin officiel de l'Éducation nationale (voir <citation>BO-2008-ECTS</citation>) afin d'attribuer les crédits aux différentes matières. Il arrive dans certaines filières qu'un enseignement donné puisse être suivi par des étudiants au titre d'une option obligatoire et par d'autres étudiants au titre d'une option facultative. Dans ce cas, le nombre de crédits varie selon l'étudiant. Afin de savoir quelles options sont suivies par les étudiants, pyKol utilise les données de la base de données <acronym>SIECLE</acronym> de l'administration. En cas d'incohérence, il faut vérifier auprès de l'administration que cette base est correctement renseignée.
+          </para>
+          <para>
+            La réglementation prévoit que les grilles ECTS ne sont qu'indicatives et qu'elles peuvent être modulées en fonction des choix des équipes. pyKol ne fournit pour l'instant pas d'interface pour modifier les crédits donnés pour chaque matière (même si, dans la structure du programme, de telles modifications sont possibles).
+          </para>
+        </answer>
+      </qandaentry>
+    </qandaset>
+  </section>
+
+  <bibliography>
+    <title>Références</title>
+
+    <biblioentry>
+      <abbrev>BO-2008-ECTS</abbrev>
+      <author>
+        <orgname>Ministère de l'Enseignement supérieur et de la recherche</orgname>
+      </author>
+
+      <date>2008-03-03</date>
+      <pubdate>2008-03-13</pubdate>
+
+      <title>Attestations descriptives des parcours de formation ; grilles nationales de référence</title>
+      <subtitle>Circulaire n°2008-1009</subtitle>
+
+      <biblioid class="other" otherclass="nor">ESRS0800077C</biblioid>
+
+      <bibliomisc><link xlink:href="https://www.education.gouv.fr/bo/2008/11/ESRS0800077C.htm"/></bibliomisc>
+    </biblioentry>
+  </bibliography>
+</chapter>

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<chapter xmlns="http://docbook.org/ns/docbook"
+  xmlns:xlink="http://www.w3.org/1999/xlink"
+  xml:lang="fr"
+  xml:id="chapter-installation">
+  <info>
+    <title>Installation de pyKol par l'administrateur</title>
+  </info>
+
+  <section>
+    <title>Choix d'un hébergement</title>
+  </section>
+
+  <section>
+    <title>Installation pas à pas de pyKol</title>
+  </section>
+
+  <section>
+    <title>Mises à jour</title>
+  </section>
+</chapter>

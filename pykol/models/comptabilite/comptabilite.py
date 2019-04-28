@@ -30,8 +30,8 @@ class Compte(MPTTModel):
 	nom = models.CharField(max_length=100)
 	parent = TreeForeignKey('self', on_delete=models.CASCADE,
 			null=True, blank=True, related_name='sous_comptes')
-	proprietaire = models.ForeignKey('User', blank=True, null=True,
-			on_delete=models.SET_NULL)
+
+	gestionnaires = models.ManyToManyField('User', blank=True)
 
 	CATEGORIE_DEPENSES = 0
 	CATEGORIE_ACTIFS = 1

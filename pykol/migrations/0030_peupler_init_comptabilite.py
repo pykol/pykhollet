@@ -224,23 +224,23 @@ def cree_comptes_professeurs(apps, schema_editor):
 		compte_prof = creation_compte(apps,
 			categorie=COMPTE_CATEGORIE_ACTIFS,
 			nom="{0.last_name} {0.first_name}".format(prof),
-			parent=racine_profs,
-			proprietaire=prof)
+			parent=racine_profs)
 		compte_prof.save()
+		compte_prof.gestionnaires.add(prof)
 
 		prof.compte_prevu = creation_compte(apps,
 			categorie=COMPTE_CATEGORIE_ACTIFS,
 			nom="Colles prévues",
-			parent=compte_prof,
-			proprietaire=prof)
+			parent=compte_prof)
 		prof.compte_prevu.save()
+		compte_prof.gestionnaires.add(prof)
 
 		prof.compte_effectue = creation_compte(apps,
 			categorie=COMPTE_CATEGORIE_ACTIFS,
 			nom="Colles effectuées",
-			parent=compte_prof,
-			proprietaire=prof)
+			parent=compte_prof)
 		prof.compte_effectue.save()
+		compte_prof.gestionnaires.add(prof)
 
 		prof.save()
 

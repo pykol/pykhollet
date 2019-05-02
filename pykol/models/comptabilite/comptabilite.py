@@ -69,8 +69,10 @@ class Compte(MPTTModel):
 		comptes = self.get_descendants(include_self=True)
 
 		return MouvementLigne.objects.filter(compte__in=comptes,
-			mouvement__annee=annee).values('taux').aggregate(duree=models.Sum('duree'),
-				duree_interrogation=models.Sum('duree_interrogation'))
+			mouvement__annee=annee,
+			mouvement__etat=Mouvement.ETAT_VALIDE).values('taux'
+		).aggregate(duree=models.Sum('duree'),
+			duree_interrogation=models.Sum('duree_interrogation'))
 
 	def sens_affichage(self):
 		"""

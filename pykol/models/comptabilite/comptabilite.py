@@ -115,6 +115,37 @@ class CompteDecouvert(Exception):
 	def __init__(self, ligne):
 		self.ligne = ligne
 
+class MouvementManager(models.Manager):
+	@transaction.atomic
+	def virement(cls, compte_debit, compte_credit,
+			duree, duree_interrogation=None,
+			taux=None, **kwargs):
+		"""
+		Méthode de classe pour faciliter la création d'un virement
+		simple d'heures d'un compte à un autre.
+		"""
+		mv = self.create(**kwargs)
+
+		# Ligne de débit
+		MouvementLigne(
+			compte=compte_debit,
+			mouvement=mv,
+			duree=-duree,
+			duree_interrogation=-duree_interrogation,
+			taux=taux,
+			motif=mv.motif).save()
+
+		# Ligne de crédit
+		MouvementLigne(
+			compte=compte_credit,
+			mouvement=mv,
+			duree=duree,
+			duree_interrogation=duree_interrogation,
+			taux=taux,
+			motif=mv.motif).save()
+
+		return mv
+
 class MouvementNonEquilibre(Exception):
 	pass
 
@@ -148,38 +179,6 @@ class Mouvement(models.Model):
 
 	def __str__(self):
 		return self.motif
-
-	@classmethod
-	@transaction.atomic
-	def virement(cls, compte_debit, compte_credit,
-			duree, duree_interrogation=None,
-			taux=None, **kwargs):
-		"""
-		Méthode de classe pour faciliter la création d'un virement
-		simple d'heures d'un compte à un autre.
-		"""
-		mv = cls(**kwargs)
-		mv.save()
-
-		# Ligne de débit
-		MouvementLigne(
-			compte=compte_debit,
-			mouvement=mv,
-			duree=-duree,
-			duree_interrogation=-duree_interrogation,
-			taux=taux,
-			motif=mv.motif).save()
-
-		# Ligne de crédit
-		MouvementLigne(
-			compte=compte_credit,
-			mouvement=mv,
-			duree=duree,
-			duree_interrogation=duree_interrogation,
-			taux=taux,
-			motif=mv.motif).save()
-
-		return mv
 
 	@transaction.atomic
 	def virement_retour(self, lettrage=True):

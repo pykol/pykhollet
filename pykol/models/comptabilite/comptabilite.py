@@ -96,6 +96,28 @@ class Compte(MPTTModel):
 		else:
 			return "{:.2f}".format(duree.total_seconds() / 3600)
 
+	def retrait_possible(self, ligne):
+		"""
+		Renvoie True quand le retrait de la ligne donnée en paramètre ne
+		provoque pas un dépassement du découvert autorisé.
+		"""
+		solde = self.solde(ligne.mouvement.annee)
+		return \
+			solde['duree'] - ligne.duree + self.decouvert_duree >= timedelta() \
+			and solde['duree_interrogation'] - ligne.duree_interrogation + \
+				self.decouvert_duree_interrogation >= timedelta()
+
+class CompteDecouvert(Exception):
+	"""
+	Exception levée lorsque la comptabilisation d'un mouvement
+	provoquerait le dépassement du découvert autorisé d'un compte.
+	"""
+	def __init__(self, ligne):
+		self.ligne = ligne
+
+class MouvementNonEquilibre(Exception):
+	pass
+
 class Mouvement(models.Model):
 	"""
 	Transfert d'heures de colles entre comptes.
@@ -197,6 +219,27 @@ class Mouvement(models.Model):
 		return solde['duree'] == timedelta() and \
 				solde['duree_interrogation'] == timedelta()
 
+	@transaction.atomic
+	def comptabiliser(self):
+		"""
+		Valide le mouvement à condition qu'il soit équilibré et que les
+		soldes des comptes le permettent.
+		"""
+		# On verrouille les comptes pour éviter toute autre transaction
+		# concurrente pendant que l'on vérifie les soldes.
+		comptes = Compte.objects.filter(mouvementligne__mouvement=self
+			).select_for_update()
+
+		if not self.est_equilibre():
+			raise MouvementNonEquilibre()
+		for ligne in self.lignes:
+			if ligne.sens == MouvementLigne.SENS_DEBIT and \
+				not ligne.compte.retrait_possible(ligne):
+				raise CompteDecouvert(ligne)
+
+		self.etat = self.ETAT_VALIDE
+		self.save()
+
 class LettrageNonEquilibre(Exception):
 	pass
 
@@ -288,3 +331,14 @@ class MouvementLigne(ColleDureeTaux):
 	motif = models.CharField(blank=True, max_length=100)
 	lettrage = models.ForeignKey(Lettrage, related_name='lignes',
 			blank=True, null=True, on_delete=models.SET_NULL)
+
+	SENS_DEBIT = -1
+	SENS_CREDIT = 1
+
+	@property
+	def sens(self):
+		if self.duree >= timedelta() and \
+				self.duree_interrogation >= timedelta():
+			return self.SENS_CREDIT
+		else:
+			return self.SENS_DEBIT

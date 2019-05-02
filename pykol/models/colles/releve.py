@@ -224,8 +224,12 @@ class ColleReleveLigne(ColleDureeTaux):
 		self.mouvement_ligne.save()
 
 	def save(self, *args, **kwargs):
-		# Si la ligne actuelle ne possède encore aucun mouvement, on
-		# l'initialise avant de sauvegarder dans la base.
+		"""
+		Sauvegarde d'une ligne de relevé.
+
+		Si cette ligne ne possède encore aucun mouvement comptable, on
+		l'initialise avant de sauvegarder dans la base.
+		"""
 		self._init_mouvement()
 		self.save(*args, **kwargs)
 

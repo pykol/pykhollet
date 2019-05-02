@@ -210,10 +210,18 @@ class Mouvement(models.Model):
 		return mv
 
 	def solde(self):
+		"""
+		Renvoie la somme des durées des lignes contenues dans ce
+		mouvement.
+		"""
 		return self.lignes.aggregate(duree=models.Sum('duree'),
 				duree_interrogation=models.Sum('duree_interrogation'))
 
 	def est_equilibre(self):
+		"""
+		Indique si la somme des durées des lignes du mouvement est bien
+		nulle.
+		"""
 		solde = self.solde()
 		return solde['duree'] == timedelta() and \
 				solde['duree_interrogation'] == timedelta()

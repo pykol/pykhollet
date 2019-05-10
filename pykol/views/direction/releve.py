@@ -41,7 +41,7 @@ from pykol.lib.auth import user_est_professeur
 def releve_creer(request):
 	# Création d'un nouveau relevé
 	releve = ColleReleve(date=localtime(),
-			etablissement=Etablissement.objects.get(pk=settings.PYKOL_UAI_DEFAULT))
+			etablissement=Etablissement.objects.get(pk=settings.PYKOL_UAI_DEFAUT))
 	releve.save()
 
 	# On attache à ce relevé toutes les colles qui sont notées mais qui

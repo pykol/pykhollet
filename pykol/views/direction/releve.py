@@ -28,7 +28,9 @@ from django.db import transaction
 from django.db.models import F
 from django.views.decorators.http import require_POST
 from django.http import JsonResponse
+from django.conf import settings
 
+from pykol.models.base import Etablissement
 from pykol.models.colles import ColleReleve, Colle, ColleReleveLigne
 from pykol.lib.auth import user_est_professeur
 
@@ -38,7 +40,8 @@ from pykol.lib.auth import user_est_professeur
 @require_POST
 def releve_creer(request):
 	# Création d'un nouveau relevé
-	releve = ColleReleve(date=localtime())
+	releve = ColleReleve(date=localtime(),
+			etablissement=Etablissement.objects.get(pk=settings.PYKOL_UAI_DEFAULT))
 	releve.save()
 
 	# On attache à ce relevé toutes les colles qui sont notées mais qui

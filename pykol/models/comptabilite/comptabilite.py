@@ -227,7 +227,7 @@ class Mouvement(models.Model):
 				solde['duree_interrogation'] == timedelta()
 
 	@transaction.atomic
-	def comptabiliser(self):
+	def valider(self):
 		"""
 		Valide le mouvement à condition qu'il soit équilibré et que les
 		soldes des comptes le permettent.

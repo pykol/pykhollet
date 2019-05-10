@@ -269,13 +269,17 @@ class ColleReleveLigne(ColleDureeTaux):
 
 	@transaction.atomic
 	def payer(self, date=None):
+		# On valide d'abord le mouvement comptable, ce qui est
+		# susceptible d'échouer si les soldes des comptes ne permettent
+		# pas le mouvement.
+		self.mouvement.valider()
+
 		if date is None:
 			self.date_paiement = localtime()
 		else:
 			self.date_paiement = date
 		self.etat = ColleReleveLigne.ETAT_PAYE
 		self.save()
-
 		self.releve.maj_etat()
 
 	def get_etat_html(self):

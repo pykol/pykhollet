@@ -24,6 +24,7 @@ from django.urls import reverse
 from pykol.models.base import Classe, Professeur, Matiere, Etudiant, \
 		Enseignement, Periode
 from pykol.models.fields import NoteField
+from pykol.models.comptabilite import Mouvement
 
 # Liste des jours de la semaine, numérotation ISO
 LISTE_JOURS = enumerate(["lundi", "mardi", "mercredi", "jeudi",
@@ -91,6 +92,8 @@ class ColleQuerySet(models.QuerySet):
 			colle_data['duree'] = \
 					datetime.combine(datetime.min, creneau.fin) - \
 					datetime.combine(datetime.min, creneau.debut)
+
+		#TODO intégration de la comptabilité
 
 		(colle, created) = self.update_or_create(
 				creneau=creneau,
@@ -251,10 +254,12 @@ class Colle(AbstractBaseColle):
 			if not salle and horaire == ancien_detail.horaire:
 				salle = ancien_detail.salle
 
+			colleur_modifie = colleur != ancien_detail.colleur
+			etudiants_modifies = set(etudiants) != set(ancien_detail.eleves.all())
+
 			detail_modifie = \
-				colleur != ancien_detail.colleur or \
-				set(etudiants) != set(ancien_detail.eleves.all()) or \
-				horaire != ancien_detail.horaire
+					colleur_modifie or etudiants_modifies or \
+					horaire != ancien_detail.horaire
 
 			# Cas où l'on ajoute une salle qui n'était précédemment pas
 			# renseignée. Dans ce cas, on ne crée pas de nouveau
@@ -271,6 +276,8 @@ class Colle(AbstractBaseColle):
 		except ColleDetails.DoesNotExist:
 			ancien_detail = None
 			detail_modifie = True
+			colleur_modifie = True
+			etudiants_modifies = True
 
 		# Ajout d'un nouveau ColleDetails s'il y a des modifications
 		if detail_modifie:
@@ -302,6 +309,25 @@ class Colle(AbstractBaseColle):
 		else:
 			return len(self.details.eleves) * self.colles_ens.duree
 
+	def comptabiliser(self):
+		"""
+		Création d'un mouvement comptable qui débite l'enveloppe de
+		colles de la matière et crédite le compte du professeur.
+		
+		Cette méthode ne vérifie pas si le mouvement n'a pas déjà été
+		créé précédemment.
+		"""
+		Mouvement.objects.virement(
+			date=timezone.now(),
+			annee=self.classe.annee,
+			colle=self,
+			duree=self.duree,
+			duree_interrogation=self.duree_interrogation,
+			compte_debit=self.colles_ens.compte_colles,
+			compte_credit=self.colleur.compte_prevu,
+			motif=str(self),
+		).valider()
+
 class ColleDetails(models.Model):
 	"""
 	Détails sur le déroulement d'une colle (date, heure, lieu, élèves).
@@ -324,6 +350,9 @@ class ColleDetails(models.Model):
 	class Meta:
 		verbose_name = "détails de la colle"
 		verbose_name_plural = "détails de la colle"
+
+	def comptabiliser(self):
+		pass
 
 class ColleNote(models.Model):
 	"""

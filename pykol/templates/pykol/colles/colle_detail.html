@@ -40,6 +40,13 @@
   </table>
 </section>
 
+{% if colle.releve %}
+<section>
+  <h3>Paiement de la colle</h3>
+  <p>Cette colle a été relevée lors du relevé du {{ releve.date }}.</p>
+</section>
+{% endif %}
+
 {% if perm_colle.deplacer %}
 <section>
   <h3>Modifier la colle</h3>

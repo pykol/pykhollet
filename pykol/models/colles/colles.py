@@ -354,6 +354,32 @@ class Colle(AbstractBaseColle):
 			mv.valider()
 		return mv
 
+	def effectuer_colle(self):
+		"""
+		Méthode qui marque la colle comme étant effectuée. Si elle était
+		déjà effectuée, cette méthode ne fait rien.
+		"""
+		if self.est_effectuee:
+			return
+
+		if self.mode == self.MODE_TD:
+			self.etat = self.ETAT_EFFECTUEE
+		else:
+			self.etat = self.ETAT_NOTEE
+
+		# Créditer le compte du colleur pour le paiement
+		Mouvement.objects.virement(
+			date=timezone.now(),
+			annee=self.classe.annee,
+			colle=self,
+			duree=self.duree,
+			duree_interrogation=self.duree_interrogation,
+			compte_debit=self.colleur.compte_prevu,
+			compte_credit=self.colleur.compte_effectue,
+			motif=str(self)).valider()
+
+		self.save()
+
 class ColleDetails(models.Model):
 	"""
 	Détails sur le déroulement d'une colle (date, heure, lieu, élèves).

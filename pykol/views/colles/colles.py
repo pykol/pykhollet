@@ -108,8 +108,7 @@ def colle_declarer(request, pk):
 	# obligatoire pour modifier la base de données).
 	if colle.mode == Colle.MODE_TD:
 		if request.method == 'POST':
-			colle.etat = Colle.ETAT_EFFECTUEE
-			colle.save()
+			colle.effectuer_colle()
 		return redirect_next('colle_detail', colle.pk, request=request)
 
 	# On peuple le formulaire avec les élèves qui n'ont pas encore été
@@ -132,8 +131,7 @@ def colle_declarer(request, pk):
 			eleves_sans_note = colle.details.eleves.difference(
 				Etudiant.objects.filter(collenote__colle=colle))
 			if not eleves_sans_note and colle.etat != Colle.ETAT_RELEVEE:
-				colle.etat = Colle.ETAT_NOTEE
-				colle.save()
+				colle.effectuer_colle()
 
 			return redirect_next('colle_detail', colle.pk,
 					request=request)

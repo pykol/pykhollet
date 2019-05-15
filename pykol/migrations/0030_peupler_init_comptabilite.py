@@ -72,7 +72,7 @@ def cree_comptes_rectorats(apps, schema_editor):
 	Academie = apps.get_model('pykol', 'Academie')
 
 	racine_rectorats = creation_compte(apps, categorie=COMPTE_CATEGORIE_REVENUS,
-		nom="Rectorats")
+		nom="Rectorats", decouvert_autorise=True)
 	racine_rectorats.save()
 
 	racine_asie = creation_compte(apps, categorie=COMPTE_CATEGORIE_DEPENSES,
@@ -83,7 +83,8 @@ def cree_comptes_rectorats(apps, schema_editor):
 		academie.compte_dotation = creation_compte(apps,
 			categorie=COMPTE_CATEGORIE_REVENUS,
 			nom=academie.nom_complet,
-			parent=racine_rectorats)
+			parent=racine_rectorats,
+			decouvert_autorise=True)
 
 		academie.compte_paiement = creation_compte(apps,
 			categorie=COMPTE_CATEGORIE_DEPENSES,
@@ -113,7 +114,7 @@ def cree_comptes_etablissements(apps, schema_editor):
 	Etablissement = apps.get_model('pykol', 'Etablissement')
 
 	racine_etab = creation_compte(apps, categorie=COMPTE_CATEGORIE_ACTIFS,
-		nom="Établissements")
+		nom="Établissements", decouvert_autorise=True)
 	racine_etab.save()
 
 	for etablissement in Etablissement.objects.filter(
@@ -121,19 +122,22 @@ def cree_comptes_etablissements(apps, schema_editor):
 		compte_etab = creation_compte(apps,
 			categorie=COMPTE_CATEGORIE_ACTIFS,
 			nom=etablissement.appellation,
-			parent=racine_etab)
+			parent=racine_etab,
+			decouvert_autorise=True)
 		compte_etab.save()
 
 		etablissement.compte_colles = creation_compte(apps,
 			categorie=COMPTE_CATEGORIE_ACTIFS,
 			nom="Dotation",
-			parent=compte_etab)
+			parent=compte_etab,
+			decouvert_autorise=True)
 		etablissement.compte_colles.save()
 
 		etablissement.compte_releves = creation_compte(apps,
 			categorie=COMPTE_CATEGORIE_ACTIFS,
 			nom="Relevés",
-			parent=compte_etab)
+			parent=compte_etab,
+			decouvert_autorise=True)
 		etablissement.compte_releves.save()
 
 		etablissement.save()
@@ -163,7 +167,8 @@ def cree_comptes_classes(apps, schema_editor):
 			categorie=COMPTE_CATEGORIE_ACTIFS,
 			nom="{classe} - {annee}".format(classe=classe.nom,
 				annee=classe.annee.nom),
-			parent=classe.etablissement.compte_colles)
+			parent=classe.etablissement.compte_colles,
+			decouvert_autorise=True)
 
 		classe.compte_colles.save()
 		classe.save()
@@ -196,7 +201,8 @@ def cree_comptes_enseignements(apps, schema_editor):
 		cens.compte_colles = creation_compte(apps,
 			categorie=COMPTE_CATEGORIE_ACTIFS,
 			nom=str_collesenseignement(cens),
-			parent=cens.classe.compte_colles)
+			parent=cens.classe.compte_colles,
+			decouvert_autorise=True)
 		cens.compte_colles.save()
 		cens.save()
 		# TODO créer des sous-comptes pour chaque enseignement ?
@@ -224,7 +230,8 @@ def cree_comptes_professeurs(apps, schema_editor):
 		compte_prof = creation_compte(apps,
 			categorie=COMPTE_CATEGORIE_ACTIFS,
 			nom="{0.last_name} {0.first_name}".format(prof),
-			parent=racine_profs)
+			parent=racine_profs,
+			decouvert_autorise=True)
 		compte_prof.save()
 		compte_prof.gestionnaires.add(prof)
 
@@ -238,7 +245,8 @@ def cree_comptes_professeurs(apps, schema_editor):
 		prof.compte_effectue = creation_compte(apps,
 			categorie=COMPTE_CATEGORIE_ACTIFS,
 			nom="Colles effectuées",
-			parent=compte_prof)
+			parent=compte_prof,
+			decouvert_autorise=True)
 		prof.compte_effectue.save()
 		compte_prof.gestionnaires.add(prof)
 
@@ -410,7 +418,8 @@ def migrer_releves(apps, schema_editor):
 		releve.compte_colles = creation_compte(apps,
 				categorie=COMPTE_CATEGORIE_ACTIFS,
 				nom="Relevé du {date}".format(date=releve.date),
-				parent=releve.etablissement.compte_releves)
+				parent=releve.etablissement.compte_releves,
+				decouvert_autorise=True)
 		releve.compte_colles.save()
 		releve.save()
 

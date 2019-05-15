@@ -108,7 +108,7 @@ def colle_declarer(request, pk):
 	# obligatoire pour modifier la base de données).
 	if colle.mode == Colle.MODE_TD:
 		if request.method == 'POST':
-			colle.effectuer_colle()
+			colle.effectuer()
 		return redirect_next('colle_detail', colle.pk, request=request)
 
 	# On peuple le formulaire avec les élèves qui n'ont pas encore été
@@ -131,7 +131,7 @@ def colle_declarer(request, pk):
 			eleves_sans_note = colle.details.eleves.difference(
 				Etudiant.objects.filter(collenote__colle=colle))
 			if not eleves_sans_note and colle.etat != Colle.ETAT_RELEVEE:
-				colle.effectuer_colle()
+				colle.effectuer()
 
 			return redirect_next('colle_detail', colle.pk,
 					request=request)
@@ -197,8 +197,7 @@ def colle_annuler(request, pk):
 		raise PermissionDenied
 
 	if colle.etat == Colle.ETAT_PREVUE:
-		colle.etat = Colle.ETAT_ANNULEE
-		colle.save()
+		colle.annuler()
 		messages.success(request, "La colle a bien été annulée")
 	else:
 		messages.error(request, "On ne peut pas annuler une colle déjà notée ou déjà relevée")

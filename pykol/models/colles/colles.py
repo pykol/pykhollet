@@ -299,11 +299,7 @@ class Colle(AbstractBaseColle):
 		# ensuite comme s'il s'agissait d'une nouvelle colle.
 		if ancien_detail is not None and (colleur_modifie or
 				anciens_etudiants != len(set(etudiants))):
-			# Recherche du mouvement actuel qui dote cette colle.
-			old_mv = Mouvement.objects.get(colle=self,
-					lignes__lettrage__isnull=True,
-					lignes__duree__gte=timedelta())
-			old_mv.virement_retour()
+			self.annuler_mouvement()
 
 		# Dotation de la colle. Ceci peut lever une exception, qui fait
 		# tout échouer.
@@ -354,7 +350,7 @@ class Colle(AbstractBaseColle):
 			mv.valider()
 		return mv
 
-	def effectuer_colle(self):
+	def effectuer(self):
 		"""
 		Méthode qui marque la colle comme étant effectuée. Si elle était
 		déjà effectuée, cette méthode ne fait rien.
@@ -378,6 +374,25 @@ class Colle(AbstractBaseColle):
 			compte_credit=self.colleur.compte_effectue,
 			motif=str(self)).valider()
 
+		self.save()
+
+	def annuler_mouvement(self):
+		# Recherche du mouvement actuel qui dote cette colle.
+		old_mv = Mouvement.objects.get(colle=self,
+				lignes__lettrage__isnull=True,
+				lignes__duree__gte=timedelta())
+		old_mv.virement_retour()
+
+	def annuler(self):
+		"""
+		Méthode qui annule une colle qui n'a pas encore été effectuée.
+		Si elle a été effectuée, on ne change rien.
+		"""
+		if self.est_effectuee:
+			return
+
+		self.etat = ETAT_ANNULEE
+		self.annuler_mouvement()
 		self.save()
 
 class ColleDetails(models.Model):

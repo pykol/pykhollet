@@ -29,7 +29,8 @@ class Migration(migrations.Migration):
                 ('level', models.PositiveIntegerField(db_index=True, editable=False)),
                 ('parent', mptt.fields.TreeForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, related_name='sous_comptes', to='pykol.Compte')),
                 ('gestionnaires', models.ManyToManyField(blank=True, to=settings.AUTH_USER_MODEL)),
-                ('decouvert_duree', models.DurationField(default=datetime.timedelta, verbose_name='durée à découvert autorisée')),
+                ('decouvert_autorise',models.BooleanField(default=False, help_text="Ce champ indique si le compte peut être à découvert. Dans ce cas, on peut limiter le nombre d'heures du découvert en donnant des valeurs non nulles aux durées à découvert autorisées.", verbose_name='découvert autorisé')),
+                ('decouvert_duree', models.DurationField(default=datetime.timedelta, verbose_name='durée à découvert autorisée', help_text="Lorsque le découvert est autorisé sur ce compte, ce champ donne une limite sur le nombre d'heures comptabilisées négativement. Par exemple, si ce champ vaut 3h, le solde du compte devra toujours être supérieur ou égal à -3h.")),
                 ('decouvert_duree_interrogation', models.DurationField(default=datetime.timedelta, verbose_name="durée d'interrogation à découvert autorisée")),
             ],
             options={

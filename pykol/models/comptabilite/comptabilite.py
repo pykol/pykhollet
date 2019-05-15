@@ -48,8 +48,21 @@ class Compte(MPTTModel):
 	categorie = models.SmallIntegerField(verbose_name="type de compte",
 			choices=CATEGORIE_CHOICES)
 
+	decouvert_autorise = models.BooleanField(
+		default=False,
+		verbose_name="découvert autorisé",
+		help_text="Ce champ indique si le compte peut être à "
+			"découvert. Dans ce cas, on peut limiter le nombre "
+			"d'heures du découvert en donnant des valeurs non nulles "
+			"aux durées à découvert autorisées.")
+
 	decouvert_duree = models.DurationField(default=timedelta,
-			verbose_name="durée à découvert autorisée")
+			verbose_name="durée à découvert autorisée",
+			help_text="Lorsque le découvert est autorisé sur ce "
+			"compte, ce champ donne une limite sur le nombre d'heures "
+			"comptabilisées négativement. Par exemple, si ce champ "
+			"vaut 3h, le solde du compte devra toujours être supérieur "
+			"ou égal à -3h.")
 
 	decouvert_duree_interrogation = models.DurationField(
 			default=timedelta,
@@ -102,10 +115,19 @@ class Compte(MPTTModel):
 		provoque pas un dépassement du découvert autorisé.
 		"""
 		solde = self.solde(ligne.mouvement.annee)
+
+		if self.decouvert_autorise:
+			duree_minimale = -self.decouvert_duree
+			duree_interrogation_minimale = -self.decouvert_duree_interrogation
+		else:
+			duree_minimale = timedelta()
+			duree_interrogation_minimale = timedelta()
+
 		return \
-			solde['duree'] - ligne.duree + self.decouvert_duree >= timedelta() \
-			and solde['duree_interrogation'] - ligne.duree_interrogation + \
-				self.decouvert_duree_interrogation >= timedelta()
+			solde['duree'] - ligne.duree >= duree_minimale \
+			and solde['duree_interrogation'] - ligne.duree_interrogation >= \
+				duree_interrogation_minimale
+
 
 class CompteDecouvert(Exception):
 	"""

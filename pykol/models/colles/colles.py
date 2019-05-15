@@ -255,7 +255,8 @@ class Colle(AbstractBaseColle):
 				salle = ancien_detail.salle
 
 			colleur_modifie = colleur != ancien_detail.colleur
-			etudiants_modifies = set(etudiants) != set(ancien_detail.eleves.all())
+			anciens_etudiants = set(ancien_detail.eleves.all())
+			etudiants_modifies = set(etudiants) != anciens_etudiants
 
 			detail_modifie = \
 					colleur_modifie or etudiants_modifies or \
@@ -278,6 +279,7 @@ class Colle(AbstractBaseColle):
 			detail_modifie = True
 			colleur_modifie = True
 			etudiants_modifies = True
+			anciens_etudiants = set()
 
 		# Ajout d'un nouveau ColleDetails s'il y a des modifications
 		if detail_modifie:
@@ -288,7 +290,25 @@ class Colle(AbstractBaseColle):
 			detail.save()
 			detail.eleves.set(etudiants)
 
-		self._update_duree()
+			self._update_duree()
+
+		# Mise à jour des écritures comptables s'il y a un changement de
+		# colleur et/ou d'effectif sur la colle, ou en cas de première
+		# programmation de la colle. Pour cela, on commence par renvoyer
+		# la dotation sur le compte de la matière, et on re-créditera
+		# ensuite comme s'il s'agissait d'une nouvelle colle.
+		if ancien_detail is not None and (colleur_modifie or
+				anciens_etudiants != len(set(etudiants))):
+			# Recherche du mouvement actuel qui dote cette colle.
+			old_mv = Mouvement.objects.get(colle=self,
+					lignes__lettrage__isnull=True,
+					lignes__duree__gte=timedelta())
+			old_mv.virement_retour()
+
+		# Dotation de la colle. Ceci peut lever une exception, qui fait
+		# tout échouer.
+		self.comptabiliser()
+
 		return self.details
 
 	def get_absolute_url(self):
@@ -309,7 +329,7 @@ class Colle(AbstractBaseColle):
 		else:
 			return len(self.details.eleves) * self.colles_ens.duree
 
-	def comptabiliser(self):
+	def comptabiliser(self, compte_source=None, valider=True):
 		"""
 		Création d'un mouvement comptable qui débite l'enveloppe de
 		colles de la matière et crédite le compte du professeur.
@@ -317,16 +337,22 @@ class Colle(AbstractBaseColle):
 		Cette méthode ne vérifie pas si le mouvement n'a pas déjà été
 		créé précédemment.
 		"""
-		Mouvement.objects.virement(
+		if compte_source is None:
+			compte_source = self.colles_ens.compte_colles
+
+		mv = Mouvement.objects.virement(
 			date=timezone.now(),
 			annee=self.classe.annee,
 			colle=self,
 			duree=self.duree,
 			duree_interrogation=self.duree_interrogation,
-			compte_debit=self.colles_ens.compte_colles,
+			compte_debit=compte_source,
 			compte_credit=self.colleur.compte_prevu,
 			motif=str(self),
-		).valider()
+		)
+		if valider:
+			mv.valider()
+		return mv
 
 class ColleDetails(models.Model):
 	"""
@@ -350,9 +376,6 @@ class ColleDetails(models.Model):
 	class Meta:
 		verbose_name = "détails de la colle"
 		verbose_name_plural = "détails de la colle"
-
-	def comptabiliser(self):
-		pass
 
 class ColleNote(models.Model):
 	"""

@@ -308,7 +308,8 @@ def mouvement_virement(apps, compte_debit, compte_credit,
 def mouvement_virement_retour(apps, self):
 	Mouvement = apps.get_model('pykol', 'Mouvement')
 	mv = Mouvement(annee=self.annee,
-		motif="Annulation du mouvement {pk}".format(pk=self.pk))
+		motif="Annulation du mouvement {pk}".format(pk=self.pk)
+		etat=self.etat)
 	mv.save()
 
 	for ligne in self.lignes.all():

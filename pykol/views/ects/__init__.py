@@ -19,6 +19,6 @@
 from .jury import jury_list, jury_detail, jury_creer, jury_supprimer, \
 		jury_detail_etudiant, jury_retirer_etudiant, \
 		jury_mentions_orphelines
-from .attestations import jury_toutes_attestations, \
-		jury_attestation_etudiant
+from .attestations import jury_toutes_attestations_resultats, \
+		jury_attestation_etudiant, jury_toutes_attestations_parcours
 from .grille import grilles_charger

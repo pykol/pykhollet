@@ -19,7 +19,8 @@
 import os
 import copy
 
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required, \
+		permission_required
 from django.shortcuts import render, get_object_or_404, redirect
 from django.http import HttpResponse
 from django.conf import settings
@@ -34,6 +35,11 @@ import odf.namespaces
 from pykol.models.ects import Jury, Mention, GrilleGroupeLignes
 from pykol.models.base import Etudiant, Enseignement
 
+def nom_formation(jury):
+	return "{libelle} − {niveau}".format(
+		libelle=jury.classe.mef.libelle_ects,
+		niveau=jury.classe.get_niveau_display())
+
 def fusion_attestation(modele, etudiant, jury):
 	"""
 	Remplace dans un modèle OpenDocument d'attestation de résultats
@@ -46,17 +52,31 @@ def fusion_attestation(modele, etudiant, jury):
 	remplacement = {
 		'pykol.date_naissance_etudiant': etudiant.birth_date.strftime("%d/%m/%Y"),
 		'pykol.ine_etudiant': etudiant.ine,
-		'pykol.nom_formation': "{libelle} − {niveau}".format(
-			libelle=jury.classe.mef.libelle_ects,
-			niveau=jury.classe.get_niveau_display()),
+		'pykol.nom_formation': nom_formation(jury),
 		'pykol.domaines_etude': jury.classe.mef.domaines_etude,
 		'pykol.nom_etudiant': str(etudiant),
+		'pykol.nom_etudiant_civilite': etudiant.name_civilite(),
 		'pykol.date_attestation': jury.date.strftime("%d/%m/%Y"),
 		'pykol.nom_signataire': jury.classe.etablissement.chef_etablissement.name_civilite(),
 		'pykol.nom_lycee': jury.classe.etablissement.appellation,
 		'pykol.statut_lycee': jury.classe.etablissement.get_nature_uai_display(),
 		'pykol.ville_lycee': jury.classe.etablissement.ville,
+		'pykol.nom_academie': jury.classe.etablissement.academie.nom_complet,
+		'pykol.annee_academique': "{annee_debut}/{annee_fin}".format(
+			annee_debut=jury.classe.annee.debut.year,
+			annee_fin=jury.classe.annee.fin.year),
+		'pykol.ne_accord': "né" if etudiant.sexe == etudiant.SEXE_HOMME \
+				else "née",
 	}
+	mention_globale = jury.mention_set.filter(etudiant=etudiant,
+			globale=True).first()
+	if mention_globale:
+		remplacement['pykol.mention_globale'] = mention_globale.get_mention_display()
+		remplacement['pykol.total_ects'] = mention_globale.credits
+	else:
+		remplacement['pykol.mention_globale'] = "Aucune"
+		remplacement['pykol.total_ects'] = "−"
+
 
 	# On parcourt la nouvelle attestation à la recherche des
 	# utilisations des champs utilisations que l'on souhaite
@@ -77,6 +97,9 @@ def fusion_attestation(modele, etudiant, jury):
 		if field.getAttrNS(odf.namespaces.TEXTNS, 'name') in remplacement:
 			field.parentNode.removeChild(field)
 
+	return attestation
+
+def fusion_mentions(etudiant, jury, attestation):
 	# Création du tableau des résultats. On trie les mentions par ordre
 	# inverse de position car, plus bas, l'ajout au tableau se fait avec
 	# insertBefore, avec pour paramètre l'élément immédiatement après
@@ -95,7 +118,7 @@ def fusion_attestation(modele, etudiant, jury):
 
 		# Insertion de la ligne donnant le titre de la formation
 		ligne = TableRow(parent=table_resultats)
-		P(text=remplacement['pykol.nom_formation'],
+		P(text=nom_formation(jury),
 			parent=TableCell(parent=ligne, stylename='enseignements.C1',
 				numbercolumnsspanned=3),
 			stylename='Filière_20_ECTS')
@@ -179,8 +202,6 @@ def fusion_attestation(modele, etudiant, jury):
 				parent=TableCell(parent=ligne, stylename='enseignements.C1'),
 				stylename='Mention_20_ECTS')
 
-	return attestation
-
 def signature_attestation(attestation, jury):
 	"""
 	Ajoute la signature du chef d'établissement et le tampon de
@@ -226,16 +247,18 @@ def signature_attestation(attestation, jury):
 	attestation.clear_caches()
 
 @login_required
-def jury_toutes_attestations(request, pk):
+def jury_toutes_attestations_resultats(request, pk):
 	jury = get_object_or_404(Jury, pk=pk)
 	etudiants = Etudiant.objects.filter(mention__jury=jury).distinct()
 
 	attestations = None
 	modele_path = os.path.join(settings.BASE_DIR, \
-		'pykol/data/ects_modele_resultats.odt')
+		'pykol/templates/pykol/ects/ects_modele_resultats.odt')
 	modele = odf.opendocument.load(modele_path)
 	for etudiant in etudiants:
 		attestation = fusion_attestation(modele, etudiant, jury)
+		fusion_mentions(etudiant, jury, attestation)
+
 		if attestations is None:
 			attestations = attestation
 		else:
@@ -251,7 +274,41 @@ def jury_toutes_attestations(request, pk):
 
 	response = HttpResponse(content_type=attestations.getMediaType())
 	response['Content-Disposition'] = \
-		'attachment; filename="attestation-ects-{classe}-{jury}.odt"'.format(
+		'attachment; filename="resultats-ects-{classe}-{jury}.odt"'.format(
+				classe=slugify(str(jury.classe)), jury=jury.pk)
+	attestations.write(response)
+
+	return response
+
+@login_required
+@permission_required('pykol.direction')
+def jury_toutes_attestations_parcours(request, pk):
+	jury = get_object_or_404(Jury, pk=pk)
+	etudiants = Etudiant.objects.filter(mention__jury=jury).distinct()
+
+	attestations = None
+	modele_path = os.path.join(settings.BASE_DIR, \
+		'pykol/templates/pykol/ects/ects_modele_attestation_de_parcours.odt')
+	modele = odf.opendocument.load(modele_path)
+	for etudiant in etudiants:
+		attestation = fusion_attestation(modele, etudiant, jury)
+
+		if attestations is None:
+			attestations = attestation
+		else:
+			for child in attestation.body.childNodes:
+				attestations.body.appendChild(child)
+
+	# odfpy ne met pas à jour correctement ses caches en cas d'appel à
+	# appendChild (les fils ne sont pas rattachés au document). On force
+	# la mise à jour.
+	attestations.clear_caches()
+
+	signature_attestation(attestations, jury)
+
+	response = HttpResponse(content_type=attestations.getMediaType())
+	response['Content-Disposition'] = \
+		'attachment; filename="attestation-parcours-ects-{classe}-{jury}.odt"'.format(
 				classe=slugify(str(jury.classe)), jury=jury.pk)
 	attestations.write(response)
 
@@ -270,6 +327,7 @@ def jury_attestation_etudiant(request, pk, etu_pk):
 		'pykol/data/ects_modele_resultats.odt')
 	attestation = fusion_attestation(odf.opendocument.load(modele_path),
 			etudiant, jury)
+	fusion_mentions(etudiant, jury, attestation)
 	signature_attestation(attestation, jury)
 
 	response = HttpResponse(content_type=attestation.getMediaType())

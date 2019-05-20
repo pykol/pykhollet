@@ -5,7 +5,8 @@
   <small>− {{ jury }} − {{ jury.classe }}</small></h2>
 
 <ul class="actions">
-  <li><a class="btn btn-primary" href="{% url 'ects_jury_attestation' jury.pk %}">Imprimer toutes les attestations</a></li>
+  <li><a class="btn btn-primary" href="{% url 'ects_jury_resultat' jury.pk %}">Imprimer tous les résultats</a></li>
+  <li><a class="btn btn-primary" href="{% url 'ects_jury_attestation' jury.pk %}">Imprimer toutes les attestations de parcours</a></li>
   <li><a class="btn btn-primary" href="{% url 'ects_jury_mentions_orphelines' jury.pk %}">Saisir les mentions orphelines</a></li>
 </ul>
 

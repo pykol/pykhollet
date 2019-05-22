@@ -392,7 +392,7 @@ class Colle(AbstractBaseColle):
 		if self.est_effectuee:
 			return
 
-		self.etat = ETAT_ANNULEE
+		self.etat = self.ETAT_ANNULEE
 		self.annuler_mouvement()
 		self.save()
 

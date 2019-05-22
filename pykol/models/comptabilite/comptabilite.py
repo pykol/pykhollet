@@ -312,10 +312,17 @@ class Lettrage(models.Model):
 	@classmethod
 	@transaction.atomic
 	def lettrage_total(cls, lignes):
-		durees = lignes.aggregate(duree=models.Sum('duree'),
-			duree_interrogation=models.Sum('duree_interrogation'))
-		if durees['duree'] != timedelta() or \
-			durees['duree_interrogation'] != timedelta():
+		# On ne fait pas l'hypothèse que lignes est un QuerySet pour
+		# permettre à l'appelant de donner à peu près n'importe quel
+		# itérable.
+		duree = timedelta()
+		duree_interrogation = timedelta()
+
+		for ligne in lignes:
+			duree += ligne.duree
+			duree_interrogation += ligne.duree_interrogation
+
+		if duree != timedelta() or duree_interrogation != timedelta():
 			raise LettrageNonEquilibre
 
 		lettrage = cls.lettrage_partiel(lignes)

@@ -16,11 +16,22 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-from .home import home, mon_profil, mentions_legales
-from .classe import ClasseDetailView, ClasseListView
-from .etudiant import etudiant_detail_dispatch
-from . import colles
-from . import direction
-from . import colloscope
-from . import ects
-from . import generic
+from django.views.generic.base import ContextMixin
+from django.shortcuts import render
+
+from pykol.models.comptabilite import CompteDecouvert
+
+class CompteDecouvertMixin(ContextMixin):
+	"""
+	Mixin pour attraper l'exception CompteDecouvert dans une vue.
+	"""
+	decouvert_template = 'pykol/comptabilite/decouvert.html'
+
+	def dispatch(self, *args, **kwargs):
+		try:
+			return super().dispatch(*args, **kwargs)
+		except CompteDecouvert:
+			# Renvoyer un message d'erreur générique lorsque l'opération
+			# a échoué à cause d'un découvert non autorisé.
+			return render(request, self.decouvert_template,
+					context=self.get_context_data())

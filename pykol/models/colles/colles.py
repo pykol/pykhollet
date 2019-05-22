@@ -20,6 +20,7 @@ from datetime import timedelta, datetime
 
 from django.db import models, transaction
 from django.urls import reverse
+from django.utils import timezone
 
 from pykol.models.base import Classe, Professeur, Matiere, Etudiant, \
 		Enseignement, Periode
@@ -316,7 +317,7 @@ class Colle(AbstractBaseColle):
 
 	@property
 	def est_effectuee(self):
-		return self.etat in (ETAT_NOTEE, ETAT_EFFECTUEE, ETAT_RELEVEE)
+		return self.etat in (self.ETAT_NOTEE, self.ETAT_EFFECTUEE, self.ETAT_RELEVEE)
 
 	@property
 	def duree_interrogation(self):

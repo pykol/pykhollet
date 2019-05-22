@@ -139,7 +139,7 @@ class CompteDecouvert(Exception):
 
 class MouvementManager(models.Manager):
 	@transaction.atomic
-	def virement(cls, compte_debit, compte_credit,
+	def virement(self, compte_debit, compte_credit,
 			duree, duree_interrogation=None,
 			taux=None, **kwargs):
 		"""
@@ -199,6 +199,8 @@ class Mouvement(models.Model):
 	etat = models.SmallIntegerField(verbose_name="état",
 			choices=ETAT_CHOICES, default=ETAT_BROUILLON)
 
+	objects = MouvementManager()
+
 	def __str__(self):
 		return self.motif
 
@@ -256,12 +258,12 @@ class Mouvement(models.Model):
 		"""
 		# On verrouille les comptes pour éviter toute autre transaction
 		# concurrente pendant que l'on vérifie les soldes.
-		comptes = Compte.objects.filter(mouvementligne__mouvement=self
+		comptes = Compte.objects.filter(lignes__mouvement=self
 			).select_for_update()
 
 		if not self.est_equilibre():
 			raise MouvementNonEquilibre()
-		for ligne in self.lignes:
+		for ligne in self.lignes.all():
 			if ligne.sens == MouvementLigne.SENS_DEBIT and \
 				not ligne.compte.retrait_possible(ligne):
 				raise CompteDecouvert(ligne)

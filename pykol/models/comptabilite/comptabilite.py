@@ -336,7 +336,11 @@ class Lettrage(models.Model):
 	def lettrage_partiel(cls, lignes):
 		lettrage = cls(mode=cls.LETTRAGE_PARTIEL)
 		lettrage.save()
-		lignes.update(lettrage=lettrage)
+
+		for ligne in lignes:
+			ligne.lettrage = lettrage
+			ligne.save()
+
 		return lettrage
 
 class ColleDureeTaux(models.Model):

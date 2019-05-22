@@ -223,8 +223,8 @@ class Mouvement(models.Model):
 		ligne de débit du mouvement retour si le paramètre lettrage vaut
 		True.
 		"""
-		mv = Mouvement(annee=self.annee,
-			motif="Annulation du mouvement {pk}".format(pk=self.pk))
+		motif_retour = "Annulation du mouvement {pk}".format(pk=self.pk)
+		mv = Mouvement(annee=self.annee, motif=motif_retour)
 		mv.save()
 
 		for ligne in self.lignes.all():
@@ -234,6 +234,7 @@ class Mouvement(models.Model):
 			ligne.duree = -ligne.duree
 			ligne.duree_interrogation = -ligne.duree_interrogation
 			ligne.mouvement = mv
+			ligne.motif = motif_retour
 			ligne.save()
 
 		if lettrage:

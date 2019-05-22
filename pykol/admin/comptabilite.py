@@ -24,7 +24,8 @@ from mptt.admin import DraggableMPTTAdmin, TreeRelatedFieldListFilter
 from pykol.admin.base import register, admin_site
 
 from pykol.models.base import Annee
-from pykol.models.comptabilite import Compte, Mouvement, MouvementLigne
+from pykol.models.comptabilite import Compte, Mouvement, \
+		MouvementLigne, Lettrage
 
 @register(Compte)
 class CompteAdmin(DraggableMPTTAdmin):
@@ -49,3 +50,7 @@ class MouvementAdmin(admin.ModelAdmin):
 class MouvementLigneAdmin(admin.ModelAdmin):
 	list_display = ('pk', 'compte', 'duree', 'duree_interrogation')
 	list_filter = (('compte', TreeRelatedFieldListFilter),)
+
+@register(Lettrage)
+class LettrageAdmin(admin.ModelAdmin):
+	inlines= (MouvementLigneInline,)

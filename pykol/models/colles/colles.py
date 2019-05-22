@@ -324,7 +324,7 @@ class Colle(AbstractBaseColle):
 		if self.mode == Colle.MODE_TD:
 			return self.duree
 		else:
-			return len(self.details.eleves) * self.colles_ens.duree
+			return len(self.details.eleves.all()) * self.colles_ens.duree
 
 	def comptabiliser(self, compte_source=None, valider=True):
 		"""

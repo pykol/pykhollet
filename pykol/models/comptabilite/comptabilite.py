@@ -56,7 +56,7 @@ class Compte(MPTTModel):
 			"d'heures du découvert en donnant des valeurs explicites "
 			"aux durées à découvert autorisées.")
 
-	decouvert_duree = models.DurationField(default=timedelta,
+	decouvert_duree = models.DurationField(
 			blank=True, null=True,
 			verbose_name="durée à découvert autorisée",
 			help_text="Lorsque le découvert est autorisé sur ce "
@@ -66,7 +66,6 @@ class Compte(MPTTModel):
 			"ou égal à -3h.")
 
 	decouvert_duree_interrogation = models.DurationField(
-			default=timedelta,
 			blank=True, null=True,
 			verbose_name="durée d'interrogation à découvert autorisée")
 
@@ -124,7 +123,7 @@ class Compte(MPTTModel):
 			else:
 				duree_minimale = -self.decouvert_duree
 
-			if self.duree_decouvert_interrogation is None:
+			if self.decouvert_duree_interrogation is None:
 				duree_interrogation_minimale = None
 			else:
 				duree_interrogation_minimale = -self.decouvert_duree_interrogation

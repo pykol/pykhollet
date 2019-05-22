@@ -382,7 +382,10 @@ class Colle(AbstractBaseColle):
 		old_mv = Mouvement.objects.get(colle=self,
 				lignes__lettrage__isnull=True,
 				lignes__duree__gte=timedelta())
-		old_mv.virement_retour().valider()
+		retour_mv = old_mv.virement_retour()
+		retour_mv.colle = self
+		retour_mv.save()
+		retour_mv.valider()
 
 	def annuler(self):
 		"""

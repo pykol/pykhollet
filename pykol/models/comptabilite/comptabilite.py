@@ -312,8 +312,8 @@ class Lettrage(models.Model):
 	@classmethod
 	@transaction.atomic
 	def lettrage_total(cls, lignes):
-		durees = lignes.aggregate(duree=Sum('duree'),
-			duree_interrogation=Sum('duree_interrogation'))
+		durees = lignes.aggregate(duree=models.Sum('duree'),
+			duree_interrogation=models.Sum('duree_interrogation'))
 		if durees['duree'] != timedelta() or \
 			durees['duree_interrogation'] != timedelta():
 			raise LettrageNonEquilibre

@@ -22,7 +22,7 @@ from django.db import models
 from django.db.models import Q
 
 from pykol.models.base import Annee, Enseignement, Classe, Etudiant, \
-		Matiere
+		Matiere, Etablissement
 from pykol.models import constantes
 from pykol.models.comptabilite import Compte
 from .colles import Colle
@@ -33,6 +33,8 @@ class Dotation(models.Model):
 	annee = models.ForeignKey(Annee, on_delete=models.CASCADE)
 	date = models.DateField()
 	heures = models.IntegerField(verbose_name="nombre d'heures")
+	etablissement = models.ForeignKey(Etablissement,
+			on_delete=models.CASCADE)
 
 class CollesEnseignement(models.Model):
 	"""

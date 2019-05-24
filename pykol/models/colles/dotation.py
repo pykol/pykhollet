@@ -24,7 +24,7 @@ from django.db.models import Q
 from pykol.models.base import Annee, Enseignement, Classe, Etudiant, \
 		Matiere, Etablissement
 from pykol.models import constantes
-from pykol.models.comptabilite import Compte
+from pykol.models.comptabilite import Compte, Mouvement
 from .colles import Colle
 
 class Dotation(models.Model):
@@ -35,6 +35,23 @@ class Dotation(models.Model):
 	heures = models.IntegerField(verbose_name="nombre d'heures")
 	etablissement = models.ForeignKey(Etablissement,
 			on_delete=models.CASCADE)
+
+	def comptabiliser(self):
+		"""
+		Crée le mouvement de compte qui correspond à cette dotation
+		d'heures.
+		"""
+		duree = self.heures * timedelta(hours=1)
+		mv = Mouvement.objects.virement(
+			annee=self.annee,
+			compte_debit=self.etablissement.academie.compte_dotation,
+			compte_credit=self.etablissement.compte_colles,
+			duree=duree,
+			duree_interrogation=duree_interrogation,
+			motif="Dotation en heures du {date}".format(date=self.date),
+			date=self.date)
+		mv.valider()
+		return mv
 
 class CollesEnseignement(models.Model):
 	"""

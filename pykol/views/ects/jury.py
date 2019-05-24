@@ -128,13 +128,6 @@ def jury_detail_direction(request, jury):
 	# base de données.
 	mentions_globales = jury.mention_set.filter(globale=True)
 	for mention in mentions_globales:
-		mention_initial.append({
-			'etudiant': mention.etudiant.pk,
-			'id': mention.pk,
-			'mention': mention.mention,
-			'jury': jury.pk,
-			'credits': mention.credits,
-		})
 		etudiants[mention.etudiant.pk].mention_globale = mention
 
 	# On prépare le formulaire pour les mentions globales que l'on peut
@@ -162,7 +155,7 @@ def jury_detail_direction(request, jury):
 		mention_formset = MentionGlobaleFormSet(request.POST,
 				initial=mention_initial,
 				prefix='mentions',
-				queryset=Mention.objects.filter(jury=jury, globale=True))
+				queryset=mentions_globales)
 		if mention_formset.is_valid():
 			mention_formset.save()
 			return redirect('ects_jury_detail', jury.pk)
@@ -170,7 +163,7 @@ def jury_detail_direction(request, jury):
 		mention_formset = MentionGlobaleFormSet(
 				initial=mention_initial,
 				prefix='mentions',
-				queryset=Mention.objects.filter(jury=jury, globale=True))
+				queryset=mentions_globales)
 
 	# On attache chaque formulaire du mention_formset à son étudiant
 	for mention_form in mention_formset:

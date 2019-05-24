@@ -324,7 +324,7 @@ def jury_attestation_etudiant(request, pk, etu_pk):
 			classe__jury=jury)
 
 	modele_path = os.path.join(settings.BASE_DIR, \
-		'pykol/data/ects_modele_resultats.odt')
+		'pykol/templates/pykol/ects/ects_modele_resultats.odt')
 	attestation = fusion_attestation(odf.opendocument.load(modele_path),
 			etudiant, jury)
 	fusion_mentions(etudiant, jury, attestation)

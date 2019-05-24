@@ -249,7 +249,8 @@ def signature_attestation(attestation, jury):
 @login_required
 def jury_toutes_attestations_resultats(request, pk):
 	jury = get_object_or_404(Jury, pk=pk)
-	etudiants = Etudiant.objects.filter(mention__jury=jury).distinct()
+	etudiants = Etudiant.objects.filter(mention__jury=jury).distinct().order_by(
+			'last_name', 'first_name')
 
 	attestations = None
 	modele_path = os.path.join(settings.BASE_DIR, \
@@ -284,7 +285,8 @@ def jury_toutes_attestations_resultats(request, pk):
 @permission_required('pykol.direction')
 def jury_toutes_attestations_parcours(request, pk):
 	jury = get_object_or_404(Jury, pk=pk)
-	etudiants = Etudiant.objects.filter(mention__jury=jury).distinct()
+	etudiants = Etudiant.objects.filter(mention__jury=jury).distinct().order_by(
+			'last_name', 'first_name')
 
 	attestations = None
 	modele_path = os.path.join(settings.BASE_DIR, \

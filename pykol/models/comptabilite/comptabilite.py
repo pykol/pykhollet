@@ -72,7 +72,7 @@ class Compte(MPTTModel):
 	def __str__(self):
 		return self.nom
 
-	def solde(self, annee):
+	def solde(self, annee=None):
 		"""
 		Calcul du solde du compte pour l'année donnée en paramètre.
 
@@ -80,6 +80,10 @@ class Compte(MPTTModel):
 		dictionnaire donne la durée totale et la durée d'interrogation
 		pour un taux donné.
 		"""
+		if annee is None:
+			from pykol.models.base import Annee
+			annee = Annee.objects.get_actuelle()
+
 		comptes = self.get_descendants(include_self=True)
 
 		return MouvementLigne.objects.filter(compte__in=comptes,

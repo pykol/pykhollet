@@ -30,6 +30,7 @@ from pykol.models.comptabilite import Compte, Mouvement, \
 @register(Compte)
 class CompteAdmin(DraggableMPTTAdmin):
 	list_display = ('tree_actions', 'indented_title', 'admin_solde')
+	autocomplete_fields = ('gestionnaires',)
 
 	def admin_solde(self, obj):
 		duree = obj.solde(Annee.objects.get_actuelle())['duree'] or \

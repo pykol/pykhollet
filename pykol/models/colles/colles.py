@@ -43,6 +43,9 @@ class AbstractBaseColle(models.Model):
 			null=True, on_delete=models.SET_NULL)
 	duree = models.DurationField(verbose_name="durée",
 			default=timedelta(hours=1))
+	duree_etudiant = models.DurationField(
+			verbose_name="durée de passage par étudiant",
+			blank=True, null=True)
 
 	MODE_INTERROGATION = 0
 	MODE_TD = 1
@@ -79,7 +82,7 @@ class ColleQuerySet(models.QuerySet):
 		"""
 		Créer une colle sur le modèle du créneau, sur la semaine
 		donnée et pour le groupe donné.
-		
+
 		On considère que la colle est identifiée par sa semaine et son
 		créneau. Si le trinôme change, on met simplement à jour la
 		colle.
@@ -201,6 +204,19 @@ class Colle(AbstractBaseColle):
 		"""Renvoie le colleur qui assure cette colle"""
 		return self.details.colleur
 
+	def _get_duree_etudiant(self):
+		"""
+		Détermine la durée d'interrogation par étudiant
+
+		Cette méthode utilise la valeur du champ duree_etudiant, s'il
+		n'est pas nul, ou bien la durée par défaut de l'objet
+		CollesEnseignement lié.
+		"""
+		if self.duree_etudiant is None:
+			return self.colles_ens.duree_frequentielle
+		else:
+			return self.duree_etudiant
+
 	def _update_duree(self):
 		# On laisse la durée par défaut pour le mode TD
 		if self.mode == Colle.MODE_TD:
@@ -210,7 +226,7 @@ class Colle(AbstractBaseColle):
 			self.duree = timedelta(hours=1)
 		else:
 			self.duree = self.details.eleves.count() * \
-					self.colles_ens.duree_frequentielle
+					self._get_duree_etudiant()
 		self.save()
 
 	def __str__(self):
@@ -324,13 +340,13 @@ class Colle(AbstractBaseColle):
 		if self.mode == Colle.MODE_TD:
 			return self.duree
 		else:
-			return len(self.details.eleves.all()) * self.colles_ens.duree
+			return len(self.details.eleves.all()) * self._get_duree_etudiant()
 
 	def comptabiliser(self, compte_source=None, valider=True):
 		"""
 		Création d'un mouvement comptable qui débite l'enveloppe de
 		colles de la matière et crédite le compte du professeur.
-		
+
 		Cette méthode ne vérifie pas si le mouvement n'a pas déjà été
 		créé précédemment.
 		"""

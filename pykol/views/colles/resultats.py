@@ -349,7 +349,7 @@ def classe_resultats_odf(request, resultats):
 				text=semaine.numero)
 
 		# Ligne pour chaque étudiant
-		for etudiant, resultats in ens_resultats['etudiants'].items():
+		for etudiant, etu_resultats in ens_resultats['etudiants'].items():
 			tr = TableRow(parent=table)
 
 			# Nom de l'étudiant
@@ -357,16 +357,16 @@ def classe_resultats_odf(request, resultats):
 
 			# Moyenne de l'étudiant
 			P(parent=TableCell(parent=tr, valuetype='float',
-					value=resultats['moyenne'], stylename=style_note),
-				text="{:.2f}".format(resultats['moyenne']))
+					value=etu_resultats['moyenne'], stylename=style_note),
+				text="{:.2f}".format(etu_resultats['moyenne']))
 
 			# Rang de l'étudiant
 			P(parent=TableCell(parent=tr, valuetype='float',
-					value=resultats['rang']),
-				text="{}".format(resultats['rang']))
+					value=etu_resultats['rang']),
+				text="{}".format(etu_resultats['rang']))
 
 			# Notes
-			for note in resultats['notes']:
+			for note in etu_resultats['notes']:
 				tc = TableCell(parent=tr)
 
 				if isinstance(note, list) and len(note) == 1:

@@ -38,6 +38,19 @@
     <li><a href="{% url 'colle_creer' classe.slug %}">Créer une colle</a></li>
     {% endif %}
   </ul>
+
+  {% if planning_colleurs %}
+  <h3>Planning des colleurs</h3>
+  <p>Vous pouvez accéder au calendrier des colles de chaque colleur dans
+  vos matières, notamment afin de programmer rapidement des colles
+  ponctuelles ou afin de gérer le planning des colles de préparation à
+  l'oral en deuxième année.</p>
+  <ul>
+    {% for matiere in planning_colleurs %}
+    <li><a href="{% url 'colloscope_calendrier_matiere' classe.slug matiere.pk %}">Calendrier des colleurs en {{ matiere }}</a></li>
+    {% endfor %}
+  </ul>
+  {% endif %}
 </section>
 
 {% if classe_perm.view_resultats %}

@@ -84,6 +84,12 @@ class ClasseDetailView(LoginRequiredMixin, generic.DetailView):
 				periodes[periode_nom] = trinomes
 		context['periodes'] = periodes
 
+		# Accès au planning des colleurs pour les professeurs qui
+		# peuvent programmer des colles dans la classe. On passe au
+		# gabarit une liste des matières.
+		# TODO liste à créer
+		context['planning_colleurs'] = []
+
 		return context
 
 class ClasseListView(LoginRequiredMixin, generic.ListView):

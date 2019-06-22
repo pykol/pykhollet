@@ -1,0 +1,23 @@
+{% extends "pykol/base.html" %}
+{% block title %}Calendrier des colles en {{ object }} − {{ block.super }}{% endblock %}
+{% block content %}
+<h2>Calendriers des colles en {{ object }}</h2>
+
+<section>
+  <p>Les colleurs suivants interviennent actuellement pour les colles en
+  {{ object }}. En cliquant sur le nom d'un colleur, vous pouvez accéder
+  au calendrier de ses colles pour les éditer.</p>
+
+  <ul>
+    {% for colleur in colleur_list %}
+    <li>{% url 'colloscope_calendrier_matiere_colleur' object.pk colleur.pk %}</li>
+    {% endfor %}
+  </ul>
+</section>
+
+<section>
+  <h3>Ajouter des colles à un nouveau colleur</h3>
+  <p>Pour accéder au calendrier des colles pour un nouveau colleur dans
+  cette matière, choisissez son nom dans la liste ci-dessous.</p>
+</section>
+{% endblock %}

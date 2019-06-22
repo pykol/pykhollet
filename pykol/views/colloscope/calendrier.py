@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 # pyKol - Gestion de colles en CPGE
-# Copyright (c) 2018-2019 Florian Hatat
+# Copyright (c) 2019 Florian Hatat
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Affero General Public License as published by
@@ -16,9 +16,16 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-from .conception import *
-from .semaines import *
-from .trinomes import *
-from .colloscope import colloscope, import_odf
-from .calendrier import CalendrierMatiereView, \
-		CalendrierMatiereColleurView
+from django.views.generic import TemplateView
+
+class CalendrierMatiereView(TemplateView):
+	"""
+	Accès au calendrier de tous les colleurs dans une matière.
+	"""
+	pass
+
+class CalendrierMatiereColleurView(TemplateView):
+	"""
+	Accès au calendrier d'un colleur dans une matière.
+	"""
+	pass

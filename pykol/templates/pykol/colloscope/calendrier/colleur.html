@@ -1,0 +1,27 @@
+{% extends "pykol/base.html" %}
+{% load static %}
+{% block title %}Colles de {{ colleur }} − {{ matiere }} − {{ block.super }}{% endblock %}
+{% block head %}
+<link  href="{% static 'fullcalendar/core/main.css' %}" rel="stylesheet">
+<link  href="{% static 'fullcalendar/daygrid/main.css' %}" rel="stylesheet">
+<link  href="{% static 'fullcalendar/timegrid/main.css' %}" rel="stylesheet">
+<script src="{% static 'fullcalendar/core/main.js' %}"></script>
+<script src="{% static 'fullcalendar/daygrid/main.js' %}"></script>
+<script src="{% static 'fullcalendar/timegrid/main.js' %}"></script>
+<script src="{% static 'fullcalendar/interaction/main.js' %}"></script>
+
+<script src="{% static 'pykol/colloscope_calendrier.js' %}"></script>
+<link href="{% static 'pykol/colloscope_calendrier.css' %}" rel="stylesheet">
+{{ block.super }}
+{% endblock %}
+{% block content %}
+<h2>Colles de {{ colleur }} en {{ matiere }}</h2>
+
+<section>
+  <form id="calendrier_colleur_form" method="post" action="">
+    <p><input type="submit" value="Enregistrer le calendrier"></p>
+    {% csrf_token %}
+    {{ colles_formset }}
+  </form>
+</section>
+{% endblock %}

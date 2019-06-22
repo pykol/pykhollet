@@ -47,7 +47,8 @@
   l'oral en deuxième année.</p>
   <ul>
     {% for matiere in planning_colleurs %}
-    <li><a href="{% url 'colloscope_calendrier_matiere' classe.slug matiere.pk %}">Calendrier des colleurs en {{ matiere }}</a></li>
+    <li><a href="{% url 'colloscope_calendrier_matiere' matiere.pk %}">Calendriers
+        des colleurs en {{ matiere.matiere }}</a></li>
     {% endfor %}
   </ul>
   {% endif %}

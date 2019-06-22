@@ -5,12 +5,12 @@
 
 <section>
   <p>Les colleurs suivants interviennent actuellement pour les colles en
-  {{ object }}. En cliquant sur le nom d'un colleur, vous pouvez accéder
-  au calendrier de ses colles pour les éditer.</p>
+  {{ object.matiere }}. En cliquant sur le nom d'un colleur, vous pouvez
+  accéder au calendrier de ses colles pour les éditer.</p>
 
   <ul>
     {% for colleur in colleur_list %}
-    <li>{% url 'colloscope_calendrier_matiere_colleur' object.pk colleur.pk %}</li>
+    <li><a href="{% url 'colloscope_calendrier_matiere_colleur' object.pk colleur.pk %}">{{ colleur }}</a></li>
     {% endfor %}
   </ul>
 </section>

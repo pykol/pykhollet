@@ -87,8 +87,10 @@ class ClasseDetailView(LoginRequiredMixin, generic.DetailView):
 		# Accès au planning des colleurs pour les professeurs qui
 		# peuvent programmer des colles dans la classe. On passe au
 		# gabarit une liste des matières.
-		# TODO liste à créer
-		context['planning_colleurs'] = []
+		# TODO filtrer selon la permission de créer des colles ?
+		context['planning_colleurs'] = classe.enseignements.all().filter(
+				service__professeur=self.request.user,
+				collesenseignement__isnull=False)
 
 		return context
 

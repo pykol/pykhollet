@@ -1,6 +1,6 @@
 {% extends "pykol/base.html" %}
 {% load static %}
-{% block title %}Colles de {{ colleur }} − {{ matiere }} − {{ block.super }}{% endblock %}
+{% block title %}Colles de {{ object }} − {{ matiere }} − {{ block.super }}{% endblock %}
 {% block head %}
 <link  href="{% static 'fullcalendar/core/main.css' %}" rel="stylesheet">
 <link  href="{% static 'fullcalendar/daygrid/main.css' %}" rel="stylesheet">
@@ -15,7 +15,7 @@
 {{ block.super }}
 {% endblock %}
 {% block content %}
-<h2>Colles de {{ colleur }} en {{ matiere }}</h2>
+<h2>Colles de {{ object }} en {{ matiere }}</h2>
 
 <section>
   <form id="calendrier_colleur_form" method="post" action="">

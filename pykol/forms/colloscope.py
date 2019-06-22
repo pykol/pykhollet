@@ -321,3 +321,31 @@ class TrinomeDetailForm(forms.ModelForm):
 		model = Trinome
 		fields = ('nom', 'periode', 'etudiants',)
 		widgets = {'etudiants': forms.CheckboxSelectMultiple}
+
+class CalendrierColleurForm(forms.Form):
+	colle = forms.ModelChoiceField(queryset=None, required=False,
+			widget=forms.TextInput, disabled=True)
+	debut = forms.DateTimeField()
+	duree_etudiant = forms.DurationField()
+
+	def __init__(self, *args, **kwargs):
+		self.colleur = kwargs.pop('colleur')
+		self.enseignement = kwargs.pop('enseignement')
+		super().__init__(*args, **kwargs)
+		self.fields['colle'].queryset = Colle.objects.filter(
+			colledetails__actif=True,
+			colledetails__colleur=self.colleur,
+			enseignement=self.enseignement)
+
+class BaseCalendrierColleurFormSet(forms.BaseFormSet):
+	def __init__(self, *args, **kwargs):
+		form_kwargs = {
+			'colleur': kwargs.pop('colleur'),
+			'enseignement': kwargs.pop('enseignement'),
+		}
+		super().__init__(*args, **kwargs)
+		self.form_kwargs = form_kwargs
+
+CalendrierColleurFormset = forms.formset_factory(CalendrierColleurForm,
+	formset=BaseCalendrierColleurFormSet,
+	can_delete=True, can_order=False, extra=2)

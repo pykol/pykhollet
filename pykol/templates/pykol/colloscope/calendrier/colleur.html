@@ -21,7 +21,12 @@
   <form id="calendrier_colleur_form" method="post" action="">
     <p><input type="submit" value="Enregistrer le calendrier"></p>
     {% csrf_token %}
-    {{ colles_formset }}
+    <table>
+      {{ form }}
+    </table>
+    <template id="template_calendrier_colleur_form">
+      {{ form.empty_form }}
+    </template>
   </form>
 </section>
 {% endblock %}

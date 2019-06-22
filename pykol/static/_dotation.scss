@@ -1,0 +1,16 @@
+.dotation_matieres {
+  dl {
+    display: table-row;
+  }
+  dt {
+    display: none;
+  }
+  dd {
+    display: table-cell;
+  }
+  li:before {
+    content: none;
+  }
+  
+  display: table;
+}

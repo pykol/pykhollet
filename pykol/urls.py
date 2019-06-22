@@ -110,6 +110,23 @@ ects_urlpatterns = [
 	path('charger_grilles/', views.ects.grilles_charger, name='ects_grilles_charger'),
 ]
 
+dotation_urlpatterns = [
+	path('', views.dotation.BaseView.as_view(), name='dotation_base'),
+	path('classe/<slug:slug>/',
+		views.dotation.ClasseDetailView.as_view(),
+		name='dotation_classe_detail'),
+	path('compte/<int:pk>/', views.dotation.CompteDetailView.as_view(),
+		name='dotation_compte_detail'),
+	path('enseignement/<int:pk>/', views.dotation.EnseignementDetailView.as_view(),
+		name='dotation_enseignement_detail'),
+	path('ajout_heures_matiere/',
+		views.dotation.AjoutHeuresMatiereView.as_view(),
+		name='dotation_ajout_heures_matiere'),
+	path('ajout_heures_matiere/',
+		views.dotation.ParametresMatieresView.as_view(),
+		name='dotation_parametres_matieres'),
+]
+
 urlpatterns = [
 	path('', views.home, name='home'),
 	path('about/', views.mentions_legales, name='mentions_legales'),
@@ -123,4 +140,5 @@ urlpatterns = [
 	path('releves/', include(releves_urlpatterns)),
 	path('trinomes/', include(trinomes_urlpatterns)),
 	path('ects/', include(ects_urlpatterns)),
+	path('dotation/', include(dotation_urlpatterns)),
 ]

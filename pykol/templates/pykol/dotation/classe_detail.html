@@ -1,0 +1,58 @@
+{% extends "pykol/base.html" %}
+{% load timedelta %}
+{% block title %}Dotation en {{ object }} − {{ block.super }}{% endblock %}
+{% block content %}
+<h2>Dotation en {{ object }}</h2>
+
+<section>
+  <h3>Résumé</h3>
+  <ul>
+    <li>Heures théoriques : {{ heures_theoriques|heures }}</li>
+    <li>Heures utilisées : {{ heures_utilisees|heures }}</li>
+    <li>Heures restantes :
+      {% if object.compte_colles.decouvert_autorise %}
+      aucune limite n'est imposée pour le moment
+      {% else %}
+      {{ heures_restantes|heures }}
+      {% endif %}
+    </li>
+  </ul>
+</section>
+
+<section>
+  <h3>Dotation par matière</h3>
+  <ul class="dotation_matieres">
+    {% for dotation in dotations %}
+    <li>
+      <dl>
+        <dt>Matière :</dt>
+        <dd>{{ dotation.matiere }}</dd>
+        <dt>Heures théoriques :</dt>
+        <dd>{{ dotation.heures|heures }}</dd>
+        <dt>Heures utilisées :</dt>
+        <dd>{{ dotation.heures_colloscope|heures }}</dd>
+        <dt>Heures restantes :</dt>
+        <dd>{{ dotation.heures_restantes|heures }}</dd>
+      </dl>
+    </li>
+    {% endfor %}
+  </ul>
+
+  <h3>Ajouter des heures à une matière</h3>
+  <form method="post" action="{% url 'dotation_ajout_heures_matiere' %}">
+    {% csrf_token %}
+    {{ form_ajout_heures }}
+    <p><input type="submit" name="submit_ajout_heures" value="Ajouter des heures"></p>
+  </form>
+</section>
+
+<section>
+  <h3>Paramètres par matière</h3>
+  <form method="post" action="{% url 'dotation_parametres_matieres' %}">
+    {% csrf_token %}
+    {{ form_parametres_matieres }}
+    <p><input type="submit" name="submit_parametres_matieres"
+              value="Enregistrer les paramètres"></p>
+  </form>
+</section>
+{% endblock %}

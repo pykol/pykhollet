@@ -16,12 +16,6 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-from .home import home, mon_profil, mentions_legales
-from .classe import ClasseDetailView, ClasseListView
-from .etudiant import etudiant_detail_dispatch
-from . import colles
-from . import direction
-from . import colloscope
-from . import ects
-from . import generic
-from . import dotation
+from .base import BaseView, ClasseDetailView, CompteDetailView, \
+	EnseignementDetailView, AjoutHeuresMatiereView, \
+	ParametresMatieresView

@@ -85,7 +85,7 @@ class EtudiantDetailView(LoginRequiredMixin, generic.DetailView):
 				semaine = collenote.colle.semaine
 			else:
 				for sem in semaines:
-					if sem.debut <= collenote.horaire <= sem.fin:
+					if sem.debut <= collenote.horaire.date() <= sem.fin:
 						semaine = sem
 			notes[matiere].semaines[semaine].append(collenote.note)
 

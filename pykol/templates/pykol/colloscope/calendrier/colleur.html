@@ -22,10 +22,29 @@
     <p><input type="submit" value="Enregistrer le calendrier"></p>
     {% csrf_token %}
     <table>
-      {{ form }}
+      <thead>
+        <tr>
+          <th>Colle</th>
+          <th>Horaire</th>
+          <th>Durée de passage par étudiant</th>
+        </tr>
+      </thead>
+      {% for colle_form in form %}
+      <tr>
+        <td>{{ colle_form.colle }}</td>
+        <td>{{ colle_form.debut }}</td>
+        <td>{{ colle_form.duree_etudiant }}</td>
+      </tr>
+      {% endfor %}
     </table>
     <template id="template_calendrier_colleur_form">
-      {{ form.empty_form }}
+      {% with template_form=form.empty_form %}
+      <tr>
+        <td>{{ template_form.colle }}</td>
+        <td>{{ template_form.debut }}</td>
+        <td>{{ template_form.duree_etudiant }}</td>
+      </tr>
+      {% endwith %}
     </template>
   </form>
 </section>

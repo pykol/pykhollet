@@ -348,4 +348,4 @@ class BaseCalendrierColleurFormSet(forms.BaseFormSet):
 
 CalendrierColleurFormset = forms.formset_factory(CalendrierColleurForm,
 	formset=BaseCalendrierColleurFormSet,
-	can_delete=True, can_order=False, extra=2)
+	can_delete=True, can_order=False, extra=0)

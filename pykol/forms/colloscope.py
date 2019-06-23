@@ -23,6 +23,8 @@ from django import forms
 from django.forms import formset_factory, modelformset_factory, \
 		inlineformset_factory
 from django.db.models import Q
+from django.utils.dateparse import parse_datetime
+from django.utils.encoding import force_str
 
 from pykol.models.base import Matiere, Etudiant, Professeur, \
 		Enseignement, Annee
@@ -322,11 +324,25 @@ class TrinomeDetailForm(forms.ModelForm):
 		fields = ('nom', 'periode', 'etudiants',)
 		widgets = {'etudiants': forms.CheckboxSelectMultiple}
 
+class ISODateTimeInput(forms.DateTimeInput):
+	def format_value(self, value):
+		if isinstance(value, str):
+			return value
+		if value is not None:
+			return value.isoformat()
+		return ""
+
+class ISODateTimeField(forms.DateTimeField):
+	widget=ISODateTimeInput
+	def strptime(self, value, format):
+		return parse_datetime(force_str(value))
+
 class CalendrierColleurForm(forms.Form):
 	colle = forms.ModelChoiceField(queryset=None, required=False,
 			widget=forms.TextInput, disabled=True)
-	debut = forms.DateTimeField()
-	duree_etudiant = forms.DurationField()
+	debut = ISODateTimeField()
+	duree = forms.DurationField()
+	duree_etudiant = forms.DurationField(required=False)
 
 	def __init__(self, *args, **kwargs):
 		self.colleur = kwargs.pop('colleur')

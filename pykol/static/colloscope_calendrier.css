@@ -1,0 +1,25 @@
+.evenement_supprimer {
+  position: absolute;
+  top: 2px;
+  right: 2px;
+  border-radius: 50%;
+  background-color: white;
+  color: black;
+  width: 15px;
+  height: 15px;
+  font-size: 11px;
+  text-align: center;
+  cursor: pointer;
+  line-height: 15px;
+  vertical-align: middle;
+  z-index: 2;
+}
+
+input[name="duree_passage_defaut"] {
+  display: inline;
+  width: 6em;
+}
+
+#calendrier_colleur_formset {
+  display: none;
+}

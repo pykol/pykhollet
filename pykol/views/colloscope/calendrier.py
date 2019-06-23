@@ -17,8 +17,9 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 from django.views.generic import DetailView
-from django.views.generic.edit import FormMixin
+from django.views.generic.edit import FormMixin, ProcessFormView
 from django.shortcuts import get_object_or_404
+from django.urls import reverse
 
 from pykol.models.base import Enseignement, Professeur
 from pykol.models.colles import Colle
@@ -40,7 +41,8 @@ class CalendrierMatiereView(DetailView):
 
 		return context
 
-class CalendrierMatiereColleurView(FormMixin, DetailView):
+class CalendrierMatiereColleurView(FormMixin, DetailView,
+		ProcessFormView):
 	"""
 	Accès au calendrier d'un colleur dans une matière.
 	"""
@@ -51,7 +53,7 @@ class CalendrierMatiereColleurView(FormMixin, DetailView):
 
 	def get_form_kwargs(self):
 		form_kwargs = super().get_form_kwargs()
-		form_kwargs['colleur'] = self.object
+		form_kwargs['colleur'] = self.get_object()
 		form_kwargs['enseignement'] = self.get_enseignement()
 		return form_kwargs
 
@@ -59,11 +61,12 @@ class CalendrierMatiereColleurView(FormMixin, DetailView):
 		initial = []
 		for colle in Colle.objects.filter(
 				colledetails__actif=True,
-				colledetails__colleur=self.object,
-				enseignement=self.get_enseignement()):
+				colledetails__colleur=self.get_object(),
+				enseignement=self.get_enseignement()).order_by('pk'):
 			initial.append({
-				'colle': colle,
+				'colle': colle.pk,
 				'debut': colle.details.horaire,
+				'duree': colle.duree,
 				'duree_etudiant': colle.duree_etudiant,
 			})
 		return initial
@@ -75,3 +78,46 @@ class CalendrierMatiereColleurView(FormMixin, DetailView):
 		context = super().get_context_data(*args, **kwargs)
 		context['matiere'] = get_object_or_404(Enseignement, pk=self.kwargs['matiere_pk'])
 		return context
+
+	def post(self, *args, **kwargs):
+		self.object = self.get_object()
+		return super().post(*args, **kwargs)
+
+	def form_valid(self, formset):
+		"""
+		Sauvegarde de la liste des colles lorsque le formulaire est
+		valide.
+		"""
+		for form in formset.initial_forms:
+			colle = form.cleaned_data['colle']
+			if not form.has_changed() or colle is None:
+				continue
+
+			if form in formset.deleted_forms:
+				colle.annuler()
+			else:
+				colle.ajout_details(horaire=form.cleaned_data['debut'])
+				colle.duree = form.cleaned_data['duree']
+				colle.duree_etudiant = form.cleaned_data['duree_etudiant']
+				colle.save()
+
+		enseignement = self.get_enseignement()
+		colleur = self.object
+
+		for form in formset.extra_forms:
+			colle = Colle(
+				classe=enseignement.classe,
+				enseignement=enseignement,
+				colles_ens=enseignement.collesenseignement_set.first(),
+				duree=form.cleaned_data['duree'],
+				duree_etudiant=form.cleaned_data['duree_etudiant'],
+			)
+			colle.save()
+			colle.ajout_details(colleur=colleur,
+					horaire=form.cleaned_data['debut'])
+
+		return super().form_valid(formset)
+
+	def get_success_url(self):
+		return reverse('colloscope_calendrier_matiere', kwargs={'pk':
+			self.get_enseignement().pk})

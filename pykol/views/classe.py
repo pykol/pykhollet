@@ -88,9 +88,10 @@ class ClasseDetailView(LoginRequiredMixin, generic.DetailView):
 		# peuvent programmer des colles dans la classe. On passe au
 		# gabarit une liste des matières.
 		# TODO filtrer selon la permission de créer des colles ?
-		context['planning_colleurs'] = classe.enseignements.all().filter(
+		context['planning_colleurs'] = classe.enseignements.filter(
 				service__professeur=self.request.user,
-				collesenseignement__isnull=False)
+				collesenseignement__isnull=False).distinct().order_by(
+					'matiere')
 
 		return context
 

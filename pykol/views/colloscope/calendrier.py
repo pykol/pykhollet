@@ -20,17 +20,28 @@ from django.views.generic import DetailView
 from django.views.generic.edit import FormMixin, ProcessFormView
 from django.shortcuts import get_object_or_404
 from django.urls import reverse
+from django.contrib.auth.mixins import UserPassesTestMixin
 
 from pykol.models.base import Enseignement, Professeur
 from pykol.models.colles import Colle
 from pykol.forms.colloscope import CalendrierColleurFormset
+from pykol.lib.auth import perm_colloscope
 
-class CalendrierMatiereView(DetailView):
+class PermissionColloscopeMixin(UserPassesTestMixin):
+	def test_func(self):
+		enseignement = self.get_enseignement()
+		return perm_colloscope(self.request.user,
+				enseignement.classe, enseignement.matiere)
+
+class CalendrierMatiereView(PermissionColloscopeMixin, DetailView):
 	"""
 	Accès au calendrier de tous les colleurs dans une matière.
 	"""
 	model = Enseignement
 	template_name = 'pykol/colloscope/calendrier/matiere.html'
+
+	def get_enseignement(self):
+		return self.get_object()
 
 	def get_context_data(self, *args, **kwargs):
 		context = super().get_context_data(*args, **kwargs)
@@ -41,8 +52,8 @@ class CalendrierMatiereView(DetailView):
 
 		return context
 
-class CalendrierMatiereColleurView(FormMixin, DetailView,
-		ProcessFormView):
+class CalendrierMatiereColleurView(PermissionColloscopeMixin,
+		FormMixin, DetailView, ProcessFormView):
 	"""
 	Accès au calendrier d'un colleur dans une matière.
 	"""

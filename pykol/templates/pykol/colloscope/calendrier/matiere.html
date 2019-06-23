@@ -19,5 +19,10 @@
   <h3>Ajouter des colles à un nouveau colleur</h3>
   <p>Pour accéder au calendrier des colles pour un nouveau colleur dans
   cette matière, choisissez son nom dans la liste ci-dessous.</p>
+  <form method="post" action="">
+    {% csrf_token %}
+    {{ form }}
+    <p><input type="submit" value="Accéder au calendrier"></p>
+  </form>
 </section>
 {% endblock %}

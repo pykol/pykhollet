@@ -1,0 +1,17 @@
+{% extends 'pykol/base.html' %}
+{% block title %}Noter la colle du {{ colle.details.horaire }} − {{ block.super }}{% endblock %}
+{% block content %}
+<h2>Noter la colle du {{ colle.details.horaire }}
+  <small>− {{ colle.classe }}</small>
+</h2>
+
+<section>
+  <p>Aucun étudiant n'est inscrit dans cette colle. Vous ne pouvez donc pas
+  encore la noter.</p>
+
+  <p>Avant de noter la colle, vous devez donc retourner sur la <a
+    href="{% url 'colle_detail' colle.pk %}">page de détail de la
+    colle</a> pour sélectionner la liste des étudiants que vous avez
+  interrogés.</p>
+</section>
+{% endblock %}

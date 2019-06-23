@@ -111,6 +111,11 @@ def colle_declarer(request, pk):
 			colle.effectuer()
 		return redirect_next('colle_detail', colle.pk, request=request)
 
+	# Les colles sans élèves ne peuvent pas être notées.
+	if len(colle.details.eleves.all()) == 0:
+		return render(request, 'pykol/colles/noter_sans_eleves.html',
+			context={'colle': colle})
+
 	# On peuple le formulaire avec les élèves qui n'ont pas encore été
 	# notés.
 	eleves_sans_note = colle.details.eleves.difference(

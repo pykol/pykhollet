@@ -27,8 +27,12 @@
     <tr>
       <th>Durée</th>
       <td>{{ colle.duree }}</td>
+      <th>Durée de passage par étudiant</th>
+      <td>{{ colle.get_duree_etudiant }}</td>
+    </tr>
+    <tr>
       <th>État</th>
-      <td>{{ colle.get_etat_display }}</td>
+      <td colspan="3">{{ colle.get_etat_display }}</td>
     </tr>
     <tr>
       <td colspan="4">

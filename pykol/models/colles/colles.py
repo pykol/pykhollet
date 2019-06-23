@@ -204,7 +204,7 @@ class Colle(AbstractBaseColle):
 		"""Renvoie le colleur qui assure cette colle"""
 		return self.details.colleur
 
-	def _get_duree_etudiant(self):
+	def get_duree_etudiant(self):
 		"""
 		Détermine la durée d'interrogation par étudiant
 
@@ -213,7 +213,7 @@ class Colle(AbstractBaseColle):
 		CollesEnseignement lié.
 		"""
 		if self.duree_etudiant is None:
-			return self.colles_ens.duree_frequentielle
+			return self.colles_ens.duree
 		else:
 			return self.duree_etudiant
 
@@ -226,7 +226,7 @@ class Colle(AbstractBaseColle):
 			self.duree = timedelta(hours=1)
 		else:
 			self.duree = self.details.eleves.count() * \
-					self._get_duree_etudiant()
+					self.get_duree_etudiant()
 		self.save()
 
 	def __str__(self):
@@ -340,7 +340,7 @@ class Colle(AbstractBaseColle):
 		if self.mode == Colle.MODE_TD:
 			return self.duree
 		else:
-			return len(self.details.eleves.all()) * self._get_duree_etudiant()
+			return len(self.details.eleves.all()) * self.get_duree_etudiant()
 
 	def comptabiliser(self, compte_source=None, valider=True):
 		"""

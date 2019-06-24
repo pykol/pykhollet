@@ -401,7 +401,7 @@ class Colle(AbstractBaseColle):
 		# plusieurs fois.
 		old_mv = Mouvement.objects.filter(colle=self,
 				lignes__lettrage__isnull=True,
-				lignes__duree__gte=timedelta().order_by('-pk').first()
+				lignes__duree__gte=timedelta()).order_by('-pk').first()
 		retour_mv = old_mv.virement_retour()
 		retour_mv.colle = self
 		retour_mv.save()

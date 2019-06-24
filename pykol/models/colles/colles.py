@@ -395,9 +395,13 @@ class Colle(AbstractBaseColle):
 
 	def annuler_mouvement(self):
 		# Recherche du mouvement actuel qui dote cette colle.
-		old_mv = Mouvement.objects.get(colle=self,
+		# Le order_by('-pk').first() est un hack affreux mais je n'ai
+		# pas mieux pour le moment : sans lui, on récupère aussi les
+		# mouvements d'annulation si la colle a déjà été déplacée
+		# plusieurs fois.
+		old_mv = Mouvement.objects.filter(colle=self,
 				lignes__lettrage__isnull=True,
-				lignes__duree__gte=timedelta())
+				lignes__duree__gte=timedelta().order_by('-pk').first()
 		retour_mv = old_mv.virement_retour()
 		retour_mv.colle = self
 		retour_mv.save()

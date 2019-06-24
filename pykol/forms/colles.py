@@ -41,7 +41,7 @@ class ColleNoteForm(forms.ModelForm):
 		if not note.horaire:
 			note.horaire = timezone.now()
 		if not note.duree:
-			note.duree = note.colle.colles_ens.duree
+			note.duree = note.colle.get_duree_etudiant()
 
 		if commit:
 			note.save()

@@ -20,7 +20,8 @@ from django.views.generic import DetailView
 from django.views.generic.edit import FormMixin, ProcessFormView
 from django.shortcuts import get_object_or_404, redirect
 from django.urls import reverse
-from django.contrib.auth.mixins import UserPassesTestMixin
+from django.contrib.auth.mixins import UserPassesTestMixin, \
+		LoginRequiredMixin
 
 from pykol.models.base import Enseignement, Professeur
 from pykol.models.colles import Colle
@@ -28,7 +29,7 @@ from pykol.forms.colloscope import CalendrierColleurFormset, \
 		SelectColleurForm
 from pykol.lib.auth import perm_colloscope
 
-class PermissionColloscopeMixin(UserPassesTestMixin):
+class PermissionColloscopeMixin(LoginRequiredMixin, UserPassesTestMixin):
 	def test_func(self):
 		enseignement = self.get_enseignement()
 		return perm_colloscope(self.request.user,

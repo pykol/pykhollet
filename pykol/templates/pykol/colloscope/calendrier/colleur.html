@@ -28,7 +28,8 @@
     pour les nouvelles colles :</label>
   <input type="text" name="duree_passage_defaut" id="duree_passage_defaut"
          value="20"> minutes.</p>
-  <form id="calendrier_colleur_form" method="post" action="">
+  <form id="calendrier_colleur_form" method="post" action=""
+    autocomplete="off">
     <p><input type="submit" value="Enregistrer le calendrier"></p>
     {% csrf_token %}
     {{ form.management_form }}

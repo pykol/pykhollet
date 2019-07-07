@@ -51,6 +51,8 @@ def releve_creer(request):
 
 	for colle in colles_faites:
 		releve.ajout_colle(colle)
+	
+	releve.comptabiliser()
 
 	# On redirige ensuite vers la vue qui affiche le détail de ce relevé
 	return redirect('releve_detail', pk=releve.pk)

@@ -49,6 +49,10 @@ class ColleReleve(models.Model):
 	etablissement = models.ForeignKey(Etablissement,
 		on_delete=models.CASCADE)
 
+	# Les heures correspondant à une colle effectuée se trouvent sur le
+	# compte de colles effectuées du colleur. Lorsque la colle est
+	# relevée, ces heures sont transférées vers un compte spécifique au
+	# relevé, désigné par le champ "compte_colles".
 	compte_colles = models.ForeignKey(Compte, on_delete=models.PROTECT)
 
 	ETAT_NOUVEAU = 0
@@ -69,12 +73,13 @@ class ColleReleve(models.Model):
 		relevé, on en crée un automatiquement en fonction de
 		l'établissement.
 		"""
-		if self.compte_colles is None:
-			self.compte_colles = Compte(
+		if self.compte_colles_id is None:
+			compte_colles = Compte(
 				categorie=Compte.CATEGORIE_ACTIFS,
 				parent=self.etablissement.compte_releves,
 				nom=str(self))
-			self.compte_colles.save()
+			compte_colles.save()
+			self.compte_colles = compte_colles
 		super().save(*args, **kwargs)
 
 	class Meta:
@@ -95,6 +100,14 @@ class ColleReleve(models.Model):
 			self.date_paiement = date
 		self.etat = ColleReleve.ETAT_PAYE
 		self.save()
+
+	@transaction.atomic
+	def comptabiliser(self):
+		"""
+		Valide les écritures comptables correspond aux colles relevées.
+		"""
+		for ligne in self.lignes.all():
+			ligne.mouvement_ligne.mouvement.valider()
 
 	def maj_etat(self, date=None):
 		"""
@@ -127,14 +140,26 @@ class ColleReleve(models.Model):
 		if colle.releve is not None:
 			return
 
-		ligne, _ = ColleReleveLigne.objects.get_or_create(
-				releve=self,
-				colleur=colle.colleur,
-				taux=ColleReleveLigne.taux_colle(colle.classe))
+		# On ne passe pas par ColleReleveLigne.objects.get_or_create
+		# afin d'être certain d'appeler la méthode save() de la ligne en
+		# cas de création. Cette méthode initialise les mouvements
+		# comptables.
+		taux_colle = ColleReleveLigne.taux_colle(colle.classe)
+		try:
+			ligne = self.lignes.get(
+					colleur=colle.colleur,
+					taux=taux_colle)
+		except ColleReleveLigne.DoesNotExist:
+			ligne = ColleReleveLigne(
+					releve=self,
+					colleur=colle.colleur,
+					taux=taux_colle)
+			ligne.save()
+
+		ligne.ajout_colle(colle)
 		colle.etat = Colle.ETAT_RELEVEE
 		colle.releve = self
 		colle.save()
-		ligne.ajout_colle(colle)
 
 	def lignes_par_prof(self):
 		return self.lignes.order_by('colleur__last_name',
@@ -204,7 +229,7 @@ class ColleReleveLigne(ColleDureeTaux):
 		relevé. Il est nécessaire de sauvegarder manuellement l'instance
 		de ColleReleveLigne par la suite, cette méthode ne le fait pas.
 		"""
-		if self.mouvement_ligne is not None:
+		if self.mouvement_ligne_id is not None:
 			return
 
 		mouvement = Mouvement(
@@ -214,14 +239,16 @@ class ColleReleveLigne(ColleDureeTaux):
 			)
 		mouvement.save()
 
-		self.mouvement_ligne = MouvementLigne(
+		mouvement_ligne = MouvementLigne(
 			compte=self.releve.compte_colles,
 			mouvement=mouvement,
 			duree=timedelta(),
 			duree_interrogation=timedelta(),
-			taux=taux,
+			taux=self.taux,
 			motif=str(self.releve))
-		self.mouvement_ligne.save()
+		mouvement_ligne.save()
+
+		self.mouvement_ligne = mouvement_ligne
 
 	def save(self, *args, **kwargs):
 		"""
@@ -231,14 +258,15 @@ class ColleReleveLigne(ColleDureeTaux):
 		l'initialise avant de sauvegarder dans la base.
 		"""
 		self._init_mouvement()
-		self.save(*args, **kwargs)
+		super().save(*args, **kwargs)
 
 	def ajout_colle(self, colle):
 		"""
-		Ajout d'une Colle à la ligne de relevé actuelle
+		Ajout d'une Colle à la ligne de relevé actuelle.
+
+		Cette fonction ne vérifie rien du tout (ni que le colleur est
+		le même, ni que la colle a été notée, ni le code de paiement).
 		"""
-		# Cette fonction ne vérifie rien du tout (ni que le colleur est
-		# le même, ni que la colle a été notée, ni le code de paiement).
 		if colle.mode == Colle.MODE_INTERROGATION:
 			duree_interrogation = timedelta()
 			for collenote in colle.collenote_set.all():
@@ -250,11 +278,13 @@ class ColleReleveLigne(ColleDureeTaux):
 		self.duree_interrogation += duree_interrogation
 
 		# Augmentation du mouvement comptable avec cette colle.
+		# On crée d'abord le mouvement comptable s'il n'existait pas.
 		self._init_mouvement()
 
 		# On augmente la ligne de crédit des colles effectuées...
 		self.mouvement_ligne.duree = self.duree
 		self.mouvement_ligne.duree_interrogation = self.duree_interrogation
+		self.mouvement_ligne.save()
 
 		# et on compense par une nouvelle ligne de débit.
 		MouvementLigne(

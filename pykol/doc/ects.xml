@@ -64,7 +64,7 @@
       </figure>
 
       <para>
-        Vous pouvez supprimer un jury après sa création. Cette suppression est définitive. Si aucun professeur n'a saisi de mention pour ce jury, pyKol le supprime immédiatement. Si, au contraire, certaines mentions sont déjà saisies, elles seront perdues lors de la suppression du jury : pyKol vous demandera de confirmer la suppression.
+        Vous pouvez supprimer un jury après sa création. Cette suppression est définitive. Si aucun professeur n'a saisi de mention pour ce jury, pyKol le supprime immédiatement. Si au contraire certaines mentions sont déjà saisies, elles seront perdues lors de la suppression du jury : pyKol vous demandera de confirmer la suppression.
       </para>
     </section>
 
@@ -197,7 +197,19 @@
         </question>
         <answer>
           <para>
-            Rien de tel n'est prévu. La direction peut définir la mention globale pour chaque étudiant ainsi que les mentions des cours pour lesquels aucun professeur n'est renseigné. Cependant, si un professeur a refusé les crédits de sa matière, en attribuant la mention Insuffisant, mais que le jury décide de valider l'ensemble des crédits par compensation, alors la mention Insuffisant sera changée en Passable.
+            Rien de tel n'est prévu. La direction peut définir la mention globale pour chaque étudiant ainsi que les mentions des cours pour lesquels aucun professeur n'est renseigné. Un professeur peut refuser les crédits de sa matière à un étudiant en lui en attribuant la mention Insuffisant. Dans ce cas le jury a le choix entre :
+            <itemizedlist>
+              <listitem>
+                <para>
+                  laisser tel quel ce refus. Dans ce cas, l'attestation finale délivrée l'étudiant indiquera que l'année dans son ensemble n'est pas valider. Seuls les crédits validés par les autres professeurs seront attribués à l'étudiant. L'attestation ne porte dans ce cas pas de mention globale ;
+                </para>
+              </listitem>
+              <listitem>
+                <para>
+                  ou décider que le niveau dans les matières validées permet de compenser le niveau dans les matières non validées. Dans ce cas, même si un professeur avait refusé les crédits de sa matière, l'ensemble des crédits de l'année sont attribués à l'étudiant. Le jury décide d'une mention globale pour l'année. Sur l'attestation <acronym>ECTS</acronym> délivrée à l'étudiant, la mention Insuffisant présente sur les matières non validées sera changée automatiquement en Passable mais en indiquant explicitement que cette validation est obtenue par compensation.
+                </para>
+              </listitem>
+            </itemizedlist>
           </para>
         </answer>
       </qandaentry>
@@ -210,7 +222,7 @@
         </question>
         <answer>
           <para>
-            pyKol reprend les grilles ECTS publiées au bulletin officiel de l'Éducation nationale (voir <citation>BO-2008-ECTS</citation>) afin d'attribuer les crédits aux différentes matières. Il arrive dans certaines filières qu'un enseignement donné puisse être suivi par des étudiants au titre d'une option obligatoire et par d'autres étudiants au titre d'une option facultative. Dans ce cas, le nombre de crédits varie selon l'étudiant. Afin de savoir quelles options sont suivies par les étudiants, pyKol utilise les données de la base de données <acronym>SIECLE</acronym> de l'administration. En cas d'incohérence, il faut vérifier auprès de l'administration que cette base est correctement renseignée.
+            pyKol reprend les grilles ECTS publiées au bulletin officiel de l'Éducation nationale (voir <citation>BO-2008-ECTS</citation>) afin d'attribuer les crédits aux différentes matières. Il arrive dans certaines filières qu'un enseignement donné puisse être suivi par des étudiants au titre d'une option obligatoire et par d'autres étudiants au titre d'une option facultative. Dans ce cas, le nombre de crédits varie selon l'étudiant. Afin de savoir quelles options sont suivies par les étudiants, pyKol utilise les données de la base de données <acronym>SIECLE</acronym> de l'établissement. En cas d'incohérence, il faut vérifier auprès de l'administration que cette base est correctement renseignée.
           </para>
           <para>
             La réglementation prévoit que les grilles ECTS ne sont qu'indicatives et qu'elles peuvent être modulées en fonction des choix des équipes. pyKol ne fournit pour l'instant pas d'interface pour modifier les crédits donnés pour chaque matière (même si, dans la structure du programme, de telles modifications sont possibles).

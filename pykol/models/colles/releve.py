@@ -302,7 +302,7 @@ class ColleReleveLigne(ColleDureeTaux):
 		# On valide d'abord le mouvement comptable, ce qui est
 		# susceptible d'échouer si les soldes des comptes ne permettent
 		# pas le mouvement.
-		self.mouvement.valider()
+		self.mouvement_ligne.mouvement.valider()
 
 		if date is None:
 			self.date_paiement = localtime()

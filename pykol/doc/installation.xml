@@ -9,6 +9,24 @@
 
   <section>
     <title>Choix d'un hébergement</title>
+
+    <para>
+      pyKol est programmé en Python 3 et utilise Django 2.1, ainsi que plusieurs autres bibliothèques Python. Tout hébergeur qui permet de faire tourner une application Django devrait convenir pour héberger une instance de pyKol.
+    </para>
+    <para>
+      Le programme a été principalement testé avec une base de données PostgreSQL, ce qui en fait le choix recommandé. Cependant, il est très probable que tout fonctionne correctement avec un autre gestionnaire de base de données. Pour une utilisation en prodction, les performances de sqlite3 seront cependant probablement assez rapidement trop faibles dès que la base de données commencera avoir taille conséquente (rien que la liste des établissements, chargée dans la base, contient déjà plusieurs milliers d'entrées).
+    </para>
+    <informalexample>
+      <para>
+        Pour l'année scolaire 2018/2019, pyKol a été utilisé pour gérer les colles d'environ 500 étudiants répartis sur 15 classes, ce qui représente environ 10000 heures de colles. Le serveur était fourni par l'hébergeur Gandi sur une instance M, dont les performances étaient largement suffisantes pour cet usage. Le serveur est en effet relativement peu sollicité : les plus gros pics de charge proviennent de l'installation de mises à jour et non de l'usage au quotidien. Cette solution présente l'avantage qu'il n'y a aucune maintenance du serveur à assurer en dehors des mises à jour de pyKol lui-même et de ses dépendances.
+      </para>
+    </informalexample>
+    <para>
+      Il est également envisageble de louer un serveur dédié, voire d'héberger un serveur directement dans l'établissement si le réseau de l'établissement le permet.
+    </para>
+    <para>
+      Pour préserver la sécurité et la confidentialité des échanges, il est indispensable de choisir un hébergement qui permet les connexions en HTTPS. Sans cela, plusieurs données sensibles circuleraient sur le réseau : mots de passe des utilisateurs, données des étudiants (noms, prénoms, classes et toutes les informations relatives à leur scolarité présentes dans pyKol). Enfin, un hébergement sans HTTPS est de plus vulnérable à toutes les attaques de type Man-In-The-Middle qui permettent à un attaquant de modifier à peu près n'importe quelle requête légitime pour insérer ses propres données. Bref : ayez un peu de respect pour vos utilisateurs, n'envisagez jamais d'utiliser pyKol sans HTTPS.
+    </para>
   </section>
 
   <section>
@@ -17,5 +35,13 @@
 
   <section>
     <title>Mises à jour</title>
+  </section>
+
+  <section>
+    <title>Personnalisation de l'application</title>
+  </section>
+
+  <section>
+    <title>Exemple de déploiement sur une instance Simple Hosting chez Gandi</title>
   </section>
 </chapter>

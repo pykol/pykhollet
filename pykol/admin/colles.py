@@ -64,6 +64,8 @@ class ColleNoteInline(admin.TabularInline):
 class ColleAdmin(admin.ModelAdmin):
 	inlines = [ColleDetailsInline, ColleNoteInline]
 	search_fields = ('classe',)
+	raw_id_fields = ('ligne_dotation',)
+	list_display = ('__str__', 'colleur', 'classe', 'enseignement', 'etat')
 
 @register(CollesEnseignement)
 class CollesEnseignementAdmin(admin.ModelAdmin):

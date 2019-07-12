@@ -25,7 +25,7 @@ from django.utils import timezone
 from pykol.models.base import Classe, Professeur, Matiere, Etudiant, \
 		Enseignement, Periode
 from pykol.models.fields import NoteField
-from pykol.models.comptabilite import Mouvement
+from pykol.models.comptabilite import Mouvement, MouvementLigne
 
 # Liste des jours de la semaine, numérotation ISO
 LISTE_JOURS = enumerate(["lundi", "mardi", "mercredi", "jeudi",
@@ -186,6 +186,18 @@ class Colle(AbstractBaseColle):
 			on_delete=models.SET_NULL)
 	releve = models.ForeignKey('ColleReleve', blank=True, null=True,
 			on_delete=models.SET_NULL)
+
+	# Intégration de la comptabilité. Le financement d'une colle doit
+	# être prévu par une ligne qui crédite un compte (à priori celui du
+	# colleur). Cette ligne donne les durées maximales attribuées à la
+	# colle. Le colleur peut effectuer des modifications sur sa colle
+	# tant que la dotation le permet. Si la dotation ne prévoit que le
+	# passage de deux étudiants dans la durée d'interrogation, le
+	# colleur ne pourra pas en ajouter un troisième. Cette modification
+	# devra alors être effectuée par un professeur qui dispose des
+	# droits suffisants sur le compte de dotation de la classe.
+	ligne_dotation = models.ForeignKey(MouvementLigne,
+		verbose_name="ligne de dotation", on_delete=models.PROTECT)
 
 	# On remplace le gestionnaire objects, mais en prenant soin de
 	# laisser le gestionnaire par défaut all_objects en première

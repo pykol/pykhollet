@@ -66,7 +66,7 @@ class ClasseDetailView(LoginRequiredMixin, DetailView):
 		context = super().get_context_data(**kwargs)
 		classe = self.get_object()
 
-		etudiants = classe.etudiant_set.order_by('last_name',
+		etudiants = classe.etudiants.order_by('last_name',
 				'first_name')
 		context['etudiant_list'] = etudiants.exclude(sortie__isnull=False)
 		context['etudiant_demissionnaire_list'] = etudiants.demissionnaire()

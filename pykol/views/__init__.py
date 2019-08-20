@@ -17,7 +17,7 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 from .home import home, mon_profil, mentions_legales
-from .classe import ClasseDetailView, ClasseListView
+from . import classe
 from .etudiant import etudiant_detail_dispatch
 from . import colles
 from . import direction

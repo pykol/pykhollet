@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 # pyKol - Gestion de colles en CPGE
-# Copyright (c) 2018 Florian Hatat
+# Copyright (c) 2018-2019 Florian Hatat
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Affero General Public License as published by
@@ -18,8 +18,9 @@
 
 from collections import namedtuple, OrderedDict
 
-from django.views import generic
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.views.generic import DetailView, ListView
+from django.contrib.auth.mixins import LoginRequiredMixin, \
+		PermissionRequiredMixin
 from django.db.models import IntegerField, Func
 
 from pykol.models.base import Classe
@@ -98,5 +99,6 @@ class ClasseDetailView(LoginRequiredMixin, DetailView):
 
 		return context
 
-class ClasseListView(LoginRequiredMixin, generic.ListView):
+class ClasseListView(LoginRequiredMixin, ListView):
 	model = Classe
+	template_name = 'pykol/classe/list.html'

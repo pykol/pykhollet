@@ -54,6 +54,16 @@
   {% endif %}
 </section>
 
+{% if perms.pykol.change_enseignement %}
+<section>
+  <h3>Paramétrage de la classe</h3>
+  <ul>
+    <li><a href="{% url 'classe_enseignement' classe.slug %}">Définir
+        les enseignants de la classe</a></li>
+  </ul>
+</section>
+{% endif %}
+
 {% if classe_perm.view_resultats %}
 <section>
   <h3>Notes de colles</h3>

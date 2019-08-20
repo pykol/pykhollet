@@ -1,0 +1,16 @@
+{% extends "pykol/base.html" %}
+{% load lien_email %}
+{% block title %}Liste des enseignants en {{ object.nom }} − {{ block.super }}{% endblock %}
+{% block content %}
+<h2>Liste des enseignants en {{ object.nom }}</h2>
+
+<section>
+  <p>Cette page vous permet de définir la liste des enseignants qui
+  interviennent en {{ object }}. Les enseignants peuvent :</p>
+  <ul>
+    <li>accéder aux résultats des colles de leurs étudiants,</li>
+    <li>modifier les colles pour leur matière,</li>
+    <li>attribuer les mentions ECTS.</li>
+  </ul>
+</section>
+{% endblock content %}

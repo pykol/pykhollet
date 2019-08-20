@@ -25,6 +25,7 @@ from django.db.models import IntegerField, Func
 
 from pykol.models.base import Classe
 from pykol.models.colles import Trinome
+from pykol.forms.classe import ServiceFormset
 
 class MaybeCast(Func):
 	"""
@@ -102,3 +103,12 @@ class ClasseDetailView(LoginRequiredMixin, DetailView):
 class ClasseListView(LoginRequiredMixin, ListView):
 	model = Classe
 	template_name = 'pykol/classe/list.html'
+
+class ClasseServiceView(LoginRequiredMixin,
+		PermissionRequiredMixin, DetailView):
+	"""
+	Vue qui permet de définir la liste des professeurs de la classe.
+	"""
+	model = Classe
+	permission_required = ('pykol.change_service',)
+	template_name = 'pykol/classe/service.html'

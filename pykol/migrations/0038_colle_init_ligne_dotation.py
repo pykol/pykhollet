@@ -25,5 +25,5 @@ class Migration(migrations.Migration):
 
     operations = [
 		migrations.RunPython(colle_ligne_dotation_init,
-			reverse_colle_ligne_dotation_init),
+			reverse_colle_ligne_dotation_init, elidable=True),
     ]

@@ -206,14 +206,25 @@ class Etudiant(User):
 			blank=True, null=True,
 			verbose_name="Établissement d'origine",
 			on_delete=models.SET_NULL)
+
+	# Dernière classe à laquelle a appartenu l'étudiant
 	classe = models.ForeignKey('Classe', on_delete=models.PROTECT)
+
+	# Date d'entrée dans l'établissement
 	entree = models.DateField(null=True, blank=True,
 			verbose_name="entrée")
+
+	# Date de sortie de l'établissement
 	sortie = models.DateField(null=True, blank=True)
+
+	# Numéro INE de l'étudiant. On ne se sert pas de ce numéro comme clé
+	# primaire car, dans quelques rares cas, il n'est pas encore
+	# attribué au moment de l'inscription.
 	ine = models.CharField(max_length=11, verbose_name="INE (numéro d'étudiant)",
 			unique=True, blank=True, null=True)
 	numero_siecle = models.CharField(max_length=30,
 			verbose_name="Numéro interne SIECLE")
+
 	options = models.ManyToManyField('Matiere', through='OptionEtudiant')
 
 	objects = EtudiantManager()

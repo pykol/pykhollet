@@ -27,8 +27,8 @@ from pykol.models.colles import Trinome
 
 class MaybeCast(Func):
 	"""
-	Convertit le début d'une chaine en entier. S'il n'y a pas de
-	chiffres au début, renvoie None.
+	Fonction SQL qui convertit le début d'une chaine en entier. S'il n'y
+	a pas de chiffres au début, renvoie None.
 	"""
 	function = "CAST"
 	template = '%(function)s(%(expressions)s AS %(db_type)s)'
@@ -56,7 +56,10 @@ ClassePerm = namedtuple('ClassePerm',
 		'change_trinome', 'change_semaine', 'change_creneau',
 		'change_roulement'))
 
-class ClasseDetailView(LoginRequiredMixin, generic.DetailView):
+class ClasseDetailView(LoginRequiredMixin, DetailView):
+	"""
+	Vue générale d'une classe
+	"""
 	model = Classe
 
 	def get_context_data(self, **kwargs):

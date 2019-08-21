@@ -26,9 +26,11 @@ class ServiceForm(ModelForm):
 	professeur et l'enseignement.
 	"""
 	def __init__(self, *args, **kwargs):
-		classe = kwargs.pop('classe_qs')
-		if classe is not None:
+		classe_qs = kwargs.pop('classe_qs', None)
+		super().__init__(*args, **kwargs)
+		if classe_qs is not None:
 			self.fields['enseignement'].queryset = classe_qs.enseignements
+
 	class Meta:
 		model = Service
 		fields = ('professeur', 'enseignement',)

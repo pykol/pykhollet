@@ -18,12 +18,15 @@
 
 from collections import namedtuple, OrderedDict
 
-from django.views.generic import DetailView, ListView
+from django.views.generic import DetailView, ListView, FormView
+from django.views.generic.detail import SingleObjectMixin, \
+		SingleObjectTemplateResponseMixin
 from django.contrib.auth.mixins import LoginRequiredMixin, \
 		PermissionRequiredMixin
 from django.db.models import IntegerField, Func
+from django.urls import reverse
 
-from pykol.models.base import Classe
+from pykol.models.base import Classe, Service
 from pykol.models.colles import Trinome
 from pykol.forms.classe import ServiceFormset
 
@@ -106,10 +109,32 @@ class ClasseListView(LoginRequiredMixin, ListView):
 	template_name = 'pykol/classe/list.html'
 
 class ClasseServiceView(LoginRequiredMixin,
-		PermissionRequiredMixin, DetailView):
+		PermissionRequiredMixin, SingleObjectMixin,
+		SingleObjectTemplateResponseMixin,
+		FormView):
 	"""
 	Vue qui permet de définir la liste des professeurs de la classe.
 	"""
 	model = Classe
 	permission_required = ('pykol.change_service',)
 	template_name = 'pykol/classe/service.html'
+	form_class = ServiceFormset
+
+	def get_success_url(self):
+		return reverse('classe_service', args=(self.get_object().slug,))
+
+	def dispatch(self, *args, **kwargs):
+		self.object = self.get_object()
+		return super().dispatch(*args, **kwargs)
+
+	def get_form_kwargs(self):
+		kwargs = super().get_form_kwargs()
+		classe = self.get_object()
+		kwargs['form_kwargs'] = {'classe_qs': classe}
+		kwargs['queryset'] = Service.objects.filter(enseignement__classe=classe
+			).order_by('enseignement__matiere')
+		return kwargs
+
+	def form_valid(self, form):
+		form.save()
+		return super().form_valid(form)

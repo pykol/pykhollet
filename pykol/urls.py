@@ -68,7 +68,7 @@ classes_urlpatterns = [
 	path('<slug:slug>/resultats', views.colles.classe_resultats, name='classe_colle_resultats'),
 	path('<slug:slug>/periode_notation', views.colles.periode_notation,
 		name='classe_periode_notation'),
-	path('<slug:slug>/enseignement', views.classe.ClasseEnseignementView.as_view(), name='classe_enseignement'),
+	path('<slug:slug>/service', views.classe.ClasseServiceView.as_view(), name='classe_service'),
 ]
 
 etudiants_urlpatterns = [

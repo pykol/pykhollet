@@ -12,5 +12,24 @@
     <li>modifier les colles pour leur matière,</li>
     <li>attribuer les mentions ECTS.</li>
   </ul>
+
+  <form method="post" action="">
+    {% csrf_token %}
+    {{ form.management_form }}
+    <ul class="formset">
+      {% for form in form %}
+      <li>
+        <ul>
+          {{ form.as_ul }}
+        </ul>
+      </li>
+      {% endfor %}
+    </ul>
+    <p><input type="submit" value="Enregistrer la liste"></p>
+
+    <template id="form-template">
+      {{ form.empty_form.as_ul }}
+    </template>
+  </form>
 </section>
 {% endblock content %}

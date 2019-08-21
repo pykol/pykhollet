@@ -224,3 +224,22 @@ fieldset {
     }
   }
 }
+
+ul.formset {
+  display: flex;
+  flex-direction: column;
+
+  li {
+    &::before {
+      content: none;
+    }
+  }
+  & > li > ul {
+    display: flex;
+    flex-direction: row;
+  }
+
+  label {
+    display: none;
+  }
+}

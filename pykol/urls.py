@@ -20,6 +20,7 @@ from django.conf.urls import url
 from django.urls import path, include
 
 from . import views
+from .urls_api import api_urlpatterns
 
 colles_urlpatterns = [
 	path('', views.colles.colle_list, name='colle_list'),
@@ -142,4 +143,5 @@ urlpatterns = [
 	path('trinomes/', include(trinomes_urlpatterns)),
 	path('ects/', include(ects_urlpatterns)),
 	path('dotation/', include(dotation_urlpatterns)),
+	path('api/', include(api_urlpatterns)),
 ]

@@ -63,6 +63,7 @@ class ClasseDetailView(LoginRequiredMixin, DetailView):
 	Vue générale d'une classe
 	"""
 	model = Classe
+	template_name = 'pykol/classe/detail.html'
 
 	def get_context_data(self, **kwargs):
 		context = super().get_context_data(**kwargs)

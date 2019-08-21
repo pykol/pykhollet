@@ -16,9 +16,18 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-from django.forms import ModelForm, modelformset_factory
+from django.forms import ModelForm, modelformset_factory, \
+		ModelChoiceField
 
 from pykol.models.base import Service
+
+class EnseignementSansClasseField(ModelChoiceField):
+	"""
+	Classe qui permet de personnaliser les libellés des enseignements
+	affichés par les instances de ServiceForm.
+	"""
+	def label_from_instance(self, obj):
+		return str(obj.matiere)
 
 class ServiceForm(ModelForm):
 	"""
@@ -34,6 +43,9 @@ class ServiceForm(ModelForm):
 	class Meta:
 		model = Service
 		fields = ('professeur', 'enseignement',)
+		field_classes = {
+			'enseignement': EnseignementSansClasseField,
+		}
 
 ServiceFormset = modelformset_factory(Service, form=ServiceForm,
 		can_delete=True, extra=3, fields=ServiceForm.Meta.fields)

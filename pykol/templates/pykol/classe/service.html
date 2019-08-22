@@ -14,8 +14,6 @@
   </ul>
 
   <form method="post" action="">
-    {% csrf_token %}
-    {{ form.management_form }}
     <ul id="service-form" class="formset">
       {% for form in form %}
       <li>
@@ -24,12 +22,15 @@
         </ul>
       </li>
       {% endfor %}
+      <template id="template-service-form">
+        {{ form.empty_form.as_ul }}
+      </template>
     </ul>
-    <p><input type="submit" value="Enregistrer la liste"></p>
-
-    <template id="template_service-form">
-      {{ form.empty_form.as_ul }}
-    </template>
+    <p>
+      {% csrf_token %}
+      {{ form.management_form }}
+      <input type="submit" value="Enregistrer la liste">
+    </p>
   </form>
 </section>
 {% endblock content %}

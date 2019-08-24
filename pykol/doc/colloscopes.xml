@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<chapter xmlns="http://docbook.org/ns/docbook"
+  xmlns:xlink="http://www.w3.org/1999/xlink"
+  xml:lang="fr"
+  xml:id="chapter-colloscopes">
+  <info>
+    <title>Gestion des colloscopes</title>
+  </info>
+
+  <para>
+    Dans pyKol, la déclaration des heures de colles se fait en deux temps :
+    <itemizedlist>
+      <listitem><simpara>un professeur, désigné responsable pour cette tâche, prévoit au calendrier les heures de colles qui auront lieu, en indiquant pour chacune la date, l'heure, la matière, le colleur et les étudiants. Ceci se fait habituellement en début d'année lors de l'élaboration du colloscope, mais il est possible de faire des modifications tout au long de l'année ;</simpara></listitem>
+      <listitem><simpara>chaque colleur peut alors voir dans son planning la liste de ses propres colles (prévues et réalisées). Lorsqu'il a effectué une colle, il saisit les notes des étudiants et confirme que l'heure a été effectuée</simpara></listitem>
+    </itemizedlist>
+    En particulier, un colleur ne peut pas créer d'autres heures que celles qui ont été prévues au colloscope. Il peut cependant effectuer certaines modifications sur ses propres heures, telles que :
+    <itemizedlist>
+      <listitem><simpara>modifier la date, l'heure ou le lieu de la colle en cas de déplacement ponctuel ;</simpara></listitem>
+      <listitem><simpara>modifier la composition du groupe d'étudiants en cas de changement ponctuel ;</simpara></listitem>
+      <listitem><simpara>donner la colle à un autre colleur, dans le cas où le colleur d'origine souhaite ou doit être remplacé ;</simpara></listitem>
+      <listitem><simpara>annuler la colle si elle n'a pas pu être effectuée ni reportée.</simpara></listitem>
+    </itemizedlist>
+  </para>
+</chapter>

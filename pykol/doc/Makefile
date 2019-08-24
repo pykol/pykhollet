@@ -1,7 +1,7 @@
 html/index.xhtml: index.xml ects.xml
 	xsltproc --output $@ --xinclude /usr/share/xml/docbook/stylesheet/docbook-xsl/xhtml/docbook.xsl $<
 
-index.fo: index.xml ects.xml
+index.fo: index.xml installation.xml ects.xml colloscopes.xml
 	xsltproc --output $@ --xinclude /usr/share/xml/docbook/stylesheet/docbook-xsl/fo/docbook.xsl $<
 
 index.pdf: index.fo

@@ -11,14 +11,14 @@
     <title>Choix d'un hébergement</title>
 
     <para>
-      pyKol est programmé en Python 3 et utilise Django 2.1, ainsi que plusieurs autres bibliothèques Python. Tout hébergeur qui permet de faire tourner une application Django devrait convenir pour héberger une instance de pyKol.
+      pyKol est programmé en Python 3 et utilise Django 2.2, ainsi que plusieurs autres bibliothèques Python. La liste précise des dépendances est fournie dans un fichier <filename>requirements.txt</filename> à la racine du projet afin que ces dépendances soient facilement installables avec pip. Tout hébergeur qui permet de faire tourner une application Django devrait convenir pour héberger une instance de pyKol.
     </para>
     <para>
       Le programme a été principalement testé avec une base de données PostgreSQL, ce qui en fait le choix recommandé. Cependant, il est très probable que tout fonctionne correctement avec un autre gestionnaire de base de données. Pour une utilisation en prodction, les performances de sqlite3 seront cependant probablement assez rapidement trop faibles dès que la base de données commencera avoir taille conséquente (rien que la liste des établissements, chargée dans la base, contient déjà plusieurs milliers d'entrées).
     </para>
     <informalexample>
       <para>
-        Pour l'année scolaire 2018/2019, pyKol a été utilisé pour gérer les colles d'environ 500 étudiants répartis sur 15 classes, ce qui représente environ 10000 heures de colles. Le serveur était fourni par l'hébergeur Gandi sur une instance M, dont les performances étaient largement suffisantes pour cet usage. Le serveur est en effet relativement peu sollicité : les plus gros pics de charge proviennent de l'installation de mises à jour et non de l'usage au quotidien. Cette solution présente l'avantage qu'il n'y a aucune maintenance du serveur à assurer en dehors des mises à jour de pyKol lui-même et de ses dépendances.
+        Pour l'année scolaire 2018/2019, pyKol a été utilisé pour gérer les colles d'environ 500 étudiants répartis sur 15 classes, ce qui représente environ 10000 heures de colles. Le serveur était fourni par l'hébergeur Gandi sur une instance M, dont les performances étaient largement suffisantes pour cet usage. Le serveur est en effet relativement peu sollicité : les plus gros pics de charge proviennent de l'installation de mises à jour et non de l'usage au quotidien. Cette solution présente l'avantage qu'il n'y a aucune maintenance du serveur à assurer en dehors des mises à jour de pyKol lui-même et de ses dépendances. Elle est détaillée en partie <xref linkend="section-pas-a-pas-gandi"/>.
       </para>
     </informalexample>
     <para>
@@ -31,6 +31,22 @@
 
   <section>
     <title>Installation pas à pas de pyKol</title>
+
+    <section xml:id="section-creation-projet-django">
+      <title>Création du projet Django</title>
+    </section>
+
+    <section>
+      <title>Configuration et initialisation de la base de données</title>
+    </section>
+
+    <section>
+      <title>Création des accès utilisateurs</title>
+    </section>
+
+    <section xml:id="section-initialisation-donnees-annee-scolaire">
+      <title>Initialisation des données pour une année scolaire</title>
+    </section>
   </section>
 
   <section>
@@ -41,7 +57,57 @@
     <title>Personnalisation de l'application</title>
   </section>
 
-  <section>
+  <section xml:id="section-pas-a-pas-gandi">
     <title>Exemple de déploiement sur une instance Simple Hosting chez Gandi</title>
+
+    <para>
+      L'auteur maintient une instance de pyKol pour le lycée Berthollet, hébergée chez Gandi sur l'offre Simple Hosting. Cette partie détaille l'installation pas à pas dans cette configuration (qui n'a rien d'obligatoire par ailleurs). Cette solution présente l'avantage qu'une grande partie de l'administration est en fait réalisée par l'hébergeur, qui gère l'installation et la maintenance du matériel, de son système d'exploitation, du serveur de base de données et du serveur web. L'administrateur de pyKol doit uniquement gérer l'application elle-même.
+    </para>
+
+    <para>
+      L'hébergeur Gandi présente également quelques :
+      <itemizedlist>
+        <listitem><simpara>
+            l'établissement contrôle le lieu de stockage du serveur et des données (le choix est proposé par l'hébergeur parmi ses centres de données) ;
+        </simpara></listitem>
+
+        <listitem><simpara>
+            cet hébergeur accepte le règlement par mandat administratif ;
+        </simpara></listitem>
+
+        <listitem><simpara>
+            la configuration Python/WSGI avec une base de donnée PostgreSQL est proposée nativement sans manipulation étrange.
+        </simpara></listitem>
+      </itemizedlist>
+    </para>
+
+    <para>
+      Cette partie suppose que vous maitrisez un environnement en ligne de commande (notamment sous GNU/Linux), que vous avez une maitrise basique de Git et de SSH.
+    </para>
+
+    <para>
+      En 2019, Gandi propose plusieurs offres Simple Hosting. L'offre Small n'est pas suffisante car elle ne permet pas de se connecter en HTTPS (les données entre les clients et pyKol ne sont pas chiffrées et circuleraient donc en clair sur le réseau). L'offre Medium est largement suffisante pour faire fonctioner pyKol de manière totalement fluide pour un établissement accueillant au moins 500 étudiants de CPGE. Il se peut que l'offre Small+SSL soit également suffisante, mais cela reste à tester : pour l'usage habituel (déclaration des colles au fil de l'année), la puissance du serveur est suffisante ; pour des tâches plus consommatrices de ressources (import des données de l'établissement et de la base élèves, affichage des résultats d'une classe, génération des attestations ECTS), il faudrait tester s'il n'y a pas de ralentissements.
+    </para>
+
+    <para>
+      Commencez par créer localement sur votre machine votre projet pyKol comme décrit en partie <xref linkend="section-creation-projet-django"/>. Je conseille ensuite de travailler avec deux branches Git :
+      <itemizedlist>
+        <listitem><simpara>une branche master qui contient le code source d'origine de pyKol sans la moindre modification ;</simpara></listitem>
+        <listitem><simpara>une branche production qui contient les quelques modifications nécessaires pour s'adapter à l'environnement de production sur le serveur Gandi (notamment avec la clé secrète de l'installation et le mot de passe d'accès à la base de données).</simpara></listitem>
+      </itemizedlist>
+      <!-- TODO mettre un exemple d'initialisation de l'espace de travail -->
+    </para>
+
+    <para>
+      Commandez un serveur Simple Hosting chez Gandi en choisissant <emphasis>impérativement</emphasis> :
+      <itemizedlist>
+        <listitem><simpara>une instance avec le langage Python ;</simpara></listitem>
+        <listitem><simpara>une instance avec une base de données PostgreSQL.</simpara></listitem>
+      </itemizedlist>
+      Les versions choisies sont peu importantes tant que vous prenez des versions relativement récentes (Python 3.7 et PostgreSQL 11 sont disponibles au moment de la rédaction de ce guide).
+    </para>
+
+    <para>
+    </para>
   </section>
 </chapter>

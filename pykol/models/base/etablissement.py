@@ -115,6 +115,10 @@ class Etablissement(models.Model):
 	compte_releves = models.ForeignKey(Compte, blank=True, null=True,
 			on_delete=models.PROTECT,
 			related_name='etablissement_releves')
+	# Comte racine des professeurs
+	compte_professeurs = models.ForeignKey(Compte, blank=True,
+			null=True, on_delete=models.PROTECT,
+			related_name='etablissement_professeurs')
 
 	class Meta:
 		ordering = ['numero_uai']

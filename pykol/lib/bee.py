@@ -1153,19 +1153,64 @@ class BEEImporter:
 							defaults={'nom': discipline_et.find('LIBELLE_COURT').text})
 					disciplines.append(discipline)
 
-				self.professeurs[individu_id], _ = Professeur.objects.update_or_create(
+				# On ne peut pas utiliser la méthode
+				# Professeur.objects.update_or_create car il faut
+				# initialiser les colles de comptes de colles du
+				# professeur.
+				try:
+					professeur = Professeur.objects.get(
+						last_name=nom,
+						first_name=prenom,
+						sexe=sexe)
+
+					professeur.etablissement = self.etablissement
+					professeur.corps = grade
+					professeur.id_acad = numero_sts
+
+					professeur.save()
+					professeur.disciplines.set(disciplines)
+					self.professeurs[individu_id] = professeur
+
+				except Professeur.DoesNotExist:
+					professeur = Professeur(
 						last_name=nom,
 						first_name=prenom,
 						sexe=sexe,
-						defaults={
-							'last_name': nom,
-							'first_name': prenom,
-							'corps': grade,
-							'sexe': sexe,
-							'etablissement': self.etablissement,
-							'id_acad': numero_sts,
-							})
-				self.professeurs[individu_id].disciplines.set(disciplines)
+						compte_prevu=compte_prevu,
+						compte_effectue=compte_effectue,
+						etablissement=self.etablissement,
+						corps=grade,
+						id_acad=numero_sts)
+
+					compte_prof = Compte(
+						categorie=COMPTE_CATEGORIE_ACTIFS,
+						nom="{0.last_name} {0.first_name}".format(professeur),
+						parent=self.etablissement.compte_professeurs,
+						decouvert_autorise=True)
+					compte_prof.save()
+
+					compte_prevu = Compte(
+						categorie=Compte.COMPTE_CATEGORIE_ACTIFS,
+						nom="Colles prévues",
+						parent=compte_prof)
+					compte_prevu.save()
+
+					compte_effectue = Compte(
+						categorie=COMPTE_CATEGORIE_ACTIFS,
+						nom="Colles effectuées",
+						parent=compte_prof,
+						decouvert_autorise=True)
+					compte_effectue.save()
+
+					professeur.compte_prevu = compte_prevu
+					professeur.compte_effectue = compte_effectue
+					professeur.save()
+					compte_prof.gestionnaires.add(professeur)
+					compte_prevu.gestionnaires.add(professeur)
+					compte_effectue.gestionnaires.add(professeur)
+
+					professeur.disciplines.set(disciplines)
+					self.professeurs[individu_id] = professeur
 
 			elif fonction == "DIR":
 				user, _ = User.objects.update_or_create(

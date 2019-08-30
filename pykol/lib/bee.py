@@ -44,6 +44,7 @@ from pykol.models.base import User, Etudiant, Professeur, \
 		ModuleElementaireFormation, MEFMatiere, \
 		GroupeEffectif, \
 		Discipline, OptionEtudiant
+from pykol.models.comptabilite import Compte
 from pykol.models.colles import CollesEnseignement
 
 class CodeMEF:
@@ -1176,27 +1177,25 @@ class BEEImporter:
 						last_name=nom,
 						first_name=prenom,
 						sexe=sexe,
-						compte_prevu=compte_prevu,
-						compte_effectue=compte_effectue,
 						etablissement=self.etablissement,
 						corps=grade,
 						id_acad=numero_sts)
 
 					compte_prof = Compte(
-						categorie=COMPTE_CATEGORIE_ACTIFS,
+						categorie=Compte.CATEGORIE_ACTIFS,
 						nom="{0.last_name} {0.first_name}".format(professeur),
 						parent=self.etablissement.compte_professeurs,
 						decouvert_autorise=True)
 					compte_prof.save()
 
 					compte_prevu = Compte(
-						categorie=Compte.COMPTE_CATEGORIE_ACTIFS,
+						categorie=Compte.CATEGORIE_ACTIFS,
 						nom="Colles prévues",
 						parent=compte_prof)
 					compte_prevu.save()
 
 					compte_effectue = Compte(
-						categorie=COMPTE_CATEGORIE_ACTIFS,
+						categorie=Compte.CATEGORIE_ACTIFS,
 						nom="Colles effectuées",
 						parent=compte_prof,
 						decouvert_autorise=True)

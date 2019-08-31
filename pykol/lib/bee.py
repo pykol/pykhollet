@@ -499,7 +499,8 @@ class BEEImporter:
 							professeur=prof)
 
 	def import_divisions(self):
-		"""Import des divisions (classes) à partir du fichier
+		"""
+		Import des divisions (classes) à partir du fichier
 		Structures.xml ou à partir de STS.
 
 		Cette fonction peut être exécutée plusieurs fois sans créer de
@@ -564,10 +565,31 @@ class BEEImporter:
 		with transaction.atomic():
 			for code_structure, classe_data in div_dict.items():
 				classe_xml = classe_data.pop('xml')
-				classe, _ = Classe.all_objects.update_or_create(
+				try:
+					classe = Classe.all_objects.get(
 						code_structure=code_structure,
 						annee=self.annee,
-						defaults=classe_data)
+						etablissement=self.etablissement)
+
+					for field, value in classe_data.items():
+						setattr(classe, field, value)
+				except Classe.DoesNotExist:
+					classe = Classe(
+						code_structure=code_structure,
+						annee=self.annee,
+						etablissement=self.etablissement,
+						**classe_data
+					)
+					compte_colles = Compte(
+						categorie=Compte.CATEGORIE_ACTIFS,
+						nom="{classe} - {annee}".format(classe=classe.nom,
+							annee=classe.annee.nom),
+						parent=classe.etablissement.compte_colles,
+					decouvert_autorise=True)
+					compte_colles.save()
+					classe.compte_colles = compte_colles
+
+				classe.save()
 
 				self.classes[code_structure] = classe
 
@@ -1281,14 +1303,27 @@ class BEEImporter:
 				# On n'ajoute la dotation que si l'on a les enseignements
 				# correspondants.
 				if enseignements:
-					colles_ens, _ = CollesEnseignement.objects.update_or_create(
+					try:
+						colles_ens = CollesEnseignement.objects.get(
+							nomenclature_id=nomenclature_id,
+							classe=classe)
+					except CollesEnseignement.DoesNotExist:
+						colles_ens = CollesEnseignement(
 							nomenclature_id=nomenclature_id,
 							classe=classe,
-							defaults={
-								'nom': nom_enveloppe,
-								'frequence': frequence,
-								'duree_frequentielle': duree,
-								'periode': periode,
-								'mode_defaut': mode_defaut,
-							})
+							nom=nom_enveloppe,
+							frequence=frequence,
+							duree_frequentielle=duree,
+							periode=periode,
+							mode_defaut=mode_defaut
+						)
+						compte_colles = Compte(
+							categorie=Compte.CATEGORIE_ACTIFS,
+							nom=colles_ens.meilleure_matiere_enseignements(enseignements),
+							parent=colles_ens.classe.compte_colles,
+							decouvert_autorise=True)
+						compte_colles.save()
+						colles_ens.compte_colles = compte_colles
+						colles_ens.save()
+
 					colles_ens.enseignements.set(enseignements)

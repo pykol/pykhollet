@@ -149,15 +149,32 @@ class CollesEnseignement(models.Model):
 
 		return nb_etudiants * self.duree_frequentielle * mult
 
+	def meilleure_matiere_enseignements(self, enseignements=None):
+		"""
+		Étant donné une liste d'enseignements, que l'on suppose liés à
+		des matières toutes filles d'une même matière, cette méthode
+		renvoie le nom de la matière mère. S'il n'y a pas de matière
+		mère stricte, elle renvoie le nom de la matière fille elle-même.
+		"""
+		if enseignements is None:
+			enseignements = self.enseignements.all()
+
+		matiere = Matiere.objects.filter(virtuelle=True,
+				filles__enseignement__pk__in=enseignements).first()
+		if matiere is not None:
+			return matiere
+		else:
+			return enseignements[0].matiere
+
 	def __str__(self):
 		if self.nom:
-			return "{} - {}".format(self.classe, self.nom)
+			nom = self.nom
 		else:
-			matiere = Matiere.objects.filter(virtuelle=True,
-					filles__enseignement__in=self.enseignements.all()).first()
-			if matiere is not None:
-				return "{} - {}".format(self.classe, matiere)
-			return str(self.enseignements.first())
+			nom = str(self.meilleure_matiere_enseignements())
+
+		return "{classe} - {nom}".format(
+			classe=self.classe,
+			nom=str(matiere))
 
 class DotationClasse(models.Model):
 	classe = models.OneToOneField(Classe, on_delete=models.CASCADE,

@@ -26,7 +26,7 @@ from django.contrib.auth.admin import UserAdmin
 from pykol.models.base import User, Professeur, Etudiant, JetonAcces, \
 		Academie, Annee, Vacances, Etablissement, Matiere, Classe, \
 		Enseignement, Service, Groupe, OptionEtudiant, \
-		ModuleElementaireFormation
+		ModuleElementaireFormation, ImportBeeLog
 
 class PykolAdminSite(admin.AdminSite):
 	site_header = 'Administration de pyKol'
@@ -200,3 +200,5 @@ class OptionEtudiantAdmin(admin.ModelAdmin):
 	list_display = ('pk', 'etudiant', 'classe', 'matiere',
 			'modalite_option')
 	list_filter = ('classe', 'matiere')
+
+admin_site.register(ImportBeeLog)

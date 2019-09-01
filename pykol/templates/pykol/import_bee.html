@@ -30,6 +30,29 @@
   scolaire.</p>
   {% endif %}
 
+  {% if horodatages %}
+  <h3>Dernières mise à jour</h3>
+  <p>Voici les dernières dates de mise à jour des données :
+  <table>
+    <thead>
+      <tr>
+        <th>Fichier</th>
+        <th>Date des données</th>
+        <th>Date de l'import</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for horodatage in horodatages %}
+      <tr>
+        <td>{{ horodatage.import_fichier|capfirst }}</td>
+        <td>{{ horodatage.date_fichier }}</td>
+        <td>{{ horodatage.date_import }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% endif %}
+
   {% if messages %}
   <h3>Messages</h3>
   <ul class="messages">

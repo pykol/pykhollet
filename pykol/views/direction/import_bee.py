@@ -24,9 +24,10 @@ from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required, permission_required
 from django.contrib import messages
 from django.conf import settings
+from django.db.models import Max
 
 from pykol.forms.import_bee import ImportBEEForm
-from pykol.models.base import Annee
+from pykol.models.base import Annee, ImportBeeLog
 from pykol.lib.bee import BEEImporter
 
 @login_required
@@ -64,7 +65,19 @@ def import_bee(request):
 	else:
 		form = ImportBEEForm()
 
+	annee_actuelle = Annee.objects.get_actuelle()
+
+	horodatages = ImportBeeLog.objects.filter(
+		annee=annee_actuelle).values('import_type'
+		).annotate(date_import=Max('date_import')
+		).values('date_fichier', 'date_import', 'import_type')
+	bee_types = dict(ImportBeeLog.IMPORT_TYPE_CHOICES)
+	for horodatage in horodatages:
+		horodatage['import_fichier'] = bee_types[horodatage['import_type']]
+
 	return render(request, 'pykol/import_bee.html', context={
 		'form': form,
 		'annee_scolaire_none': not(Annee.objects.all()),
+		'horodatages': horodatages,
+		'annee': annee_actuelle,
 	})

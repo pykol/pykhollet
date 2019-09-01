@@ -31,12 +31,14 @@ import re
 from collections import defaultdict, namedtuple
 
 from django.utils.text import slugify
+from django.utils import timezone
 from django.contrib.auth.models import Permission
 from django.contrib.contenttypes.models import ContentType
 from django.db.models import Q
 from django.db import transaction
 
 import isodate
+import pytz
 
 from pykol.models.base import User, Etudiant, Professeur, \
 		Annee, Classe, Etablissement, Academie, \
@@ -46,6 +48,7 @@ from pykol.models.base import User, Etudiant, Professeur, \
 		Discipline, OptionEtudiant
 from pykol.models.comptabilite import Compte
 from pykol.models.colles import CollesEnseignement
+from pykol.models.base import ImportBeeLog
 
 class CodeMEF:
 	"""
@@ -105,6 +108,24 @@ def parse_date_francaise(date):
 		return None
 	return datetime.date(year=int(mo['annee']), month=int(mo['mois']),
 			day=int(mo['jour']))
+
+def parse_datetime_francaise(date):
+	"""
+	Renvoie un datetime.datetime à partir d'une chaine de caractères
+	représentant un instant au format français :
+	  DD/MM/YYYY HH:MM:SS
+	"""
+	mo = re.fullmatch(r'(?P<day>\d+)/(?P<month>\d+)/(?P<year>\d+) (?P<hour>\d+):(?P<minute>\d+):(?P<second>\d+)',
+			date)
+	if not mo:
+		return None
+
+	vals = mo.groupdict()
+	for key in vals:
+		vals[key] = int(vals[key])
+	vals['tzinfo'] = pytz.timezone('Europe/Paris')
+
+	return datetime.datetime(**vals)
 
 def appartenance_mef_cpge(mef_appartenance_et):
 	"""
@@ -235,6 +256,53 @@ class BEEImporter:
 		self.import_etudiants()
 		self.import_options_etudiants()
 		self.import_colles()
+
+		self.log_imports()
+
+	def log_imports(self):
+		"""
+		Enregistre dans la base de données la date d'import des données.
+		"""
+		fichiers = (
+			{
+				'field': 'structures_et',
+				'type': ImportBeeLog.IMPORT_TYPE_STRUCTURES,
+			},
+			{
+				'field': 'nomenclatures_et',
+				'type': ImportBeeLog.IMPORT_TYPE_NOMENCLATURES,
+			},
+			{
+				'field': 'eleves_et',
+				'type': ImportBeeLog.IMPORT_TYPE_BASE_ELEVES,
+			},
+			{
+				'field': 'sts_et',
+				'type': ImportBeeLog.IMPORT_TYPE_STS,
+			},
+			{
+				'field': 'nomenclatures_colles_et',
+				'type': ImportBeeLog.IMPORT_TYPE_COLLES,
+			},
+		)
+		for fichier in fichiers:
+			try:
+				xml_et = getattr(self, fichier['field'])
+				if xml_et is None:
+					continue
+
+				log = ImportBeeLog(
+					date_import=timezone.now(),
+					import_type=fichier['type'],
+					annee=self.annee,
+				)
+				try:
+					log.date_fichier = parse_datetime_francaise(xml_et.getroot().find('PARAMETRES/HORODATAGE').text)
+				except:
+					log.date_fichier = timezone.now()
+				log.save()
+			except:
+				continue
 
 	def import_annee(self):
 		"""

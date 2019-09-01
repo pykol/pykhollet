@@ -1,0 +1,384 @@
+<?xml version="1.0" encoding="utf-8"?>
+<appendix xmlns="http://docbook.org/ns/docbook"
+  xmlns:xlink="http://www.w3.org/1999/xlink"
+  xml:lang="fr"
+  xml:id="appendix-licence">
+  <info>
+    <title>Licence publique Creative Commons Attribution - Partage dans les mêmes conditions 4.0 International</title>
+  </info>
+
+  <para>
+    Lorsque <xref linkend="cc-definition-vous"/> exercez les <xref linkend="cc-definition-droits-accordes"/> (définis ci-dessous), <xref linkend="cc-definition-vous"/> acceptez d'être lié par les termes et conditions de la présente Licence publique Creative Commons Attribution - Partage dans les mêmes conditions 4.0 International (la « Licence publique »). Dans la mesure où la présente Licence publique peut être interprétée comme un contrat, <xref linkend="cc-definition-vous"/> bénéficiez des <xref linkend="cc-definition-droits-accordes"/> en contrepartie de <xref linkend="cc-definition-vous" endterm="cc-definition-votre"/> acceptation des présents termes et conditions, et le <xref linkend="cc-definition-donneur"/> <xref linkend="cc-definition-vous"/> accorde ces droits en contrepartie des avantages que lui procure le fait de mettre à disposition l'<xref linkend="cc-definition-oeuvre-sous-licence"/> en vertu des présents termes et conditions.
+  </para>
+
+  <formalpara xml:id="cc-s1">
+    <title>Article 1 - Définitions.</title>
+    <titleabbrev xml:id="cc-s1-abbrev">Article 1</titleabbrev>
+    <para>
+      <variablelist>
+
+        <varlistentry xml:id="cc-definition-oeuvre-derivee">
+          <term>Œuvre dérivée</term>
+          <listitem><simpara>signifie œuvre protégée par les <xref linkend="cc-definition-droit-auteur"/>, dérivée ou adaptée de l'<xref linkend="cc-definition-oeuvre-sous-licence"/> et dans laquelle l'<xref linkend="cc-definition-oeuvre-sous-licence"/> est traduite, retouchée, arrangée, transformée, ou modifiée de telle façon que l'autorisation du <xref linkend="cc-definition-donneur"/> est nécessaire, conformément aux dispositions des <xref linkend="cc-definition-droit-auteur"/>. Dans le cas de la présente Licence publique, lorsque l'<xref linkend="cc-definition-oeuvre-sous-licence"/> est une œuvre musicale, une représentation publique ou un enregistrement sonore, la synchronisation de l'<xref linkend="cc-definition-oeuvre-sous-licence"/> avec une image animée sera considérée comme une Œuvre dérivée aux fins de la présente Licence publique.</simpara></listitem>
+        </varlistentry>
+
+        <varlistentry xml:id="cc-definition-licence-oeuvre-derivee">
+          <term>Licence d'Œuvre dérivée</term>
+          <listitem><simpara>signifie licence par laquelle <xref linkend="cc-definition-vous"/> accordez <xref linkend="cc-definition-vous" endterm="cc-definition-vos"/> <xref linkend="cc-definition-droit-auteur"/> portant sur <xref linkend="cc-definition-vous" endterm="cc-definition-vos"/> contributions à l'<xref linkend="cc-definition-oeuvre-derivee"/>, selon les termes et conditions de la présente Licence publique.</simpara></listitem>
+        </varlistentry>
+
+        <varlistentry xml:id="cc-definition-licence-compatible-bysa">
+          <term>Licence compatible BY-SA</term>
+          <listitem><simpara> signifie licence figurant à l'adresse suivante <link xlink:href="https://creativecommons.org/compatiblelicenses"/>, approuvée par Creative Commons comme étant essentiellement équivalente à la présente Licence publique.</simpara></listitem>
+        </varlistentry>
+
+        <varlistentry xml:id="cc-definition-droit-auteur">
+          <term>Droit d'auteur et droits connexes</term>
+          <listitem><simpara>signifie droit d'auteur et/ou droits connexes incluant, notamment, la représentation, la radio et télédiffusion, l'enregistrement sonore et le <xref linkend="cc-definition-droit-sui-generis"/>, quelle que soit la classification ou qualification juridique de ces droits. Dans le cadre de la présente Licence publique, les droits visés à l'Article <xref linkend="cc-s2b"/> ne relèvent ni du Droit d'auteur ni de droits connexes.</simpara></listitem>
+        </varlistentry>
+
+        <varlistentry xml:id="cc-definition-mesures-techniques">
+          <term>Mesures techniques efficaces</term>
+          <term role="singular" xml:id="cc-definition-mesure-technique">Mesure technique efficace</term>
+          <listitem><simpara>signifie mesures techniques qui, en l'absence d'autorisation expresse, ne peuvent être contournées dans le cadre de lois conformes aux dispositions de l'Article 11 du Traité de l'OMPI sur le droit d'auteur adopté le 20 Décembre 1996 et/ou d'accords internationaux de même objet.</simpara></listitem>
+        </varlistentry>
+
+        <varlistentry xml:id="cc-definition-exceptions-limitations">
+          <term>Exceptions et limitations</term>
+          <listitem><simpara>signifie utilisation loyale et équitable (<foreignphrase>fair use</foreignphrase> et <foreignphrase>fair dealing</foreignphrase>) et/ou toute autre exception ou limitation applicable à <xref linkend="cc-definition-vous" endterm="cc-definition-votre"/> utilisation de l'<xref linkend="cc-definition-oeuvre-sous-licence"/>.</simpara></listitem>
+        </varlistentry>
+
+        <varlistentry xml:id="cc-definition-elements-licence">
+          <term>Éléments de licence</term>
+          <listitem><simpara>signifie les composantes de la licence figurant dans l'intitulé de la Licence publique Creative Commons. Les éléments de la présente Licence publique sont : Attribution et Partage dans les mêmes conditions.</simpara></listitem>
+        </varlistentry>
+
+        <varlistentry xml:id="cc-definition-oeuvre-sous-licence">
+          <term>Œuvre sous licence</term>
+          <listitem><simpara>signifie œuvre littéraire ou artistique, base de données ou toute autre œuvre pour laquelle le <xref linkend="cc-definition-donneur"/> a recours à la présente Licence publique.</simpara></listitem>
+        </varlistentry>
+        
+        <varlistentry xml:id="cc-definition-droits-accordes">
+          <term>Droits accordés par la licence</term>
+          <listitem><simpara>signifie droits qui <xref linkend="cc-definition-vous"/> sont accordés selon les termes et conditions d'utilisation définis par la présente Licence publique, limités aux <xref linkend="cc-definition-droit-auteur"/> applicables à <xref linkend="cc-definition-vous" endterm="cc-definition-votre"/> utilisation de l'<xref linkend="cc-definition-oeuvre-sous-licence"/> et que le <xref linkend="cc-definition-donneur"/> a le droit d'accorder.</simpara></listitem>
+        </varlistentry>
+        
+        <varlistentry xml:id="cc-definition-donneur">
+          <term>Donneur de licence</term>
+          <listitem><simpara>signifie un individu ou une entité octroyant la présente Licence publique et les droits accordés par elle.</simpara></listitem>
+        </varlistentry>
+        
+        <varlistentry xml:id="cc-definition-partager">
+          <term>Partager</term>
+          <term role="alternative" xml:id="cc-definition-partagez">Partagez</term>
+          <listitem><simpara>signifie mettre une œuvre à la disposition du public par tout moyen ou procédé qui requiert l'autorisation découlant des <xref linkend="cc-definition-droits-accordes"/>, tels que les droits de reproduction, de représentation au public, de distribution, de diffusion, de communication ou d'importation, y compris de manière à ce que chacun puisse y avoir accès de l'endroit et au moment qu'il choisit individuellement.</simpara></listitem>
+        </varlistentry>
+        
+        <varlistentry xml:id="cc-definition-droit-sui-generis">
+          <term>Droit sui generis des producteurs de bases de données</term>
+          <term role="singular" xml:id="cc-definition-droit-sui-generis-de-producteur">Droit sui generis des producteurs de bases de données</term>
+          <listitem><simpara>signifie droits distincts du droit d'auteur résultant de la Directive 96/9/CE du Parlement européen et du Conseil du 11 mars 1996 sur la protection juridique des bases de données, ainsi que tout autre droit de nature équivalente dans le monde.</simpara></listitem>
+        </varlistentry>
+        
+        <varlistentry xml:id="cc-definition-vous">
+          <term>Vous</term>
+          <listitem><simpara>(preneur de licence) se rapporte à tout individu ou entité exerçant les <xref linkend="cc-definition-droits-accordes"/>. <emphasis role="strong" xml:id="cc-definition-votre">Votre</emphasis> et <emphasis role="strong" xml:id="cc-definition-vos">Vos</emphasis> renvoient également au preneur de licence.</simpara></listitem>
+        </varlistentry>
+
+      </variablelist>
+    </para>
+  </formalpara>
+
+  <formalpara>
+    <title>Article 2 - Champ d'application de la présente Licence publique.</title>
+    <titleabbrev xml:id="cc-s2-abbrev">Article 2</titleabbrev>
+
+    <para>
+      <orderedlist numeration="loweralpha">
+        <listitem xml:id="cc-s2a">
+          <formalpara>
+            <title>Octroi de la licence</title>
+            <para>
+              <orderedlist numeration="arabic">
+                <listitem xml:id="cc-s2a1">
+                  <para>
+                    Sous réserve du respect des termes et conditions d'utilisation de la présente Licence publique, le <xref linkend="cc-definition-donneur"/> <xref linkend="cc-definition-vous"/> autorise à exercer pour le monde entier, à titre gratuit, non sous-licenciable, non exclusif, irrévocable, les <xref linkend="cc-definition-droits-accordes"/> afin de :
+                    <orderedlist numeration="upperalpha">
+                      <listitem><simpara>reproduire et <xref linkend="cc-definition-partager"/> l'<xref linkend="cc-definition-oeuvre-sous-licence"/>, en tout ou partie ; et</simpara></listitem>
+                      <listitem><simpara>produire, reproduire et <xref linkend="cc-definition-partager"/> l'<xref linkend="cc-definition-oeuvre-derivee"/>.</simpara></listitem>
+                    </orderedlist>
+                  </para>
+                </listitem>
+                <listitem xml:id="cc-s2a2">
+                  <simpara><emphasis><xref linkend="cc-definition-exceptions-limitations"/></emphasis>. Afin de lever toute ambiguïté, lorsque les <xref linkend="cc-definition-exceptions-limitations"/> s'appliquent à <xref linkend="cc-definition-vous" endterm="cc-definition-votre"/> utilisation, la présente Licence publique ne s'applique pas et <xref linkend="cc-definition-vous"/> n'avez pas à <xref linkend="cc-definition-vous"/> conformer à ses termes et conditions.</simpara>
+                </listitem>
+
+                <listitem xml:id="cc-s2a3">
+                  <simpara><emphasis>Durée</emphasis>. La durée de la présente Licence publique est définie à l'Article <xref linkend="cc-s6a"/>.</simpara>
+                </listitem>
+
+                <listitem xml:id="cc-s2a4">
+                  <simpara><emphasis>Supports et formats : modifications techniques autorisées</emphasis>. Le <xref linkend="cc-definition-donneur"/> <xref linkend="cc-definition-vous"/> autorise à exercer les <xref linkend="cc-definition-droits-accordes"/> sur tous les supports et formats connus ou encore inconnus à ce jour, et à apporter toutes les modifications techniques que ceux-ci requièrent. Le <xref linkend="cc-definition-donneur"/> renonce et/ou accepte de ne pas exercer ses droits qui pourraient être susceptibles de <xref linkend="cc-definition-vous"/> empêcher d'apporter les modifications techniques nécessaires pour exercer les <xref linkend="cc-definition-droits-accordes"/>, y compris celles nécessaires au contournement des <xref linkend="cc-definition-mesures-techniques"/>. Dans le cadre de la présente Licence publique, le fait de ne procéder qu'à de simples modifications techniques autorisées selon les termes du présent Article <xref linkend="cc-s2a4"/> n'est jamais de nature à créer une <xref linkend="cc-definition-oeuvre-derivee"/>.</simpara>
+                </listitem>
+
+                <listitem xml:id="cc-s2a5">
+                  <para>
+                    <emphasis>Utilisateurs en aval.</emphasis>
+                    <orderedlist numeration="upperalpha">
+                      <listitem>
+                        <simpara><emphasis>Offre du <xref linkend="cc-definition-donneur"/> – <xref linkend="cc-definition-oeuvre-sous-licence"/></emphasis>. Chaque utilisateur de l'<xref linkend="cc-definition-oeuvre-sous-licence"/> reçoit automatiquement une offre de la part du <xref linkend="cc-definition-donneur"/> lui permettant d'exercer les <xref linkend="cc-definition-droits-accordes"/> selon les termes et conditions de la présente Licence publique.</simpara>
+                      </listitem>
+
+                      <listitem>
+                        <simpara><emphasis>Offre additionnelle du <xref linkend="cc-definition-donneur"/> – <xref linkend="cc-definition-oeuvre-derivee"/>.</emphasis> Chaque utilisateur d'une <xref linkend="cc-definition-oeuvre-derivee"/> reçoit automatiquement une offre du <xref linkend="cc-definition-donneur"/> lui permettant d'exercer les <xref linkend="cc-definition-droits-accordes"/> sur l'<xref linkend="cc-definition-oeuvre-derivee"/> selon les termes et conditions de la <xref linkend="cc-definition-licence-oeuvre-derivee"/> que <xref linkend="cc-definition-vous"/> appliquez.</simpara>
+                      </listitem>
+
+                      <listitem>
+                        <simpara><emphasis>Pas de restrictions en aval pour les utilisateurs suivants</emphasis>. <xref linkend="cc-definition-vous"/> ne pouvez proposer ou imposer des termes et conditions supplémentaires ou différents, ou appliquer quelque <xref linkend="cc-definition-mesures-techniques" endterm="cc-definition-mesure-technique"/> que ce soit à l'<xref linkend="cc-definition-oeuvre-sous-licence"/> si ceux(celles)-ci sont de nature à restreindre l'exercice des <xref linkend="cc-definition-droits-accordes"/> aux utilisateurs de l'<xref linkend="cc-definition-oeuvre-sous-licence"/>.</simpara>
+                      </listitem>
+                    </orderedlist>
+                  </para>
+                </listitem>
+
+                <listitem xml:id="cc-s2a6">
+                  <simpara><emphasis>Non approbation</emphasis>. Aucun élément de la présente Licence publique ne peut être interprété comme laissant supposer que le preneur de licence ou que l'utilisation qu'il fait de l'<xref linkend="cc-definition-oeuvre-sous-licence"/> est lié à, parrainé, approuvé, ou doté d'un statut officiel par le <xref linkend="cc-definition-donneur"/> ou par toute autre personne à qui revient l'attribution de l'<xref linkend="cc-definition-oeuvre-sous-licence"/>, comme indiqué à l'Article <xref linkend="cc-s3a1Ai"/>.</simpara>
+                </listitem>
+
+              </orderedlist>
+            </para>
+          </formalpara>
+        </listitem>
+
+        <listitem xml:id="cc-s2b">
+          <formalpara>
+            <title>Autres droits</title>
+            <para>
+              <orderedlist numeration="arabic">
+                <listitem><simpara>
+                    Les droits moraux, tel que le droit à l'intégrité de l'œuvre, ne sont pas accordés par la présente Licence publique, ni le droit à l'image, ni le droit au respect de la vie privée, ni aucun autre droit de la personnalité ou apparenté ; cependant, dans la mesure du possible, le <xref linkend="cc-definition-donneur"/> renonce et/ou accepte de ne pas faire valoir les droits qu'il détient de manière à <xref linkend="cc-definition-vous"/> permettre d'exercer les <xref linkend="cc-definition-droits-accordes"/>.
+                </simpara></listitem>
+                <listitem><simpara>
+                    Le droit des brevets et le droit des marques ne sont pas concernés par la présente Licence publique.
+                </simpara></listitem>
+                <listitem><simpara>
+                    Dans la mesure du possible, le <xref linkend="cc-definition-donneur"/> renonce au droit de collecter des redevances auprès de <xref linkend="cc-definition-vous"/> pour l'exercice des <xref linkend="cc-definition-droits-accordes"/>, directement ou indirectement dans le cadre d'un régime de gestion collective facultative ou obligatoire assorti de possibilités de renonciation quel que soit le type d'accord ou de licence. Dans tous les autres cas, le <xref linkend="cc-definition-donneur"/> se réserve expressément le droit de collecter de telles redevances.
+                </simpara></listitem>
+              </orderedlist>
+            </para>
+          </formalpara>
+        </listitem>
+      </orderedlist>
+    </para>
+  </formalpara>
+
+  <formalpara>
+    <title>Article 3 – Conditions d'utilisation de la présente Licence publique.</title>
+    <titleabbrev xml:id="cc-s3-abbrev">Article 3</titleabbrev>
+    <para>
+      L'exercice des <xref linkend="cc-definition-droits-accordes"/> est expressément soumis aux conditions suivantes.
+
+      <orderedlist numeration="loweralpha">
+        <listitem>
+          <formalpara>
+            <title>Attribution</title>
+            <para>
+              <orderedlist numeration="arabic">
+
+                <listitem xml:id="cc-s3a1">
+                  <para>
+                    Si <xref linkend="cc-definition-vous"/> partagez l'<xref linkend="cc-definition-oeuvre-sous-licence"/> (y compris sous une forme modifiée), <xref linkend="cc-definition-vous"/> devez :
+
+                    <orderedlist numeration="upperalpha">
+                      <listitem>
+                        <para>conserver les informations suivantes lorsqu'elles sont fournies par le <xref linkend="cc-definition-donneur"/> avec l'<xref linkend="cc-definition-oeuvre-sous-licence"/> :
+                          <orderedlist numeration="lowerroman">
+                            <listitem xml:id="cc-s3a1Ai">
+                              <simpara>identification du(des) auteur(s) de l'<xref linkend="cc-definition-oeuvre-sous-licence"/> et de toute personne à qui revient l'attribution de l'<xref linkend="cc-definition-oeuvre-sous-licence"/>, dans la mesure du possible, conformément à la demande du <xref linkend="cc-definition-donneur"/> (y compris sous la forme d'un pseudonyme s'il est indiqué) ; </simpara>
+                            </listitem>
+                            <listitem xml:id="cc-s3a1Aii">
+                              <simpara>l'indication de l'existence d'un droit d'auteur ; </simpara>
+                            </listitem>
+                            <listitem xml:id="cc-s3a1Aiii">
+                              <simpara>une notice faisant référence à la présente Licence publique ; </simpara>
+                            </listitem>
+                            <listitem xml:id="cc-s3a1Aiv">
+                              <simpara>une notice faisant référence aux limitations de garantie et exclusions de responsabilité ;</simpara>
+                            </listitem>
+                            <listitem xml:id="cc-s3a1Av">
+                              <simpara>un URI ou un hyperlien vers l'<xref linkend="cc-definition-oeuvre-sous-licence"/> dans la mesure du possible ;</simpara>
+                            </listitem>
+                          </orderedlist>
+                        </para>
+                      </listitem>
+
+                      <listitem xml:id="cc-s3a1B">
+                        <simpara>Indiquer si <xref linkend="cc-definition-vous"/> avez modifié l'<xref linkend="cc-definition-oeuvre-sous-licence"/> et conserver un suivi des modifications précédentes ; et</simpara>
+                      </listitem>
+
+                      <listitem xml:id="cc-s3a1C">
+                        <simpara>Indiquer si l'<xref linkend="cc-definition-oeuvre-sous-licence"/> est mise à disposition en vertu de la présente Licence publique en incluant le texte, l'URI ou l'hyperlien correspondant à la présente Licence publique.</simpara>
+                      </listitem>
+                    </orderedlist>
+                  </para>
+                </listitem>
+
+                <listitem xml:id="cc-s3a2">
+                  <simpara><xref linkend="cc-definition-vous"/> pouvez satisfaire aux conditions de l'Article <xref linkend="cc-s3a1"/> dans toute la mesure du possible, en fonction des supports, moyens et contextes dans lesquels <xref linkend="cc-definition-vous"/> <xref linkend="cc-definition-partager" endterm="cc-definition-partagez"/> l'<xref linkend="cc-definition-oeuvre-sous-licence"/>. Par exemple, <xref linkend="cc-definition-vous"/> pouvez satisfaire aux conditions susmentionnées en fournissant l'URI ou l'hyperlien vers la ressource incluant les informations requises.</simpara>
+                </listitem>
+
+                <listitem xml:id="cc-s3a3">
+                  <simpara>Bien que requises aux termes de l'Article <xref linkend="cc-s3a1A3"/>, certaines informations devront être retirées, dans la mesure du possible, si le <xref linkend="cc-definition-donneur"/> en fait la demande.</simpara>
+                </listitem> 
+              </orderedlist>
+            </para>
+          </formalpara>
+        </listitem>
+
+        <listitem>
+          <formalpara>
+            <title>Partage dans les mêmes conditions</title>
+            <para>
+              Outre les conditions indiquées à l'Article <xref linkend="cc-s3a"/>, si <xref linkend="cc-definition-vous"/> <xref linkend="cc-definition-partager" endterm="cc-definition-partagez"/> une <xref linkend="cc-definition-oeuvre-derivee"/> que <xref linkend="cc-definition-vous"/> avez réalisée, les conditions suivantes s'appliquent aussi.
+              <orderedlist numeration="arabic">
+                <listitem xml:id="cc-s3b1">
+                  <simpara>La <xref linkend="cc-definition-licence-oeuvre-derivee"/> que <xref linkend="cc-definition-vous"/> appliquez doit être une licence Creative Commons avec les mêmes <xref linkend="cc-definition-elements-licence"/>, qu'il s'agisse de cette version ou d'une version ultérieure, ou une <xref linkend="cc-definition-licence-compatible-bysa"/>.</simpara>
+                </listitem>
+
+                <listitem xml:id="cc-s3b2">
+                  <simpara><xref linkend="cc-definition-vous"/> devez inclure le texte, l'URI ou l'hyperlien correspondant à la <xref linkend="cc-definition-licence-oeuvre-derivee"/> que <xref linkend="cc-definition-vous"/> appliquez. Ces conditions peuvent être satisfaites dans la mesure du raisonnable suivant les supports, moyens et contextes via lesquels <xref linkend="cc-definition-vous"/> <xref linkend="cc-definition-partager" endterm="cc-definition-partagez"/> l'<xref linkend="cc-definition-oeuvre-derivee"/>.</simpara>
+                </listitem>
+
+                <listitem xml:id="cc-s3b3">
+                  <simpara><xref linkend="cc-definition-vous"/> ne pouvez pas proposer ou imposer des termes ou des conditions supplémentaires ou différents ou appliquer des <xref linkend="cc-definition-mesures-techniques"/> à l'<xref linkend="cc-definition-oeuvre-derivee"/> qui seraient de nature à restreindre l'exercice des Droits accordés par la <xref linkend="cc-definition-licence-oeuvre-derivee"/> que <xref linkend="cc-definition-vous"/> appliquez.</simpara>
+                </listitem>
+              </orderedlist>
+            </para>
+          </formalpara>
+        </listitem>
+      </orderedlist>
+    </para>
+  </formalpara>
+
+  <formalpara xml:id="cc-s4">
+    <title>Article 4 – Le <xref linkend="cc-definition-droit-sui-generis"/>.</title>
+    <titleabbrev xml:id="cc-s4-abbrev">Article 4</titleabbrev>
+
+    <para>
+      Lorsque les <xref linkend="cc-definition-droits-accordes"/> incluent le <xref linkend="cc-definition-droit-sui-generis"/> applicable à <xref linkend="cc-definition-vous" endterm="cc-definition-votre"/> utilisation de l'<xref linkend="cc-definition-oeuvre-sous-licence"/> :
+
+      <orderedlist numeration="loweralpha">
+        <listitem xml:id="cc-s4a">
+          <simpara>afin de lever toute ambiguïté, l'Article <xref linkend="cc-s2a1"/> <xref linkend="cc-definition-vous"/> accorde le droit d'extraire, réutiliser, reproduire et <xref linkend="cc-definition-partager"/> la totalité ou une partie substantielle du contenu de la base de données ;</simpara>
+        </listitem>
+        <listitem xml:id="cc-s4b">
+          <simpara>si <xref linkend="cc-definition-vous"/> incluez la totalité ou une partie substantielle du contenu de la base de données dans une base de données pour laquelle <xref linkend="cc-definition-vous"/> détenez un <xref linkend="cc-definition-droit-sui-generis" endterm="cc-definition-droit-sui-generis-de-producteur"/>, la base de données sur laquelle <xref linkend="cc-definition-vous"/> détenez un tel droit (mais pas ses contenus individuels) sera alors considérée comme une <xref linkend="cc-definition-oeuvre-derivee"/>, y compris pour l'application de l'Article <xref linkend="cc-s3b"/> ; et</simpara>
+        </listitem>
+        <listitem xml:id="cc-s4c">
+          <simpara><xref linkend="cc-definition-vous"/> devez respecter les conditions de l'Article <xref linkend="cc-s3a"/> si <xref linkend="cc-definition-vous"/> <xref linkend="cc-definition-partager" endterm="cc-definition-partagez"/> la totalité ou une partie substantielle du contenu des bases de données.</simpara>
+        </listitem>
+      </orderedlist>
+
+      Afin de lever toute ambiguïté, le présent <xref linkend="cc-s4" endterm="cc-s4-abbrev"/> complète mais ne remplace pas <xref linkend="cc-definition-vous" endterm="cc-definition-vos"/> obligations découlant des termes de la présente Licence publique lorsque les <xref linkend="cc-definition-droits-accordes"/> incluent d'autres <xref linkend="cc-definition-droit-auteur"/>.
+    </para>
+  </formalpara>
+
+  <formalpara xml:id="cc-s5">
+    <title>Article 5 – Limitations de garantie et exclusions de responsabilité.</title>
+    <titleabbrev xml:id="cc-s5-abbrev">Article 5</titleabbrev>
+    <para>
+      <orderedlist numeration="loweralpha">
+        <listitem xml:id="cc-s5a">
+          <simpara><emphasis role="strong">Sauf indication contraire et dans la mesure du possible, le <xref linkend="cc-definition-donneur"/> met à disposition l'<xref linkend="cc-definition-oeuvre-sous-licence"/> telle quelle, et n'offre aucune garantie de quelque sorte que ce soit, notamment expresse, implicite, statutaire ou autre la concernant. Cela inclut, notamment, les garanties liées au titre, à la valeur marchande, à la compatibilité de certaines utilisations particulières, à l'absence de violation, à l'absence de vices cachés ou autres défauts, à l'exactitude, à la présence ou à l'absence d'erreurs connues ou non ou susceptibles d'être découvertes dans l'<xref linkend="cc-definition-oeuvre-sous-licence"/>. Lorsqu'une limitation de garantie n'est pas autorisée en tout ou partie, cette clause peut ne pas <xref linkend="cc-definition-vous"/> être applicable.</emphasis></simpara>
+        </listitem>
+        <listitem xml:id="cc-s5b">
+          <simpara><emphasis role="strong">Dans la mesure du possible, le <xref linkend="cc-definition-donneur"/> ne saurait voir sa responsabilité engagée vis-à-vis de <xref linkend="cc-definition-vous"/>, quel qu'en soit le fondement juridique (y compris, notamment, la négligence), pour tout préjudice direct, spécial, indirect, incident, conséquentiel, punitif, exemplaire, ou pour toutes pertes, coûts, dépenses ou tout dommage découlant de l'utilisation de la présente Licence publique ou de l'utilisation de l'<xref linkend="cc-definition-oeuvre-sous-licence"/>, même si le <xref linkend="cc-definition-donneur"/> avait connaissance de l'éventualité de telles pertes, coûts, dépenses ou dommages. Lorsqu'une exclusion de responsabilité n'est pas autorisée en tout ou partie, cette clause peut ne pas <xref linkend="cc-definition-vous"/> être applicable.</emphasis></simpara>
+        </listitem>
+        <listitem xml:id="cc-s5c">
+          <simpara>Les limitations de garantie et exclusions de responsabilité ci-dessus doivent être interprétées, dans la mesure du possible, comme des limitations et renonciations totales de toute responsabilité.</simpara>
+        </listitem>
+      </orderedlist>
+    </para>
+  </formalpara>
+
+  <formalpara xml:id="cc-s6">
+    <title>Article 6 – Durée et fin.</title>
+    <titleabbrev xml:id="cc-s6-abbrev">Article 6</titleabbrev>
+    <para>
+      <orderedlist numeration="loweralpha">
+        <listitem xml:id="cc-s6a">
+          <simpara>La présente Licence publique s'applique pendant toute la durée de validité des <xref linkend="cc-definition-droits-accordes"/>. Cependant, si <xref linkend="cc-definition-vous"/> manquez à <xref linkend="cc-definition-vous" endterm="cc-definition-vos"/> obligations prévues par la présente Licence publique, <xref linkend="cc-definition-vous" endterm="cc-definition-vos"/> droits accordés par la présente Licence publique seront automatiquement révoqués.</simpara>
+        </listitem>
+
+        <listitem xml:id="cc-s6b">
+          <para>
+            Lorsque les <xref linkend="cc-definition-droits-accordes"/> ont été révoqués selon les termes de l'Article <xref linkend="cc-s6a"/>, ils seront rétablis :
+            <orderedlist numeration="arabic">
+              <listitem xml:id="cc-s6b1">
+                <simpara>automatiquement, à compter du jour où la violation aura cessé, à condition que <xref linkend="cc-definition-vous"/> y remédiiez dans les 30 jours suivant la date à laquelle <xref linkend="cc-definition-vous"/> aurez eu connaissance de la violation ; ou</simpara>
+              </listitem>
+              <listitem xml:id="cc-s6b2">
+                <simpara>à condition que le <xref linkend="cc-definition-donneur"/> l'autorise expressément.</simpara>
+              </listitem>
+            </orderedlist>
+            Afin de lever toute ambiguïté, le présent Article <xref linkend="cc-s6b"/> n'affecte pas le droit du <xref linkend="cc-definition-donneur"/> de demander réparation dans les cas de violation de la présente Licence publique.
+          </para>
+        </listitem>
+
+        <listitem xml:id="cc-s6c">
+          <simpara>Afin de lever toute ambiguïté, le <xref linkend="cc-definition-donneur"/> peut également proposer l'<xref linkend="cc-definition-oeuvre-sous-licence"/> selon d'autres termes et conditions et peut cesser la mise à disposition de l'<xref linkend="cc-definition-oeuvre-sous-licence"/> à tout moment ; une telle cessation n'entraîne pas la fin de la présente Licence publique.</simpara>
+        </listitem>
+
+        <listitem xml:id="cc-s6d">
+          <simpara>Les Articles <xref linkend="cc-s1"/>, <xref linkend="cc-s5"/>, <xref linkend="cc-s6"/>, <xref linkend="cc-s7"/> et <xref linkend="cc-s8"/> continueront à s'appliquer même après la résiliation de la présente Licence publique.</simpara>
+        </listitem>
+      </orderedlist>
+    </para>
+  </formalpara>
+
+  <formalpara xml:id="cc-s7">
+    <title>Article 7 – Autres termes et conditions.</title>
+    <titleabbrev xml:id="cc-s7-abbrev">Article 7</titleabbrev>
+
+    <para>
+      <orderedlist numeration="loweralpha">
+        <listitem xml:id="cc-s7a">
+          <simpara>Sauf accord exprès, le <xref linkend="cc-definition-donneur"/> n'est lié par aucune modification des termes de <xref linkend="cc-definition-vous" endterm="cc-definition-votre"/> part.</simpara>
+        </listitem>
+        <listitem xml:id="cc-s7b">
+          <simpara>Tous arrangements, ententes ou accords relatifs à l'<xref linkend="cc-definition-oeuvre-sous-licence"/> non mentionnés dans la présente Licence publique sont séparés et indépendants des termes et conditions de la présente Licence publique.</simpara>
+        </listitem>
+      </orderedlist>
+    </para>
+  </formalpara>
+
+  <formalpara xml:id="cc-s8">
+    <title>Article 8 – Interprétation.</title>
+    <titleabbrev xml:id="cc-s8-abbrev">Article 8</titleabbrev>
+    <para>
+      <orderedlist numeration="loweralpha">
+        <listitem xml:id="cc-s8a">
+          <simpara>Afin de lever toute ambiguïté, la présente Licence publique ne doit en aucun cas être interprétée comme ayant pour effet de réduire, limiter, restreindre ou imposer des conditions plus contraignantes que celles qui sont prévues par les dispositions légales applicables.</simpara>
+        </listitem>
+        <listitem xml:id="cc-s8b">
+          <simpara>Dans la mesure du possible, si une clause de la présente Licence publique est déclarée inapplicable, elle sera automatiquement modifiée a minima afin de la rendre applicable. Dans le cas où la clause ne peut être modifiée, elle sera écartée de la présente Licence publique sans préjudice de l'applicabilité des termes et conditions restants.</simpara>
+        </listitem>
+        <listitem xml:id="cc-s8c">
+          <simpara>Aucun terme ni aucune condition de la présente Licence publique ne sera écarté(e) et aucune violation ne sera admise sans l'accord exprès du <xref linkend="cc-definition-donneur"/>.</simpara>
+        </listitem>
+        <listitem xml:id="cc-s8d">
+          <simpara>Aucun terme ni aucune condition de la présente Licence publique ne constitue ou ne peut être interprété(e) comme une limitation ou une renonciation à un quelconque privilège ou à une immunité s'appliquant au <xref linkend="cc-definition-donneur"/> ou à <xref linkend="cc-definition-vous"/>, y compris lorsque celles-ci émanent d'une procédure légale, quel(le) qu'en soit le système juridique concerné ou l'autorité compétente.</simpara>
+        </listitem>
+      </orderedlist>
+    </para>
+  </formalpara>
+
+  <para>
+    Creative Commons n'est pas partie prenante de ses licences publiques. Néanmoins, Creative Commons se réserve le droit d'utiliser une de ses licences publiques pour les œuvres qu'elle publie, et dans ce cas sera considérée comme « <xref linkend="cc-definition-donneur"/> ». Le texte des licences publiques Creative Commons est versé au domaine public en vertu de <link xlink:href="https://creativecommons.org/publicdomain/zero/1.0/legalcode.fr">CC0 Domaine Public</link>.
+  </para>
+
+  <para>
+    À l'exception des seuls cas où il est indiqué que l'œuvre est mise à disposition sous licence publique Creative Commons et ceux autorisés par les statuts de Creative Commons disponibles sur <link xlink:href="https://creativecommons.org/policies">creativecommons.org/policies</link>, Creative Commons n'autorise l'utilisation par aucune partie de la marque "Creative Commons" ou de toute autre marque ou logo de Creative Commons sans le consentement écrit préalable de Creative Commons. Cette restriction relative à l'utilisation des marques ne constitue pas une partie de nos licences publiques.
+  </para>
+  <para>Vous pouvez joindre Creative Commons via <link xlink:href="https://creativecommons.org/">creativecommons.org</link>.</para>
+  <para xml:id="cc-languages">Autres langues disponibles : <link xlink:href="https://creativecommons.org/licenses/by-sa/4.0/legalcode.id">Bahasa Indonesia</link>, <link xlink:href="https://creativecommons.org/licenses/by-sa/4.0/legalcode.es">Español</link>, <link xlink:href="https://creativecommons.org/licenses/by-sa/4.0/legalcode.eu">euskara</link>, <link xlink:href="https://creativecommons.org/licenses/by-sa/4.0/legalcode.de">Deutsch</link>, <link xlink:href="https://creativecommons.org/licenses/by-sa/4.0/legalcode">English</link>, <link xlink:href="https://creativecommons.org/licenses/by-sa/4.0/legalcode.es">Español</link>, <link xlink:href="https://creativecommons.org/licenses/by-sa/4.0/legalcode.hr">hrvatski</link>, <link xlink:href="https://creativecommons.org/licenses/by-sa/4.0/legalcode.it">italiano</link>, <link xlink:href="https://creativecommons.org/licenses/by-sa/4.0/legalcode.lv">latviski</link>, <link xlink:href="https://creativecommons.org/licenses/by-sa/4.0/legalcode.lt">Lietuvių</link>, <link xlink:href="https://creativecommons.org/licenses/by-sa/4.0/legalcode.nl">Nederlands</link>, <link xlink:href="https://creativecommons.org/licenses/by-sa/4.0/legalcode.no">norsk</link>, <link xlink:href="https://creativecommons.org/licenses/by-sa/4.0/legalcode.pl">polski</link>, <link xlink:href="https://creativecommons.org/licenses/by-sa/4.0/legalcode.pt">português</link>, <link xlink:href="https://creativecommons.org/licenses/by-sa/4.0/legalcode.fi">suomeksi</link>, <link xlink:href="https://creativecommons.org/licenses/by-sa/4.0/legalcode.sv">svenska</link>, <link xlink:href="https://creativecommons.org/licenses/by-sa/4.0/legalcode.mi">te reo Māori</link>, <link xlink:href="https://creativecommons.org/licenses/by-sa/4.0/legalcode.tr">Türkçe</link>, <link xlink:href="https://creativecommons.org/licenses/by-sa/4.0/legalcode.cs">čeština</link>, <link xlink:href="https://creativecommons.org/licenses/by-sa/4.0/legalcode.el">Ελληνικά</link>, <link xlink:href="https://creativecommons.org/licenses/by-sa/4.0/legalcode.ru">русский</link>, <link xlink:href="https://creativecommons.org/licenses/by-sa/4.0/legalcode.uk">українська</link>, <link xlink:href="https://creativecommons.org/licenses/by-sa/4.0/legalcode.ar">العربية</link>, <link xlink:href="https://creativecommons.org/licenses/by-sa/4.0/legalcode.ja">日本語</link>, <link xlink:href="https://creativecommons.org/licenses/by-sa/4.0/legalcode.ko">한국어</link>. Veuillez lire la <link xlink:href="https://wiki.creativecommons.org/wiki/Frequently_Asked_Questions#officialtranslations">FAQ</link> pour plus d'informations sur les traductions officielles.</para>
+</appendix>

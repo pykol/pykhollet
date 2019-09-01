@@ -1,8 +1,8 @@
 html/index.xhtml: index.xml ects.xml
 	xsltproc --output $@ --xinclude /usr/share/xml/docbook/stylesheet/docbook-xsl/xhtml/docbook.xsl $<
 
-index.fo: index.xml installation.xml ects.xml colloscopes.xml
-	xsltproc --output $@ --xinclude /usr/share/xml/docbook/stylesheet/docbook-xsl/fo/docbook.xsl $<
+index.fo: docbook-fo.xsl index.xml installation.xml ects.xml colloscopes.xml cc-by-sa-4.0.xml
+	xsltproc --output $@ --xinclude $< $(word 2,$^)
 
 index.pdf: index.fo
 	fop -fo $< -pdf $@

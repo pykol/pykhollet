@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <book xmlns="http://docbook.org/ns/docbook"
   xmlns:xi="http://www.w3.org/2001/XInclude"
+  xmlns:xlink="http://www.w3.org/1999/xlink"
   xml:id="book-pykol"
   xml:lang="fr"
   version="5.0">
@@ -20,10 +21,22 @@
       <year>2019</year>
       <holder>Florian Hatat</holder>
     </copyright>
+
+    <legalnotice>
+      <mediaobject>
+        <imageobject>
+          <imagedata align="center" width="3cm" format="SVG" fileref="figures/CC-BY-SA_icon.svg"/>
+        </imageobject>
+      </mediaobject>
+      <para>
+        Cette œuvre est mise à disposition sous licence Attribution - Partage dans les Mêmes Conditions 4.0 International. Pour voir une copie de cette licence, visitez <link xlink:href="http://creativecommons.org/licenses/by-sa/4.0/deed.fr"/> ou écrivez à Creative Commons, PO Box 1866, Mountain View, CA 94042, USA.
+      </para>
+    </legalnotice>
   </info>
 
   <xi:include href="installation.xml"/>
   <xi:include href="colloscopes.xml"/>
   <xi:include href="comptabilite.xml"/>
   <xi:include href="ects.xml"/>
+  <xi:include href="cc-by-sa-4.0.xml"/>
 </book>

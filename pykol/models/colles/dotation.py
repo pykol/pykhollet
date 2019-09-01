@@ -174,7 +174,7 @@ class CollesEnseignement(models.Model):
 
 		return "{classe} - {nom}".format(
 			classe=self.classe,
-			nom=str(matiere))
+			nom=nom)
 
 class DotationClasse(models.Model):
 	classe = models.OneToOneField(Classe, on_delete=models.CASCADE,

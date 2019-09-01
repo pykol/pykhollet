@@ -25,3 +25,4 @@ from .enseignement import Matiere, Groupe, Service, \
 		Enseignement, Classe, GroupeEffectif, \
 		AbstractBaseGroupe, OptionEtudiant, AbstractPeriode
 from .enseignement import ModuleElementaireFormation, MEFMatiere
+from .import_bee import ImportBeeLog

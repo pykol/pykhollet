@@ -16,17 +16,44 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+from datetime import timedelta
+
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import update_session_auth_hash
 from django.contrib.auth.decorators import login_required, \
 		permission_required
 from django.contrib.auth.mixins import PermissionRequiredMixin
+from django.utils import timezone
 
 from pykol.forms.user import MonProfilForm, MonProfilPasswordForm
 
+from pykol.models.base import Annee, Classe
+
 @login_required
 def home(request):
-	return render(request, 'pykol/base.html')
+	context = {}
+
+	# Liste des choses à faire en début d'année
+	annee_actuelle = Annee.objects.get_actuelle()
+	if annee_actuelle.debut + timedelta(days=60) > timezone.now().date():
+		# On cherche la liste des classes dont le professeur est
+		# responsable du colloscope.
+		classes = Classe.objects.filter(
+				annee=annee_actuelle,
+				colloscopepermission__user=request.user,
+				colloscopepermission__matiere_seulement=False,
+				colloscopepermission__droit__content_type__app_label='pykol',
+				colloscopepermission__droit__codename='change_colloscope')
+		context['debut_annee'] = []
+		for classe in classes:
+			context['debut_annee'].append({
+				'classe': classe,
+				'semaines_ok': classe.semaine_set.exists(),
+				'groupes_ok': classe.trinomes.exists(),
+				'creneaux_ok': classe.creneau_set.exists(),
+			})
+
+	return render(request, 'pykol/accueil.html', context=context)
 
 @login_required
 def mon_profil(request):

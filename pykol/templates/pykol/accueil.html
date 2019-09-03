@@ -1,0 +1,35 @@
+{% extends "pykol/base.html" %}
+{% block content %}
+{% block content_title %}
+<h2>pyKol − <small>un gestionnaire de colles</small></h2>
+{% endblock %}
+<section>
+  <p>Les rubriques que vous pouvez consulter sont accessibles à partir
+  du menu de gauche.</p>
+
+  <p>Nous avons essayé de concevoir pyKol avec le plus grand soin.
+  Cependant comme tout logiciel, il n'est certainement pas à l'abri
+  d'anomalies ou de défauts. Si pyKol vous donne l'impression de
+  tituber plus que de raison, n'hésitez pas en informer les auteurs ou
+  la direction du lycée afin d'apporter un correctif le plus
+  rapidement possible.</p>
+</section>
+
+{% for debut in debut_annee %}
+<section>
+  <h3>C'est le début de l'année en {{ debut.classe }} !</h3>
+  <p>Vous êtes mentionné dans la base de données comme responsable du
+  colloscope en classe de {{ debut.classe }}. Voici la liste des actions à
+  réaliser pour saisir le colloscope :
+  <ul>
+    <li class="{% if debut.semaines_ok %}task_done{% else %}task_todo{% endif %}"><a href="{% url 'colloscope_semaines' debut.classe.slug %}">définir les semaines de colles</a> ;</li>
+    <li class="{% if debut.trinomes_ok %}task_done{% else %}task_todo{% endif %}"><a href="{% url 'colloscope_trinomes' debut.classe.slug %}">définir les groupes de colles</a> ;</li>
+    <li class="{% if debut.creneaux_ok %}task_done{% else %}task_todo{% endif %}"><a href="{% url 'colloscope_creneaux' debut.classe.slug %}">saisir les créneaux réguliers de colles</a>.</li>
+  </ul>
+  <p>Vous pourrez ensuite importer le
+  <a href="{% url 'colloscope_import_odf' debut.classe.slug %}">colloscope
+    de la classe</a>, ce qui permettra à tous les colleurs d'avoir accès
+  à leurs plannings de colles et de déclarer les colles qu'ils ont
+  effectuées.</p>
+{% endfor %}
+{% endblock %}

@@ -50,7 +50,8 @@ class ServiceForm(ModelForm):
 		classe_qs = kwargs.pop('classe_qs', None)
 		super().__init__(*args, **kwargs)
 		if classe_qs is not None:
-			self.fields['enseignement'].queryset = classe_qs.enseignements
+			self.fields['enseignement'].queryset = classe_qs.enseignements.order_by(
+					'modalite_option', 'rang_option', 'matiere__parent', 'matiere__nom')
 
 	class Meta:
 		model = Service

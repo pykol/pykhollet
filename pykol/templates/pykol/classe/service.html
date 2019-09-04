@@ -15,6 +15,15 @@
 
   <form method="post" action="">
     <ul id="service-form" class="formset">
+      <li>
+        <ul class="formset-labels">
+        {% for field in form.empty_form %}
+        {% if not field.is_hidden %}
+        <li>{{ field.label }}</li>
+        {% endif %}
+        {% endfor %}
+        </ul>
+      </li>
       {% for form in form %}
       <li>
         <ul>

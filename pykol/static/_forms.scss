@@ -94,6 +94,21 @@ fieldset {
     @include button-danger;
     @extend .btn-sm;
   }
+  .formset-labels {
+    font-weight: bold;
+    text-align: center;
+  }
+  & > li {
+    margin-bottom: 0.5rem;
+  }
+}
+
+#service-form {
+  & > li > ul > li {
+    &:nth-child(1) { width: 100% * 5 / 12; }
+    &:nth-child(2) { width: 100% * 5 / 12; }
+    &:nth-child(3) { width: 100% * 2 / 12; }
+  }
 }
 
 .button-add {

@@ -176,4 +176,3 @@ def semaines(request, slug):
 				'formset': formset,
 				'genform': genform,
 				})
-

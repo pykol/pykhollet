@@ -26,8 +26,20 @@ class EnseignementSansClasseField(ModelChoiceField):
 	Classe qui permet de personnaliser les libellés des enseignements
 	affichés par les instances de ServiceForm.
 	"""
-	def label_from_instance(self, obj):
-		return str(obj.matiere)
+	def label_from_instance(self, enseignement):
+		if enseignement.modalite_option == enseignement.MODALITE_COMMUN:
+			return str(enseignement.matiere)
+		elif enseignement.modalite_option == enseignement.MODALITE_OBLIGATOIRE:
+			return "{matiere} (rang {rang}, {modalite})".format(
+				matiere=enseignement.matiere,
+				rang=enseignement.rang_option,
+				modalite=enseignement.get_modalite_option_display(),
+			)
+		else:
+			return "{matiere} ({modalite})".format(
+				matiere=enseignement.matiere,
+				modalite=enseignement.get_modalite_option_display(),
+			)
 
 class ServiceForm(ModelForm):
 	"""

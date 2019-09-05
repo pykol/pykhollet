@@ -22,7 +22,7 @@
 class DjangoFormset {
   constructor(formset_element) {
     // TODO guess prefix
-    this.formset_prefix = ...;
+    this.formset_prefix = "form";
     this.formset_element = formset_element;
 
     this.formset = formset_element;
@@ -131,8 +131,9 @@ class DjangoFormset {
     var line_id = this.newLineId();
     // TODO réattribuer proprement les attributs "name"
     var html_line = this.formset.appendChild(document.importNode(this.template.content, true).children[0]);
-    for(var element of html_line.querySelectorAll(...)) {
-      var name = ...;
+    // TODO query et name
+    for(var element of html_line.querySelectorAll(42)) {
+      var name = 42;
       element.name = this.inputName(form_id, name);
       element.id = 'id_' + element.name;
     }
@@ -240,14 +241,20 @@ class DjangoFormset {
   }
 
   addDeleteButtons() {
-    for(var form_id = 0; form_id < this.formset.children.length; form_id++) {
+    for(var child_id = 0; child_id < this.formset.children.length; child_id++) {
+      if(!this.formset.children[child_id].classList.contains('formset-line')) {
+        continue;
+      }
+      var form_id = child_id - 1;
       var delete_button = document.createElement('button');
       var line_id = this.lineIdOf(form_id);
       this.form_lines[line_id].delete_button = delete_button;
       delete_button.attributes['name'] = this.inputName(form_id, 'DELETEBUTTON');
       delete_button.id = 'id-' + delete_button.attributes['name'];
+      delete_button.className ='delete-row';
+      delete_button.innerHTML = '<i class="fa fa-trash"></i> Supprimer';
 
-      var delete_box = this.formset.children[form_id].querySelector('[name="' + this.inputName(form_id, 'DELETE') + '"]');
+      var delete_box = this.formset.children[child_id].querySelector('[name="' + this.inputName(form_id, 'DELETE') + '"]');
       delete_box.style.display = 'none';
       delete_box.type = 'hidden';
 
@@ -272,6 +279,9 @@ class DjangoFormset {
   addAddButton() {
     var add_button = document.createElement('button');
     add_button.attributes['name'] = this.formset_prefix + '-ADDBUTTON';
+    add_button.className = 'add-row';
+    add_button.innerHTML = '<i class="fa fa-plus"></i> Ajouter une ligne';
+    add_button.type = "button";
     add_button.addEventListener('click', (function() {
       var old_can_delete = this.canDelete();
       this.addLine();
@@ -285,12 +295,16 @@ class DjangoFormset {
       }
     }).bind(this));
     this.add_button = add_button;
+    this.formset.parentNode.insertBefore(add_button, this.formset.nextSibling);
   }
 }
 
-document.addEventListener('DOMCOntentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function() {
   var formsets = document.getElementsByClassName('formset');
+  console.log(formsets);
   for(var i = 0; i < formsets.length; i++) {
     formsets[i].formset = new DjangoFormset(formsets[i]);
+    formsets[i].formset.addDeleteButtons();
+    formsets[i].formset.addAddButton();
   }
 });

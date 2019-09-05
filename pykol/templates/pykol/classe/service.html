@@ -1,6 +1,10 @@
 {% extends "pykol/base.html" %}
-{% load lien_email %}
+{% load static %}
 {% block title %}Liste des enseignants en {{ object.nom }} − {{ block.super }}{% endblock %}
+{% block head %}
+{{ block.super }}
+<script src="{% static 'js/formset_client.js' %}"></script>
+{% endblock %}
 {% block content %}
 <h2>Liste des enseignants en {{ object.nom }}</h2>
 
@@ -15,8 +19,8 @@
 
   <form method="post" action="">
     <ul id="service-form" class="formset">
-      <li>
-        <ul class="formset-labels">
+      <li class="formset-labels">
+        <ul>
         {% for field in form.empty_form %}
         {% if not field.is_hidden %}
         <li>{{ field.label }}</li>
@@ -25,7 +29,7 @@
         </ul>
       </li>
       {% for form in form %}
-      <li>
+      <li class="formset-line">
         <ul>
           {{ form.as_ul }}
         </ul>

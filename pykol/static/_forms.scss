@@ -86,10 +86,12 @@ fieldset {
   height: 34px;
 }
 
-.formset {
+form {
   .add-row {
     @include button-primary;
   }
+}
+.formset {
   .delete-row {
     @include button-danger;
     @extend .btn-sm;
@@ -105,8 +107,9 @@ fieldset {
 
 #service-form {
   & > li > ul > li {
-    &:nth-child(1) { width: 100% * 5 / 12; }
-    &:nth-child(2) { width: 100% * 5 / 12; }
+    &:nth-child(1) { width: 100% * 4 / 12; }
+    &:nth-child(2) { width: 100% * 4 / 12; }
+    &:nth-child(3) { width: 100% * 2 / 12; }
     &:nth-child(3) { width: 100% * 2 / 12; }
   }
 }

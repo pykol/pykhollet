@@ -17,7 +17,7 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 from django.forms import ModelForm, modelformset_factory, \
-		ModelChoiceField
+		ModelChoiceField, BooleanField
 
 from pykol.models.base import Service
 
@@ -46,6 +46,13 @@ class ServiceForm(ModelForm):
 	Formulaire qui permet d'éditer un objet Service afin de modifier le
 	professeur et l'enseignement.
 	"""
+
+	# On ajoute un champ supplémentaire qui permet de gérer au passage
+	# les permissions sur le colloscope, qui ne font pas partie du
+	# modèle Service mais du modèle ColloscopePermission.
+	gestion_colloscope = BooleanField(required=False,
+		label="Gestion du colloscope")
+
 	def __init__(self, *args, **kwargs):
 		classe_qs = kwargs.pop('classe_qs', None)
 		super().__init__(*args, **kwargs)
@@ -59,6 +66,10 @@ class ServiceForm(ModelForm):
 		field_classes = {
 			'enseignement': EnseignementSansClasseField,
 		}
+
+	def save(self, commit=True):
+		service = super().save(commit=commit)
+		return service
 
 ServiceFormset = modelformset_factory(Service, form=ServiceForm,
 		can_delete=True, extra=3, fields=ServiceForm.Meta.fields)

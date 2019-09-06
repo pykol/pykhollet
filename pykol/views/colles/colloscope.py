@@ -1,7 +1,7 @@
 # -*- coding: utf-8
 
 # pyKol - Gestion de colles en CPGE
-# Copyright (c) 2018 Florian Hatat
+# Copyright (c) 2018-2019 Florian Hatat
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Affero General Public License as published by
@@ -27,8 +27,7 @@ from django.contrib import messages
 
 from pykol.models.base import Classe
 from pykol.models.colles import Creneau, Colle
-from pykol.forms.colloscope import CreneauSalleFormSet, \
-		CreneauSansClasseFormSet, \
+from pykol.forms.colloscope import CreneauSansClasseFormSet, \
 		ColleForm, ColleSupprimerForm
 
 @login_required
@@ -164,27 +163,6 @@ def creneaux(request, slug):
 	return render(request, 'pykol/colles/creneaux.html', context={
 		'classe': classe,
 		'formset': formset})
-
-@login_required
-@permission_required('pykol.direction')
-def creneau_list_direction(request):
-	"""Gestion de tous les créneaux de colle par la direction"""
-	# On trie par nom de colleur, puis par colleur pour départager les
-	# homonymes.
-	creneaux_qs = Creneau.objects.order_by('colleur__last_name',
-			'colleur__first_name', 'colleur', 'jour', 'debut')
-
-	if request.method == 'POST':
-		formset = CreneauSalleFormSet(request.POST, queryset=creneaux_qs)
-
-		if formset.is_valid():
-			formset.save()
-
-	else:
-		formset = CreneauSalleFormSet(queryset=creneaux_qs)
-
-	return render(request, 'pykol/direction/creneau_list.html',
-			context={'formset': formset})
 
 @login_required
 def creneau_supprimer(request, pk):

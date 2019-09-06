@@ -7,11 +7,15 @@
   min-width: 4.5rem;
 }
 </style>
+<link rel="alternate" href="?format=odf" type="application/vnd.oasis.opendocument.spreadsheet">
 {% endblock %}
 {% block title %}Créneaux de colles − {{ block.super }}{% endblock %}
 {% block content %}
 <h2>
   Créneaux de colles
+  <small>
+    <a title="Télécharger au format OpenDocument" href="?format=odf"><i class="fa fa-download"></i></a>
+  </small>
 </h2>
 
 <section>

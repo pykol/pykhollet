@@ -22,3 +22,4 @@ from .releve import *
 from .permissions import *
 from .user import *
 from .colles import *
+from .colloscope import *

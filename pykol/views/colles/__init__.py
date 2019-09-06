@@ -17,7 +17,7 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 from .colloscope import colloscope_home
-from .colloscope import creneaux, creneau_list_direction
+from .colloscope import creneaux
 from .colloscope import colle_creer, colle_supprimer
 
 from .colles import colle_declarer, colle_deplacer, \

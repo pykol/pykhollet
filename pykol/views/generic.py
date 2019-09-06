@@ -18,6 +18,7 @@
 
 from django.views.generic.base import ContextMixin
 from django.shortcuts import render
+from django.http import HttpResponse
 
 from pykol.models.comptabilite import CompteDecouvert
 
@@ -35,3 +36,17 @@ class CompteDecouvertMixin(ContextMixin):
 			# a échoué à cause d'un découvert non autorisé.
 			return render(request, self.decouvert_template,
 					context=self.get_context_data())
+
+class OdfResponse(HttpResponse):
+	"""
+	Classe générique pour aider à construire une réponse au format
+	OpenDocument.
+	"""
+	def __init__(self, opendocument, **kwargs):
+		self.filename = kwargs.pop('filename', None)
+		self.opendocument = opendocument
+		kwargs.setdefault('content_type', self.opendocument.getMediaType())
+		super().__init__(**kwargs)
+		if self.filename is not None:
+			self['Content-Disposition'] = 'attachment; filename="{}"'.format(self.filename)
+		self.opendocument.write(self)

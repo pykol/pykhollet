@@ -22,7 +22,6 @@ import copy
 from django.contrib.auth.decorators import login_required, \
 		permission_required
 from django.shortcuts import render, get_object_or_404, redirect
-from django.http import HttpResponse
 from django.conf import settings
 from django.utils.text import slugify
 
@@ -34,6 +33,7 @@ import odf.namespaces
 
 from pykol.models.ects import Jury, Mention, GrilleGroupeLignes
 from pykol.models.base import Etudiant, Enseignement
+from pykol.views.generic import OdfResponse
 
 def nom_formation(jury):
 	return "{libelle} − {niveau}".format(
@@ -273,13 +273,8 @@ def jury_toutes_attestations_resultats(request, pk):
 
 	signature_attestation(attestations, jury)
 
-	response = HttpResponse(content_type=attestations.getMediaType())
-	response['Content-Disposition'] = \
-		'attachment; filename="resultats-ects-{classe}-{jury}.odt"'.format(
-				classe=slugify(str(jury.classe)), jury=jury.pk)
-	attestations.write(response)
-
-	return response
+	return OdfResponse(attestations, filename="resultats-ects-{classe}-{jury}.odt".format(
+		classe=slugify(str(jury.classe)), jury=jury.pk))
 
 @login_required
 @permission_required('pykol.direction')
@@ -308,16 +303,11 @@ def jury_toutes_attestations_parcours(request, pk):
 
 	signature_attestation(attestations, jury)
 
-	response = HttpResponse(content_type=attestations.getMediaType())
-	response['Content-Disposition'] = \
-		'attachment; filename="attestation-parcours-ects-{classe}-{jury}.odt"'.format(
-				classe=slugify(str(jury.classe)), jury=jury.pk)
-	attestations.write(response)
-
-	return response
+	return OdfResponse(attestations, filename="attestation-parcours-ects-{classe}-{jury}.odt".format(
+		classe=slugify(str(jury.classe)), jury=jury.pk))
 
 @login_required
-#@permission_required('pykol.direction')
+@permission_required('pykol.direction')
 def jury_attestation_etudiant(request, pk, etu_pk):
 	jury = get_object_or_404(Jury, pk=pk)
 	# On filtre les étudiants par jury pour ne pas éditer une
@@ -332,10 +322,5 @@ def jury_attestation_etudiant(request, pk, etu_pk):
 	fusion_mentions(etudiant, jury, attestation)
 	signature_attestation(attestation, jury)
 
-	response = HttpResponse(content_type=attestation.getMediaType())
-	response['Content-Disposition'] = \
-		'attachment; filename="attestation-ects-{etudiant}-{jury}.odt"'.format(
-				etudiant=slugify(str(etudiant)), jury=jury.pk)
-	attestation.write(response)
-
-	return response
+	return OdfResponse(attestation, filename="attestation-ects-{etudiant}-{jury}.odt".format(
+		etudiant=slugify(str(etudiant)), jury=jury.pk))

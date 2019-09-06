@@ -23,7 +23,6 @@ from collections import defaultdict, OrderedDict
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
 from django.core.exceptions import PermissionDenied
-from django.http import HttpResponse
 
 from odf.opendocument import OpenDocumentSpreadsheet, load
 from odf.table import Table, TableColumn, TableRow, TableCell, \
@@ -37,6 +36,7 @@ from pykol.models.base import Classe
 from pykol.models.colles import Colle
 from pykol.forms.colloscope import ColloscopeImportForm
 from pykol.lib.odftools import tablecell_to_text, iter_columns
+from pykol.views.generic import OdfResponse
 
 @login_required
 def colloscope(request, slug):
@@ -94,9 +94,6 @@ def colloscope_odf(request, classe):
 	"""
 	Affichage du colloscope d'une classe au format OpenDocument
 	"""
-	response = HttpResponse(content_type='application/vnd.oasis.opendocument.spreadsheet')
-	response['Content-Disposition'] = 'attachment; filename="colloscope_{}.ods"'.format(classe.slug)
-
 	semaines = classe.semaine_set.order_by('debut')
 	creneaux = classe.creneau_set.order_by('enseignement', 'jour', 'debut')
 	colles = classe.colle_set.filter(semaine__in=semaines,
@@ -206,8 +203,7 @@ def colloscope_odf(request, classe):
 				cell.valuetype="string"
 				P(parent=cell, text=groupes_texte)
 
-	ods.write(response)
-	return response
+	return OdfResponse(ods, filename="colloscope_{}.ods".format(classe.slug))
 
 @login_required
 def import_odf(request, slug):

@@ -40,7 +40,7 @@ i.#{$fa-css-prefix} {
 
 .content {
   li:before { content: "\2013 "; }
-  .trinomes li:before { content: none; }
+  .trinomes li::before { content: none; }
 
   p {
     margin-bottom: 0.3em;
@@ -60,4 +60,16 @@ i.#{$fa-css-prefix} {
 .resultats sup {
   vertical-align: super;
   font-size: 75%;
+}
+
+.content li.task_todo::before {
+  @extend .fa;
+  content: fa-content($fa-var-hand-point-right);
+  color: orange;
+}
+
+.content li.task_done::before {
+  @extend .fa;
+  content: fa-content($fa-var-check);
+  color: green;
 }

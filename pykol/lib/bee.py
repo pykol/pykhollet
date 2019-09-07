@@ -1257,13 +1257,10 @@ class BEEImporter:
 					professeur.etablissement = self.etablissement
 					professeur.corps = grade
 					professeur.id_acad = numero_sts
-
 					professeur.save()
-					professeur.disciplines.set(disciplines)
-					self.professeurs[individu_id] = professeur
 
 				except Professeur.DoesNotExist:
-					professeur = Professeur(
+					professeur = Professeur.objects.create(
 						last_name=nom,
 						first_name=prenom,
 						sexe=sexe,
@@ -1271,35 +1268,8 @@ class BEEImporter:
 						corps=grade,
 						id_acad=numero_sts)
 
-					compte_prof = Compte(
-						categorie=Compte.CATEGORIE_ACTIFS,
-						nom="{0.last_name} {0.first_name}".format(professeur),
-						parent=self.etablissement.compte_professeurs,
-						decouvert_autorise=True)
-					compte_prof.save()
-
-					compte_prevu = Compte(
-						categorie=Compte.CATEGORIE_ACTIFS,
-						nom="Colles prévues",
-						parent=compte_prof)
-					compte_prevu.save()
-
-					compte_effectue = Compte(
-						categorie=Compte.CATEGORIE_ACTIFS,
-						nom="Colles effectuées",
-						parent=compte_prof,
-						decouvert_autorise=True)
-					compte_effectue.save()
-
-					professeur.compte_prevu = compte_prevu
-					professeur.compte_effectue = compte_effectue
-					professeur.save()
-					compte_prof.gestionnaires.add(professeur)
-					compte_prevu.gestionnaires.add(professeur)
-					compte_effectue.gestionnaires.add(professeur)
-
-					professeur.disciplines.set(disciplines)
-					self.professeurs[individu_id] = professeur
+				professeur.disciplines.set(disciplines)
+				self.professeurs[individu_id] = professeur
 
 			elif fonction == "DIR":
 				user, _ = User.objects.update_or_create(

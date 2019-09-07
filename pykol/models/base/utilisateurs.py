@@ -25,6 +25,7 @@ from django.contrib.auth.models import AbstractUser, BaseUserManager
 from django.core.validators import RegexValidator
 from django.core.exceptions import ObjectDoesNotExist
 from django.urls import reverse
+from django.conf import settings
 
 from pykol.models.fields import Lettre23Field
 from pykol.models.base import Etablissement
@@ -251,6 +252,12 @@ class Discipline(models.Model):
 	def __str__(self):
 		return "{} ({})".format(self.nom, self.code)
 
+class ProfesseurManager(UserManager):
+	def create(self, **kwargs):
+		professeur = self.model(**kwargs)
+		professeur.construire_comptes(commit)
+		return professeur
+
 class Professeur(User):
 	"""
 	Professeur intervenant dans l'établissement
@@ -259,6 +266,8 @@ class Professeur(User):
 	affectés à l'établissement que les intervenants extérieurs. Le
 	statut est précisé grâce au champ corps.
 	"""
+	objects = ProfesseurManager()
+
 	CORPS_AUTRE = 0
 	CORPS_CERTIFIE = 1
 	CORPS_AGREGE = 2
@@ -325,6 +334,46 @@ class Professeur(User):
 					colle__colledetails__eleves__classe__pk=F('pk'),
 					colle__colledetails__colleur=self))
 		return qs
+
+	def construire_comptes(self, commit=True):
+		"""
+		Initialise les comptes de colle du professeur, s'ils ne sont pas
+		déjà définis.
+		"""
+		if hasattr(self, 'compte_prevu') or \
+			hasattr(self, 'compte_effectue'):
+			return
+
+		compte_prof = Compte(
+			categorie=Compte.CATEGORIE_ACTIFS,
+			nom="{0.last_name} {0.first_name}".format(self),
+			parent=Etablissement.objects.get(pk=settings.PYKOL_UAI_DEFAUT).compte_professeurs,
+			decouvert_autorise=True)
+		compte_prof.save()
+
+		compte_prevu = Compte(
+			categorie=Compte.CATEGORIE_ACTIFS,
+			nom="Colles prévues",
+			parent=compte_prof)
+		compte_prevu.save()
+
+		compte_effectue = Compte(
+			categorie=Compte.CATEGORIE_ACTIFS,
+			nom="Colles effectuées",
+			parent=compte_prof,
+			decouvert_autorise=True)
+		compte_effectue.save()
+
+		self.compte_prevu = compte_prevu
+		self.compte_effectue = compte_effectue
+
+		if commit:
+			self.save()
+
+		if self.pk is not None:
+			self.compte_prof.gestionnaires.add(self)
+			self.compte_prevu.gestionnaires.add(self)
+			self.compte_effectue.gestionnaires.add(self)
 
 class JetonAcces(models.Model):
 	uuid = models.UUIDField(default=uuid.uuid4, editable=False,

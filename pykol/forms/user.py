@@ -89,6 +89,11 @@ class ProfesseurForm(forms.ModelForm):
 		fields = ('corps', 'etablissement', 'id_acad',
 				'nom_asie', 'prenom_asie')
 
+	def save(self, commit=True):
+		professeur = super().save(commit=False)
+		professeur.construire_comptes()
+		return professeur
+
 class EtudiantForm(forms.ModelForm):
 	"""
 	Édition des informations spécifiques aux étudiants.

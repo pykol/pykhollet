@@ -156,8 +156,7 @@ def import_colleurs_odf(request):
 				except Professeur.DoesNotExist:
 					try:
 						if not form.cleaned_data.get('mise_a_jour'):
-							prof = Professeur(**colleur_data)
-							prof.save()
+							prof = Professeur.objects.create(**colleur_data)
 					except:
 						# On est peut-être en train de mettre à jour le
 						# compte d'un personnel de direction

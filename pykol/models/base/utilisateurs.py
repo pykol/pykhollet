@@ -371,9 +371,9 @@ class Professeur(User):
 			self.save()
 
 		if self.pk is not None:
-			self.compte_prof.gestionnaires.add(self)
-			self.compte_prevu.gestionnaires.add(self)
-			self.compte_effectue.gestionnaires.add(self)
+			compte_prof.gestionnaires.add(self)
+			compte_prevu.gestionnaires.add(self)
+			compte_effectue.gestionnaires.add(self)
 
 class JetonAcces(models.Model):
 	uuid = models.UUIDField(default=uuid.uuid4, editable=False,

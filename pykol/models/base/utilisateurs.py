@@ -346,7 +346,9 @@ class Professeur(User):
 
 		compte_prof = Compte(
 			categorie=Compte.CATEGORIE_ACTIFS,
-			nom="{0.last_name} {0.first_name}".format(self),
+			nom="{last_name} {first_name}".format(
+				last_name=self.last_name,
+				first_name=self.first_name),
 			parent=Etablissement.objects.get(pk=settings.PYKOL_UAI_DEFAUT).compte_professeurs,
 			decouvert_autorise=True)
 		compte_prof.save()

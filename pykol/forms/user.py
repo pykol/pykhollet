@@ -229,13 +229,15 @@ class FullUserForm(forms.Form):
 		res = self.user_form.save(commit=False)
 
 		if self.is_professeur():
-			prof = self.prof_form.save(commit=False)
+			prof = self.prof_form.instance
 			prof.__dict__.update(res.__dict__)
+			self.prof_form.save(commit)
 			res = prof
 
 		if self.is_etudiant():
-			etu = self.etu_form.save(commit=False)
+			etu = self.etu_form.instance
 			etu.__dict__.update(res.__dict__)
+			etu = self.etu_form.save(commit)
 			res = etu
 
 		if commit:

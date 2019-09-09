@@ -49,7 +49,7 @@ def home(request):
 			context['debut_annee'].append({
 				'classe': classe,
 				'semaines_ok': classe.semaine_set.exists(),
-				'groupes_ok': classe.trinomes.exists(),
+				'trinomes_ok': classe.trinomes.exists(),
 				'creneaux_ok': classe.creneau_set.exists(),
 			})
 

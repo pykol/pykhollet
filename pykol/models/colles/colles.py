@@ -189,15 +189,11 @@ class Colle(AbstractBaseColle):
 
 	# Intégration de la comptabilité. Le financement d'une colle doit
 	# être prévu par une ligne qui crédite un compte (à priori celui du
-	# colleur). Cette ligne donne les durées maximales attribuées à la
-	# colle. Le colleur peut effectuer des modifications sur sa colle
-	# tant que la dotation le permet. Si la dotation ne prévoit que le
-	# passage de deux étudiants dans la durée d'interrogation, le
-	# colleur ne pourra pas en ajouter un troisième. Cette modification
-	# devra alors être effectuée par un professeur qui dispose des
-	# droits suffisants sur le compte de dotation de la classe.
+	# colleur). Cette ligne indique la durée qui sera mise en paiement
+	# au colleur.
 	ligne_dotation = models.ForeignKey(MouvementLigne,
-		verbose_name="ligne de dotation", on_delete=models.PROTECT)
+		verbose_name="ligne de dotation", on_delete=models.PROTECT,
+		blank=True, null=True)
 
 	# On remplace le gestionnaire objects, mais en prenant soin de
 	# laisser le gestionnaire par défaut all_objects en première
@@ -326,8 +322,7 @@ class Colle(AbstractBaseColle):
 		# programmation de la colle. Pour cela, on commence par renvoyer
 		# la dotation sur le compte de la matière, et on re-créditera
 		# ensuite comme s'il s'agissait d'une nouvelle colle.
-		if ancien_detail is not None and (colleur_modifie or
-				anciens_etudiants != len(set(etudiants))):
+		if self.ligne_dotation:
 			self.annuler_mouvement()
 
 		# Dotation de la colle. Ceci peut lever une exception, qui fait
@@ -375,6 +370,9 @@ class Colle(AbstractBaseColle):
 			compte_credit=self.colleur.compte_prevu,
 			motif=str(self),
 		)
+		self.ligne_dotation = mv.ligne_credit()
+		self.save()
+
 		if valider:
 			mv.valider()
 		return mv
@@ -393,7 +391,7 @@ class Colle(AbstractBaseColle):
 			self.etat = self.ETAT_NOTEE
 
 		# Créditer le compte du colleur pour le paiement
-		Mouvement.objects.virement(
+		mv = Mouvement.objects.virement(
 			date=timezone.now(),
 			annee=self.classe.annee,
 			colle=self,
@@ -401,19 +399,21 @@ class Colle(AbstractBaseColle):
 			duree_interrogation=self.duree_interrogation,
 			compte_debit=self.colleur.compte_prevu,
 			compte_credit=self.colleur.compte_effectue,
-			motif=str(self)).valider()
+			motif=str(self))
+		mv.valider()
+
+		# On lettre la ligne de dotation et la ligne qui débite cette
+		# dotation pour payer le colleur.
+		Lettrage.lettrage_total([self.ligne_dotation, mv.ligne_debit()])
 
 		self.save()
 
 	def annuler_mouvement(self):
-		# Recherche du mouvement actuel qui dote cette colle.
-		# Le order_by('-pk').first() est un hack affreux mais je n'ai
-		# pas mieux pour le moment : sans lui, on récupère aussi les
-		# mouvements d'annulation si la colle a déjà été déplacée
-		# plusieurs fois.
-		old_mv = Mouvement.objects.filter(colle=self,
-				lignes__lettrage__isnull=True,
-				lignes__duree__gte=timedelta()).order_by('-pk').first()
+		"""
+		Annulation de la dotation de la colle, en rendant les heures à
+		la matière.
+		"""
+		old_mv = self.ligne_dotation.mouvement
 		retour_mv = old_mv.virement_retour()
 		retour_mv.colle = self
 		retour_mv.save()

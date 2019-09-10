@@ -285,6 +285,29 @@ class Mouvement(models.Model):
 		self.etat = self.ETAT_VALIDE
 		self.save()
 
+	def _premiere_ligne_sens(self, sens):
+		for ligne in self.lignes.all():
+			if ligne.sens == sens:
+				return ligne
+
+	def ligne_debit(self):
+		"""
+		Renvoie la première ligne de ce mouvement qui est un débit. Ceci
+		permet d'identifier facilement la ligne de débit dans le cas
+		d'un virement simple. L'ordre n'est pas défini quand il y a
+		plusieurs lignes de débit.
+		"""
+		return self._premiere_ligne_sens(MouvementLigne.SENS_DEBIT)
+
+	def ligne_credit(self):
+		"""
+		Renvoie la première ligne de ce mouvement qui est un crédit. Ceci
+		permet d'identifier facilement la ligne de crédit dans le cas
+		d'un virement simple. L'ordre n'est pas défini quand il y a
+		plusieurs lignes de crédit.
+		"""
+		return self._premiere_ligne_sens(MouvementLigne.SENS_CREDIT)
+
 class LettrageNonEquilibre(Exception):
 	pass
 

@@ -18,12 +18,12 @@
       <th>E-mail</th>
       <td>{% if etudiant.email %}<a href="mailto:{{ etudiant.email }}">{{ etudiant.email }}</a>{% else %}Adresse inconnue{% endif %}</td>
     </tr>
-    {% if etudiant.options %}
+    {% if options %}
     <tr>
-      <th>Options</th>
+      <th>Options suivies</th>
       <td>
         <ul>
-          {% for option in etudiant.optionetudiant_set.all %}
+          {% for option in options %}
           <li>{{ option }}</li>
           {% endfor %}
         </ul>
@@ -36,11 +36,23 @@
       <td>{{ etudiant.sortie }}
     </tr>
     {% endif %}
+    {% if classes %}
+    <tr>
+      <th>Historique des classes</th>
+      <td>
+        <ul>
+          {% for classe in classes %}
+          <li>{{ classe }} ({{ classe.annee }})</li>
+          {% endfor %}
+        </ul>
+      </td>
+    </tr>
+    {% endif %}
   </table>
 </section>
 
 <section>
-  <h3>Notes par matière </h3>
+  <h3>Notes par matière</h3>
   <table>
     <tr>
       <th>Matière</th>

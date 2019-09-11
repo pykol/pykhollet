@@ -27,7 +27,7 @@ from django.http import HttpResponse
 
 import vobject
 
-from pykol.models.base import Etudiant, Matiere
+from pykol.models.base import Etudiant, Matiere, Classe
 from pykol.models.colles import Semaine, ColleNote
 from pykol.models.fields import Moyenne
 from pykol.lib.auth import professeur_dans
@@ -89,9 +89,17 @@ class EtudiantDetailView(LoginRequiredMixin, generic.DetailView):
 						semaine = sem
 			notes[matiere].semaines[semaine].append(collenote.note)
 
+		classes = Classe.objects.filter(groupe__etudiants=etudiant).exclude(pk=etudiant.classe.pk)
+
+		options = etudiant.optionetudiant_set.filter(
+			classe=etudiant.classe).order_by(
+					'modalite_option', 'rang_option')
+
 		context.update({
 			'notes': dict(notes),
 			'semaines': semaines,
+			'options': options,
+			'classes': classes,
 		})
 
 		return context

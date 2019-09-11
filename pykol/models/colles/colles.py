@@ -25,7 +25,8 @@ from django.utils import timezone
 from pykol.models.base import Classe, Professeur, Matiere, Etudiant, \
 		Enseignement, Periode
 from pykol.models.fields import NoteField
-from pykol.models.comptabilite import Mouvement, MouvementLigne
+from pykol.models.comptabilite import Mouvement, MouvementLigne, \
+		Lettrage
 
 # Liste des jours de la semaine, numérotation ISO
 LISTE_JOURS = enumerate(["lundi", "mardi", "mercredi", "jeudi",

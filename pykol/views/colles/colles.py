@@ -209,7 +209,7 @@ def colle_annuler(request, pk):
 
 	return redirect('colle_list')
 
-class ColleListView(LoginRequiredMixin, generic.ListView):
+class ProfesseurColleListView(LoginRequiredMixin, generic.ListView):
 	"""
 	Affichage des colles pour le colleur actuellement connecté
 	"""
@@ -250,6 +250,49 @@ class ColleListView(LoginRequiredMixin, generic.ListView):
 				kwargs={'uuid': ical_jeton.uuid})
 
 		return context
+
+class EtudiantColleListView(LoginRequiredMixin, generic.ListView):
+	"""
+	Affichage des colles pour le colleur actuellement connecté
+	"""
+	template_name = 'pykol/colles/colle_list_passe_etudiant.html'
+
+	def get_queryset(self):
+		return Colle.objects.filter(
+			colledetails__eleves=self.request.user,
+			colledetails__actif=True).order_by('colledetails__horaire')
+
+	def get_context_data(self, **kwargs):
+		context = super().get_context_data(**kwargs)
+		# Pour la séparation colles passées et futures, on laisse quand
+		# même un délai de grâce de 3 jours avant de les reléguer en fin
+		# de page.
+		limite_futur = timezone.localtime() - timedelta(days=3)
+		colle_list = self.get_queryset()
+		context['colles_futures'] = colle_list.filter(colledetails__actif=True, colledetails__horaire__gte=limite_futur)
+		context['colles_passees'] = colle_list.filter(colledetails__actif=True, colledetails__horaire__lt=limite_futur)
+
+		# Ajout d'un lien vers la version iCalendar du planning des
+		# colles. Si nécessaire, on crée automatiquement le jeton
+		# d'accès.
+		try:
+			ical_jeton = JetonAcces.objects.filter(owner=self.request.user,
+				scope='colles_icalendar')[0]
+		except IndexError:
+			ical_jeton = JetonAcces(owner=self.request.user,
+				scope='colles_icalendar')
+			ical_jeton.save()
+		context['ical_url'] = reverse('colle_calendrier',
+				kwargs={'uuid': ical_jeton.uuid})
+
+		return context
+
+class ColleListView(LoginRequiredMixin, generic.View):
+	def dispatch(self, request, *args, **kwargs):
+		if hasattr(request.user, 'professeur'):
+			return ProfesseurColleListView.as_view()(request, *args, **kwargs)
+		elif hasattr(request.user, 'etudiant'):
+			return EtudiantColleListView.as_view()(request, *args, **kwargs)
 
 colle_list = ColleListView.as_view()
 

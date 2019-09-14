@@ -1,0 +1,22 @@
+{% if colle_list %}
+<table>
+  <thead>
+    <tr>
+      <th>Horaire</th>
+      <th>Matière</th>
+      <th>Professeur</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for colle in colle_list %}
+    <tr>
+      <td>{{ colle.details.horaire }}</a></td>
+      <td>{{ colle.matiere }}</td>
+      <td>{{ colle.colleur.short_name_civilite }}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% else %}
+<p>Aucune colle à afficher.</p>
+{% endif %}

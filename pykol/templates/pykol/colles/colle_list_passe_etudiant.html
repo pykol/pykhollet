@@ -21,14 +21,14 @@ dans un agenda électronique.</p>
 {% if colles_futures %}
 <section id="colles_futures">
   <h3>Planning</h3>
-  {% include 'pykol/colles/colle_list_widget.html' with colle_list=colles_futures %}
+  {% include 'pykol/colles/colle_list_etudiant_widget.html' with colle_list=colles_futures %}
 </section>
 {% endif %}
 
 {% if colles_passees %}
 <section id="colles_passees">
   <h3>Colles passées</h3>
-  {% include 'pykol/colles/colle_list_widget.html' with colle_list=colles_passees %}
+  {% include 'pykol/colles/colle_list_etudiant_widget.html' with colle_list=colles_passees %}
 </section>
 {% endif %}
 {% endblock content %}

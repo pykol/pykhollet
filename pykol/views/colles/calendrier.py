@@ -27,18 +27,34 @@ from pykol.models.base import JetonAcces
 
 def calendrier(request, uuid):
 	jeton = get_object_or_404(JetonAcces, uuid=uuid, scope='colles_icalendar')
-	prof = jeton.owner
+	utilisateur = jeton.owner
 
 	cal = vobject.iCalendar()
 
-	colles = Colle.objects.filter(colledetails__actif=True,
-			colledetails__colleur=prof)
+	if hasattr(jeton.owner, 'professeur'):
+		colles = Colle.objects.filter(colledetails__actif=True,
+			colledetails__colleur=utilisateur)
+		professeur = True
+	elif hasattr(jeton.owner, 'etudiant'):
+		colles = Colle.objects.filter(colledetails__actif=True,
+			colledetails__eleves=utilisateur)
+		professeur = False
+	else:
+		colles = Colle.objects.none()
+		professeur = False
+
 	for colle in colles:
 		vevent = cal.add('vevent')
 		vevent.add('uid').value = 'colle-{pk}@{host}'.format(
 				pk=colle.pk, host=request.get_host())
-		vevent.add('summary').value = \
+
+		if professeur:
+			vevent.add('summary').value = \
 				"Colle en {classe}".format(classe=colle.classe)
+		else:
+			vevent.add('summary').value = \
+				"Colle de {matiere}".format(matiere=colle.matiere)
+
 		vevent.add('dtstart').value = colle.details.horaire
 		vevent.add('dtend').value   = colle.details.horaire + colle.duree
 		vevent.add('location').value = colle.details.salle
@@ -51,8 +67,13 @@ def calendrier(request, uuid):
 
 		prof_att = vevent.add('attendee')
 		prof_att.role_param = 'CHAIR'
-		prof_att.cn_param = str(prof)
-		prof_att.value = 'MAILTO:{email}'.format(email=prof.email)
+
+		if professeur:
+			prof_att.cn_param = str(colle.colleur)
+		else:
+			prof_att.cn_param = str(colle.colleur.short_name_civilite())
+
+		prof_att.value = 'MAILTO:{email}'.format(email=colle.colleur.email)
 		prof_att.partstat_param = 'ACCEPTED'
 
 		for etudiant in colle.details.eleves.all():

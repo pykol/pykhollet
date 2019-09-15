@@ -59,6 +59,7 @@ class CreneauOdfView(View):
 		table.addElement(TableColumn(stylename=style_col_colleur)) # Colleur
 		table.addElement(TableColumn(stylename=style_col_standard)) # Classe
 		table.addElement(TableColumn(stylename=style_col_matiere)) # Matière
+		table.addElement(TableColumn(stylename=style_col_standard)) # Jour
 		table.addElement(TableColumn(stylename=style_col_standard)) # Début
 		table.addElement(TableColumn(stylename=style_col_standard)) # Fin
 		table.addElement(TableColumn(stylename=style_col_standard)) # Salle
@@ -75,6 +76,8 @@ class CreneauOdfView(View):
 		P(parent=TableCell(parent=tr, valuetype='string',
 			stylename=style_entete), text="Matière")
 		P(parent=TableCell(parent=tr, valuetype='string',
+			stylename=style_entete), text="Jour")
+		P(parent=TableCell(parent=tr, valuetype='string',
 			stylename=style_entete), text="Début")
 		P(parent=TableCell(parent=tr, valuetype='string',
 			stylename=style_entete), text="Fin")
@@ -86,6 +89,7 @@ class CreneauOdfView(View):
 			P(parent=TableCell(parent=tr, valuetype='string'), text=str(creneau.colleur))
 			P(parent=TableCell(parent=tr, valuetype='string'), text=str(creneau.classe))
 			P(parent=TableCell(parent=tr, valuetype='string'), text=str(creneau.matiere))
+			P(parent=TableCell(parent=tr, valuetype='string'), text=str(creneau.get_jour_display()))
 			P(parent=TableCell(parent=tr, valuetype='string'), text=str(creneau.debut))
 			P(parent=TableCell(parent=tr, valuetype='string'), text=str(creneau.fin))
 			P(parent=TableCell(parent=tr, valuetype='string'), text=str(creneau.salle))

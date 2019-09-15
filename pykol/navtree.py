@@ -20,6 +20,15 @@ from django.urls import reverse
 
 from pykol.lib.navigation import item, nav, MesClassesChildren
 
+def user_est_professeur(user):
+	return hasattr(user, 'professeur')
+
+def user_est_etudiant(user):
+	return hasattr(user, 'etudiant')
+
+def user_est_professeur_ou_direction(user):
+	return user_est_professeur(user) or user.has_perm('pykol.direction')
+
 nav.register(item(name="home",
 	label="Tableau de bord",
 	url="home",
@@ -32,10 +41,11 @@ nav.register(item(name="home",
 	icon="user",
 	))
 
-mes_colles = item(
+mes_colles_professeur = item(
 	name="mes_colles",
 	label="Mes colles",
 	icon="question",
+	user_passes_test=user_est_professeur,
 	children=(
 		item(
 			name="colles_a_noter",
@@ -58,7 +68,17 @@ mes_colles = item(
 	)
 )
 
-nav.register(mes_colles)
+nav.register(mes_colles_professeur)
+
+mes_colles_etudiant = item(
+	name="colles_planning",
+	label="Mes colles",
+	icon="question",
+	user_passes_test=user_est_etudiant,
+	url="colle_list",
+)
+
+nav.register(mes_colles_etudiant)
 
 parametrage = item(
 	name="parametrage",
@@ -108,6 +128,7 @@ nav.register(colloscopes)
 classes = item(name="classes",
 	label="Classes",
 	icon="chalkboard-teacher",
+	user_passes_test=user_est_professeur_ou_direction,
 	)
 classes.children = MesClassesChildren()
 nav.register(classes)
@@ -116,6 +137,7 @@ ects = item(name="ects",
 	label="ECTS",
 	icon="credit-card",
 	url="ects_jury_list",
+	user_passes_test=user_est_professeur_ou_direction,
 )
 nav.register(ects)
 

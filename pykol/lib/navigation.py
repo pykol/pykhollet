@@ -50,13 +50,14 @@ class NavigationItem:
 	"""
 	def __init__(self, label, url=None, absolute_url=None, priority=0,
 			permissions=[], icon=None, name=None, parent=None,
-			children=[]):
+			children=[], user_passes_test=None):
 		self.label = label
 		self.url = url
 		self.url_args = []
 		self.absolute_url = absolute_url
 		self.priority = priority
 		self.permissions = permissions
+		self.user_passes_test = user_passes_test
 		self.icon = icon
 		self.name = name
 		self.children = NavigationChildrenList(children)
@@ -75,6 +76,9 @@ class NavigationItem:
 		return iter(self.children)
 
 	def is_allowed(self, user):
+		if callable(self.user_passes_test):
+			if not self.user_passes_test(user):
+				return False
 		return user.has_perms(self.permissions)
 
 	def is_current(self, request):

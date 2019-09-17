@@ -23,7 +23,7 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.views import generic
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin, \
-		UserPassesTestMixin
+		UserPassesTestMixin, AccessMixin
 from django.utils import timezone
 from django.db.models import Func, F
 from django.views.decorators.http import require_POST
@@ -287,12 +287,15 @@ class EtudiantColleListView(LoginRequiredMixin, generic.ListView):
 
 		return context
 
-class ColleListView(LoginRequiredMixin, generic.View):
+class ColleListView(AccessMixin, generic.View):
 	def dispatch(self, request, *args, **kwargs):
-		if hasattr(request.user, 'professeur'):
-			return ProfesseurColleListView.as_view()(request, *args, **kwargs)
-		elif hasattr(request.user, 'etudiant'):
-			return EtudiantColleListView.as_view()(request, *args, **kwargs)
+		if request.user.is_authenticated:
+			if hasattr(request.user, 'professeur'):
+				return ProfesseurColleListView.as_view()(request, *args, **kwargs)
+			elif hasattr(request.user, 'etudiant'):
+				return EtudiantColleListView.as_view()(request, *args, **kwargs)
+
+		return self.handle_no_permission()
 
 colle_list = ColleListView.as_view()
 

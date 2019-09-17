@@ -53,41 +53,41 @@ class EtudiantDetailView(LoginRequiredMixin, generic.DetailView):
 				professeur_dans(self.request.user, etudiant.classe)):
 			return context
 
-		# Récupération de la liste des matières, selon le profil de
-		# l'utilisateur (professeur ou étudiant)
-		try:
-			matieres = list(Matiere.objects.filter(
-				enseignement__classe__etudiant = etudiant,
-				enseignement__service__professeur = self.request.user
-			))
-		except:
-			try:
-				matieres = list(Matiere.objects.filter(etudiant=self.request.user))
-			except:
-				matieres = []
+		## Récupération de la liste des matières, selon le profil de
+		## l'utilisateur (professeur ou étudiant)
+		#try:
+		#	matieres = list(Matiere.objects.filter(
+		#		enseignement__classe__etudiant = etudiant,
+		#		enseignement__service__professeur = self.request.user
+		#	))
+		#except:
+		#	try:
+		#		matieres = list(Matiere.objects.filter(etudiant=self.request.user))
+		#	except:
+		#		matieres = []
 
-		semaines = Semaine.objects.filter(classe__etudiant=etudiant).order_by('debut')
+		#semaines = Semaine.objects.filter(classe__etudiant=etudiant).order_by('debut')
 
-		collenotes = ColleNote.objects.filter(eleve=etudiant,
-				colle__enseignement__matiere__in=matieres)
+		#collenotes = ColleNote.objects.filter(eleve=etudiant,
+		#		colle__enseignement__matiere__in=matieres)
 
-		NotesMatiere = namedtuple('NotesMatiere', ('moyenne', 'semaines'))
-		notes = defaultdict(lambda: NotesMatiere(moyenne=Moyenne(),
-			semaines=OrderedDict([(semaine, []) for semaine in semaines])))
+		#NotesMatiere = namedtuple('NotesMatiere', ('moyenne', 'semaines'))
+		#notes = defaultdict(lambda: NotesMatiere(moyenne=Moyenne(),
+		#	semaines=OrderedDict([(semaine, []) for semaine in semaines])))
 
-		for collenote in collenotes:
-			matiere = collenote.colle.matiere
+		#for collenote in collenotes:
+		#	matiere = collenote.colle.matiere
 
-			notes[matiere] = notes[matiere]._replace(moyenne=
-					notes[matiere].moyenne + collenote.note)
+		#	notes[matiere] = notes[matiere]._replace(moyenne=
+		#			notes[matiere].moyenne + collenote.note)
 
-			if collenote.colle.semaine:
-				semaine = collenote.colle.semaine
-			else:
-				for sem in semaines:
-					if sem.debut <= collenote.horaire.date() <= sem.fin:
-						semaine = sem
-			notes[matiere].semaines[semaine].append(collenote.note)
+		#	if collenote.colle.semaine:
+		#		semaine = collenote.colle.semaine
+		#	else:
+		#		for sem in semaines:
+		#			if sem.debut <= collenote.horaire.date() <= sem.fin:
+		#				semaine = sem
+		#	notes[matiere].semaines[semaine].append(collenote.note)
 
 		classes = Classe.objects.filter(groupe__etudiants=etudiant).exclude(pk=etudiant.classe.pk)
 
@@ -96,8 +96,8 @@ class EtudiantDetailView(LoginRequiredMixin, generic.DetailView):
 					'modalite_option', 'rang_option')
 
 		context.update({
-			'notes': dict(notes),
-			'semaines': semaines,
+			#'notes': dict(notes),
+			#'semaines': semaines,
 			'options': options,
 			'classes': classes,
 		})

@@ -262,15 +262,24 @@ class EtudiantColleListView(LoginRequiredMixin, generic.ListView):
 			colledetails__eleves=self.request.user,
 			colledetails__actif=True).order_by('colledetails__horaire')
 
+	def get_limite_futur(self):
+		return timezone.localtime() - timedelta(days=3)
+
+	def get_queryset_futures(self):
+		return self.get_queryset().filter(colledetails__actif=True,
+				colledetails__horaire__gte=self.get_limite_futur())
+
+	def get_queryset_passees(self):
+		return self.get_queryset().filter(colledetails__actif=True,
+				colledetails__horaire__lt=self.get_limite_futur())
+
 	def get_context_data(self, **kwargs):
 		context = super().get_context_data(**kwargs)
 		# Pour la séparation colles passées et futures, on laisse quand
 		# même un délai de grâce de 3 jours avant de les reléguer en fin
 		# de page.
-		limite_futur = timezone.localtime() - timedelta(days=3)
-		colle_list = self.get_queryset()
-		context['colles_futures'] = colle_list.filter(colledetails__actif=True, colledetails__horaire__gte=limite_futur)
-		context['colles_passees'] = colle_list.filter(colledetails__actif=True, colledetails__horaire__lt=limite_futur)
+		context['colles_futures'] = self.get_queryset_futures()
+		context['colles_passees'] = self.get_queryset_passees()
 
 		# Ajout d'un lien vers la version iCalendar du planning des
 		# colles. Si nécessaire, on crée automatiquement le jeton
@@ -299,7 +308,7 @@ class ColleListView(AccessMixin, generic.View):
 
 colle_list = ColleListView.as_view()
 
-class ColleANoterListView(ColleListView):
+class ColleANoterListView(ProfesseurColleListView):
 	"""
 	Affichage des colles en attente de notation pour le colleur
 	"""

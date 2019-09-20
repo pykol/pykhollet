@@ -32,4 +32,18 @@
   à leurs plannings de colles et de déclarer les colles qu'ils ont
   effectuées.</p>
 {% endfor %}
+
+{% if soucis_comptes_colleurs %}
+<section>
+  <h3>Y a-t-il un souci pour ces colleurs ?</h3>
+  <p>Les colleurs suivants doivent déclarer des colles cette année,
+  cependant ils n'ont pas encore activé leurs comptes. Pensez à vérifier
+  avec eux qu'ils n'ont pas de souci.</p>
+  <ul>
+    {% for colleur in soucis_comptes_colleurs %}
+    <li><a href="{% url 'direction_edit_user' colleur.pk %}">{{ colleur }}</a>{% if not colleur.email %} (vous devez renseigner une adresse e-mail pour cette personne){% endif %}{% if forloop.last %}.{% else %} ;{% endif %}</li>
+    {% endfor %}
+  </ul>
+</section>
+{% endif %}
 {% endblock %}

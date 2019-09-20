@@ -27,7 +27,7 @@ from django.utils import timezone
 
 from pykol.forms.user import MonProfilForm, MonProfilPasswordForm
 
-from pykol.models.base import Annee, Classe
+from pykol.models.base import Annee, Classe, Professeur
 
 @login_required
 def home(request):
@@ -52,6 +52,16 @@ def home(request):
 				'trinomes_ok': classe.trinomes.exists(),
 				'creneaux_ok': classe.creneau_set.exists(),
 			})
+
+	# Pour la direction : lister les colleurs dont les comptes
+	# pourraient présenter des anomalies.
+	context['soucis_comptes_colleurs'] = []
+	if request.user.has_perm('pykol.direction'):
+		context['soucis_comptes_colleurs'] = Professeur.objects.filter(
+			colledetails__actif=True,
+			colledetails__colle__classe__annee=annee_actuelle,
+			last_login__isnull=True).distinct().order_by('last_name',
+					'first_name')
 
 	return render(request, 'pykol/accueil.html', context=context)
 

@@ -57,11 +57,11 @@ def home(request):
 	# pourraient présenter des anomalies.
 	context['soucis_comptes_colleurs'] = []
 	if request.user.has_perm('pykol.direction'):
-		context['soucis_comptes_colleurs'] = Professeur.objects.filter(
+		context['soucis_comptes_colleurs'] = list(Professeur.objects.filter(
 			colledetails__actif=True,
 			colledetails__colle__classe__annee=annee_actuelle,
 			last_login__isnull=True).distinct().order_by('last_name',
-					'first_name')
+					'first_name'))
 
 	return render(request, 'pykol/accueil.html', context=context)
 

@@ -317,7 +317,8 @@ class ColleANoterListView(ProfesseurColleListView):
 	def get_queryset(self):
 		return super().get_queryset().filter(etat=Colle.ETAT_PREVUE,
 				colledetails__horaire__lte=timezone.localtime(),
-				colledetails__actif=True)
+				colledetails__actif=True,
+				classe__annee=Annee.objects.get_actuelle())
 
 	def get_context_data(self, **kwargs):
 		context = super().get_context_data(**kwargs)

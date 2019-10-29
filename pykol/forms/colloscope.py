@@ -251,6 +251,7 @@ class CreneauForm(EnseignementDoteMixin, forms.ModelForm):
 		creneau = super().save(commit=False)
 		creneau.enseignement = self.cleaned_data.get('enseignement_dote')['enseignement']
 		creneau.colles_ens   = self.cleaned_data.get('enseignement_dote')['collesenseignement']
+		creneau.mode = creneau.colles_ens.mode_defaut
 
 		if commit:
 			creneau.save()

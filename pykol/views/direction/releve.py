@@ -75,7 +75,7 @@ def releve_detail_json(request, pk):
 			'pk', 'releve', 'etat',
 			'colleur', 'nom', 'prenom', 'id_acad',
 			'taux', 'duree', 'duree_interrogation',
-			'nom_asie', 'prenom_asie',))
+			'nom_asie', 'prenom_asie', 'code_indemnite'))
 	data = {
 		'taux': dict(ColleReleveLigne.TAUX_CHOICES),
 		'etat_ligne': dict(ColleReleveLigne.ETAT_CHOICES),

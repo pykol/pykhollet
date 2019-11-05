@@ -26,7 +26,8 @@ from django.db import models, transaction
 from django.utils.timezone import localtime
 from django.template.loader import get_template
 
-from pykol.models.base import Annee, Professeur, Classe, Etablissement
+from pykol.models.base import Annee, Professeur, Classe, Etablissement, \
+		CodeIndemniteMixin
 from pykol.models.comptabilite import ColleDureeTaux, Compte, \
 		Mouvement, MouvementLigne
 from pykol.models.colles import Colle
@@ -153,7 +154,8 @@ class ColleReleve(models.Model):
 			ligne = ColleReleveLigne(
 					releve=self,
 					colleur=colle.colleur,
-					taux=taux_colle)
+					taux=taux_colle,
+					code_indemnite=colle.colleur.code_indemnite)
 			ligne.save()
 
 		ligne.ajout_colle(colle)
@@ -169,7 +171,7 @@ class ColleReleve(models.Model):
 		template = get_template('pykol/widgets/collereleve_etat.html')
 		return template.render(context={'object': self})
 
-class ColleReleveLigne(ColleDureeTaux):
+class ColleReleveLigne(CodeIndemniteMixin, ColleDureeTaux):
 	"""
 	Une ligne d'un relevé de colles. Une ligne correspond au total des
 	heures effectuées par un professeur donné sur la période, et pour un

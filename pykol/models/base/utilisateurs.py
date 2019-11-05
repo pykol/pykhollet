@@ -266,7 +266,24 @@ class ProfesseurManager(UserManager):
 		professeur.construire_comptes(commit)
 		return professeur
 
-class Professeur(User):
+class CodeIndemniteMixin(models.Model):
+	# Code indemnité applicable au professeur pour le paiement des
+	# colles.
+	CODE_INDEMNITE_PROF_CPGE = '0207'
+	CODE_INDEMNITE_PROF_AUTRE = '2249'
+	CODE_INDEMNITE_CHOICES = (
+			(CODE_INDEMNITE_PROF_CPGE, "professeur en CPGE"),
+			(CODE_INDEMNITE_PROF_AUTRE, "moins d'un demi-service en CPGE"),
+	)
+	code_indemnite = models.CharField(max_length=4,
+			verbose_name="code indemnité",
+			choices=CODE_INDEMNITE_CHOICES,
+			default=CODE_INDEMNITE_PROF_AUTRE)
+
+	class Meta:
+		abstract = True
+
+class Professeur(CodeIndemniteMixin, User):
 	"""
 	Professeur intervenant dans l'établissement
 

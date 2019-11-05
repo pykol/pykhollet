@@ -97,6 +97,22 @@ class DirectionListUser(PermissionRequiredMixin, ListView):
 	template_name = 'pykol/direction/list_user.html'
 	permission_required = 'pykol.direction'
 
+class DirectionListColleur(PermissionRequiredMixin, ListView):
+	model = Professeur
+	ordering = ('last_name', 'first_name',)
+	template_name = 'pykol/direction/list_colleur.html'
+	permission_required = 'pykol.direction'
+
+	def get_queryset(self):
+		return Professeur.objects.filter(colledetails__actif=True).distinct()
+
+	def get_ordering(self):
+		return ('last_name', 'first_name')
+
+	def post(self, request):
+		#TODO gérer la soumission des codes indemnités
+		pass
+
 @login_required
 @permission_required('pykol.direction')
 def direction_delete_user(request):

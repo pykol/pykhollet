@@ -78,6 +78,7 @@ etudiants_urlpatterns = [
 
 accounts_urlpatterns = [
 	path('', views.direction.DirectionListUser.as_view(), name='direction_list_user'),
+	path('colleurs/', views.direction.DirectionListColleur.as_view(), name='direction_list_colleur'),
 	path('profile/', views.mon_profil, name='mon_profil'),
 	path('create/', views.direction.direction_create_user, name='direction_create_user'),
 	path('edit/<int:pk>/', views.direction.direction_edit_user, name='direction_edit_user'),

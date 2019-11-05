@@ -104,6 +104,12 @@ parametrage = item(
 			url='direction_list_user',
 			icon="users",
 		),
+
+		item(name="colleurs",
+			label="Colleurs",
+			url='direction_list_colleur',
+			icon="users",
+		),
 	)
 )
 nav.register(parametrage)

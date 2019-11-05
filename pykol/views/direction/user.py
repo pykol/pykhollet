@@ -104,14 +104,8 @@ class DirectionListColleur(PermissionRequiredMixin, ListView):
 	permission_required = 'pykol.direction'
 
 	def get_queryset(self):
-		return Professeur.objects.filter(colledetails__actif=True).distinct()
-
-	def get_ordering(self):
-		return ('last_name', 'first_name')
-
-	def post(self, request):
-		#TODO gérer la soumission des codes indemnités
-		pass
+		return Professeur.objects.filter(colledetails__actif=True).distinct().order_by('last_name',
+			'first_name')
 
 @login_required
 @permission_required('pykol.direction')

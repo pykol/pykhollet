@@ -1235,13 +1235,33 @@ class BEEImporter:
 			# qu'une clé primaire opaque, non documentée et probablement
 			# instable avec le temps.
 			if fonction == "ENS":
-				# Construction de la liste des disciplines du professeur
+				# Construction de la liste des disciplines du
+				# professeur.
+				# On calcule aussi le nombre d'heures pour tenter de
+				# deviner le code indemnité à appliquer pour les colles.
+				# Ce n'est qu'une approximation : on obtient via STS
+				# l'ORS. On va considérer que des ORS de 8h, 9h, 10, 11h
+				# sont des ORS de CPGE et appliquer l'indemnité de CPGE
+				# pour les colles. Le vrai critère vient du service, qui
+				# doit être effectué pour plus de la moitié en CPGE.
+				# Mais ceci ne peut pas être deviné via STS. L'algo
+				# appliqué ici ne marche pas dans un paquet de
+				# situations (temps partiel, service partagé). Il ne
+				# donne qu'une première approximation qui doit être
+				# confirmée manuellement par le secrétariat.
+
 				disciplines = []
+				nb_heures = 0
 				for discipline_et in individu.findall('DISCIPLINES/DISCIPLINE'):
 					discipline, _ = Discipline.objects.get_or_create(
 							code=discipline_et.attrib['CODE'],
 							defaults={'nom': discipline_et.find('LIBELLE_COURT').text})
 					disciplines.append(discipline)
+					nb_heures += float(discipline_et.find('NB_HEURES').text)
+
+				# Comme dit plus haut, ceci n'est qu'une vague
+				# approximation.
+				est_prof_cpge = 8 <= nb_heures <= 11
 
 				# On ne peut pas utiliser la méthode
 				# Professeur.objects.update_or_create car il faut
@@ -1256,6 +1276,8 @@ class BEEImporter:
 					professeur.etablissement = self.etablissement
 					professeur.corps = grade
 					professeur.id_acad = numero_sts
+					if est_prof_cpge:
+						professeur.code_indemnite = professeur.CODE_INDEMNITE_PROF_CPGE
 					professeur.save()
 
 				except Professeur.DoesNotExist:
@@ -1265,7 +1287,10 @@ class BEEImporter:
 						sexe=sexe,
 						etablissement=self.etablissement,
 						corps=grade,
-						id_acad=numero_sts)
+						id_acad=numero_sts,
+						code_indemnite = professeur.CODE_INDEMNITE_PROF_CPGE if est_prof_cpge
+							else professeur.CODE_INDEMNITE_PROF_AUTRE,
+						)
 
 				professeur.disciplines.set(disciplines)
 				self.professeurs[individu_id] = professeur

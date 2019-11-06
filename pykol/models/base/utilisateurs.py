@@ -263,7 +263,7 @@ class Discipline(models.Model):
 class ProfesseurManager(UserManager):
 	def create(self, **kwargs):
 		professeur = self.model(**kwargs)
-		professeur.construire_comptes(commit)
+		professeur.construire_comptes(kwargs.get('commit', True))
 		return professeur
 
 class CodeIndemniteMixin(models.Model):

@@ -13,7 +13,8 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='collereleveligne',
             name='code_indemnite',
-            field=models.CharField(choices=[('0207', 'professeur en CPGE'), ('2249', "moins d'un demi-service en CPGE")], default='2249', max_length=4, verbose_name='code indemnité'),
+            field=models.CharField(choices=[('0207', 'professeur en CPGE'), ('2249', "moins d'un demi-service en CPGE")], default='0207', max_length=4, verbose_name='code indemnité'),
+            preserve_default=False,
         ),
         migrations.AddField(
             model_name='professeur',

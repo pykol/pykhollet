@@ -1219,9 +1219,8 @@ class BEEImporter:
 			else:
 				grade_xml = None
 
-			# TODO quel est le grade pour la classe exceptionnelle des
-			# certifiés ?
-			if grade_xml == "CERT. H CL" or grade_xml == "CERT. CL N":
+			if grade_xml == "CERT CE" or grade_xml == "CERT. H CL" or \
+					grade_xml == "CERT. CL N":
 				grade = Professeur.CORPS_CERTIFIE
 			elif grade_xml == "AGREGE CE" or grade_xml == "AGREGE HCL" or \
 					grade_xml == "AGREGE CLN":

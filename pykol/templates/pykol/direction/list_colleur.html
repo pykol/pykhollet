@@ -1,0 +1,42 @@
+{% extends "pykol/base.html" %}
+{% block title %}Liste des colleurs − {{ block.super }}{% endblock %}
+{% block content %}
+<h2>Liste des colleurs</h2>
+
+<p><a class="button-add"
+  href="{% url 'direction_create_user' %}">Ajouter un professeur</a></p>
+
+<p><a class="button-add" href="{% url 'import_colleurs' %}">Importer la
+  liste des colleurs depuis un fichier</a></p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Nom</th>
+      <th>E-mail</th>
+      <th>Code indemnité</th>
+      <th>État</th>
+    </tr>
+  </thead>
+
+  <tbody>
+    {% for pykol_user in professeur_list %}
+    <tr>
+      <td><a href="{% url 'direction_edit_user' pykol_user.pk %}">{{ pykol_user }}</a></td>
+      <td>{{ pykol_user.email|default_if_none:"-" }}</td>
+      <td>{{ pykol_user.code_indemnite }} ({{ pykol_user.get_code_indemnite_display }})</td>
+      <td>
+        {% if pykol_user.is_active %}
+        {% if pykol_user.last_login %}
+        <span class="btn-success btn-sm">Actif</span>
+        {% else %}
+        <span class="btn-warning btn-sm">Jamais connecté</span>
+        {% endif %}
+        {% else %}
+        <span class="btn-dark btn-sm">Désactivé</span>
+        {% endif %}
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endblock %}

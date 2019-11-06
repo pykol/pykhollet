@@ -87,7 +87,7 @@ class ProfesseurForm(forms.ModelForm):
 	class Meta:
 		model = Professeur
 		fields = ('corps', 'etablissement', 'id_acad',
-				'nom_asie', 'prenom_asie')
+				'nom_asie', 'prenom_asie', 'code_indemnite',)
 
 	def save(self, commit=True):
 		professeur = super().save(commit=False)

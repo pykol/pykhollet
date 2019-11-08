@@ -24,6 +24,7 @@ from django.contrib.auth.decorators import login_required, \
 		permission_required
 from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.utils import timezone
+from django.db.models import Q
 
 from pykol.forms.user import MonProfilForm, MonProfilPasswordForm
 
@@ -59,8 +60,10 @@ def home(request):
 	if request.user.has_perm('pykol.direction'):
 		context['soucis_comptes_colleurs'] = Professeur.objects.filter(
 			colledetails__actif=True,
-			colledetails__colle__classe__annee=annee_actuelle,
-			last_login__isnull=True).distinct().order_by('last_name',
+			colledetails__colle__classe__annee=annee_actuelle).filter(
+			Q(Q(last_login__isnull=True) |
+				Q(last_login__lt=annee_actuelle.debut))
+			).distinct().order_by('last_name',
 					'first_name')
 
 	return render(request, 'pykol/accueil.html', context=context)

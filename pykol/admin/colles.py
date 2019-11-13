@@ -21,7 +21,7 @@ from django.contrib import admin
 from pykol.admin.base import register, admin_site
 from pykol.models.colles import Semaine, Creneau, Trinome, Roulement, \
 		RoulementLigne, Colle, ColleDetails, CollesEnseignement, \
-		ColleNote
+		ColleNote, ColleReleve, ColleReleveLigne
 
 @register(Semaine)
 class SemaineAdmin(admin.ModelAdmin):
@@ -82,3 +82,6 @@ class ColleNoteAdmin(admin.ModelAdmin):
 
 	def heure_colle(self, collenote):
 		return collenote.colle.details.horaire
+
+admin_site.register(ColleReleve)
+admin_site.register(ColleReleveLigne)

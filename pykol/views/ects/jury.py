@@ -39,8 +39,9 @@ def jury_list_direction(request):
 	"""
 	jury_list = Jury.objects.all().annotate(
 			mentions_reste=Count('mention',
-				filter=Q(mention__mention__isnull=True))
-		).order_by('date')
+				filter=Q(mention__mention__isnull=True)),
+			annee=F('classe__annee'),
+		).order_by('-annee', 'date')
 
 	jury_creer_form = JuryForm()
 

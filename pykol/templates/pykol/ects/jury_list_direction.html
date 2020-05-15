@@ -4,6 +4,8 @@
 <h2>Liste des jurys
   <abbr title="European Credit Transfer System" lang="en">ECTS</abbr></h2>
 
+{% regroup jury_list by annee as jury_list_annee %}
+
 <section>
   {% if jury_list %}
   <table id="ects_jury_list">
@@ -17,7 +19,68 @@
       </tr>
     </thead>
     <tbody>
-      {% for jury in jury_list %}
+      {% with jury_list_first=jury_list_annee|first %}
+      {% for jury in jury_list_first.list %}
+      <tr>
+        <td>{{ jury }}</td>
+        <td>{{ jury.classe }}</td>
+        <td>{{ jury.date }}</td>
+        <td>{{ jury.mentions_reste }} mentions à saisir</td>
+        <td>
+          <ul class="actions">
+            <li><a class="btn btn-primary" href="{{ jury.get_absolute_url }}">Détails</a></li>
+            {% if jury.etat == jury.ETAT_TERMINE %}
+            <li>
+              <a class="btn btn-success" href="{% url 'ects_jury_attestation' jury.pk %}">Éditer les attestations</a>
+            </li>
+            {% endif %}
+            {% if jury.etat == jury.ETAT_PREVU %}
+            <li>
+              <form method="post" action="{% url 'ects_jury_supprimer' jury.pk %}">
+              {% csrf_token %}
+              <button type="submit" class="btn btn-danger">Supprimer</button>
+              </form>
+            </li>
+            {% endif %}
+          </ul>
+        </td>
+      </tr>
+      {% endfor %}
+      {% endwith %}
+    </tbody>
+  </table>
+  {% else %}
+  <p>Aucun jury d'attribution des <abbr>ECTS</abbr> n'est programmé pour
+  le moment.</p>
+  {% endif %}
+
+  {% if jury_creer_form %}
+  <h3>Création d'un jury ECTS</h3>
+  <form method="post" action="{% url 'ects_jury_creer' %}">
+    {% csrf_token %}
+    <table>
+      {{ jury_creer_form.as_table }}
+    </table>
+    <p><input type="submit" value="Créer le jury"></p>
+  </form>
+  {% endif %}
+</section>
+
+{% for jury_annee in jury_list_annee|slice:"2:" %}
+<section>
+  <h3>{{ jury_annee.grouper }}</h3>
+  <table id="ects_jury_list">
+    <thead>
+      <tr>
+        <th>Nom</th>
+        <th>Classe</th>
+        <th>Date du jury</th>
+        <th>Mentions</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for jury in jury_annee.list %}
       <tr>
         <td>{{ jury }}</td>
         <td>{{ jury.classe }}</td>
@@ -45,20 +108,7 @@
       {% endfor %}
     </tbody>
   </table>
-  {% else %}
-  <p>Aucun jury d'attribution des <abbr>ECTS</abbr> n'est programmé pour
-  le moment.</p>
-  {% endif %}
-
-  {% if jury_creer_form %}
-  <h3>Création d'un jury ECTS</h3>
-  <form method="post" action="{% url 'ects_jury_creer' %}">
-    {% csrf_token %}
-    <table>
-      {{ jury_creer_form.as_table }}
-    </table>
-    <p><input type="submit" value="Créer le jury"></p>
-  </form>
-  {% endif %}
 </section>
+{% endfor %}
+
 {% endblock %}

@@ -18,7 +18,7 @@
 
 from collections import OrderedDict
 
-from django.db.models import Count, Q, Sum
+from django.db.models import Count, Q, Sum, F
 from django.db.models.functions import Coalesce
 from django.contrib.auth.decorators import login_required, \
 		permission_required

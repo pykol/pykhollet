@@ -28,7 +28,7 @@ from django.forms import modelformset_factory
 from django.views.decorators.http import require_POST
 
 from pykol.models.ects import Jury, Mention
-from pykol.models.base import Etudiant, Enseignement
+from pykol.models.base import Etudiant, Enseignement, Annee
 from pykol.forms.ects import MentionFormSet, JuryForm, JuryDateForm, \
 		MentionGlobaleForm, JuryTerminerForm
 from pykol.lib.shortcuts import redirect_next

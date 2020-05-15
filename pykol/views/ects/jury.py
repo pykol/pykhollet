@@ -55,7 +55,8 @@ def jury_list_professeur(request):
 	Affichage des jurys auxquels participe un professeur.
 	"""
 	jury_list = Jury.objects.filter(
-			mention__enseignement__professeurs=request.user
+			mention__enseignement__professeurs=request.user,
+			classe__annee=Annee.objects.get_actuelle(),
 		).annotate(
 			mentions_reste=Count('mention',
 				filter=Q(

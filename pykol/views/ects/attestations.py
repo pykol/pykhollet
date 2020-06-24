@@ -24,6 +24,7 @@ from django.contrib.auth.decorators import login_required, \
 from django.shortcuts import render, get_object_or_404, redirect
 from django.conf import settings
 from django.utils.text import slugify
+from django.db.models import Min
 
 import odf.opendocument
 from odf.text import UserFieldDecl, UserFieldGet, Span, P
@@ -106,7 +107,8 @@ def fusion_mentions(etudiant, jury, attestation):
 	# l'intitulé du groupe. Par conséquent, les lignes placées en bas
 	# doivent être ajoutées en premier.
 	mentions = Mention.objects.filter(etudiant=etudiant,
-			jury=jury).order_by('-grille_lignes__position').distinct()
+			jury=jury).annotate(position=Min('grille_lignes__position')
+			).order_by('-position')
 	groupes_mentions = GrilleGroupeLignes.objects.filter(
 			lignes__mention__etudiant=etudiant,
 			lignes__mention__jury=jury).order_by('position',

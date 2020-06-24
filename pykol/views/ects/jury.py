@@ -226,7 +226,7 @@ def jury_saisie_mentions(request, jury, mention_qs):
 
 def jury_detail_professeur(request, jury):
 	mention_qs = Mention.objects.filter(jury=jury,
-			enseignement__professeurs=request.user)
+			enseignement__professeurs=request.user).distinct()
 	return jury_saisie_mentions(request, jury, mention_qs)
 
 @permission_required('pykol.direction')

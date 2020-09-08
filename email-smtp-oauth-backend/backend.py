@@ -85,7 +85,7 @@ class OAuthEmailBackend(BaseEmailBackend):
         params['client_secret'] = self.oauth_client_secret
         params['refresh_token'] = self.oauth_token_refresh
         params['grant_type'] = 'refresh_token'
-        response = json.loads(urllib.request.urlopen(self.oauth_request_url, urllib.parse.urlencode(params)).read())
+        response = json.loads(urllib.request.urlopen(self.oauth_request_url, urllib.parse.urlencode(params).encode('utf-8')).read())
         #TODO attraper les erreurs
         return response['access_token']
 

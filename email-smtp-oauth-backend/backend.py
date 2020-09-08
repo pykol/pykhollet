@@ -36,7 +36,8 @@ SMTP emailing class which authenticates using OAUTH2
 import smtplib
 import ssl
 import threading
-import urllib
+import urllib.request
+import urllib.parse
 import json
 
 from django.conf import settings
@@ -84,7 +85,7 @@ class OAuthEmailBackend(BaseEmailBackend):
         params['client_secret'] = self.oauth_client_secret
         params['refresh_token'] = self.oauth_token_refresh
         params['grant_type'] = 'refresh_token'
-        response = json.loads(urllib.urlopen(self.oauth_request_url, urllib.urlencode(params)).read())
+        response = json.loads(urllib.request.urlopen(self.oauth_request_url, urllib.parse.urlencode(params)).read())
         #TODO attraper les erreurs
         return response['access_token']
 

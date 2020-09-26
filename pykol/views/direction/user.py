@@ -25,6 +25,7 @@ from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.views.generic.list import ListView
 from django.contrib.auth import get_user_model
 from django.db.models import Q
+from django.db.models.functions import Lower
 
 from odf.opendocument import OpenDocumentSpreadsheet, load
 from odf.table import Table, TableColumn, TableRow, TableCell
@@ -93,13 +94,13 @@ def direction_edit_user(request, pk):
 
 class DirectionListUser(PermissionRequiredMixin, ListView):
 	model = User
-	ordering = ('last_name', 'first_name',)
+	ordering = (Lower('last_name'), Lower('first_name'),)
 	template_name = 'pykol/direction/list_user.html'
 	permission_required = 'pykol.direction'
 
 class DirectionListColleur(PermissionRequiredMixin, ListView):
 	model = Professeur
-	ordering = ('last_name', 'first_name',)
+	ordering = (Lower('last_name'), Lower('first_name'),)
 	template_name = 'pykol/direction/list_colleur.html'
 	permission_required = 'pykol.direction'
 

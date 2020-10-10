@@ -29,7 +29,7 @@ class Note:
 	ABSENCE_EXCUSEE = 5
 
 	def __init__(self, initial=None):
-		self.kind = Note.NON_NOTE
+		self.kind = None
 		self.value = None
 		if initial is not None:
 			self.set(initial)
@@ -46,6 +46,9 @@ class Note:
 			self.value = 0
 		elif value == 'vu':
 			self.kind = Note.VU
+			self.value = None
+		elif value == '':
+			self.kind = None
 			self.value = None
 		else:
 			try:
@@ -65,6 +68,7 @@ class Note:
 			return 'nn'
 		if self.kind == Note.VU:
 			return 'vu'
+		return ''
 
 	def compte_dans_moyenne(self):
 		return self.value is not None
@@ -123,7 +127,7 @@ class Moyenne(Note):
 		res.points = self.points
 		res.nb_notes = self.nb_notes
 
-		if self.nb_notes == 0:
+		if self.nb_notes == 0 and note.kind is not None:
 			res.kind = note.kind
 		else:
 			res.kind = self.kind
@@ -139,7 +143,7 @@ class Moyenne(Note):
 		if not isinstance(note, Note):
 			note = Note(note)
 
-		if self.nb_notes == 0:
+		if self.nb_notes == 0 and note.kind is not None:
 			self.kind = note.kind
 
 		if note.compte_dans_moyenne():

@@ -378,12 +378,12 @@ class ColleDureeTaux(models.Model):
 	TAUX_2A_SUP36 = 6
 
 	TAUX_CHOICES = (
-		(TAUX_1A_INF20, "1è année - Moins de 20 étudiants"),
-		(TAUX_1A_INF35, "1è année - Entre 21 et 35 étudiants"),
-		(TAUX_1A_SUP36, "1è année - Plus de 35 étudiants"),
-		(TAUX_2A_INF20, "2è année - Moins de 20 étudiants"),
-		(TAUX_2A_INF35, "2è année - Entre 21 et 35 étudiants"),
-		(TAUX_2A_SUP36, "2è année - Plus de 35 étudiants"),
+		(TAUX_1A_INF20, "1è année - 19 étudiants ou moins"),
+		(TAUX_1A_INF35, "1è année - Entre 20 et 35 étudiants"),
+		(TAUX_1A_SUP36, "1è année - À partir de 36 étudiants"),
+		(TAUX_2A_INF20, "2è année - 19 étudiants ou moins"),
+		(TAUX_2A_INF35, "2è année - Entre 20 et 35 étudiants"),
+		(TAUX_2A_SUP36, "2è année - À partir de 36 étudiants"),
 		)
 	taux = models.PositiveSmallIntegerField(blank=True, null=True,
 			verbose_name="taux", choices=TAUX_CHOICES)

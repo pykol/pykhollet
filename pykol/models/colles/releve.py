@@ -203,14 +203,14 @@ class ColleReleveLigne(CodeIndemniteMixin, ColleDureeTaux):
 		Détermine le taux d'une colle en fonction de la classe
 		"""
 		if classe.niveau == Classe.NIVEAU_PREMIERE_ANNEE:
-			if classe.effectif <= 20:
+			if classe.effectif < 20:
 				return cls.TAUX_1A_INF20
 			elif classe.effectif <= 35:
 				return cls.TAUX_1A_INF35
 			else:
 				return cls.TAUX_1A_SUP36
 		else:
-			if classe.effectif <= 20:
+			if classe.effectif < 20:
 				return cls.TAUX_2A_INF20
 			elif classe.effectif <= 35:
 				return cls.TAUX_2A_INF35

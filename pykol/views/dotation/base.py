@@ -30,7 +30,9 @@ class BaseView(TemplateView):
 
 class ClasseDetailView(DetailView):
 	template_name = 'pykol/dotation/classe_detail.html'
-	queryset = Classe.objects.all()
+
+	def get_queryset(self):
+		return Classe.objects.all()
 
 	def get_context_data(self, *args, **kwargs):
 		context = super().get_context_data(*args, **kwargs)

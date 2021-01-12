@@ -28,7 +28,7 @@ from odf.opendocument import OpenDocumentSpreadsheet, load
 from odf.table import Table, TableColumn, TableRow, TableCell, \
 		CoveredTableCell, TableHeaderRows
 from odf.style import Style, TableColumnProperties, TableRowProperties, \
-        TextProperties, ParagraphProperties
+		TextProperties, ParagraphProperties
 from odf.text import P
 
 from pykol.models import constantes
@@ -291,43 +291,65 @@ def import_odf(request, slug):
 
 					# Et on arrive aux semaines
 					for sem_num, sem_cell in enumerate(cells):
-						# Si la cellule est vide, on passe à la suivante
-						sem_text = tablecell_to_text(sem_cell).strip()
-						if not sem_text:
-							continue
+						# On récupére le contenu de la cellule et on tente de
+						# deviner la semaine. En fonction des quatre cas
+						# possibles pour ce couple de valeurs (vide ou non pour
+						# chacune), le traitement est différent.
+						groupes_text = tablecell_to_text(sem_cell).strip()
+						semaine = semaines.get(sem_num)
 
-						try:
-							semaine = semaines[sem_num]
-						except:
-							import_erreurs.append(('semaine_invalide',
-								(ligne_num, sem_num + nb_entetes_fixes),
-								"Case située au-delà de la dernière "
-								"semaine de colles."))
+						if semaine is None:
+							# On trouve du contenu dans une case qui ne
+							# correspond à aucune semaine du colloscope. On
+							# signale l'erreur. Si le contenu de la case est
+							# vide, on ne signale rien : c'est juste un
+							# reliquat fantôme du tableur.
+							if groupes_text:
+								import_erreurs.append(('semaine_invalide',
+									(ligne_num, sem_num + nb_entetes_fixes),
+									"Case située au-delà de la dernière "
+									"semaine de colles."))
+
+							# Et dans tous les cas on passe à ligne suivante,
+							# il n'y a plus aucune semaine intéressante à
+							# attendre sur cette ligne.
 							break
 
-						groupes_colles = [g.strip()
-								for g in sem_text.split(",")
-								if g.strip()]
+						elif groupes_text:
+							# Cas où on trouve une liste de groupes pour une
+							# semaine connue. On met à jour les colles.
+							groupes_colles = [g.strip()
+									for g in sem_text.split(",")
+									if g.strip()]
 
-						for num_groupe in groupes_colles:
-							try:
-								groupe = groupes[semaine.periode][num_groupe]
-							except:
-								# On signale les groupes qui n'existent
-								# pas et on passe aux suivants.
-								import_erreurs.append(('groupe_invalide',
-									(ligne_num, sem_num + nb_entetes_fixes),
-									"Identifiant de groupe de colle "
-									"inconnu."))
-								continue
+							for num_groupe in groupes_colles:
+								try:
+									groupe = groupes[semaine.periode][num_groupe]
+								except:
+									# On signale les groupes qui n'existent
+									# pas et on passe aux suivants.
+									import_erreurs.append(('groupe_invalide',
+										(ligne_num, sem_num + nb_entetes_fixes),
+										"Identifiant de groupe de colle "
+										"inconnu."))
+									continue
 
-							try:
-								Colle.objects.update_or_create_from_creneau(creneau, semaine, groupe)
-							except:
-								import_erreurs.append(('update_echoue',
-									(ligne_num, sem_num + nb_entetes_fixes),
-									"Échec de la mise à jour de cette "
-									"colle."))
+								try:
+									Colle.objects.update_or_create_from_creneau(creneau, semaine, groupe)
+								except:
+									import_erreurs.append(('update_echoue',
+										(ligne_num, sem_num + nb_entetes_fixes),
+										"Échec de la mise à jour de cette "
+										"colle."))
+
+						else:
+							# Cas où la case de la semaine est vide. On
+							# supprime les colles qui s'y trouveraient déjà
+							# dans la base de données.
+							for colle in Colle.objects.filter(creneau=creneau, semaine=semaine):
+								if not colle.est_effectuee:
+									colle.annuler_mouvement()
+									colle.delete()
 
 				if not import_erreurs:
 					return redirect('colloscope', slug=classe.slug)

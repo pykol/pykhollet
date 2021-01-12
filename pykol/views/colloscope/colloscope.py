@@ -19,6 +19,7 @@
 """Affichage et édition du colloscope."""
 
 from collections import defaultdict, OrderedDict
+from itertools import zip_longest
 import logging
 
 from django.shortcuts import render, get_object_or_404, redirect
@@ -293,13 +294,15 @@ def import_odf(request, slug):
 						continue
 
 					# Et on arrive aux semaines
-					for sem_num, sem_cell in enumerate(cells):
+					for sem_num, (sem_cell, semaine) in enumerate(zip_longest(cells, semaines)):
 						# On récupére le contenu de la cellule et on tente de
 						# deviner la semaine. En fonction des quatre cas
 						# possibles pour ce couple de valeurs (vide ou non pour
 						# chacune), le traitement est différent.
-						groupes_text = tablecell_to_text(sem_cell).strip()
-						semaine = semaines.get(sem_num)
+						if sem_cell is None:
+							groupes_text = None
+						else:
+							groupes_text = tablecell_to_text(sem_cell).strip()
 
 						if semaine is None:
 							# On trouve du contenu dans une case qui ne
@@ -322,7 +325,7 @@ def import_odf(request, slug):
 							# Cas où on trouve une liste de groupes pour une
 							# semaine connue. On met à jour les colles.
 							groupes_colles = [g.strip()
-									for g in sem_text.split(",")
+									for g in groupes_text.split(",")
 									if g.strip()]
 
 							for num_groupe in groupes_colles:

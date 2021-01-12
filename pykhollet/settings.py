@@ -129,7 +129,7 @@ LOGGING = {
 		}
 	},
 	'loggers': {
-		'pykhollet': {
+		'pykol': {
 			'handlers': ['console', 'mail_admins'],
 			'level': 'INFO',
 		},

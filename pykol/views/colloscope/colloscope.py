@@ -19,6 +19,7 @@
 """Affichage et édition du colloscope."""
 
 from collections import defaultdict, OrderedDict
+import logging
 
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
@@ -37,6 +38,8 @@ from pykol.models.colles import Colle
 from pykol.forms.colloscope import ColloscopeImportForm
 from pykol.lib.odftools import tablecell_to_text, iter_columns
 from pykol.views.generic import OdfResponse
+
+logger = logging.getLogger(__name__)
 
 @login_required
 def colloscope(request, slug):
@@ -355,10 +358,10 @@ def import_odf(request, slug):
 					return redirect('colloscope', slug=classe.slug)
 
 			except Exception as e:
-				# TODO il pourrait être utile de logger l'exception e
-				# pour dénicher des bugs
 				import_erreurs.append(('fichier_invalide', None,
 					"Votre fichier n'est pas au format demandé."))
+				logger.exception("Erreur inconnue lors de l'importation d'un colloscope",
+						exc_info=e)
 	else:
 		form = ColloscopeImportForm()
 

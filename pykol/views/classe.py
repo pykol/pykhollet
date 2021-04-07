@@ -26,6 +26,9 @@ from django.contrib.auth.mixins import LoginRequiredMixin, \
 from django.db.models import IntegerField, Func
 from django.urls import reverse
 
+from django.contrib.auth import get_user_model
+
+User = get_user_model()
 from pykol.models.base import Classe, Service
 from pykol.models.colles import Trinome
 from pykol.forms.classe import ServiceFormset

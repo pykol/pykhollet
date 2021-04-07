@@ -1,0 +1,7 @@
+{% if colloscopeurs %}
+<p>Dans cette classe, le colloscope est géré par
+{% for colloscopeur in colloscopeurs %}
+<a href="mailto:{{ colloscopeur.email }}">{{ colloscopeur }}</a>{% if not forloop.last %}, {% else %}.{% endif %}
+{% endfor %}
+En cas d'anomalie sur le planning des colles, vous pouvez essayer de {% if colloscopeurs|length > 1%}les{% else %}le{% endif %} contacter.</p>
+{% endif %}

@@ -21,6 +21,8 @@
 <p><a class="btn btn-primary" href="{% url 'colloscope_import_odf' classe.slug %}">Import du colloscope</a></p>
 {% endif %}
 
+{% include 'pykol/widgets/liste_colloscopeurs.html' with colloscopeurs=classe.colloscopeurs only %}
+
 <table class="colloscope">
   <thead>
     <tr>

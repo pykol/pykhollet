@@ -490,3 +490,12 @@ class Classe(Groupe):
 		"""
 		return Professeur.objects.filter(service__enseignement__classe=self,
 				service__enseignement__matiere=matiere)
+
+	def colloscopeurs(self):
+		"""
+		Liste des professeurs qui peuvent gérer le colloscope de la classe
+		"""
+		return Professeur.objects.filter(
+				colloscopepermission__classe=self,
+				colloscopepermission__matiere_seulement=False,
+				colloscopepermission__droit__codename='change_colloscope')

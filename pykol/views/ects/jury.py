@@ -301,11 +301,39 @@ def jury_detail_etudiant(request, pk, etu_pk):
 	etudiant = get_object_or_404(Etudiant, pk=etu_pk,
 			classe__jury=jury)
 
-	mentions = etudiant.mention_set.filter(jury=jury, globale=False
-		)
+	mentions = etudiant.mention_set.filter(jury=jury, globale=False)
 
 	mention_globale = etudiant.mention_set.filter(jury=jury,
 			globale=True).first()
+
+	if request.user.has_perm('pykol.direction') and mention_globale is not None:
+		if request.method == 'POST':
+			mention_globale_form = MentionGlobaleForm(request.POST,
+					instance=mention_globale)
+			if mention_globale_form.is_valid():
+				mention_globale_form.save()
+				if 'save_next' in request.POST:
+					etudiants_jury = Etudiant.objects.filter(
+							mention__jury=jury,
+							mention__globale=True,
+					).order_by('last_name', 'first_name').values_list('pk', flat=True)
+					next_pk = None
+					prev_pk = None
+					for next_pk in etudiants_jury:
+						if prev_pk == etu_pk:
+							break
+						prev_pk = next_pk
+					else:
+						return redirect('ects_jury_detail', pk)
+
+					if next_pk is not None:
+						return redirect('ects_jury_detail_etudiant', pk, next_pk)
+
+				return redirect('ects_jury_detail_etudiant', pk, etu_pk)
+		else:
+			mention_globale_form = MentionGlobaleForm(instance=mention_globale)
+	else:
+		mention_globale_form = None
 
 	return render(request, 'pykol/ects/jury_detail_etudiant.html',
 			context={
@@ -313,6 +341,7 @@ def jury_detail_etudiant(request, pk, etu_pk):
 				'etudiant': etudiant,
 				'mentions': mentions,
 				'mention_globale': mention_globale,
+				'mention_globale_form': mention_globale_form,
 			})
 
 @require_POST

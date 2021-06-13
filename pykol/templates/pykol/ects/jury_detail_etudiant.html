@@ -2,9 +2,21 @@
 {% block title %}Mentions ECTS pour {{ etudiant }} − {{ block.super }}{% endblock %}
 {% block content %}
 <h2>Détail des mentions pour {{ etudiant }}
-  <small>− {{ jury }} − {{ jury.classe }}</small></h2>
+	<small>− <a href="{% url 'ects_jury_detail' jury.pk %}">{{ jury }}</a> − {{ jury.classe }}</small></h2>
 
 <section>
+	{% if mention_globale_form %}
+	<h3>Mention globale</h3>
+	<form action="" method="post" class="form_ects_mentions">
+		{% csrf_token %}
+		{% include "pykol/ects/mention_form.html" with form=mention_globale_form %}
+		<p><input type="submit" name="save_next" value="Enregistrer et passer à l'étudiant suivant">
+	</form>
+	{% elif mention_globale %}
+	<p>Le jury a attribué la mention {{ mention_globale.get_mention_display }}.</p>
+	{% endif %}
+
+	<h3>Mentions par matière</h3>
   <table>
     <thead>
       <tr>

@@ -306,17 +306,38 @@ def jury_detail_etudiant(request, pk, etu_pk):
 	mention_globale = etudiant.mention_set.filter(jury=jury,
 			globale=True).first()
 
-	if request.user.has_perm('pykol.direction') and mention_globale is not None:
+	credits = mentions.aggregate(
+		prevus=Coalesce(Sum('credits'), 0),
+		attribues=Coalesce(Sum('credits',
+			filter=~Q(mention=Mention.MENTION_INSUFFISANT)
+				& Q(mention__isnull=False)
+			), 0),
+		refuses=Coalesce(Sum('credits',
+			filter=Q(mention=Mention.MENTION_INSUFFISANT)), 0)
+	)
+
+	if request.user.has_perm('pykol.direction') and (
+		mention_globale is not None or credits['prevus'] == credits['attribues']):
+		if mention_globale is None:
+			form_kwargs = {'initial': {
+				'jury': jury.pk,
+				'etudiant': etudiant.pk,
+				'credits': credits['attribues'],
+				}
+			}
+		else:
+			form_kwargs = {'instance': mention_globale}
+
 		if request.method == 'POST':
 			mention_globale_form = MentionGlobaleForm(request.POST,
-					instance=mention_globale)
+					**form_kwargs)
+
 			if mention_globale_form.is_valid():
 				mention_globale_form.save()
 				if 'save_next' in request.POST:
 					etudiants_jury = Etudiant.objects.filter(
 							mention__jury=jury,
-							mention__globale=True,
-					).order_by('last_name', 'first_name').values_list('pk', flat=True)
+					).distinct().order_by('last_name', 'first_name').values_list('pk', flat=True)
 					next_pk = None
 					prev_pk = None
 					for next_pk in etudiants_jury:
@@ -331,7 +352,7 @@ def jury_detail_etudiant(request, pk, etu_pk):
 
 				return redirect('ects_jury_detail_etudiant', pk, etu_pk)
 		else:
-			mention_globale_form = MentionGlobaleForm(instance=mention_globale)
+			mention_globale_form = MentionGlobaleForm(**form_kwargs)
 	else:
 		mention_globale_form = None
 

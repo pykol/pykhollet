@@ -43,15 +43,17 @@
           <th>Supprimer</th>
         </tr>
       </thead>
-      {% for colle_form in form %}
-      <tr>
-        <td>{{ colle_form.colle }}</td>
-        <td>{{ colle_form.debut }}</td>
-        <td>{{ colle_form.duree }}</td>
-        <td>{{ colle_form.duree_etudiant }}</td>
-        <td>{{ colle_form.DELETE }}</td>
-      </tr>
-      {% endfor %}
+	  <tbody>
+        {% for colle_form in form %}
+        <tr>
+          <td>{{ colle_form.colle }}</td>
+          <td>{{ colle_form.debut }}</td>
+          <td>{{ colle_form.duree }}</td>
+          <td>{{ colle_form.duree_etudiant }}</td>
+          <td>{{ colle_form.DELETE }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
     </table>
     <template id="template_calendrier_colleur_formset">
       {% with template_form=form.empty_form %}

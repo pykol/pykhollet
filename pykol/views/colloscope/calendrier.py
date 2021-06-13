@@ -129,6 +129,8 @@ class CalendrierMatiereColleurView(PermissionColloscopeMixin,
 		colleur = self.object
 
 		for form in formset.extra_forms:
+			if not form.has_changed():
+				continue
 			colle = Colle(
 				classe=enseignement.classe,
 				enseignement=enseignement,

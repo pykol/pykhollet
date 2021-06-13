@@ -26,13 +26,13 @@
 class ColleFormset {
   constructor(id, prefix) {
     this.formset_prefix = prefix;
-    var formset_element = document.getElementById(id);
+    let formset_element = document.getElementById(id);
     this.formset_element = formset_element;
 
     this.formset = formset_element;
     // Hack pour contourner le tbody d'un tableau
     if(formset_element instanceof HTMLTableElement) {
-      var tbody = formset_element.getElementsByTagName('tbody');
+      let tbody = formset_element.getElementsByTagName('tbody');
       if(tbody.length > 0) {
         this.formset = tbody[0];
       }
@@ -48,7 +48,7 @@ class ColleFormset {
     this.ligne_next_id = 0;
 
     // Initialisation du tableau avec les lignes déjà existantes
-    for(var ligne_html of this.formset.children) {
+    for(let ligne_html of this.formset.children) {
       this.lignes[this.newLigneId()] = ligne_html;
     }
   }
@@ -62,7 +62,7 @@ class ColleFormset {
   }
 
   newLigneId() {
-    var ligne_id = "ligne" + this.ligne_next_id;
+    let ligne_id = "ligne" + this.ligne_next_id;
     this.ligne_next_id++;
     return ligne_id;
   }
@@ -79,17 +79,17 @@ class ColleFormset {
       return null;
     }
 
-    var form_id = this.getTotalForms();
-    var ligne_id = this.newLigneId();
+    let form_id = this.getTotalForms();
+    let ligne_id = this.newLigneId();
 
-    var ligne = document.importNode(this.template.content, true);
-    var setField = (function(name, value) {
-      var input = ligne.querySelector('[name="' + this.formset_prefix + "-__prefix__-" + name + '"]');
+    let ligne = document.importNode(this.template.content, true);
+    let setField = (function(name, value) {
+      let input = ligne.querySelector('[name="' + this.formset_prefix + "-__prefix__-" + name + '"]');
       input.value = value;
       input.name = this.inputName(form_id, name);
       input.id = 'id_' + input.name;
     }).bind(this);
-    for(var cle in data) {
+    for(let cle in data) {
       if(data.hasOwnProperty(cle)) {
         setField(cle, data[cle]);
       }
@@ -103,14 +103,14 @@ class ColleFormset {
   // Renvoie la liste des données pour une ligne du formset, donnée par
   // son identifiant unique.
   ligneData(ligne_id) {
-    var data = {};
-    var ligne_html = this.lignes[ligne_id];
-    var position = this.positionOf(ligne_html);
-    var name_prefix = this.formset_prefix + "-" + position + "-";
-    for(var item of this.lignes[ligne_id].querySelectorAll('*')) {
+    let data = {};
+    let ligne_html = this.lignes[ligne_id];
+    let position = this.positionOf(ligne_html);
+    let name_prefix = this.formset_prefix + "-" + position + "-";
+    for(let item of this.lignes[ligne_id].querySelectorAll('*')) {
       if(item.hasAttribute('name') &&
         item.attributes['name'].value.startsWith(name_prefix)) {
-        var key = item.attributes['name'].value.substring(name_prefix.length);
+        let key = item.attributes['name'].value.substring(name_prefix.length);
         data[key] = item.value;
       }
     }
@@ -119,10 +119,10 @@ class ColleFormset {
 
   // Renvoie le tableau des données de toutes les lignes
   getAllData() {
-    var data = new Array();
-    for(var ligne_id in this.lignes) {
+    let data = new Array();
+    for(let ligne_id in this.lignes) {
       if(this.lignes.hasOwnProperty(ligne_id)) {
-        var ligne_data = this.ligneData(ligne_id);
+        let ligne_data = this.ligneData(ligne_id);
         ligne_data.ligne_id = ligne_id;
         data.push(ligne_data);
       }
@@ -133,7 +133,7 @@ class ColleFormset {
   // Déterminer la position (index de l'enfant dans l'arbre DOM du
   // formset) de la ligne.
   positionOf(ligne_html) {
-    for(var position = 0; position < this.getTotalForms(); position++) {
+    for(let position = 0; position < this.getTotalForms(); position++) {
       if(this.formset.children[position] == ligne_html) {
         return position;
       }
@@ -143,24 +143,24 @@ class ColleFormset {
 
   // Supprimer une ligne du tableau
   supprimerLigne(ligne_id) {
-    var ligne = this.lignes[ligne_id];
-    var position = this.positionOf(ligne);
+    let ligne = this.lignes[ligne_id];
+    let position = this.positionOf(ligne);
 
     // TODO vérifier que l'on ne passe pas en dessous de MIN_NUM_FORMS
     // Les lignes d'origine du formset ne doivent pas être retirées,
     // mais on coche le champ de suppression de Django.
     if(ligne.querySelector('[name="' + this.inputName(position, 'id') + '"]')) {
-      var delete_box = ligne.querySelector('[name="' + this.inputName(position, 'DELETE') + '"]');
+      let delete_box = ligne.querySelector('[name="' + this.inputName(position, 'DELETE') + '"]');
       delete_box.checked = true;
     }
     else {
       // On renumérote les lignes suivantes du formset
-      var name_regexp = new RegExp('^(' + this.formset_prefix +
+      let name_regexp = new RegExp('^(' + this.formset_prefix +
         '-)\\d+(-.*)' + '$');
-      for(var element = ligne.nextElementSibling;
+      for(let element = ligne.nextElementSibling;
         element != null;
         position++, element = element.nextElementSibling) {
-        for(var item of element.querySelectorAll('*')) {
+        for(let item of element.querySelectorAll('*')) {
           if(item.hasAttribute('name')) {
             item.attributes['name'].value =
               item.attributes['name'].value.replace(name_regexp,
@@ -175,15 +175,15 @@ class ColleFormset {
 }
 
 document.addEventListener('DOMContentLoaded', function() {
-  var calendarEl = document.createElement('div');
-  var formset = new ColleFormset('calendrier_colleur_formset', 'form');
+  let calendarEl = document.createElement('div');
+  let formset = new ColleFormset('calendrier_colleur_formset', 'form');
 
   formset.formset_element.parentNode.insertBefore(calendarEl,
     formset.formset_element);
 
-  var duree_passage_defaut = document.getElementById('duree_passage_defaut');
+  let duree_passage_defaut = document.getElementById('duree_passage_defaut');
 
-  var calendar = new FullCalendar.Calendar(calendarEl, {
+  let calendar = new FullCalendar.Calendar(calendarEl, {
     plugins: [ 'timeGrid', 'interaction' ],
     defaultView: 'timeGridWeek',
     locale: 'fr',
@@ -195,8 +195,8 @@ document.addEventListener('DOMContentLoaded', function() {
     allDaySlot: false,
     height: 'auto',
     events: function(fetchInfo, successCallback, failureCallback) {
-      var data = new Array();
-      for(var ev of formset.getAllData()) {
+      let data = new Array();
+      for(let ev of formset.getAllData()) {
         data.push({
           title: "Colle",
           id: ev.ligne_id,
@@ -209,7 +209,7 @@ document.addEventListener('DOMContentLoaded', function() {
     dateClick: function(info) {
       date_fin = new Date(info.date.getTime());
       date_fin.setHours(date_fin.getHours() + 1);
-      var id = formset.ajoutLigne({
+      let id = formset.ajoutLigne({
         debut: info.date.toISOString(),
         duree: 'PT1H',
         duree_etudiant: "PT" + duree_passage_defaut.value + "M",
@@ -225,7 +225,7 @@ document.addEventListener('DOMContentLoaded', function() {
       }
     },
     eventRender: function(info) {
-      var span = document.createElement("span");
+      let span = document.createElement("span");
       span.setAttribute('class', 'evenement_supprimer');
       span.setAttribute('title', "Supprimer la colle");
       span.textContent = "🗙";
@@ -242,7 +242,7 @@ document.addEventListener('DOMContentLoaded', function() {
    * formset lorsque l'on clique sur la case à cocher "supprimer".
    */
   function toggle_existing_line(ev) {
-    var ligne_id;
+    let ligne_id;
     for(ligne_id in formset.lignes) {
       if(formset.lignes.hasOwnProperty(ligne_id)
         && formset.lignes[ligne_id].contains(ev.currentTarget)) {
@@ -253,7 +253,7 @@ document.addEventListener('DOMContentLoaded', function() {
       calendar.getEventById(ligne_id).remove();
     }
     else {
-      var ligne_data = formset.ligneData(ligne_id);
+      let ligne_data = formset.ligneData(ligne_id);
       calendar.addEvent({
         title: "Colle",
         id: ligne_id,
@@ -263,7 +263,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
   }
 
-  for(var delete_checkbox of
+  for(let delete_checkbox of
     formset.formset.querySelectorAll('[name$="-DELETE"][name^="' + formset.formset_prefix + '-"]')) {
     delete_checkbox.addEventListener('change', toggle_existing_line);
   }

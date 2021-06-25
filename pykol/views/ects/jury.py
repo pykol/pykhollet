@@ -360,7 +360,7 @@ def jury_detail_etudiant(request, pk, etu_pk):
 			context={
 				'jury': jury,
 				'etudiant': etudiant,
-				'mentions': mentions,
+				'mentions': mentions.order_by('-credits'),
 				'mention_globale': mention_globale,
 				'mention_globale_form': mention_globale_form,
 			})

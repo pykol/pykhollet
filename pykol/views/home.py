@@ -36,7 +36,7 @@ def home(request):
 
 	# Liste des choses à faire en début d'année
 	annee_actuelle = Annee.objects.get_actuelle()
-	if annee_actuelle.debut + timedelta(days=60) > timezone.now().date():
+	if annee_actuelle is not None and annee_actuelle.debut + timedelta(days=60) > timezone.now().date():
 		# On cherche la liste des classes dont le professeur est
 		# responsable du colloscope.
 		classes = Classe.objects.filter(

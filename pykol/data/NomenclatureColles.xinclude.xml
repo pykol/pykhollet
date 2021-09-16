@@ -9,7 +9,7 @@
     différents enseignements.
 
     Sources :
-    * ECS et ECE : arrêté du 23 mars 1995 (NOR: RESK9500107A) ;
+    * ECS, ECE et ECG : arrêté du 23 mars 1995 (NOR: RESK9500107A) ;
     * CPGE scientifiques : arrêté du 10 février 1995 (NOR: RESK9500109A) ;
     * CPGE littéraires : arrêté du 27 juin 1995 (NOR: MENU9501179A).
   -->
@@ -22,6 +22,7 @@
     <xi:include href="nomenclaturescolles/1995-lettres.xml" xpointer="xpointer(/pykol_nomenclatures/colles/*)"/>
     <xi:include href="nomenclaturescolles/1995-bcpst.xml" xpointer="xpointer(/pykol_nomenclatures/colles/*)"/>
     <xi:include href="nomenclaturescolles/1995-tsi.xml"   xpointer="xpointer(/pykol_nomenclatures/colles/*)"/>
+    <xi:include href="nomenclaturescolles/2021-ecg.xml"   xpointer="xpointer(/pykol_nomenclatures/colles/*)"/>
 
   </colles>
 
@@ -34,5 +35,6 @@
     <xi:include href="nomenclaturescolles/1995-lettres.xml" xpointer="xpointer(/pykol_nomenclatures/colles_mefs/*)"/>
     <xi:include href="nomenclaturescolles/1995-bcpst.xml" xpointer="xpointer(/pykol_nomenclatures/colles_mefs/*)"/>
     <xi:include href="nomenclaturescolles/1995-tsi.xml"   xpointer="xpointer(/pykol_nomenclatures/colles_mefs/*)"/>
+    <xi:include href="nomenclaturescolles/2021-ecg.xml"   xpointer="xpointer(/pykol_nomenclatures/colles_mefs/*)"/>
   </colles_mefs>
 </pykol_nomenclatures>

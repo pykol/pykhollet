@@ -1032,7 +1032,12 @@ class BEEImporter:
 			# code 001700 et que l'on découpe artificiellement en deux
 			# sous-matières 001701 (culture générale - lettres) et 001702
 			# (culture générale - philosophie).
-			if code_matiere == '001700':
+			# Depuis la réforme 2021, la culture générale est devenue « lettres
+			# et philosophie » sous le code 024500, que l'on découpe à nouveau
+			# arbitrairement en deux sous-matières 024501 (lettres) et 024502
+			# (philosophie). Coup de bol, le ministère n'a pas choisi le même
+			# code que pour les filières scientifiques.
+			if code_matiere == '001700' or code_matiere == '024500':
 				code_lettres = code_matiere[:4] + '01'
 				code_philo   = code_matiere[:4] + '02'
 				matieres[code_lettres] = {

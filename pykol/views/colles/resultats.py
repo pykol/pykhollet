@@ -187,7 +187,7 @@ def tableau_resultats(classe, enseignements):
 	for enseignement in enseignements:
 		#TODO on devrait se restreindre aux étudiants qui suivent cette
 		# matière au lieu de prendre tous les étudiants de la classe.
-		etudiants = Etudiant.objects.filter(classe = classe).order_by('last_name','first_name')
+		etudiants = Etudiant.objects.filter(collenote__colle__enseignement=enseignement).order_by('last_name','first_name')
 
 		resultats = OrderedDict()
 		for etudiant in etudiants:

@@ -42,12 +42,14 @@ class GrilleQuerySet(models.QuerySet):
 		match_subq = GrilleMatchLigne.objects.filter(
 				matiere__matiere__optionetudiant__etudiant=etudiant,
 				matiere__matiere__optionetudiant__classe=classe,
-				grille=OuterRef('pk')).values('pk')
+				grille=OuterRef('pk')).values('grille__pk'
+                        ).annotate(matches=Count('pk')
+                        ).values('matches')
 
 		return self.filter(code_mef=classe.mef
 			).annotate(
 				expected_match=Count('match_options')).annotate(
-				actual_match=Count(Subquery(match_subq))
+				actual_match=Subquery(match_subq)
 			).filter(expected_match=F('actual_match')).order_by('-actual_match')
 
 GrilleManager = GrilleQuerySet.as_manager

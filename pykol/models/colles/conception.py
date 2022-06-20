@@ -39,12 +39,6 @@ class Semaine(models.Model):
 	classe = models.ForeignKey(Classe, on_delete=models.CASCADE)
 	numero = models.TextField(verbose_name="numéro")
 
-	PERIODE_PREMIERE = constantes.PERIODE_PREMIERE
-	PERIODE_DEUXIEME = constantes.PERIODE_DEUXIEME
-	PERIODE_CHOICES = constantes.PERIODE_XOR_CHOICES
-	override_periode = models.SmallIntegerField(verbose_name="période",
-			choices=PERIODE_XOR_CHOICES, blank=True, null=True)
-
 	class Meta:
 		ordering = ['debut']
 
@@ -73,10 +67,7 @@ class Semaine(models.Model):
 		Le semestre est déterminé en prenant la date du premier jour de
 		la semaine de colle.
 		"""
-		if self.override_periode is not None:
-			return self.override_periode
-		else:
-			return self.classe.annee.periode_enseignement(self.debut)
+		return self.classe.annee.periode_enseignement(self.debut)
 
 class Creneau(AbstractBaseColle):
 	"""Créneau de colle programmé au colloscope

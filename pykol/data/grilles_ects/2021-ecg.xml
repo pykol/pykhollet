@@ -4,22 +4,22 @@
     <!-- Mathématiques et informatique -->
     <groupe nom="Sciences">
       <ligne nom="Mathématiques appliquées" credits="7">
-        <matiere code="061500"/>
+        <matiere code="061500" modalite_option="O"/>
       </ligne>
       <ligne nom="Informatique" credits="1">
-        <matiere code="061500"/>
+        <matiere code="061500" modalite_option="O"/>
       </ligne>
     </groupe>
     <groupe nom="Sciences humaines et sociales">
       <!-- ESH -->
       <ligne credits="9">
-        <matiere code="052300"/>
+        <matiere code="052300" modalite_option="O"/>
       </ligne>
       <!-- Culture générale -->
       <ligne>
-        <matiere code="001700" credits="6"/>
-        <matiere code="001701" credits="3"/>
-        <matiere code="001702" credits="3"/>
+        <matiere code="024500" credits="6"/>
+        <matiere code="024501" credits="3"/>
+        <matiere code="024502" credits="3"/>
       </ligne>
       <!-- Langue vivante 1 -->
       <ligne credits="3">
@@ -47,22 +47,22 @@
     <!-- Mathématiques et informatique -->
     <groupe nom="Sciences">
       <ligne nom="Mathématiques approfondies" credits="9">
-        <matiere code="069800"/>
+        <matiere code="069800" modalite_option="O"/>
       </ligne>
       <ligne nom="Informatique" credits="1">
-        <matiere code="069800"/>
+        <matiere code="069800" modalite_option="O"/>
       </ligne>
     </groupe>
     <groupe nom="Sciences humaines et sociales">
       <!-- HGG -->
       <ligne credits="7">
-        <matiere code="044000"/>
+        <matiere code="044000" modalite_option="O"/>
       </ligne>
       <!-- Culture générale -->
       <ligne>
-        <matiere code="001700" credits="6"/>
-        <matiere code="001701" credits="3"/>
-        <matiere code="001702" credits="3"/>
+        <matiere code="024500" credits="6"/>
+        <matiere code="024501" credits="3"/>
+        <matiere code="024502" credits="3"/>
       </ligne>
       <!-- Langue vivante 1 -->
       <ligne credits="3">
@@ -90,22 +90,22 @@
     <!-- Mathématiques et informatique -->
     <groupe nom="Sciences">
       <ligne nom="Mathématiques approfondies" credits="8">
-        <matiere code="069800"/>
+        <matiere code="069800" modalite_option="O"/>
       </ligne>
       <ligne nom="Informatique" credits="1">
-        <matiere code="069800"/>
+        <matiere code="069800" modalite_option="O"/>
       </ligne>
     </groupe>
     <groupe nom="Sciences humaines et sociales">
       <!-- ESH -->
       <ligne credits="8">
-        <matiere code="052300"/>
+        <matiere code="052300" modalite_option="O"/>
       </ligne>
       <!-- Culture générale -->
       <ligne>
-        <matiere code="001700" credits="6"/>
-        <matiere code="001701" credits="3"/>
-        <matiere code="001702" credits="3"/>
+        <matiere code="024500" credits="6"/>
+        <matiere code="024501" credits="3"/>
+        <matiere code="024502" credits="3"/>
       </ligne>
       <!-- Langue vivante 1 -->
       <ligne credits="3">
@@ -133,22 +133,22 @@
     <!-- Mathématiques et informatique -->
     <groupe nom="Sciences">
       <ligne nom="Mathématiques appliquées" credits="8">
-        <matiere code="061500"/>
+        <matiere code="061500" modalite_option="O"/>
       </ligne>
       <ligne nom="Informatique" credits="1">
-        <matiere code="061500"/>
+        <matiere code="061500" modalite_option="O"/>
       </ligne>
     </groupe>
     <groupe nom="Sciences humaines et sociales">
       <!-- HGG -->
       <ligne credits="8">
-        <matiere code="044000"/>
+        <matiere code="044000" modalite_option="O"/>
       </ligne>
       <!-- Culture générale -->
       <ligne>
-        <matiere code="001700" credits="6"/>
-        <matiere code="001701" credits="3"/>
-        <matiere code="001702" credits="3"/>
+        <matiere code="024500" credits="6"/>
+        <matiere code="024501" credits="3"/>
+        <matiere code="024502" credits="3"/>
       </ligne>
       <!-- Langue vivante 1 -->
       <ligne credits="3">

@@ -5,7 +5,8 @@
     en CPGE.
 
     Sources :
-    * Bulletin officiel n°11 du 13 mars 2008.
+	  * Bulletin officiel n°11 du 13 mars 2008.
+	  * adapté manuellement pour les ECG 2021
   -->
   <grille_ects xml:id="bo2008-ece" xml:base="grilles_ects/2008-ece.xml">
     <!-- Mathématiques et informatique -->
@@ -717,5 +718,193 @@
   <mef code_mef="30111033220" xml:base="grilles_ects/2008-psi.xml">
     <libelle>Classe préparatoire scientifique, parcours PSI*</libelle>
     <domaines_etude>Mathématiques, physique, sciences industrielles pour l'ingénieur</domaines_etude>
+  </mef>
+  <grille_ects xml:id="bo2021-ecg-appli-esh" xml:base="grilles_ects/2021-ecg.xml">
+    <!-- Mathématiques et informatique -->
+    <groupe nom="Sciences">
+      <ligne nom="Mathématiques appliquées" credits="7">
+        <matiere code="061500"/>
+      </ligne>
+      <ligne nom="Informatique" credits="1">
+        <matiere code="061500"/>
+      </ligne>
+    </groupe>
+    <groupe nom="Sciences humaines et sociales">
+      <!-- ESH -->
+      <ligne credits="9">
+        <matiere code="052300"/>
+      </ligne>
+      <!-- Culture générale -->
+      <ligne>
+        <matiere code="001700" credits="6"/>
+        <matiere code="001701" credits="3"/>
+        <matiere code="001702" credits="3"/>
+      </ligne>
+      <!-- Langue vivante 1 -->
+      <ligne credits="3">
+        <matiere modalite_option="O" rang_option="1"/>
+      </ligne>
+      <!-- Langue vivante 2 -->
+      <ligne credits="3">
+        <matiere modalite_option="O" rang_option="2"/>
+      </ligne>
+    </groupe>
+    <!-- EPS -->
+    <groupe nom="EPS">
+      <ligne credits="1">
+        <matiere code="100100"/>
+      </ligne>
+    </groupe>
+    <match>
+      <matiere code="052300" modalite_option="O"/>
+      <matiere code="061500" modalite_option="O"/>
+    </match>
+  </grille_ects>
+  <grille_ects xml:id="bo2021-ecg-appro-hgg" xml:base="grilles_ects/2021-ecg.xml">
+    <!-- Mathématiques et informatique -->
+    <groupe nom="Sciences">
+      <ligne nom="Mathématiques approfondies" credits="9">
+        <matiere code="069800"/>
+      </ligne>
+      <ligne nom="Informatique" credits="1">
+        <matiere code="069800"/>
+      </ligne>
+    </groupe>
+    <groupe nom="Sciences humaines et sociales">
+      <!-- HGG -->
+      <ligne credits="7">
+        <matiere code="044000"/>
+      </ligne>
+      <!-- Culture générale -->
+      <ligne>
+        <matiere code="001700" credits="6"/>
+        <matiere code="001701" credits="3"/>
+        <matiere code="001702" credits="3"/>
+      </ligne>
+      <!-- Langue vivante 1 -->
+      <ligne credits="3">
+        <matiere modalite_option="O" rang_option="1"/>
+      </ligne>
+      <!-- Langue vivante 2 -->
+      <ligne credits="3">
+        <matiere modalite_option="O" rang_option="2"/>
+      </ligne>
+    </groupe>
+    <!-- EPS -->
+    <groupe nom="EPS">
+      <ligne credits="1">
+        <matiere code="100100"/>
+      </ligne>
+    </groupe>
+    <match>
+      <matiere code="044000" modalite_option="O"/>
+      <matiere code="069800" modalite_option="O"/>
+    </match>
+  </grille_ects>
+  <grille_ects xml:id="bo2021-ecg-appro-esh" xml:base="grilles_ects/2021-ecg.xml">
+    <!-- Mathématiques et informatique -->
+    <groupe nom="Sciences">
+      <ligne nom="Mathématiques approfondies" credits="8">
+        <matiere code="069800"/>
+      </ligne>
+      <ligne nom="Informatique" credits="1">
+        <matiere code="069800"/>
+      </ligne>
+    </groupe>
+    <groupe nom="Sciences humaines et sociales">
+      <!-- ESH -->
+      <ligne credits="8">
+        <matiere code="052300"/>
+      </ligne>
+      <!-- Culture générale -->
+      <ligne>
+        <matiere code="001700" credits="6"/>
+        <matiere code="001701" credits="3"/>
+        <matiere code="001702" credits="3"/>
+      </ligne>
+      <!-- Langue vivante 1 -->
+      <ligne credits="3">
+        <matiere modalite_option="O" rang_option="1"/>
+      </ligne>
+      <!-- Langue vivante 2 -->
+      <ligne credits="3">
+        <matiere modalite_option="O" rang_option="2"/>
+      </ligne>
+    </groupe>
+    <!-- EPS -->
+    <groupe nom="EPS">
+      <ligne credits="1">
+        <matiere code="100100"/>
+      </ligne>
+    </groupe>
+    <match>
+      <matiere code="052300" modalite_option="O"/>
+      <matiere code="069800" modalite_option="O"/>
+    </match>
+  </grille_ects>
+  <grille_ects xml:id="bo2021-ecg-appli-hgg" xml:base="grilles_ects/2021-ecg.xml">
+    <!-- Mathématiques et informatique -->
+    <groupe nom="Sciences">
+      <ligne nom="Mathématiques appliquées" credits="8">
+        <matiere code="061500"/>
+      </ligne>
+      <ligne nom="Informatique" credits="1">
+        <matiere code="061500"/>
+      </ligne>
+    </groupe>
+    <groupe nom="Sciences humaines et sociales">
+      <!-- HGG -->
+      <ligne credits="8">
+        <matiere code="044000"/>
+      </ligne>
+      <!-- Culture générale -->
+      <ligne>
+        <matiere code="001700" credits="6"/>
+        <matiere code="001701" credits="3"/>
+        <matiere code="001702" credits="3"/>
+      </ligne>
+      <!-- Langue vivante 1 -->
+      <ligne credits="3">
+        <matiere modalite_option="O" rang_option="1"/>
+      </ligne>
+      <!-- Langue vivante 2 -->
+      <ligne credits="3">
+        <matiere modalite_option="O" rang_option="2"/>
+      </ligne>
+    </groupe>
+    <!-- EPS -->
+    <groupe nom="EPS">
+      <ligne credits="1">
+        <matiere code="100100"/>
+      </ligne>
+    </groupe>
+    <match>
+      <matiere code="044000" modalite_option="O"/>
+      <matiere code="061500" modalite_option="O"/>
+    </match>
+  </grille_ects>
+  <classe code_mef="30112019210" semestre="1" grille_ref="bo2021-ecg-appli-esh" xml:base="grilles_ects/2021-ecg.xml"/>
+  <classe code_mef="30112019210" semestre="2" grille_ref="bo2021-ecg-appli-esh" xml:base="grilles_ects/2021-ecg.xml"/>
+  <classe code_mef="30112019220" semestre="1" grille_ref="bo2021-ecg-appli-esh" xml:base="grilles_ects/2021-ecg.xml"/>
+  <classe code_mef="30112019220" semestre="2" grille_ref="bo2021-ecg-appli-esh" xml:base="grilles_ects/2021-ecg.xml"/>
+  <classe code_mef="30112019210" semestre="1" grille_ref="bo2021-ecg-appro-hgg" xml:base="grilles_ects/2021-ecg.xml"/>
+  <classe code_mef="30112019210" semestre="2" grille_ref="bo2021-ecg-appro-hgg" xml:base="grilles_ects/2021-ecg.xml"/>
+  <classe code_mef="30112019220" semestre="1" grille_ref="bo2021-ecg-appro-hgg" xml:base="grilles_ects/2021-ecg.xml"/>
+  <classe code_mef="30112019220" semestre="2" grille_ref="bo2021-ecg-appro-hgg" xml:base="grilles_ects/2021-ecg.xml"/>
+  <classe code_mef="30112019210" semestre="1" grille_ref="bo2021-ecg-appli-hgg" xml:base="grilles_ects/2021-ecg.xml"/>
+  <classe code_mef="30112019210" semestre="2" grille_ref="bo2021-ecg-appli-hgg" xml:base="grilles_ects/2021-ecg.xml"/>
+  <classe code_mef="30112019220" semestre="1" grille_ref="bo2021-ecg-appli-hgg" xml:base="grilles_ects/2021-ecg.xml"/>
+  <classe code_mef="30112019220" semestre="2" grille_ref="bo2021-ecg-appli-hgg" xml:base="grilles_ects/2021-ecg.xml"/>
+  <classe code_mef="30112019210" semestre="1" grille_ref="bo2021-ecg-appro-esh" xml:base="grilles_ects/2021-ecg.xml"/>
+  <classe code_mef="30112019210" semestre="2" grille_ref="bo2021-ecg-appro-esh" xml:base="grilles_ects/2021-ecg.xml"/>
+  <classe code_mef="30112019220" semestre="1" grille_ref="bo2021-ecg-appro-esh" xml:base="grilles_ects/2021-ecg.xml"/>
+  <classe code_mef="30112019220" semestre="2" grille_ref="bo2021-ecg-appro-esh" xml:base="grilles_ects/2021-ecg.xml"/>
+  <mef code_mef="30112019210" xml:base="grilles_ects/2021-ecg.xml">
+    <libelle>Classe préparatoire économique et commerciale, voie générale (ECG)</libelle>
+    <domaines_etude>Culture générale, langues, mathématiques, histoire, géographie, géopolitique, économie et sciences sociales</domaines_etude>
+  </mef>
+  <mef code_mef="30112019220" xml:base="grilles_ects/2021-ecg.xml">
+    <libelle>Classe préparatoire économique et commerciale, voie générale (ECG)</libelle>
+    <domaines_etude>Culture générale, langues, mathématiques, histoire, géographie, géopolitique, économie et sciences sociales</domaines_etude>
   </mef>
 </grilles_ects>

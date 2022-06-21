@@ -71,8 +71,8 @@ def query_matieres_from_tag(matiere_et, code_mef):
 
 	if modalite_option != MEFMatiere.MODALITE_COMMUN:
 		rang = matiere_et.attrib.get('rang_option')
-		if rang is not None:
-			mefmatiere_q = mefmatiere_q & Q(rang_option=rang)
+		if rang is not None and rang.isnumeric():
+			mefmatiere_q = mefmatiere_q & Q(rang_option=int(rang))
 
 	code_matiere = matiere_et.attrib.get('code')
 	if code_matiere is not None:

@@ -57,7 +57,7 @@ def home(request):
 	# Pour la direction : lister les colleurs dont les comptes
 	# pourraient présenter des anomalies.
 	context['soucis_comptes_colleurs'] = []
-	if request.user.has_perm('pykol.direction'):
+	if annee_actuelle is not None and request.user.has_perm('pykol.direction'):
 		context['soucis_comptes_colleurs'] = Professeur.objects.filter(
 			colledetails__actif=True,
 			colledetails__colle__classe__annee=annee_actuelle).filter(

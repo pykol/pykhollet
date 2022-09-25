@@ -896,12 +896,21 @@ class BEEImporter:
 			# le fichier SIECLE.
 			options_siecle = set()
 			for option_et in eleve_et.findall('OPTIONS_ELEVE'):
-				options_siecle.add(SiecleOption(
-					rang=int(option_et.find('NUM_OPTION').text),
-					modalite=OptionEtudiant.parse_modalite_election(
-						option_et.find('CODE_MODALITE_ELECT').text),
-					matiere=self.matieres[option_et.find('CODE_MATIERE').text]
-				))
+				try:
+					options_siecle.add(SiecleOption(
+						rang=int(option_et.find('NUM_OPTION').text),
+						modalite=OptionEtudiant.parse_modalite_election(
+							option_et.find('CODE_MODALITE_ELECT').text),
+						matiere=self.matieres[option_et.find('CODE_MATIERE').text]
+					))
+				except:
+					# On ignore les matières qui n'existeraient pas.
+					# C'est déjà arrivé avec une base élèves où un étudiant
+					# ayant quitté l'établissement a été confondu avec un
+					# autre. L'étudiant parti a récupéré dans SIECLE les
+					# options de l'étudiant encore présent. Les codes matières
+					# n'existaient pas.
+					pass
 
 			# On obtient ensuite la liste des options présentes dans la
 			# base de données.

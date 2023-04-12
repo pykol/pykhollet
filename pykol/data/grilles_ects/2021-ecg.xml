@@ -170,41 +170,31 @@
 
   <classe code_mef="30112019210" semestre="1" grille_ref="bo2021-ecg-appli-esh"/>
   <classe code_mef="30112019210" semestre="2" grille_ref="bo2021-ecg-appli-esh"/>
-  <!--
   <classe code_mef="30112019220" semestre="1" grille_ref="bo2021-ecg-appli-esh"/>
   <classe code_mef="30112019220" semestre="2" grille_ref="bo2021-ecg-appli-esh"/>
-  -->
 
   <classe code_mef="30112019210" semestre="1" grille_ref="bo2021-ecg-appro-hgg"/>
   <classe code_mef="30112019210" semestre="2" grille_ref="bo2021-ecg-appro-hgg"/>
-  <!--
   <classe code_mef="30112019220" semestre="1" grille_ref="bo2021-ecg-appro-hgg"/>
   <classe code_mef="30112019220" semestre="2" grille_ref="bo2021-ecg-appro-hgg"/>
-  -->
 
   <classe code_mef="30112019210" semestre="1" grille_ref="bo2021-ecg-appli-hgg"/>
   <classe code_mef="30112019210" semestre="2" grille_ref="bo2021-ecg-appli-hgg"/>
-  <!--
   <classe code_mef="30112019220" semestre="1" grille_ref="bo2021-ecg-appli-hgg"/>
   <classe code_mef="30112019220" semestre="2" grille_ref="bo2021-ecg-appli-hgg"/>
-  -->
 
   <classe code_mef="30112019210" semestre="1" grille_ref="bo2021-ecg-appro-esh"/>
   <classe code_mef="30112019210" semestre="2" grille_ref="bo2021-ecg-appro-esh"/>
-  <!--
   <classe code_mef="30112019220" semestre="1" grille_ref="bo2021-ecg-appro-esh"/>
   <classe code_mef="30112019220" semestre="2" grille_ref="bo2021-ecg-appro-esh"/>
-  -->
 
   <mef code_mef="30112019210">
     <libelle>Classe préparatoire économique et commerciale, voie générale (ECG)</libelle>
     <domaines_etude>Culture générale, langues, mathématiques, histoire, géographie, géopolitique, économie et sciences sociales</domaines_etude>
   </mef>
 
-  <!--
   <mef code_mef="30112019220">
     <libelle>Classe préparatoire économique et commerciale, voie générale (ECG)</libelle>
     <domaines_etude>Culture générale, langues, mathématiques, histoire, géographie, géopolitique, économie et sciences sociales</domaines_etude>
   </mef>
-  -->
 </grilles_ects>

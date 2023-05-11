@@ -18,6 +18,7 @@
 
 from django.db import models
 from django.db.models import F, Count, OuterRef, Subquery
+from django.db.models.functions import Coalesce
 
 from pykol.models import constantes
 from pykol.models.base import ModuleElementaireFormation, MEFMatiere
@@ -49,7 +50,7 @@ class GrilleQuerySet(models.QuerySet):
 		return self.filter(code_mef=classe.mef
 			).annotate(
 				expected_match=Count('match_options')).annotate(
-				actual_match=Subquery(match_subq)
+				actual_match=Coalesce(Subquery(match_subq), 0)
 			).filter(expected_match=F('actual_match')).order_by('-actual_match')
 
 GrilleManager = GrilleQuerySet.as_manager

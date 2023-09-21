@@ -133,14 +133,14 @@ def appartenance_mef_cpge(mef_appartenance_et):
 
 	Cette fonction prend en paramètre un fragment d'arbre etree qui
 	correspond à un fragment XML de la forme :
-        <MEFS_APPARTENANCE>
-          <MEF_APPARTENANCE>
-            <CODE_MEF>20112005110</CODE_MEF>
-          </MEF_APPARTENANCE>
-          <MEF_APPARTENANCE>
-            <CODE_MEF>20112005112</CODE_MEF>
-          </MEF_APPARTENANCE>
-        </MEFS_APPARTENANCE>
+		<MEFS_APPARTENANCE>
+		  <MEF_APPARTENANCE>
+			<CODE_MEF>20112005110</CODE_MEF>
+		  </MEF_APPARTENANCE>
+		  <MEF_APPARTENANCE>
+			<CODE_MEF>20112005112</CODE_MEF>
+		  </MEF_APPARTENANCE>
+		</MEFS_APPARTENANCE>
 
 	Elle accepte également la version STS-WEB :
 		<MEF_APPARTENANCE CODE="20112005110"/>
@@ -406,14 +406,14 @@ class BEEImporter:
 		à un fragment XML de la forme (version STS) :
 		<MEFS>
 		  <MEF CODE="30112013210">
-		    <FORMATION>1HEC-E</FORMATION>
-		    <LIBELLE_LONG>CPGE1  ECO.ET COMMERC.OPT ECONOMIQUE</LIBELLE_LONG>
-		    <LIBELLE_EDITION>Cpge1  eco.et commerc.opt economique</LIBELLE_EDITION>
+			<FORMATION>1HEC-E</FORMATION>
+			<LIBELLE_LONG>CPGE1  ECO.ET COMMERC.OPT ECONOMIQUE</LIBELLE_LONG>
+			<LIBELLE_EDITION>Cpge1  eco.et commerc.opt economique</LIBELLE_EDITION>
 		  </MEF>
 		  <MEF CODE="30112012210">
-		    <FORMATION>1HEC-S</FORMATION>
-		    <LIBELLE_LONG>CPGE1  ECO.ET COMMERC.OPT SCIENTIFIQUE</LIBELLE_LONG>
-		    <LIBELLE_EDITION>Cpge1  eco.et commerc.opt scientifique</LIBELLE_EDITION>
+			<FORMATION>1HEC-S</FORMATION>
+			<LIBELLE_LONG>CPGE1  ECO.ET COMMERC.OPT SCIENTIFIQUE</LIBELLE_LONG>
+			<LIBELLE_EDITION>Cpge1  eco.et commerc.opt scientifique</LIBELLE_EDITION>
 		  </MEF>
 		  ...
 		</MEFS>
@@ -798,13 +798,21 @@ class BEEImporter:
 		# importer.
 		classe_etudiant = {}
 		for struct_eleve in self.eleves_et.getroot().findall('DONNEES/STRUCTURES/STRUCTURES_ELEVE'):
-			code_structure = struct_eleve.find('STRUCTURE/CODE_STRUCTURE').text
+			# Dans struct_eleve on trouve une liste de <STRUCTURE> dont
+			# certains sont des divisions et d'autres des groupes. On cherche
+			# uniquement les divisions et on les essaie une par une.
 			num_eleve = struct_eleve.attrib['ELENOET']
-			try:
-				classe_etudiant[num_eleve] = self.classes[code_structure]
-			except:
-				# L'étudiant n'est pas dans une classe gérée par pyKol.
-				continue
+			for structure_et in struct_eleve.findall('STRUCTURE'):
+				type_structure = structure_et.find('TYPE_STRUCTURE')
+				if type_structure is None or type_structure.text != 'D':
+					continue
+				try:
+					code_structure = structure_et.find('CODE_STRUCTURE').text
+					classe_etudiant[num_eleve] = self.classes[code_structure]
+					break
+				except:
+					# L'étudiant n'est pas dans une classe gérée par pyKol.
+					continue
 
 		# On peut à présent créer ou mettre à jour les élèves dans la base de
 		# données. Le dictionnaire classe_etudiant permet de mettre la main
@@ -948,21 +956,21 @@ class BEEImporter:
 		Cette fonction prend en paramètre un sous-arbre etree qui correspond
 		à du XML de la forme :
 
-	    <MATIERES>
-	      <MATIERE CODE_MATIERE="001700">
-	        <CODE_GESTION>CULGE</CODE_GESTION>
-	        <LIBELLE_COURT>CULTURE GENERALE</LIBELLE_COURT>
-	        <LIBELLE_LONG>CULTURE GENERALE</LIBELLE_LONG>
-	        <LIBELLE_EDITION>Culture generale</LIBELLE_EDITION>
-	        <MATIERE_ETP>1</MATIERE_ETP>
-	      </MATIERE>
-	      <MATIERE CODE_MATIERE="002300">
-	        <CODE_GESTION>TPE</CODE_GESTION>
-	        <LIBELLE_COURT>TRAVX PERSO.ENCADRES</LIBELLE_COURT>
-	        <LIBELLE_LONG>TRAVAUX PERSONNELS ENCADRES</LIBELLE_LONG>
-	        <LIBELLE_EDITION>Travaux personnels encadrés</LIBELLE_EDITION>
-	        <MATIERE_ETP>0</MATIERE_ETP>
-	      </MATIERE>
+		<MATIERES>
+		  <MATIERE CODE_MATIERE="001700">
+			<CODE_GESTION>CULGE</CODE_GESTION>
+			<LIBELLE_COURT>CULTURE GENERALE</LIBELLE_COURT>
+			<LIBELLE_LONG>CULTURE GENERALE</LIBELLE_LONG>
+			<LIBELLE_EDITION>Culture generale</LIBELLE_EDITION>
+			<MATIERE_ETP>1</MATIERE_ETP>
+		  </MATIERE>
+		  <MATIERE CODE_MATIERE="002300">
+			<CODE_GESTION>TPE</CODE_GESTION>
+			<LIBELLE_COURT>TRAVX PERSO.ENCADRES</LIBELLE_COURT>
+			<LIBELLE_LONG>TRAVAUX PERSONNELS ENCADRES</LIBELLE_LONG>
+			<LIBELLE_EDITION>Travaux personnels encadrés</LIBELLE_EDITION>
+			<MATIERE_ETP>0</MATIERE_ETP>
+		  </MATIERE>
 		  ...
 		</MATIERES>
 

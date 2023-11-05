@@ -66,6 +66,15 @@
       <duree>PT30M</duree>
     </colle>
 
+    <!-- Hack temporaire pour les classes mixtes MP2I/MPSI -->
+    <colle id="mp2i-2021-informatique">
+      <codes_matieres>
+        <code_matiere>240500</code_matiere>
+      </codes_matieres>
+      <frequence>hebdomadaire</frequence>
+      <duree>PT5M</duree>
+    </colle>
+
   </colles>
 
   <colles_mefs>

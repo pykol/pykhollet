@@ -172,6 +172,13 @@
       <frequence>trimestrielle</frequence>
       <duree>PT30M</duree>
     </colle>
+    <colle id="mp2i-2021-informatique" xml:base="nomenclaturescolles/1995-mp.xml">
+      <codes_matieres>
+        <code_matiere>240500</code_matiere>
+      </codes_matieres>
+      <frequence>hebdomadaire</frequence>
+      <duree>PT5M</duree>
+    </colle>
     <colle id="pcsi-1995-maths" xml:base="nomenclaturescolles/1995-pcsi.xml">
       <!-- Mathématiques -->
       <codes_mefs>

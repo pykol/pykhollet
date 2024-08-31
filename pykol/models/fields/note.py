@@ -166,7 +166,7 @@ class NoteField(models.Field):
 		del kwargs["max_length"]
 		return name, path, args, kwargs
 
-	def from_db_value(self, value, expression, connection, context):
+	def from_db_value(self, value, expression, connection, context=None):
 		if value is None:
 			return value
 		return Note(value)

@@ -19,7 +19,7 @@
 """Raccourcis pratiques et fréquemment utilisés dans pyKol"""
 
 from django.shortcuts import redirect
-from django.utils.http import is_safe_url
+from django.utils.http import url_has_allowed_host_and_scheme
 
 def redirect_next(to, *args, request=None, **kwargs):
 	"""
@@ -38,13 +38,13 @@ def redirect_next(to, *args, request=None, **kwargs):
 	d'une URL sécurisée pour une redirection.
 	"""
 	try:
-		if is_safe_url(request.POST['next'], allowed_hosts=None):
+		if url_has_allowed_host_and_scheme(request.POST['next'], allowed_hosts=None):
 			return redirect(request.POST['next'], *args, **kwargs)
 	except:
 		pass
 
 	try:
-		if is_safe_url(request.GET['next'], allowed_hosts=None):
+		if url_has_allowed_host_and_scheme(request.GET['next'], allowed_hosts=None):
 			return redirect(request.GET['next'], *args, **kwargs)
 	except:
 		pass

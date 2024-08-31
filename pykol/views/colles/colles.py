@@ -29,7 +29,7 @@ from django.db.models import Func, F
 from django.views.decorators.http import require_POST
 from django.contrib import messages
 from django.urls import reverse
-from django.utils.http import is_safe_url
+from django.utils.http import url_has_allowed_host_and_scheme
 
 from pykol.models.base import Etudiant, Annee, JetonAcces
 from pykol.models.colles import Colle
@@ -148,7 +148,7 @@ def colle_declarer(request, pk):
 
 	next_url = request.POST.get('next', request.GET.get('next'))
 	if next_url:
-		if is_safe_url(next_url, allowed_hosts=None):
+		if url_has_allowed_host_and_scheme(next_url, allowed_hosts=None):
 			context['next_url'] = next_url
 
 	return render(request, 'pykol/colles/noter.html', context)

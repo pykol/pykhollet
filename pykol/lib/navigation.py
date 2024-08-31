@@ -18,7 +18,6 @@
 
 import copy
 from importlib import import_module
-from django.utils import six
 from django.urls import reverse
 
 class NavigationChildrenList:

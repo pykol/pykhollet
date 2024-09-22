@@ -180,6 +180,7 @@ class BEEImporter:
 		fichiers_invalides = []
 		self.structures_et = self.nomenclatures_et = \
 				self.eleves_et = self.sts_et = \
+				self.edt_sts_et = \
 				self.nomenclatures_colles_et = None
 		for xml in xmls:
 			try:
@@ -206,6 +207,8 @@ class BEEImporter:
 				self.eleves_et = xml_et
 			elif xml_root.tag == 'STS_EDT':
 				self.sts_et = xml_et
+			elif xml_root.tag == 'EDT_STS':
+				self.edt_sts_et = xml_et
 			elif xml_root.tag == 'pykol_nomenclatures':
 				self.nomenclature_colles_et = xml_et
 			else:
@@ -253,6 +256,7 @@ class BEEImporter:
 		self.import_professeurs()
 		self.import_divisions()
 		self.import_groupes()
+		self.import_services()
 		self.import_etudiants()
 		self.import_options_etudiants()
 		self.import_colles()
@@ -325,7 +329,7 @@ class BEEImporter:
 
 		annee_erreurs = []
 		for xml_siecle in (self.structures_et, self.nomenclatures_et,
-				self.eleves_et):
+				self.eleves_et, self.edt_sts_et):
 			if xml_siecle is None:
 				continue
 			annee_fichier = xml_siecle.getroot().find('PARAMETRES/ANNEE_SCOLAIRE').text
@@ -376,7 +380,7 @@ class BEEImporter:
 
 		etab_erreurs = []
 		for xml_siecle in (self.structures_et, self.nomenclatures_et,
-				self.eleves_et):
+				self.eleves_et, self.edt_sts_et):
 			if xml_siecle is None:
 				continue
 
@@ -692,6 +696,26 @@ class BEEImporter:
 			self.classes = dict([(c.code_structure, c)
 				for c in Classe.all_objects.filter(annee=self.annee)])
 
+	def import_services(self):
+		"""
+		Lire les services d'enseignement depuis le fichier STS ou EDT-STS
+		À appeler après self.import_divisions
+		"""
+		if not self.classes:
+			return
+
+		div_sts_et = []
+		if self.sts_et:
+			div_sts_et = chain(div_sts_et, self.sts_et.getroot().findall('DONNEES/STRUCTURE/DIVISIONS/DIVISION'))
+		if self.edt_sts_et:
+			div_sts_et = chain(div_sts_et, self.edt_sts_et.getroot().findall('DONNEES/STRUCTURE/DIVISIONS/DIVISION'))
+
+		for div_et in div_sts_et:
+			code_structure = div_et.attrib['CODE']
+			if code_structure not in self.classes:
+				continue
+			self._stocker_services(div_et, code_structure, code_structure)
+
 	def import_groupes(self):
 		"""
 		Création des groupes d'enseignement à partir de l'export STS ou
@@ -721,7 +745,11 @@ class BEEImporter:
 			else:
 				continue
 
-			if not appartenance_mef_cpge(groupe_et.find('MEFS_APPARTENANCE')):
+			divisions_et = groupe_et.findall('DIVISIONS_APPARTENANCE/DIVISION_APPARTENANCE')
+			if all([
+				div_et.attrib.get('CODE',
+					  div_et.attrib.get('CODE_STRUCTURE')) not in self.classes
+					for div_et in divisions_et]):
 				continue
 
 			groupe_data = groupe_dict.setdefault(code_structure, {})
@@ -747,7 +775,6 @@ class BEEImporter:
 
 			# On détaille les effectifs du groupe par classe et on
 			# stocke les Enseignement qu'il faudra créer.
-			divisions_et = groupe_et.findall('DIVISIONS_APPARTENANCE/DIVISION_APPARTENANCE')
 			for division_et in divisions_et:
 				try:
 					# Version STS
@@ -770,6 +797,7 @@ class BEEImporter:
 				# groupe et à cette classe.
 				self._stocker_services(groupe_et, code_div,
 						code_groupe=code_structure)
+				self._stocker_services(groupe_et, code_div, code_div)
 
 		# TODO faut-il peupler self.groupes avec la base de données s'il
 		# est vide à ce stade de la méthode ?
@@ -1219,7 +1247,9 @@ class BEEImporter:
 		chaque code professeur associe l'objet Professeur correspondant.
 		"""
 		if not self.sts_et:
-			# TODO charger les profs si pas de STS
+			# Charger les profs depuis la base si pas de STS
+			for prof in Professeur.objects.all():
+				self.professeurs[prof.id_acad] = prof
 			return
 
 		for individu in self.sts_et.getroot().findall('DONNEES/INDIVIDUS/INDIVIDU'):
@@ -1329,9 +1359,6 @@ class BEEImporter:
 				perm_direction = Permission.objects.get(codename='direction',
 						content_type=ContentType.objects.get_for_model(User))
 				user.user_permissions.add(perm_direction)
-
-		# TODO charger les profs si pas de sts
-
 
 	def import_colles(self):
 		if not self.nomenclature_colles_et:

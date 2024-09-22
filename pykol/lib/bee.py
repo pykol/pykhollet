@@ -728,10 +728,10 @@ class BEEImporter:
 		else:
 			groupe_structures_et = []
 
-		if self.sts_et:
-			groupe_sts_et = self.sts_et.getroot().findall('DONNEES/STRUCTURE/GROUPES/GROUPE')
-		else:
-			groupe_sts_et = []
+		groupe_sts_et = []
+		for et in (self.sts_et, self.edt_sts_et):
+			if et is not None:
+				groupe_sts_et = chain(groupe_sts_et, et.findall('DONNEES/STRUCTURE/GROUPES/GROUPE'))
 
 		# Création d'un dictionnaire qui à chaque groupe associe les
 		# données trouvées dans les fichiers

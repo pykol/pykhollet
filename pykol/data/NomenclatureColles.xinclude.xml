@@ -23,6 +23,7 @@
     <xi:include href="nomenclaturescolles/1995-bcpst.xml" xpointer="xpointer(/pykol_nomenclatures/colles/*)"/>
     <xi:include href="nomenclaturescolles/1995-tsi.xml"   xpointer="xpointer(/pykol_nomenclatures/colles/*)"/>
     <xi:include href="nomenclaturescolles/2021-ecg.xml"   xpointer="xpointer(/pykol_nomenclatures/colles/*)"/>
+    <xi:include href="nomenclaturescolles/2021-mp2i.xml"  xpointer="xpointer(/pykol_nomenclatures/colles/*)"/>
 
   </colles>
 
@@ -36,5 +37,6 @@
     <xi:include href="nomenclaturescolles/1995-bcpst.xml" xpointer="xpointer(/pykol_nomenclatures/colles_mefs/*)"/>
     <xi:include href="nomenclaturescolles/1995-tsi.xml"   xpointer="xpointer(/pykol_nomenclatures/colles_mefs/*)"/>
     <xi:include href="nomenclaturescolles/2021-ecg.xml"   xpointer="xpointer(/pykol_nomenclatures/colles_mefs/*)"/>
+    <xi:include href="nomenclaturescolles/2021-mp2i.xml"  xpointer="xpointer(/pykol_nomenclatures/colles_mefs/*)"/>
   </colles_mefs>
 </pykol_nomenclatures>

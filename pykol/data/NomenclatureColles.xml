@@ -824,6 +824,7 @@
       </codes_mefs>
       <codes_matieres>
         <code_matiere>065700</code_matiere>
+        <code_matiere>062300</code_matiere>
       </codes_matieres>
       <frequence>hebdomadaire</frequence>
       <duree>PT10M</duree>

@@ -108,8 +108,8 @@ class AbstractLienMatiere(models.Model):
 		elif code_elect == 'S':
 			return cls.MODALITE_COMMUN
 
-        # Hack temporaire
-        return cls.MODALITE_COMMUN
+		# Hack temporaire
+		return cls.MODALITE_COMMUN
 
 	def __str__(self):
 		return '{matiere} ({modalite})'.format(matiere=self.matiere,

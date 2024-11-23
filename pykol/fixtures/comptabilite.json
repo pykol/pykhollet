@@ -1,0 +1,641 @@
+[
+    {
+        "model": "pykol.compte",
+        "pk": 0,
+        "fields": {
+            "nom": "Rectorats",
+	    "categorie": 2,
+	    "decouvert_autorise": true
+	}
+    },
+    {
+        "model": "pykol.compte",
+        "pk": 1,
+        "fields": {
+            "nom": "Paiements",
+	    "categorie": 0,
+	    "decouvert_autorise": true
+	}
+    },
+    {
+        "model": "pykol.compte",
+        "pk": 3,
+        "fields": {
+            "nom": "Établissements",
+	    "categorie": 1,
+	    "decouvert_autorise": true
+	}
+    },
+    {
+        "model": "pykol.compte",
+        "pk": 4,
+        "fields": {
+            "nom": "Professeurs",
+	    "categorie": 1,
+	    "decouvert_autorise": true
+	}
+    },
+
+    {
+        "model": "pykol.compte",
+        "pk": 5,
+        "fields": {
+            "nom": "Acad\u00e9mie d'Aix-Marseille",
+	    "parent": 0,
+	    "categorie": 2,
+	    "decouvert_autorise": true
+        }
+    },
+    {
+        "model": "pykol.compte",
+        "pk": 6,
+        "fields": {
+            "nom": "Acad\u00e9mie d'Amiens",
+	    "parent": 0,
+	    "categorie": 2,
+	    "decouvert_autorise": true
+        }
+    },
+    {
+        "model": "pykol.compte",
+        "pk": 7,
+        "fields": {
+            "nom": "Acad\u00e9mie de Besan\u00e7on",
+	    "parent": 0,
+	    "categorie": 2,
+	    "decouvert_autorise": true
+        }
+    },
+    {
+        "model": "pykol.compte",
+        "pk": 8,
+        "fields": {
+            "nom": "Acad\u00e9mie de Bordeaux",
+	    "parent": 0,
+	    "categorie": 2,
+	    "decouvert_autorise": true
+        }
+    },
+    {
+        "model": "pykol.compte",
+        "pk": 9,
+        "fields": {
+            "nom": "Acad\u00e9mie de Normandie",
+	    "parent": 0,
+	    "categorie": 2,
+	    "decouvert_autorise": true
+        }
+    },
+    {
+        "model": "pykol.compte",
+        "pk": 10,
+        "fields": {
+            "nom": "Acad\u00e9mie de Clermont-Ferrand",
+	    "parent": 0,
+	    "categorie": 2,
+	    "decouvert_autorise": true
+        }
+    },
+    {
+        "model": "pykol.compte",
+        "pk": 11,
+        "fields": {
+            "nom": "Acad\u00e9mie de Corse",
+	    "parent": 0,
+	    "categorie": 2,
+	    "decouvert_autorise": true
+        }
+    },
+    {
+        "model": "pykol.compte",
+        "pk": 12,
+        "fields": {
+            "nom": "Acad\u00e9mie de Cr\u00e9teil",
+	    "parent": 0,
+	    "categorie": 2,
+	    "decouvert_autorise": true
+        }
+    },
+    {
+        "model": "pykol.compte",
+        "pk": 13,
+        "fields": {
+            "nom": "Acad\u00e9mie de Dijon",
+	    "parent": 0,
+	    "categorie": 2,
+	    "decouvert_autorise": true
+        }
+    },
+    {
+        "model": "pykol.compte",
+        "pk": 14,
+        "fields": {
+            "nom": "Acad\u00e9mie de Grenoble",
+	    "parent": 0,
+	    "categorie": 2,
+	    "decouvert_autorise": true
+        }
+    },
+    {
+        "model": "pykol.compte",
+        "pk": 15,
+        "fields": {
+            "nom": "Acad\u00e9mie de Guyane",
+	    "parent": 0,
+	    "categorie": 2,
+	    "decouvert_autorise": true
+        }
+    },
+    {
+        "model": "pykol.compte",
+        "pk": 16,
+        "fields": {
+            "nom": "Acad\u00e9mie de la Guadeloupe",
+	    "parent": 0,
+	    "categorie": 2,
+	    "decouvert_autorise": true
+        }
+    },
+    {
+        "model": "pykol.compte",
+        "pk": 17,
+        "fields": {
+            "nom": "Acad\u00e9mie de la Martinique",
+	    "parent": 0,
+	    "categorie": 2,
+	    "decouvert_autorise": true
+        }
+    },
+    {
+        "model": "pykol.compte",
+        "pk": 18,
+        "fields": {
+            "nom": "Acad\u00e9mie de la R\u00e9union",
+	    "parent": 0,
+	    "categorie": 2,
+	    "decouvert_autorise": true
+        }
+    },
+    {
+        "model": "pykol.compte",
+        "pk": 19,
+        "fields": {
+            "nom": "Acad\u00e9mie de Lille",
+	    "parent": 0,
+	    "categorie": 2,
+	    "decouvert_autorise": true
+        }
+    },
+    {
+        "model": "pykol.compte",
+        "pk": 20,
+        "fields": {
+            "nom": "Acad\u00e9mie de Limoges",
+	    "parent": 0,
+	    "categorie": 2,
+	    "decouvert_autorise": true
+        }
+    },
+    {
+        "model": "pykol.compte",
+        "pk": 21,
+        "fields": {
+            "nom": "Acad\u00e9mie de Lyon",
+	    "parent": 0,
+	    "categorie": 2,
+	    "decouvert_autorise": true
+        }
+    },
+    {
+        "model": "pykol.compte",
+        "pk": 22,
+        "fields": {
+            "nom": "Acad\u00e9mie de Montpellier",
+	    "parent": 0,
+	    "categorie": 2,
+	    "decouvert_autorise": true
+        }
+    },
+    {
+        "model": "pykol.compte",
+        "pk": 23,
+        "fields": {
+            "nom": "Acad\u00e9mie de Nancy-Metz",
+	    "parent": 0,
+	    "categorie": 2,
+	    "decouvert_autorise": true
+        }
+    },
+    {
+        "model": "pykol.compte",
+        "pk": 24,
+        "fields": {
+            "nom": "Acad\u00e9mie de Nantes",
+	    "parent": 0,
+	    "categorie": 2,
+	    "decouvert_autorise": true
+        }
+    },
+    {
+        "model": "pykol.compte",
+        "pk": 25,
+        "fields": {
+            "nom": "Acad\u00e9mie de Nice",
+	    "parent": 0,
+	    "categorie": 2,
+	    "decouvert_autorise": true
+        }
+    },
+    {
+        "model": "pykol.compte",
+        "pk": 26,
+        "fields": {
+            "nom": "Acad\u00e9mie de Paris",
+	    "parent": 0,
+	    "categorie": 2,
+	    "decouvert_autorise": true
+        }
+    },
+    {
+        "model": "pykol.compte",
+        "pk": 27,
+        "fields": {
+            "nom": "Acad\u00e9mie de Poitiers",
+	    "parent": 0,
+	    "categorie": 2,
+	    "decouvert_autorise": true
+        }
+    },
+    {
+        "model": "pykol.compte",
+        "pk": 28,
+        "fields": {
+            "nom": "Acad\u00e9mie de Reims",
+	    "parent": 0,
+	    "categorie": 2,
+	    "decouvert_autorise": true
+        }
+    },
+    {
+        "model": "pykol.compte",
+        "pk": 29,
+        "fields": {
+            "nom": "Acad\u00e9mie de Rennes",
+	    "parent": 0,
+	    "categorie": 2,
+	    "decouvert_autorise": true
+        }
+    },
+    {
+        "model": "pykol.compte",
+        "pk": 31,
+        "fields": {
+            "nom": "Acad\u00e9mie de Strasbourg",
+	    "parent": 0,
+	    "categorie": 2,
+	    "decouvert_autorise": true
+        }
+    },
+    {
+        "model": "pykol.compte",
+        "pk": 32,
+        "fields": {
+            "nom": "Acad\u00e9mie de Toulouse",
+	    "parent": 0,
+	    "categorie": 2,
+	    "decouvert_autorise": true
+        }
+    },
+    {
+        "model": "pykol.compte",
+        "pk": 33,
+        "fields": {
+            "nom": "Acad\u00e9mie de Versailles",
+	    "parent": 0,
+	    "categorie": 2,
+	    "decouvert_autorise": true
+        }
+    },
+    {
+        "model": "pykol.compte",
+        "pk": 34,
+        "fields": {
+            "nom": "Acad\u00e9mie d'Orl\u00e9ans-Tours",
+	    "parent": 0,
+	    "categorie": 2,
+	    "decouvert_autorise": true
+        }
+    },
+    {
+        "model": "pykol.compte",
+        "pk": 35,
+        "fields": {
+            "nom": "D\u00e9tach\u00e9s (29\u00e8 base)",
+	    "parent": 0,
+	    "categorie": 2,
+	    "decouvert_autorise": true
+        }
+    },
+
+
+    {
+        "model": "pykol.compte",
+        "pk": 36,
+        "fields": {
+            "nom": "Acad\u00e9mie d'Aix-Marseille",
+	    "parent": 1,
+	    "categorie": 0,
+	    "decouvert_autorise": true
+        }
+    },
+    {
+        "model": "pykol.compte",
+        "pk": 37,
+        "fields": {
+            "nom": "Acad\u00e9mie d'Amiens",
+	    "parent": 1,
+	    "categorie": 0,
+	    "decouvert_autorise": true
+        }
+    },
+    {
+        "model": "pykol.compte",
+        "pk": 38,
+        "fields": {
+            "nom": "Acad\u00e9mie de Besan\u00e7on",
+	    "parent": 1,
+	    "categorie": 0,
+	    "decouvert_autorise": true
+        }
+    },
+    {
+        "model": "pykol.compte",
+        "pk": 39,
+        "fields": {
+            "nom": "Acad\u00e9mie de Bordeaux",
+	    "parent": 1,
+	    "categorie": 0,
+	    "decouvert_autorise": true
+        }
+    },
+    {
+        "model": "pykol.compte",
+        "pk": 40,
+        "fields": {
+            "nom": "Acad\u00e9mie de Normandie",
+	    "parent": 1,
+	    "categorie": 0,
+	    "decouvert_autorise": true
+        }
+    },
+    {
+        "model": "pykol.compte",
+        "pk": 41,
+        "fields": {
+            "nom": "Acad\u00e9mie de Clermont-Ferrand",
+	    "parent": 1,
+	    "categorie": 0,
+	    "decouvert_autorise": true
+        }
+    },
+    {
+        "model": "pykol.compte",
+        "pk": 42,
+        "fields": {
+            "nom": "Acad\u00e9mie de Corse",
+	    "parent": 1,
+	    "categorie": 0,
+	    "decouvert_autorise": true
+        }
+    },
+    {
+        "model": "pykol.compte",
+        "pk": 43,
+        "fields": {
+            "nom": "Acad\u00e9mie de Cr\u00e9teil",
+	    "parent": 1,
+	    "categorie": 0,
+	    "decouvert_autorise": true
+        }
+    },
+    {
+        "model": "pykol.compte",
+        "pk": 44,
+        "fields": {
+            "nom": "Acad\u00e9mie de Dijon",
+	    "parent": 1,
+	    "categorie": 0,
+	    "decouvert_autorise": true
+        }
+    },
+    {
+        "model": "pykol.compte",
+        "pk": 45,
+        "fields": {
+            "nom": "Acad\u00e9mie de Grenoble",
+	    "parent": 1,
+	    "categorie": 0,
+	    "decouvert_autorise": true
+        }
+    },
+    {
+        "model": "pykol.compte",
+        "pk": 46,
+        "fields": {
+            "nom": "Acad\u00e9mie de Guyane",
+	    "parent": 1,
+	    "categorie": 0,
+	    "decouvert_autorise": true
+        }
+    },
+    {
+        "model": "pykol.compte",
+        "pk": 47,
+        "fields": {
+            "nom": "Acad\u00e9mie de la Guadeloupe",
+	    "parent": 1,
+	    "categorie": 0,
+	    "decouvert_autorise": true
+        }
+    },
+    {
+        "model": "pykol.compte",
+        "pk": 48,
+        "fields": {
+            "nom": "Acad\u00e9mie de la Martinique",
+	    "parent": 1,
+	    "categorie": 0,
+	    "decouvert_autorise": true
+        }
+    },
+    {
+        "model": "pykol.compte",
+        "pk": 49,
+        "fields": {
+            "nom": "Acad\u00e9mie de la R\u00e9union",
+	    "parent": 1,
+	    "categorie": 0,
+	    "decouvert_autorise": true
+        }
+    },
+    {
+        "model": "pykol.compte",
+        "pk": 50,
+        "fields": {
+            "nom": "Acad\u00e9mie de Lille",
+	    "parent": 1,
+	    "categorie": 0,
+	    "decouvert_autorise": true
+        }
+    },
+    {
+        "model": "pykol.compte",
+        "pk": 51,
+        "fields": {
+            "nom": "Acad\u00e9mie de Limoges",
+	    "parent": 1,
+	    "categorie": 0,
+	    "decouvert_autorise": true
+        }
+    },
+    {
+        "model": "pykol.compte",
+        "pk": 52,
+        "fields": {
+            "nom": "Acad\u00e9mie de Lyon",
+	    "parent": 1,
+	    "categorie": 0,
+	    "decouvert_autorise": true
+        }
+    },
+    {
+        "model": "pykol.compte",
+        "pk": 53,
+        "fields": {
+            "nom": "Acad\u00e9mie de Montpellier",
+	    "parent": 1,
+	    "categorie": 0,
+	    "decouvert_autorise": true
+        }
+    },
+    {
+        "model": "pykol.compte",
+        "pk": 54,
+        "fields": {
+            "nom": "Acad\u00e9mie de Nancy-Metz",
+	    "parent": 1,
+	    "categorie": 0,
+	    "decouvert_autorise": true
+        }
+    },
+    {
+        "model": "pykol.compte",
+        "pk": 55,
+        "fields": {
+            "nom": "Acad\u00e9mie de Nantes",
+	    "parent": 1,
+	    "categorie": 0,
+	    "decouvert_autorise": true
+        }
+    },
+    {
+        "model": "pykol.compte",
+        "pk": 56,
+        "fields": {
+            "nom": "Acad\u00e9mie de Nice",
+	    "parent": 1,
+	    "categorie": 0,
+	    "decouvert_autorise": true
+        }
+    },
+    {
+        "model": "pykol.compte",
+        "pk": 57,
+        "fields": {
+            "nom": "Acad\u00e9mie de Paris",
+	    "parent": 1,
+	    "categorie": 0,
+	    "decouvert_autorise": true
+        }
+    },
+    {
+        "model": "pykol.compte",
+        "pk": 58,
+        "fields": {
+            "nom": "Acad\u00e9mie de Poitiers",
+	    "parent": 1,
+	    "categorie": 0,
+	    "decouvert_autorise": true
+        }
+    },
+    {
+        "model": "pykol.compte",
+        "pk": 59,
+        "fields": {
+            "nom": "Acad\u00e9mie de Reims",
+	    "parent": 1,
+	    "categorie": 0,
+	    "decouvert_autorise": true
+        }
+    },
+    {
+        "model": "pykol.compte",
+        "pk": 60,
+        "fields": {
+            "nom": "Acad\u00e9mie de Rennes",
+	    "parent": 1,
+	    "categorie": 0,
+	    "decouvert_autorise": true
+        }
+    },
+    {
+        "model": "pykol.compte",
+        "pk": 62,
+        "fields": {
+            "nom": "Acad\u00e9mie de Strasbourg",
+	    "parent": 1,
+	    "categorie": 0,
+	    "decouvert_autorise": true
+        }
+    },
+    {
+        "model": "pykol.compte",
+        "pk": 63,
+        "fields": {
+            "nom": "Acad\u00e9mie de Toulouse",
+	    "parent": 1,
+	    "categorie": 0,
+	    "decouvert_autorise": true
+        }
+    },
+    {
+        "model": "pykol.compte",
+        "pk": 64,
+        "fields": {
+            "nom": "Acad\u00e9mie de Versailles",
+	    "parent": 1,
+	    "categorie": 0,
+	    "decouvert_autorise": true
+        }
+    },
+    {
+        "model": "pykol.compte",
+        "pk": 65,
+        "fields": {
+            "nom": "Acad\u00e9mie d'Orl\u00e9ans-Tours",
+	    "parent": 1,
+	    "categorie": 0,
+	    "decouvert_autorise": true
+        }
+    },
+    {
+        "model": "pykol.compte",
+        "pk": 66,
+        "fields": {
+            "nom": "D\u00e9tach\u00e9s (29\u00e8 base)",
+	    "parent": 1,
+	    "categorie": 0,
+	    "decouvert_autorise": true
+        }
+    }
+]

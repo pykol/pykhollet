@@ -6,7 +6,9 @@
             "nom": "Aix-Marseille",
             "nom_complet": "Acad\u00e9mie d'Aix-Marseille",
             "departements": "13,4,5,84",
-            "slug": "aix-marseille"
+            "slug": "aix-marseille",,
+            "compte_dotation": 5,
+            "compte_paiement": 36
         }
     },
     {
@@ -16,7 +18,9 @@
             "nom": "Amiens",
             "nom_complet": "Acad\u00e9mie d'Amiens",
             "departements": "2,60,80",
-            "slug": "amiens"
+            "slug": "amiens",
+            "compte_dotation": 6,
+            "compte_paiement": 37
         }
     },
     {
@@ -26,7 +30,9 @@
             "nom": "Besan\u00e7on",
             "nom_complet": "Acad\u00e9mie de Besan\u00e7on",
             "departements": "25,39,70,90",
-            "slug": "besancon"
+            "slug": "besancon",
+            "compte_dotation": 7,
+            "compte_paiement": 38
         }
     },
     {
@@ -36,17 +42,21 @@
             "nom": "Bordeaux",
             "nom_complet": "Acad\u00e9mie de Bordeaux",
             "departements": "24,33,40,47,64",
-            "slug": "bordeaux"
+            "slug": "bordeaux",
+            "compte_dotation": 8,
+            "compte_paiement": 39
         }
     },
     {
         "model": "pykol.academie",
-        "pk": "05",
+        "pk": "70",
         "fields": {
-            "nom": "Caen",
-            "nom_complet": "Acad\u00e9mie de Caen",
-            "departements": "14,50,61",
-            "slug": "caen"
+            "nom": "Normandie",
+            "nom_complet": "Acad\u00e9mie de Normandie",
+            "departements": "14,50,61,27,76",
+            "slug": "normandie",
+            "compte_dotation": 9,
+            "compte_paiement": 40
         }
     },
     {
@@ -56,7 +66,9 @@
             "nom": "Clermont-Ferrand",
             "nom_complet": "Acad\u00e9mie de Clermont-Ferrand",
             "departements": "15,3,43,63",
-            "slug": "clermont-ferrand"
+            "slug": "clermont-ferrand",
+            "compte_dotation": 10,
+            "compte_paiement": 41
         }
     },
     {
@@ -66,7 +78,9 @@
             "nom": "Corse",
             "nom_complet": "Acad\u00e9mie de Corse",
             "departements": "2A,2B",
-            "slug": "corse"
+            "slug": "corse",
+            "compte_dotation": 11,
+            "compte_paiement": 42
         }
     },
     {
@@ -76,7 +90,9 @@
             "nom": "Cr\u00e9teil",
             "nom_complet": "Acad\u00e9mie de Cr\u00e9teil",
             "departements": "77,93,94",
-            "slug": "creteil"
+            "slug": "creteil",
+            "compte_dotation": 12,
+            "compte_paiement": 43
         }
     },
     {
@@ -86,7 +102,9 @@
             "nom": "Dijon",
             "nom_complet": "Acad\u00e9mie de Dijon",
             "departements": "21,58,71,89",
-            "slug": "dijon"
+            "slug": "dijon",
+            "compte_dotation": 13,
+            "compte_paiement": 44
         }
     },
     {
@@ -96,7 +114,9 @@
             "nom": "Grenoble",
             "nom_complet": "Acad\u00e9mie de Grenoble",
             "departements": "26,38,7,73,74",
-            "slug": "grenoble"
+            "slug": "grenoble",
+            "compte_dotation": 14,
+            "compte_paiement": 45
         }
     },
     {
@@ -106,7 +126,9 @@
             "nom": "Guyane",
             "nom_complet": "Acad\u00e9mie de Guyane",
             "departements": "973",
-            "slug": "guyane"
+            "slug": "guyane",
+            "compte_dotation": 15,
+            "compte_paiement": 46
         }
     },
     {
@@ -116,7 +138,9 @@
             "nom": "Guadeloupe",
             "nom_complet": "Acad\u00e9mie de la Guadeloupe",
             "departements": "971",
-            "slug": "guadeloupe"
+            "slug": "guadeloupe",
+            "compte_dotation": 16,
+            "compte_paiement": 47
         }
     },
     {
@@ -126,7 +150,9 @@
             "nom": "Martinique",
             "nom_complet": "Acad\u00e9mie de la Martinique",
             "departements": "972",
-            "slug": "martinique"
+            "slug": "martinique",
+            "compte_dotation": 17,
+            "compte_paiement": 48
         }
     },
     {
@@ -136,7 +162,9 @@
             "nom": "R\u00e9union",
             "nom_complet": "Acad\u00e9mie de la R\u00e9union",
             "departements": "974",
-            "slug": "reunion"
+            "slug": "reunion",
+            "compte_dotation": 18,
+            "compte_paiement": 49
         }
     },
     {
@@ -146,7 +174,9 @@
             "nom": "Lille",
             "nom_complet": "Acad\u00e9mie de Lille",
             "departements": "59,62",
-            "slug": "lille"
+            "slug": "lille",
+            "compte_dotation": 19,
+            "compte_paiement": 50
         }
     },
     {
@@ -156,7 +186,9 @@
             "nom": "Limoges",
             "nom_complet": "Acad\u00e9mie de Limoges",
             "departements": "19,23,87",
-            "slug": "limoges"
+            "slug": "limoges",
+            "compte_dotation": 20,
+            "compte_paiement": 51
         }
     },
     {
@@ -166,7 +198,9 @@
             "nom": "Lyon",
             "nom_complet": "Acad\u00e9mie de Lyon",
             "departements": "1,42,69D,69M",
-            "slug": "lyon"
+            "slug": "lyon",
+            "compte_dotation": 21,
+            "compte_paiement": 52
         }
     },
     {
@@ -176,7 +210,9 @@
             "nom": "Montpellier",
             "nom_complet": "Acad\u00e9mie de Montpellier",
             "departements": "11,30,34,48,66",
-            "slug": "montpellier"
+            "slug": "montpellier",
+            "compte_dotation": 22,
+            "compte_paiement": 53
         }
     },
     {
@@ -186,7 +222,9 @@
             "nom": "Nancy-Metz",
             "nom_complet": "Acad\u00e9mie de Nancy-Metz",
             "departements": "54,55,57,88",
-            "slug": "nancy-metz"
+            "slug": "nancy-metz",
+            "compte_dotation": 23,
+            "compte_paiement": 54
         }
     },
     {
@@ -196,7 +234,9 @@
             "nom": "Nantes",
             "nom_complet": "Acad\u00e9mie de Nantes",
             "departements": "44,49,53,72,85",
-            "slug": "nantes"
+            "slug": "nantes",
+            "compte_dotation": 24,
+            "compte_paiement": 55
         }
     },
     {
@@ -206,7 +246,9 @@
             "nom": "Nice",
             "nom_complet": "Acad\u00e9mie de Nice",
             "departements": "6,83",
-            "slug": "nice"
+            "slug": "nice",
+            "compte_dotation": 25,
+            "compte_paiement": 56
         }
     },
     {
@@ -216,7 +258,9 @@
             "nom": "Paris",
             "nom_complet": "Acad\u00e9mie de Paris",
             "departements": "75",
-            "slug": "paris"
+            "slug": "paris",
+            "compte_dotation": 26,
+            "compte_paiement": 57
         }
     },
     {
@@ -226,7 +270,9 @@
             "nom": "Poitiers",
             "nom_complet": "Acad\u00e9mie de Poitiers",
             "departements": "16,17,79,86",
-            "slug": "poitiers"
+            "slug": "poitiers",
+            "compte_dotation": 27,
+            "compte_paiement": 58
         }
     },
     {
@@ -236,7 +282,9 @@
             "nom": "Reims",
             "nom_complet": "Acad\u00e9mie de Reims",
             "departements": "10,51,52,8",
-            "slug": "reims"
+            "slug": "reims",
+            "compte_dotation": 28,
+            "compte_paiement": 59
         }
     },
     {
@@ -246,17 +294,9 @@
             "nom": "Rennes",
             "nom_complet": "Acad\u00e9mie de Rennes",
             "departements": "22,29,35,56",
-            "slug": "rennes"
-        }
-    },
-    {
-        "model": "pykol.academie",
-        "pk": "21",
-        "fields": {
-            "nom": "Rouen",
-            "nom_complet": "Acad\u00e9mie de Rouen",
-            "departements": "27,76",
-            "slug": "rouen"
+            "slug": "rennes",
+            "compte_dotation": 29,
+            "compte_paiement": 60
         }
     },
     {
@@ -266,7 +306,9 @@
             "nom": "Strasbourg",
             "nom_complet": "Acad\u00e9mie de Strasbourg",
             "departements": "67,68",
-            "slug": "strasbourg"
+            "slug": "strasbourg",
+            "compte_dotation": 31,
+            "compte_paiement": 62
         }
     },
     {
@@ -276,7 +318,9 @@
             "nom": "Toulouse",
             "nom_complet": "Acad\u00e9mie de Toulouse",
             "departements": "12,31,32,46,65,81,82,9",
-            "slug": "toulouse"
+            "slug": "toulouse",
+            "compte_dotation": 32,
+            "compte_paiement": 63
         }
     },
     {
@@ -286,7 +330,9 @@
             "nom": "Versailles",
             "nom_complet": "Acad\u00e9mie de Versailles",
             "departements": "78,91,92,95",
-            "slug": "versailles"
+            "slug": "versailles",
+            "compte_dotation": 33,
+            "compte_paiement": 64
         }
     },
     {
@@ -296,7 +342,9 @@
             "nom": "Orl\u00e9ans-Tours",
             "nom_complet": "Acad\u00e9mie d'Orl\u00e9ans-Tours",
             "departements": "18,28,36,37,41,45",
-            "slug": "orleans-tours"
+            "slug": "orleans-tours",
+            "compte_dotation": 34,
+            "compte_paiement": 65
         }
     },
     {
@@ -306,7 +354,9 @@
             "nom": "D\u00e9tach\u00e9s (29\u00e8 base)",
             "nom_complet": "D\u00e9tach\u00e9s (29\u00e8 base)",
             "departements": "",
-            "slug": "detaches"
+            "slug": "detaches",
+            "compte_dotation": 35,
+            "compte_paiement": 66
         }
     }
 ]

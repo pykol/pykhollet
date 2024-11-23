@@ -1329,7 +1329,7 @@ class BEEImporter:
 					professeur.corps = grade
 					professeur.id_acad = numero_sts
 					if est_prof_cpge:
-						professeur.code_indemnite = professeur.CODE_INDEMNITE_PROF_CPGE
+						professeur.code_indemnite = Professeur.CODE_INDEMNITE_PROF_CPGE
 					professeur.save()
 
 				except Professeur.DoesNotExist:
@@ -1340,8 +1340,8 @@ class BEEImporter:
 						etablissement=self.etablissement,
 						corps=grade,
 						id_acad=numero_sts,
-						code_indemnite = professeur.CODE_INDEMNITE_PROF_CPGE if est_prof_cpge
-							else professeur.CODE_INDEMNITE_PROF_AUTRE,
+						code_indemnite = Professeur.CODE_INDEMNITE_PROF_CPGE if est_prof_cpge
+							else Professeur.CODE_INDEMNITE_PROF_AUTRE,
 						)
 
 				professeur.disciplines.set(disciplines)

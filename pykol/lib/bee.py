@@ -74,7 +74,10 @@ class CodeMEF:
 		return 200 <= self.dispositif() < 300
 
 	def est_superieur(self):
-		return 300 <= self.dispositif()
+		"""
+		Teste si on est en CPGE
+		"""
+		return 300 <= self.dispositif() <= 301
 
 	def categorie(self):
 		return int(self.code[3])

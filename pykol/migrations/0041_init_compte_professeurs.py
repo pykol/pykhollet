@@ -8,9 +8,12 @@ def init_compte_professeurs(apps, schema_editor):
 	Compte = apps.get_model('pykol', 'Compte')
 	Etablissement = apps.get_model('pykol', 'Etablissement')
 	racine_profs = Compte.objects.get(nom="Professeurs")
-	etablissement = Etablissement.objects.get(pk=settings.PYKOL_UAI_DEFAUT)
-	etablissement.compte_professeurs = racine_profs
-	etablissement.save()
+	try:
+		etablissement = Etablissement.objects.get(pk=settings.PYKOL_UAI_DEFAUT)
+		etablissement.compte_professeurs = racine_profs
+		etablissement.save()
+	except:
+		pass
 
 class Migration(migrations.Migration):
 

@@ -9,28 +9,31 @@ def definir_etablissement_dotation(apps, schema):
 	Etablissement = apps.get_model("pykol", "Etablissement")
 	Dotation = apps.get_model("pykol", "Dotation")
 
-	etablissement = Etablissement.objects.get(pk=settings.PYKOL_UAI_DEFAUT)
-	Dotation.objects.update(etablissement=etablissement)
+	try:
+		etablissement = Etablissement.objects.get(pk=settings.PYKOL_UAI_DEFAUT)
+		Dotation.objects.update(etablissement=etablissement)
+	except:
+		pass
 
 class Migration(migrations.Migration):
 
-    dependencies = [
-        ('pykol', '0033_duree_decouvert_nulle'),
-    ]
+	dependencies = [
+		('pykol', '0033_duree_decouvert_nulle'),
+	]
 
-    operations = [
-        migrations.AddField(
-            model_name='dotation',
-            name='etablissement',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE,
+	operations = [
+		migrations.AddField(
+			model_name='dotation',
+			name='etablissement',
+			field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE,
 				to='pykol.Etablissement', null=True, blank=True),
-        ),
+		),
 		migrations.RunPython(definir_etablissement_dotation,
 			migrations.RunPython.noop, elidable=True),
-        migrations.AlterField(
-            model_name='dotation',
-            name='etablissement',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE,
+		migrations.AlterField(
+			model_name='dotation',
+			name='etablissement',
+			field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE,
 				to='pykol.Etablissement', null=False, blank=False),
-        ),
-    ]
+		),
+	]

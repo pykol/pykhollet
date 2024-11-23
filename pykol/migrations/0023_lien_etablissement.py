@@ -7,8 +7,11 @@ from django.conf import settings
 def rattache_classe_etablissement(apps, schema_editor):
 	Etablissement = apps.get_model('pykol', 'Etablissement')
 	Classe = apps.get_model('pykol', 'Classe')
-	etab = Etablissement.objects.get(numero_uai=settings.PYKOL_UAI_DEFAUT)
-	Classe.objects.filter(etablissement__isnull=True).update(etablissement=etab)
+	try:
+		etab = Etablissement.objects.get(numero_uai=settings.PYKOL_UAI_DEFAUT)
+		Classe.objects.filter(etablissement__isnull=True).update(etablissement=etab)
+	except:
+		pass
 
 def reverse_rattache_classe_etablissement(apps, schema_editor):
 	# Il n'y a rien à faire pour inverser la fonction précédente, car la
@@ -19,8 +22,11 @@ def reverse_rattache_classe_etablissement(apps, schema_editor):
 def rattache_collereleve_etablissement(apps, schema_editor):
 	Etablissement = apps.get_model('pykol', 'Etablissement')
 	ColleReleve = apps.get_model('pykol', 'ColleReleve')
-	etab = Etablissement.objects.get(numero_uai=settings.PYKOL_UAI_DEFAUT)
-	ColleReleve.objects.filter(etablissement__isnull=True).update(etablissement=etab)
+	try:
+		etab = Etablissement.objects.get(numero_uai=settings.PYKOL_UAI_DEFAUT)
+		ColleReleve.objects.filter(etablissement__isnull=True).update(etablissement=etab)
+	except:
+		pass
 
 def reverse_rattache_collereleve_etablissement(apps, schema_editor):
 	# Il n'y a rien à faire pour inverser la fonction précédente, car la

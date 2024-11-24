@@ -1257,7 +1257,7 @@ class BEEImporter:
 
 		for individu in chain(
 					self.sts_et.getroot().findall('DONNEES/INDIVIDUS/INDIVIDU'),
-					self.sts_et.getroot().fidnall('DONNEES/SUPPLEANTS/SUPPLEANT'),
+					self.sts_et.getroot().findall('DONNEES/SUPPLEANTS/SUPPLEANT'),
 				):
 			individu_id = individu.attrib['ID']
 			nom = individu.find('NOM_USAGE').text.title()

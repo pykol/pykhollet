@@ -16,6 +16,7 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+from zoneinfo import ZoneInfo
 import vobject
 
 from django.shortcuts import get_object_or_404
@@ -30,6 +31,7 @@ def calendrier(request, uuid):
 	utilisateur = jeton.owner
 
 	cal = vobject.iCalendar()
+	utc_zone = ZoneInfo('UTC')
 
 	if hasattr(jeton.owner, 'professeur'):
 		colles = Colle.objects.filter(colledetails__actif=True,
@@ -55,8 +57,8 @@ def calendrier(request, uuid):
 			vevent.add('summary').value = \
 				"Colle de {matiere}".format(matiere=colle.matiere)
 
-		vevent.add('dtstart').value = colle.details.horaire
-		vevent.add('dtend').value   = colle.details.horaire + colle.duree
+		vevent.add('dtstart').value = colle.details.horaire.astimezone(utc_zone)
+		vevent.add('dtend').value   = (colle.details.horaire + colle.duree).astimezone(utc_zone)
 		vevent.add('location').value = colle.details.salle
 		if colle.etat == Colle.ETAT_BROUILLON:
 			vevent.add('status').value = 'TENTATIVE'

@@ -132,9 +132,9 @@ class CollesEnseignement(models.Model):
 		# dotation partagée entre plusieurs matières.
 		etudiants_qs = Etudiant.objects.none()
 		for enseignement in enseignements:
-			etudiants_qs = etudiants_qs.union(enseignement.etudiants)
+			etudiants_qs = etudiants_qs.union(enseignement.etudiants.sur_ventilation_service(self.classe.annee))
 
-		nb_etudiants = etudiants_qs.sur_ventilation_service(self.classe.annee).distinct().count()
+		nb_etudiants = etudiants_qs.distinct().count()
 
 		if self.frequence == CollesEnseignement.FREQUENCE_HEBDOMADAIRE:
 			if self.periode == CollesEnseignement.PERIODE_ANNEE:

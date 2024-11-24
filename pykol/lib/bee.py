@@ -1255,7 +1255,10 @@ class BEEImporter:
 				self.professeurs[prof.id_acad] = prof
 			return
 
-		for individu in self.sts_et.getroot().findall('DONNEES/INDIVIDUS/INDIVIDU'):
+		for individu in chain(
+					self.sts_et.getroot().findall('DONNEES/INDIVIDUS/INDIVIDU'),
+					self.sts_et.getroot().fidnall('DONNEES/SUPPLEANTS/SUPPLEANT'),
+				):
 			individu_id = individu.attrib['ID']
 			nom = individu.find('NOM_USAGE').text.title()
 			prenom = individu.find('PRENOM').text.title()

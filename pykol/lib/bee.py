@@ -184,7 +184,7 @@ class BEEImporter:
 		self.structures_et = self.nomenclatures_et = \
 				self.eleves_et = self.sts_et = \
 				self.edt_sts_et = \
-				self.nomenclatures_colles_et = None
+				self.nomenclature_colles_et = None
 		for xml in xmls:
 			try:
 				xml_et = ET.parse(xml)
@@ -288,7 +288,7 @@ class BEEImporter:
 				'type': ImportBeeLog.IMPORT_TYPE_STS,
 			},
 			{
-				'field': 'nomenclatures_colles_et',
+				'field': 'nomenclature_colles_et',
 				'type': ImportBeeLog.IMPORT_TYPE_COLLES,
 			},
 		)

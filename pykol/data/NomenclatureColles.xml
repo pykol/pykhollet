@@ -885,6 +885,124 @@
       <frequence>hebdomadaire</frequence>
       <duree>PT5M</duree>
     </colle>
+    <colle id="ect-2007-maths" xml:base="nomenclaturescolles/2007-ect.xml">
+      <!-- Mathématiques -->
+      <codes_mefs>
+        <code_mef>30112020210</code_mef>
+        <code_mef>30112020220</code_mef>
+      </codes_mefs>
+      <codes_matieres>
+        <code_matiere>061600</code_matiere>
+      </codes_matieres>
+      <frequence>hebdomadaire</frequence>
+      <duree>PT10M</duree>
+    </colle>
+    <colle id="ect-2007-info" xml:base="nomenclaturescolles/2007-ect.xml">
+      <!-- Informatique -->
+      <nom>Informatique</nom>
+      <codes_mefs>
+        <code_mef>30112020210</code_mef>
+        <code_mef>30112020220</code_mef>
+      </codes_mefs>
+      <codes_matieres>
+        <code_matiere>061600</code_matiere>
+      </codes_matieres>
+      <frequence>hebdomadaire</frequence>
+      <duree>PT5M</duree>
+      <mode_defaut>travaux_diriges</mode_defaut>
+    </colle>
+    <colle id="ect-2007-cg" xml:base="nomenclaturescolles/2007-ect.xml">
+      <!-- Culture générale -->
+      <codes_mefs>
+        <code_mef>30112020210</code_mef>
+        <code_mef>30112020220</code_mef>
+      </codes_mefs>
+      <codes_matieres>
+        <code_matiere>001700</code_matiere>
+      </codes_matieres>
+      <frequence>hebdomadaire</frequence>
+      <duree>PT10M</duree>
+    </colle>
+    <colle id="ect-2007-lv1" xml:base="nomenclaturescolles/2007-ect.xml">
+      <!-- Langues -->
+      <nom>Langue vivante 1</nom>
+      <codes_mefs>
+        <code_mef>30112020210</code_mef>
+        <code_mef>30112020220</code_mef>
+      </codes_mefs>
+      <codes_matieres>
+        <!-- Allemand -->
+        <code_matiere>030101</code_matiere>
+        <!-- Anglais -->
+        <code_matiere>030201</code_matiere>
+        <!-- Espagnol -->
+        <code_matiere>030601</code_matiere>
+        <!-- Italien -->
+        <code_matiere>030901</code_matiere>
+        <!-- Russe -->
+        <code_matiere>031401</code_matiere>
+      </codes_matieres>
+      <frequence>hebdomadaire</frequence>
+      <duree>PT10M</duree>
+    </colle>
+    <colle id="ect-2007-lv2" xml:base="nomenclaturescolles/2007-ect.xml">
+      <!-- Langues -->
+      <nom>Langue vivante 2</nom>
+      <codes_mefs>
+        <code_mef>30112020210</code_mef>
+        <code_mef>30112020220</code_mef>
+      </codes_mefs>
+      <codes_matieres>
+        <!-- Allemand -->
+        <code_matiere>030102</code_matiere>
+        <!-- Anglais -->
+        <code_matiere>030202</code_matiere>
+        <!-- Espagnol -->
+        <code_matiere>030602</code_matiere>
+        <!-- Italien -->
+        <code_matiere>030902</code_matiere>
+        <!-- Russe -->
+        <code_matiere>031402</code_matiere>
+      </codes_matieres>
+      <frequence>hebdomadaire</frequence>
+      <duree>PT10M</duree>
+    </colle>
+    <colle id="ect-2007-eco" xml:base="nomenclaturescolles/2007-ect.xml">
+      <!-- Économie -->
+      <codes_mefs>
+        <code_mef>30112020210</code_mef>
+        <code_mef>30112020220</code_mef>
+      </codes_mefs>
+      <codes_matieres>
+        <code_matiere>380800</code_matiere>
+      </codes_matieres>
+      <frequence>hebdomadaire</frequence>
+      <duree>PT10M</duree>
+    </colle>
+    <colle id="ect-2007-droit" xml:base="nomenclaturescolles/2007-ect.xml">
+      <!-- Droit -->
+      <codes_mefs>
+        <code_mef>30112020210</code_mef>
+        <code_mef>30112020220</code_mef>
+      </codes_mefs>
+      <codes_matieres>
+        <code_matiere>362600</code_matiere>
+      </codes_matieres>
+      <frequence>hebdomadaire</frequence>
+      <duree>PT10M</duree>
+    </colle>
+    <colle id="ect-2007-management" xml:base="nomenclaturescolles/2007-ect.xml">
+      <!-- Management et gestion de l'entreprise -->
+      <codes_mefs>
+        <code_mef>30112020210</code_mef>
+        <code_mef>30112020220</code_mef>
+      </codes_mefs>
+      <codes_matieres>
+        <code_matiere>435900</code_matiere>
+      </codes_matieres>
+      <frequence>hebdomadaire</frequence>
+      <duree>PT20M</duree>
+    </colle>
   </colles>
   <colles_mefs>
     <colles_mef code_mef="30112012210" xml:base="nomenclaturescolles/1995-ec.xml">
@@ -980,6 +1098,14 @@
       <nombre_trimestres>2</nombre_trimestres>
     </colles_mef>
     <colles_mef code_mef="30111049220" xml:base="nomenclaturescolles/2021-mp2i.xml">
+      <nombre_semaines>25</nombre_semaines>
+      <nombre_trimestres>2</nombre_trimestres>
+    </colles_mef>
+    <colles_mef code_mef="30112020210" xml:base="nomenclaturescolles/2007-ect.xml">
+      <nombre_semaines>30</nombre_semaines>
+      <nombre_trimestres>3</nombre_trimestres>
+    </colles_mef>
+    <colles_mef code_mef="30112020220" xml:base="nomenclaturescolles/2007-ect.xml">
       <nombre_semaines>25</nombre_semaines>
       <nombre_trimestres>2</nombre_trimestres>
     </colles_mef>

@@ -986,13 +986,14 @@
         <code_mef>30112020220</code_mef>
       </codes_mefs>
       <codes_matieres>
-        <code_matiere>362600</code_matiere>
+        <code_matiere>362000</code_matiere>
       </codes_matieres>
       <frequence>hebdomadaire</frequence>
       <duree>PT10M</duree>
     </colle>
     <colle id="ect-2007-management" xml:base="nomenclaturescolles/2007-ect.xml">
       <!-- Management et gestion de l'entreprise -->
+      <nom>Management et gestion de l'entreprise</nom>
       <codes_mefs>
         <code_mef>30112020210</code_mef>
         <code_mef>30112020220</code_mef>

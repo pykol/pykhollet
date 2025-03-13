@@ -357,7 +357,10 @@ class Professeur(CodeIndemniteMixin, User):
 					colle__colledetails__colleur=self)).union(
 				Classe.objects.filter(colle__colledetails__actif=True,
 					colle__colledetails__eleves__classe__pk=F('pk'),
-					colle__colledetails__colleur=self))
+					colle__colledetails__colleur=self)).union(
+				Classe.objects.filter(
+					colloscopepermission__droit__codename='change_colloscope',
+					colloscopepermission__user=self))
 		return qs
 
 	def construire_comptes(self, commit=True):

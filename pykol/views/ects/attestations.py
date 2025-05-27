@@ -2,6 +2,7 @@
 
 # pyKol - Gestion de colles en CPGE
 # Copyright (c) 2019 Florian Hatat
+# Copyright (C) 2008 Søren Roug, European Environment Agency (odtmerge function, GPLv2)
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Affero General Public License as published by
@@ -27,6 +28,7 @@ from django.utils.text import slugify
 from django.db.models import Min
 
 import odf.opendocument
+from odf.opendocument import OpenDocumentText
 from odf.text import UserFieldDecl, UserFieldGet, Span, P
 from odf.table import Table, TableCell, TableRow, CoveredTableCell
 from odf.draw import Frame, Image
@@ -36,20 +38,52 @@ from pykol.models.ects import Jury, Mention, GrilleGroupeLignes
 from pykol.models.base import Etudiant, Enseignement
 from pykol.views.generic import OdfResponse
 
+def odtmerge(fromodt, toodt):
+	# Need to make a copy of the list because addElement unlinks from the original
+	for meta in fromodt.meta.childNodes[:]:
+		toodt.meta.addElement(meta)
+
+	for font in fromodt.fontfacedecls.childNodes[:]:
+		toodt.fontfacedecls.addElement(font)
+
+	for style in fromodt.styles.childNodes[:]:
+		toodt.styles.addElement(style)
+
+	for autostyle in fromodt.automaticstyles.childNodes[:]:
+		toodt.automaticstyles.addElement(autostyle)
+
+	for scripts in fromodt.scripts.childNodes[:]:
+		toodt.scripts.addElement(scripts)
+
+	for settings in fromodt.settings.childNodes[:]:
+		toodt.settings.addElement(settings)
+
+	for masterstyles in fromodt.masterstyles.childNodes[:]:
+		toodt.masterstyles.addElement(masterstyles)
+
+	for body in fromodt.body.childNodes[:]:
+		toodt.body.addElement(body)
+
+	# odfpy ne met pas à jour correctement ses caches en cas d'appel à
+	# appendChild (les fils ne sont pas rattachés au document). On force
+	# la mise à jour.
+	toodt.Pictures = fromodt.Pictures
+	toodt.rebuild_caches()
+	return toodt
+
+
 def nom_formation(jury):
 	return "{libelle} − {niveau}".format(
 		libelle=jury.classe.mef.libelle_ects,
 		niveau=jury.classe.get_niveau_display())
 
-def fusion_attestation(modele, etudiant, jury):
+def fusion_attestation(attestation, etudiant, jury):
 	"""
-	Remplace dans un modèle OpenDocument d'attestation de résultats
-	les champs utilisateurs par les données de l'étudiant. Cette
-	fonction renvoie le document OpenDocument modifié. Le modèle est
-	copié, donc n'est pas modifié par l'appel.
+    Remplace dans un modèle OpenDocument d'attestation de résultats les champs
+    utilisateurs par les données de l'étudiant. Cette fonction renvoie le
+    document OpenDocument modifié. Le modèle est potentiellement modifié par
+    l'appel, il n'est plus utilisable par la suite.
 	"""
-	attestation = copy.deepcopy(modele)
-
 	remplacement = {
 		'pykol.date_naissance_etudiant': etudiant.birth_date.strftime("%d/%m/%Y"),
 		'pykol.ine_etudiant': etudiant.ine,
@@ -82,7 +116,7 @@ def fusion_attestation(modele, etudiant, jury):
 	# On parcourt la nouvelle attestation à la recherche des
 	# utilisations des champs utilisations que l'on souhaite
 	# substituer.
-	for field in attestation.getElementsByType(UserFieldGet):
+	for field in attestation.getElementsByType(UserFieldGet)[:]:
 		try:
 			valeur = remplacement[field.getAttrNS(odf.namespaces.TEXTNS,
 				'name')]
@@ -94,10 +128,11 @@ def fusion_attestation(modele, etudiant, jury):
 
 	# Suppression des déclarations des champs utilisateurs de
 	# l'en-tête du document global.
-	for field in attestation.getElementsByType(UserFieldDecl):
+	for field in attestation.getElementsByType(UserFieldDecl)[:]:
 		if field.getAttrNS(odf.namespaces.TEXTNS, 'name') in remplacement:
 			field.parentNode.removeChild(field)
 
+	attestation.rebuild_caches()
 	return attestation
 
 def fusion_mentions(etudiant, jury, attestation):
@@ -246,7 +281,7 @@ def signature_attestation(attestation, jury):
 	# case de l'ajout des objets Image dans la boucle précédente. On
 	# vide ce cache de force sinon l'appel suivant de getElementsByType
 	# échoue et renvoie une liste vide.
-	attestation.clear_caches()
+	attestation.rebuild_caches()
 
 @login_required
 def jury_toutes_attestations_resultats(request, pk):
@@ -254,26 +289,19 @@ def jury_toutes_attestations_resultats(request, pk):
 	etudiants = Etudiant.objects.filter(mention__jury=jury).distinct().order_by(
 			'last_name', 'first_name')
 
-	attestations = None
+	attestations = OpenDocumentText()
 	modele_path = os.path.join(settings.BASE_DIR, \
 		'pykol/templates/pykol/ects/ects_modele_resultats.odt')
-	modele = odf.opendocument.load(modele_path)
 	for etudiant in etudiants:
+		modele = odf.opendocument.load(modele_path)
 		attestation = fusion_attestation(modele, etudiant, jury)
 		fusion_mentions(etudiant, jury, attestation)
+		attestation.rebuild_caches()
 
-		if attestations is None:
-			attestations = attestation
-		else:
-			for child in attestation.body.childNodes:
-				attestations.body.appendChild(child)
-
-	# odfpy ne met pas à jour correctement ses caches en cas d'appel à
-	# appendChild (les fils ne sont pas rattachés au document). On force
-	# la mise à jour.
-	attestations.clear_caches()
+		attestations = odtmerge(attestation, attestations)
 
 	signature_attestation(attestations, jury)
+	attestations.rebuild_caches()
 
 	return OdfResponse(attestations, filename="resultats-ects-{classe}-{jury}.odt".format(
 		classe=slugify(str(jury.classe)), jury=jury.pk))
@@ -285,25 +313,16 @@ def jury_toutes_attestations_parcours(request, pk):
 	etudiants = Etudiant.objects.filter(mention__jury=jury).distinct().order_by(
 			'last_name', 'first_name')
 
-	attestations = None
+	attestations = OpenDocumentText()
 	modele_path = os.path.join(settings.BASE_DIR, \
 		'pykol/templates/pykol/ects/ects_modele_attestation_de_parcours.odt')
-	modele = odf.opendocument.load(modele_path)
 	for etudiant in etudiants:
+		modele = odf.opendocument.load(modele_path)
 		attestation = fusion_attestation(modele, etudiant, jury)
-
-		if attestations is None:
-			attestations = attestation
-		else:
-			for child in attestation.body.childNodes:
-				attestations.body.appendChild(child)
-
-	# odfpy ne met pas à jour correctement ses caches en cas d'appel à
-	# appendChild (les fils ne sont pas rattachés au document). On force
-	# la mise à jour.
-	attestations.clear_caches()
+		attestations = odtmerge(attestation, attestations)
 
 	signature_attestation(attestations, jury)
+	attestations.rebuild_caches()
 
 	return OdfResponse(attestations, filename="attestation-parcours-ects-{classe}-{jury}.odt".format(
 		classe=slugify(str(jury.classe)), jury=jury.pk))

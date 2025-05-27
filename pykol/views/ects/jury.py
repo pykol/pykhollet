@@ -210,8 +210,11 @@ def jury_saisie_mentions(request, jury, mention_qs):
 		for enseignement in enseignements:
 			formsettab[etudiant][enseignement] = None
 	for form in formset:
-		formsettab[form.instance.etudiant][(form.instance.enseignement,
-			form.instance.grille_lignes.first())] = form
+		try:
+			formsettab[form.instance.etudiant][(form.instance.enseignement,
+				form.instance.grille_lignes.first())] = form
+		except:
+			pass
 	formsettab.management_form = formset.management_form
 	formsettab.errors = formset.errors
 

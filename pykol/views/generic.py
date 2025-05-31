@@ -16,6 +16,7 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+import io
 from django.views.generic.base import ContextMixin
 from django.shortcuts import render
 from django.http import HttpResponse
@@ -47,6 +48,9 @@ class OdfResponse(HttpResponse):
 		self.opendocument = opendocument
 		kwargs.setdefault('content_type', self.opendocument.getMediaType())
 		super().__init__(**kwargs)
+		buffer = io.BytesIO()
+		self.opendocument.save(buffer)
+		self.write(buffer.getvalue())
 		if self.filename is not None:
 			self['Content-Disposition'] = 'attachment; filename="{}"'.format(self.filename)
 		self.opendocument.write(self)

@@ -61,6 +61,7 @@ def odtmerge(fromodt, toodt):
 	for masterstyles in fromodt.masterstyles.childNodes[:]:
 		toodt.masterstyles.addElement(masterstyles)
 
+	fromodt.rebuild_caches()
 	for body in fromodt.body.childNodes[:]:
 		toodt.body.addElement(body)
 
@@ -68,7 +69,7 @@ def odtmerge(fromodt, toodt):
 	# appendChild (les fils ne sont pas rattachés au document). On force
 	# la mise à jour.
 	toodt.Pictures = fromodt.Pictures
-	toodt.rebuild_caches()
+	#toodt.rebuild_caches()
 	return toodt
 
 
@@ -79,10 +80,10 @@ def nom_formation(jury):
 
 def fusion_attestation(attestation, etudiant, jury):
 	"""
-    Remplace dans un modèle OpenDocument d'attestation de résultats les champs
-    utilisateurs par les données de l'étudiant. Cette fonction renvoie le
-    document OpenDocument modifié. Le modèle est potentiellement modifié par
-    l'appel, il n'est plus utilisable par la suite.
+	Remplace dans un modèle OpenDocument d'attestation de résultats les champs
+	utilisateurs par les données de l'étudiant. Cette fonction renvoie le
+	document OpenDocument modifié. Le modèle est potentiellement modifié par
+	l'appel, il n'est plus utilisable par la suite.
 	"""
 	remplacement = {
 		'pykol.date_naissance_etudiant': etudiant.birth_date.strftime("%d/%m/%Y"),
@@ -132,7 +133,7 @@ def fusion_attestation(attestation, etudiant, jury):
 		if field.getAttrNS(odf.namespaces.TEXTNS, 'name') in remplacement:
 			field.parentNode.removeChild(field)
 
-	attestation.rebuild_caches()
+	#attestation.rebuild_caches()
 	return attestation
 
 def fusion_mentions(etudiant, jury, attestation):
@@ -281,7 +282,7 @@ def signature_attestation(attestation, jury):
 	# case de l'ajout des objets Image dans la boucle précédente. On
 	# vide ce cache de force sinon l'appel suivant de getElementsByType
 	# échoue et renvoie une liste vide.
-	attestation.rebuild_caches()
+	#attestation.rebuild_caches()
 
 @login_required
 def jury_toutes_attestations_resultats(request, pk):
@@ -296,12 +297,12 @@ def jury_toutes_attestations_resultats(request, pk):
 		modele = odf.opendocument.load(modele_path)
 		attestation = fusion_attestation(modele, etudiant, jury)
 		fusion_mentions(etudiant, jury, attestation)
-		attestation.rebuild_caches()
+		#attestation.rebuild_caches()
 
 		attestations = odtmerge(attestation, attestations)
 
 	signature_attestation(attestations, jury)
-	attestations.rebuild_caches()
+	#attestations.rebuild_caches()
 
 	return OdfResponse(attestations, filename="resultats-ects-{classe}-{jury}.odt".format(
 		classe=slugify(str(jury.classe)), jury=jury.pk))
@@ -322,7 +323,7 @@ def jury_toutes_attestations_parcours(request, pk):
 		attestations = odtmerge(attestation, attestations)
 
 	signature_attestation(attestations, jury)
-	attestations.rebuild_caches()
+	#attestations.rebuild_caches()
 
 	return OdfResponse(attestations, filename="attestation-parcours-ects-{classe}-{jury}.odt".format(
 		classe=slugify(str(jury.classe)), jury=jury.pk))

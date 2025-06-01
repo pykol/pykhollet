@@ -1,0 +1,141 @@
+<?xml version="1.0"?>
+<grilles_ects xmlns="http://hatat.me/2018/pykol">
+  <grille_ects xml:id="bo2021-mp2i-s1">
+    <groupe nom="Sciences">
+      <!-- Mathématiques -->
+      <ligne credits="12">
+        <matiere code="061300"/>
+      </ligne>
+      <!-- Physique/chimie -->
+      <ligne credits="6">
+        <matiere code="065700"/>
+      </ligne>
+      <!-- Informatique -->
+      <ligne credits="4">
+        <matiere code="480900"/>
+      </ligne>
+      <!-- SI -->
+      <ligne credits="3">
+        <matiere code="067000"/>
+      </ligne>
+    </groupe>
+
+    <groupe nom="Lettres/langues">
+      <!-- Français/philosophie -->
+      <ligne credits="2">
+        <matiere code="022700"/>
+      </ligne>
+      <!-- Langue vivante 1 -->
+      <ligne credits="2">
+        <matiere modalite_option="O" rang_option="1"/>
+      </ligne>
+    </groupe>
+    <!-- EPS -->
+    <groupe nom="EPS">
+      <ligne credits="1">
+        <matiere code="100100"/>
+      </ligne>
+    </groupe>
+  </grille_ects>
+
+  <grille_ects xml:id="bo2021-mp2i-s2-info">
+    <groupe nom="Sciences">
+      <!-- Mathématiques -->
+      <ligne credits="10">
+        <matiere code="061300"/>
+      </ligne>
+      <!-- Physique/chimie -->
+      <ligne credits="6">
+        <matiere code="065700"/>
+      </ligne>
+      <!-- Informatique -->
+      <ligne credits="5">
+        <matiere code="480900"/>
+      </ligne>
+      <!-- TIPE -->
+      <ligne credits="4">
+        <matiere code="003300"/>
+      </ligne>
+    </groupe>
+
+    <groupe nom="Lettres/langues">
+      <!-- Français/philosophie -->
+      <ligne credits="2">
+        <matiere code="022700"/>
+      </ligne>
+      <!-- Langue vivante 1 -->
+      <ligne credits="2">
+        <matiere modalite_option="O" rang_option="1"/>
+      </ligne>
+    </groupe>
+    <!-- EPS -->
+    <groupe nom="EPS">
+      <ligne credits="1">
+        <matiere code="100100"/>
+      </ligne>
+    </groupe>
+  </grille_ects>
+  
+  <grille_ects xml:id="bo2021-mp2i-s2-si">
+    <groupe nom="Sciences">
+      <!-- Mathématiques -->
+      <ligne credits="9">
+        <matiere code="061300"/>
+      </ligne>
+      <!-- Physique/chimie -->
+      <ligne credits="6">
+        <matiere code="065700"/>
+      </ligne>
+      <!-- Informatique -->
+      <ligne credits="2">
+        <matiere code="480900"/>
+      </ligne>
+      <!-- SI -->
+      <ligne credits="4">
+        <matiere code="067000"/>
+      </ligne>
+      <!-- TIPE -->
+      <ligne credits="4">
+        <matiere code="003300"/>
+      </ligne>
+    </groupe>
+
+    <groupe nom="Lettres/langues">
+      <!-- Français/philosophie -->
+      <ligne credits="2">
+        <matiere code="022700"/>
+      </ligne>
+      <!-- Langue vivante 1 -->
+      <ligne credits="2">
+        <matiere modalite_option="O" rang_option="1"/>
+      </ligne>
+    </groupe>
+    <!-- EPS -->
+    <groupe nom="EPS">
+      <ligne credits="1">
+        <matiere code="100100"/>
+      </ligne>
+    </groupe>
+  </grille_ects>
+
+  <classe code_mef="30111046210" semestre="1" grille_ref="bo2021-mp2i-s1"/>
+
+  <classe code_mef="30111047210" semestre="2" grille_ref="bo2021-mp2i-s1"/>
+  <classe code_mef="30111047210" semestre="2" grille_ref="bo2021-mp2i-s2-si"/>
+
+  <classe code_mef="30111048210" semestre="2" grille_ref="bo2021-mp2i-s1"/>
+  <classe code_mef="30111048210" semestre="2" grille_ref="bo2021-mp2i-s2-info"/>
+
+  <mef code_mef="30111046210">
+    <libelle>Classe préparatoire scientifique, parcours MP2I</libelle>
+    <domaines_etude>Mathématiques, physique, ingénierie et informatique</domaines_etude>
+  </mef>
+  <mef code_mef="30111047210">
+    <libelle>Classe préparatoire scientifique, parcours MP2I</libelle>
+    <domaines_etude>Mathématiques, physique, ingénierie et informatique</domaines_etude>
+  </mef>
+  <mef code_mef="30111048210">
+    <libelle>Classe préparatoire scientifique, parcours MP2I</libelle>
+    <domaines_etude>Mathématiques, physique, ingénierie et informatique</domaines_etude>
+  </mef>
+</grilles_ects>

@@ -22,5 +22,6 @@
   <xi:include href="grilles_ects/2008-pcsi.xml"       xpointer="xmlns(pykol=http://hatat.me/2018/pykol)xpointer(/pykol:grilles_ects/*)"/>
   <xi:include href="grilles_ects/2008-psi.xml"        xpointer="xmlns(pykol=http://hatat.me/2018/pykol)xpointer(/pykol:grilles_ects/*)"/>
   <xi:include href="grilles_ects/2021-ecg.xml"        xpointer="xmlns(pykol=http://hatat.me/2018/pykol)xpointer(/pykol:grilles_ects/*)"/>
+  <xi:include href="grilles_ects/2021-mp2i.xml"        xpointer="xmlns(pykol=http://hatat.me/2018/pykol)xpointer(/pykol:grilles_ects/*)"/>
   <xi:include href="grilles_ects/2021-mpi.xml"        xpointer="xmlns(pykol=http://hatat.me/2018/pykol)xpointer(/pykol:grilles_ects/*)"/>
 </grilles_ects>

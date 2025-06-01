@@ -61,15 +61,15 @@ def odtmerge(fromodt, toodt):
 	for masterstyles in fromodt.masterstyles.childNodes[:]:
 		toodt.masterstyles.addElement(masterstyles)
 
+    # odfpy ne met pas à jour ses caches. Ceux du document d'origine ont encore
+    # trace d'éléments retirés. On force la mise à jour pour contourner (ce qui
+    # détruit totalement le contenu de fromodt).
 	fromodt.rebuild_caches()
 	for body in fromodt.body.childNodes[:]:
 		toodt.body.addElement(body)
 
-	# odfpy ne met pas à jour correctement ses caches en cas d'appel à
-	# appendChild (les fils ne sont pas rattachés au document). On force
-	# la mise à jour.
-	toodt.Pictures = fromodt.Pictures
-	#toodt.rebuild_caches()
+	toodt.Pictures.update(fromodt.Pictures)
+
 	return toodt
 
 
@@ -268,21 +268,12 @@ def signature_attestation(attestation, jury):
 		# l'attache au fichier.
 		if frame_name not in remplacement_href:
 			remplacement_href[frame_name] = attestation.addPicture(
-				filename="Pictures/{name}{ext}".format(
-					name=frame_name,
-					ext=os.path.splitext(remplacement_images[frame_name].name)[1]),
-				content=remplacement_images[frame_name].read())
+				filename=remplacement_images[frame_name].path)
 
-		for child in frame.childNodes:
+		for child in frame.childNodes[:]:
 			if child.nodeType == child.ELEMENT_NODE:
 				child.parentNode.removeChild(child)
 		Image(parent=frame, href=remplacement_href[frame_name])
-
-	# Un bug de odfpy fait que le cache d'éléments n'est plus à jour à
-	# case de l'ajout des objets Image dans la boucle précédente. On
-	# vide ce cache de force sinon l'appel suivant de getElementsByType
-	# échoue et renvoie une liste vide.
-	#attestation.rebuild_caches()
 
 @login_required
 def jury_toutes_attestations_resultats(request, pk):
@@ -297,12 +288,10 @@ def jury_toutes_attestations_resultats(request, pk):
 		modele = odf.opendocument.load(modele_path)
 		attestation = fusion_attestation(modele, etudiant, jury)
 		fusion_mentions(etudiant, jury, attestation)
-		#attestation.rebuild_caches()
 
 		attestations = odtmerge(attestation, attestations)
 
 	signature_attestation(attestations, jury)
-	#attestations.rebuild_caches()
 
 	return OdfResponse(attestations, filename="resultats-ects-{classe}-{jury}.odt".format(
 		classe=slugify(str(jury.classe)), jury=jury.pk))
@@ -323,7 +312,6 @@ def jury_toutes_attestations_parcours(request, pk):
 		attestations = odtmerge(attestation, attestations)
 
 	signature_attestation(attestations, jury)
-	#attestations.rebuild_caches()
 
 	return OdfResponse(attestations, filename="attestation-parcours-ects-{classe}-{jury}.odt".format(
 		classe=slugify(str(jury.classe)), jury=jury.pk))

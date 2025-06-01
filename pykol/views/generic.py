@@ -46,11 +46,10 @@ class OdfResponse(HttpResponse):
 	def __init__(self, opendocument, **kwargs):
 		self.filename = kwargs.pop('filename', None)
 		self.opendocument = opendocument
-		kwargs.setdefault('content_type', self.opendocument.getMediaType())
-		super().__init__(**kwargs)
 		buffer = io.BytesIO()
 		self.opendocument.save(buffer)
-		self.write(buffer.getvalue())
+		kwargs.setdefault('content_type', self.opendocument.getMediaType())
+		kwargs['content'] = buffer.getvalue()
+		super().__init__(**kwargs)
 		if self.filename is not None:
 			self['Content-Disposition'] = 'attachment; filename="{}"'.format(self.filename)
-		self.opendocument.write(self)

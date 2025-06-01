@@ -9,7 +9,8 @@
 
     Sources :
 	  * Bulletin officiel n°11 du 13 mars 2008.
-	  * adapté manuellement pour les ECG 2021
+	  * adapté manuellement pour les ECG 2021.
+          :
   -->
   <xi:include href="grilles_ects/2008-ece.xml"        xpointer="xmlns(pykol=http://hatat.me/2018/pykol)xpointer(/pykol:grilles_ects/*)"/>
   <xi:include href="grilles_ects/2008-ecs.xml"        xpointer="xmlns(pykol=http://hatat.me/2018/pykol)xpointer(/pykol:grilles_ects/*)"/>
@@ -21,4 +22,5 @@
   <xi:include href="grilles_ects/2008-pcsi.xml"       xpointer="xmlns(pykol=http://hatat.me/2018/pykol)xpointer(/pykol:grilles_ects/*)"/>
   <xi:include href="grilles_ects/2008-psi.xml"        xpointer="xmlns(pykol=http://hatat.me/2018/pykol)xpointer(/pykol:grilles_ects/*)"/>
   <xi:include href="grilles_ects/2021-ecg.xml"        xpointer="xmlns(pykol=http://hatat.me/2018/pykol)xpointer(/pykol:grilles_ects/*)"/>
+  <xi:include href="grilles_ects/2021-mpi.xml"        xpointer="xmlns(pykol=http://hatat.me/2018/pykol)xpointer(/pykol:grilles_ects/*)"/>
 </grilles_ects>

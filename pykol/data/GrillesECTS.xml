@@ -6,7 +6,8 @@
 
     Sources :
 	  * Bulletin officiel n°11 du 13 mars 2008.
-	  * adapté manuellement pour les ECG 2021
+	  * adapté manuellement pour les ECG 2021.
+          :
   -->
   <grille_ects xml:id="bo2008-ece" xml:base="grilles_ects/2008-ece.xml">
     <!-- Mathématiques et informatique -->
@@ -902,5 +903,53 @@
   <mef code_mef="30112019220" xml:base="grilles_ects/2021-ecg.xml">
     <libelle>Classe préparatoire économique et commerciale, voie générale (ECG)</libelle>
     <domaines_etude>Culture générale, langues, mathématiques, histoire, géographie, géopolitique, économie et sciences sociales</domaines_etude>
+  </mef>
+  <grille_ects xml:id="bo2021-mpi" xml:base="grilles_ects/2021-mpi.xml">
+    <groupe nom="Sciences">
+      <!-- Mathématiques -->
+      <ligne credits="10">
+        <matiere code="061300"/>
+      </ligne>
+      <!-- Physique/chimie -->
+      <ligne credits="6">
+        <matiere code="065700"/>
+      </ligne>
+      <!-- Informatique -->
+      <ligne credits="5">
+        <matiere code="067000"/>
+      </ligne>
+      <!-- TIPE -->
+      <ligne credits="4">
+        <matiere code="003300"/>
+      </ligne>
+    </groupe>
+    <groupe nom="Lettres/langues">
+      <!-- Français/philosophie -->
+      <ligne credits="2">
+        <matiere code="022700"/>
+      </ligne>
+      <!-- Langue vivante 1 -->
+      <ligne credits="2">
+        <matiere modalite_option="O" rang_option="1"/>
+      </ligne>
+    </groupe>
+    <!-- EPS -->
+    <groupe nom="EPS">
+      <ligne credits="1">
+        <matiere code="100100"/>
+      </ligne>
+    </groupe>
+  </grille_ects>
+  <classe code_mef="30111049220" semestre="1" grille_ref="bo2021-mpi" xml:base="grilles_ects/2021-mpi.xml"/>
+  <classe code_mef="30111049220" semestre="2" grille_ref="bo2021-mpi" xml:base="grilles_ects/2021-mpi.xml"/>
+  <classe code_mef="30111050220" semestre="1" grille_ref="bo2021-mpi" xml:base="grilles_ects/2021-mpi.xml"/>
+  <classe code_mef="30111050220" semestre="2" grille_ref="bo2021-mpi" xml:base="grilles_ects/2021-mpi.xml"/>
+  <mef code_mef="30111049220" xml:base="grilles_ects/2021-mpi.xml">
+    <libelle>Classe préparatoire scientifique, parcours MPI</libelle>
+    <domaines_etude>Mathématiques, physique, informatique</domaines_etude>
+  </mef>
+  <mef code_mef="30111050220" xml:base="grilles_ects/2021-mpi.xml">
+    <libelle>Classe préparatoire scientifique, parcours MPI*</libelle>
+    <domaines_etude>Mathématiques, physique, informatique</domaines_etude>
   </mef>
 </grilles_ects>

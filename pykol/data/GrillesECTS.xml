@@ -913,6 +913,7 @@
       <!-- Physique/chimie -->
       <ligne credits="6">
         <matiere code="062300"/>
+        <matiere code="065700"/>
       </ligne>
       <!-- Informatique -->
       <ligne credits="4">
@@ -948,6 +949,7 @@
       </ligne>
       <!-- Physique/chimie -->
       <ligne credits="6">
+        <matiere code="062300"/>
         <matiere code="065700"/>
       </ligne>
       <!-- Informatique -->
@@ -956,7 +958,7 @@
       </ligne>
       <!-- TIPE -->
       <ligne credits="4">
-        <matiere code="003300"/>
+        <matiere code="003300" force="true"/>
       </ligne>
     </groupe>
     <groupe nom="Lettres/langues">
@@ -984,6 +986,7 @@
       </ligne>
       <!-- Physique/chimie -->
       <ligne credits="6">
+        <matiere code="062300"/>
         <matiere code="065700"/>
       </ligne>
       <!-- Informatique -->
@@ -996,7 +999,7 @@
       </ligne>
       <!-- TIPE -->
       <ligne credits="4">
-        <matiere code="003300"/>
+        <matiere code="003300" force="true"/>
       </ligne>
     </groupe>
     <groupe nom="Lettres/langues">
@@ -1017,10 +1020,10 @@
     </groupe>
   </grille_ects>
   <classe code_mef="30111046210" semestre="1" grille_ref="bo2021-mp2i-s1" xml:base="grilles_ects/2021-mp2i.xml"/>
-  <classe code_mef="30111046210" semestre="1" grille_ref="bo2021-mp2i-s2-info" xml:base="grilles_ects/2021-mp2i.xml"/>
-  <classe code_mef="30111047210" semestre="2" grille_ref="bo2021-mp2i-s1" xml:base="grilles_ects/2021-mp2i.xml"/>
+  <classe code_mef="30111046210" semestre="2" grille_ref="bo2021-mp2i-s2-info" xml:base="grilles_ects/2021-mp2i.xml"/>
+  <classe code_mef="30111047210" semestre="1" grille_ref="bo2021-mp2i-s1" xml:base="grilles_ects/2021-mp2i.xml"/>
   <classe code_mef="30111047210" semestre="2" grille_ref="bo2021-mp2i-s2-si" xml:base="grilles_ects/2021-mp2i.xml"/>
-  <classe code_mef="30111048210" semestre="2" grille_ref="bo2021-mp2i-s1" xml:base="grilles_ects/2021-mp2i.xml"/>
+  <classe code_mef="30111048210" semestre="1" grille_ref="bo2021-mp2i-s1" xml:base="grilles_ects/2021-mp2i.xml"/>
   <classe code_mef="30111048210" semestre="2" grille_ref="bo2021-mp2i-s2-info" xml:base="grilles_ects/2021-mp2i.xml"/>
   <mef code_mef="30111046210" xml:base="grilles_ects/2021-mp2i.xml">
     <libelle>Classe préparatoire scientifique, parcours MP2I</libelle>

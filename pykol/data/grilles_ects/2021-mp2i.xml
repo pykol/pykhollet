@@ -9,6 +9,7 @@
       <!-- Physique/chimie -->
       <ligne credits="6">
         <matiere code="062300"/>
+        <matiere code="065700"/>
       </ligne>
       <!-- Informatique -->
       <ligne credits="4">
@@ -46,6 +47,7 @@
       </ligne>
       <!-- Physique/chimie -->
       <ligne credits="6">
+        <matiere code="062300"/>
         <matiere code="065700"/>
       </ligne>
       <!-- Informatique -->
@@ -54,7 +56,7 @@
       </ligne>
       <!-- TIPE -->
       <ligne credits="4">
-        <matiere code="003300"/>
+        <matiere code="003300" force="true"/>
       </ligne>
     </groupe>
 
@@ -84,6 +86,7 @@
       </ligne>
       <!-- Physique/chimie -->
       <ligne credits="6">
+        <matiere code="062300"/>
         <matiere code="065700"/>
       </ligne>
       <!-- Informatique -->
@@ -96,7 +99,7 @@
       </ligne>
       <!-- TIPE -->
       <ligne credits="4">
-        <matiere code="003300"/>
+        <matiere code="003300" force="true"/>
       </ligne>
     </groupe>
 
@@ -120,12 +123,12 @@
 
   <classe code_mef="30111046210" semestre="1" grille_ref="bo2021-mp2i-s1"/>
   <!-- La ligne suivante est un hack pour les cas où le changement de MEF n'a pas été saisi dans la base élèves. On considère par défaut que les étudiants ont choisi l'informatique. L'administration pourra rectifier les crédits sur l'attestation, manuellement. -->
-  <classe code_mef="30111046210" semestre="1" grille_ref="bo2021-mp2i-s2-info"/>
+  <classe code_mef="30111046210" semestre="2" grille_ref="bo2021-mp2i-s2-info"/>
 
-  <classe code_mef="30111047210" semestre="2" grille_ref="bo2021-mp2i-s1"/>
+  <classe code_mef="30111047210" semestre="1" grille_ref="bo2021-mp2i-s1"/>
   <classe code_mef="30111047210" semestre="2" grille_ref="bo2021-mp2i-s2-si"/>
 
-  <classe code_mef="30111048210" semestre="2" grille_ref="bo2021-mp2i-s1"/>
+  <classe code_mef="30111048210" semestre="1" grille_ref="bo2021-mp2i-s1"/>
   <classe code_mef="30111048210" semestre="2" grille_ref="bo2021-mp2i-s2-info"/>
 
   <mef code_mef="30111046210">

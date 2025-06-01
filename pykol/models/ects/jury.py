@@ -107,9 +107,9 @@ class JuryManager(models.Manager):
 					# Dans ce cas, on tente de rattacher la ligne au
 					# premier enseignement dont la matière est la bonne.
 					if ligne.force_creation:
-						enseignement = Enseignement.objects.filter(classe=classe,
-							matiere=ligne.matiere.matiere
-						).order_by('modalite_option').first()
+						#enseignement = Enseignement.objects.filter(classe=classe,
+						#	matiere=ligne.matiere.matiere
+						#).order_by('modalite_option').first()
 						Mention.objects.credit_or_create(
 							etudiant=etudiant, jury=jury,
 							credits=ligne.credits,

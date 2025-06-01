@@ -119,6 +119,8 @@
   </grille_ects>
 
   <classe code_mef="30111046210" semestre="1" grille_ref="bo2021-mp2i-s1"/>
+  <!-- La ligne suivante est un hack pour les cas où le changement de MEF n'a pas été saisi dans la base élèves. On considère par défaut que les étudiants ont choisi l'informatique. L'administration pourra rectifier les crédits sur l'attestation, manuellement. -->
+  <classe code_mef="30111046210" semestre="1" grille_ref="bo2021-mp2i-s2-info"/>
 
   <classe code_mef="30111047210" semestre="2" grille_ref="bo2021-mp2i-s1"/>
   <classe code_mef="30111047210" semestre="2" grille_ref="bo2021-mp2i-s2-si"/>

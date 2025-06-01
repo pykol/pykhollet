@@ -1017,6 +1017,7 @@
     </groupe>
   </grille_ects>
   <classe code_mef="30111046210" semestre="1" grille_ref="bo2021-mp2i-s1" xml:base="grilles_ects/2021-mp2i.xml"/>
+  <classe code_mef="30111046210" semestre="1" grille_ref="bo2021-mp2i-s2-info" xml:base="grilles_ects/2021-mp2i.xml"/>
   <classe code_mef="30111047210" semestre="2" grille_ref="bo2021-mp2i-s1" xml:base="grilles_ects/2021-mp2i.xml"/>
   <classe code_mef="30111047210" semestre="2" grille_ref="bo2021-mp2i-s2-si" xml:base="grilles_ects/2021-mp2i.xml"/>
   <classe code_mef="30111048210" semestre="2" grille_ref="bo2021-mp2i-s1" xml:base="grilles_ects/2021-mp2i.xml"/>

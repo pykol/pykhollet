@@ -119,10 +119,15 @@ def charger_grilles_xml():
 
 	for classe in xml_et.findall(nstag('classe')):
 		grille_et = grilles[classe.attrib['grille_ref']]
-		grille, _ = Grille.objects.get_or_create(
-			ref=classe.attrib['grille_ref'],
-			code_mef=ModuleElementaireFormation.objects.get(code_mef=classe.attrib['code_mef']),
-			semestre=classe.attrib['semestre'], defaults={})
+		try:
+			grille, _ = Grille.objects.get_or_create(
+				ref=classe.attrib['grille_ref'],
+				code_mef=ModuleElementaireFormation.objects.get(code_mef=classe.attrib['code_mef']),
+				semestre=classe.attrib['semestre'], defaults={})
+		except ModuleElementaireFormation.DoesNotExist:
+			# Ce n'est pas grave si le MEF n'existe pas, on n'a juste pas la
+			# classe dans ce lycée.
+			continue
 
 		# Peupler la grille avec ses lignes
 		for position, grille_child in enumerate(grille_et):
@@ -148,10 +153,15 @@ def charger_grilles_xml():
 							defaults={})
 
 	for mef_et in xml_et.findall(nstag('mef')):
-		libelle = mef_et.find(nstag('libelle')).text
-		domaines_etude = mef_et.find(nstag('domaines_etude')).text
+		try:
+			libelle = mef_et.find(nstag('libelle')).text
+			domaines_etude = mef_et.find(nstag('domaines_etude')).text
 
-		mef = ModuleElementaireFormation.objects.get(code_mef=mef_et.attrib['code_mef'])
-		mef.libelle_ects = libelle
-		mef.domaines_etude = domaines_etude
-		mef.save()
+			mef = ModuleElementaireFormation.objects.get(code_mef=mef_et.attrib['code_mef'])
+			mef.libelle_ects = libelle
+			mef.domaines_etude = domaines_etude
+			mef.save()
+		except ModuleElementaireFormation.DoesNotExist:
+			# Ce n'est pas grave si le MEF n'existe pas, on n'a juste pas la
+			# classe dans ce lycée.
+			continue

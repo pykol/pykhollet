@@ -345,7 +345,7 @@ class BEEImporter:
 					self.annee = Annee.objects.get(nom=annee_fichier)
 				except Annee.DoesNotExist:
 					annee_erreurs.append(ValueError('annee-inexistante',
-						xml_siece))
+						xml_siecle))
 
 		if annee_erreurs:
 			raise ValueError(annee_erreurs)

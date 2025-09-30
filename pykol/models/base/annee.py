@@ -134,30 +134,26 @@ class Annee(Periode):
 
 		# Lors de la requête au serveur, on demande toute période de
 		# vacances qui une intersection non vide avec l'année en cours.
-		api_url = 'https://data.education.gouv.fr/api/records/1.0/download/'
-		query = '(location={academie} AND start_date < {fin} AND end_date > {debut})'.format(
-			academie=academie.nom.title(),
-			debut="{0:%Y/%m/%d}".format(self.debut),
-			fin="{0:%Y/%m/%d}".format(self.fin),
-			)
+		api_url = 'https://data.education.gouv.fr/api/explore/v2.1/catalog/datasets/fr-en-calendrier-scolaire/records'
 		calendrier = requests.get(api_url, params={
-			'dataset': 'fr-en-calendrier-scolaire',
-			'format': 'json',
-			'q': query,
+			'refine': [
+				f'annee_scolaire:"{self.debut.year}-{self.fin.year}"',
+				f'location:"{academie.nom.title()}"',
+			]
 		}).json()
 
 		# Pas de fantôme vieille période vacances restant
 		self.vacances.filter(type_vacances=Vacances.TYPE_VACANCES).delete()
 
-		for vacances_json in calendrier:
-			debut = isodate.parse_date(vacances_json['fields']['start_date']) \
+		for vacances_json in calendrier['results']:
+			debut = isodate.parse_datetime(vacances_json['start_date']).date() \
 					+ un_jour
-			fin   = isodate.parse_date(vacances_json['fields']['end_date']) \
+			fin   = isodate.parse_datetime(vacances_json['end_date']).date() \
 					- un_jour
 			vacances = Vacances(
 					annee=self,
 					type_vacances=Vacances.TYPE_VACANCES,
-					nom=vacances_json['fields']['description'],
+					nom=vacances_json['description'],
 					debut=debut,
 					fin=fin,
 				)
